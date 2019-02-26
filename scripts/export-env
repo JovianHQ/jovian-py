@@ -1,0 +1,4 @@
+#! /bin/bash
+
+. /usr/local/anaconda3/etc/profile.d/conda.sh
+conda env export > environment.yml --no-builds
