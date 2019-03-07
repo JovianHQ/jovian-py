@@ -85,7 +85,7 @@ def _h():
 
 #     return callback
 
-FILENAME_MSG = 'Failed to detect notebook filename. Please provide the notebook filename (including extension) as the "filename" argument to "jovian.commit".'
+FILENAME_MSG = 'Failed to detect notebook filename. Please provide the notebook filename (including .ipynb extension) as the "filename" argument to "jovian.commit".'
 
 
 def create_gist_simple(filename=None):
@@ -124,37 +124,3 @@ def upload_file(gist_slug, file):
     if res.status_code == 200:
         return res.json()['data']
     raise ApiError('File upload failed: ' + _pretty(res))
-
-# def create_gist(progress=True):
-#     """Upload the current notebook to create a gist"""
-#     if not in_notebook():
-#         log('Failed to detect Juptyer notebook. Skipping..', error=True)
-#         return
-#     save_notebook()
-#     sleep(1)
-#     path = get_notebook_name()
-#     nb_file = (basename(path), open(path, 'rb'))
-#     encoder = MultipartEncoder({'files': nb_file, 'public': '1'})
-#     callback = _create_callback(encoder) if progress else None
-#     monitor = MultipartEncoderMonitor(encoder, callback)
-#     res = post(url=_u('/gist/create'),
-#                data=monitor,
-#                headers={**_h(), 'Content-Type': monitor.content_type})
-#     if res.status_code == 200:
-#         return res.json()['data']
-#     raise ApiError('File upload failed: ' + _pretty(res))
-
-
-# def upload_file(gist_slug, file, progress=True):
-#     """Upload a file and track the progress of the upload"""
-#     if type(file) == str:
-#         file = (basename(file), open(file, 'rb'))
-#     encoder = MultipartEncoder({'files': file})
-#     callback = _create_callback(encoder) if progress else None
-#     monitor = MultipartEncoderMonitor(encoder, callback)
-#     res = post(url=_u('/gist/' + gist_slug + '/upload'),
-#                data=monitor,
-#                headers={**_h(), 'Content-Type': monitor.content_type})
-#     if res.status_code == 200:
-#         return res.json()['data']
-#     raise ApiError('File upload failed: ' + _pretty(res))

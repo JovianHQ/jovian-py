@@ -5,6 +5,9 @@ from jovian.utils.pip import upload_pip_env
 from jovian.utils.api import create_gist_simple
 from jovian.utils.logger import log
 from jovian.utils.constants import WEBAPP_URL
+from jovian.utils.jupyter import set_notebook_name
+
+set_notebook_name()
 
 
 def commit(capture_env=True, filename=None):

@@ -5,25 +5,8 @@ import os.path
 import re
 import requests
 import time
-# from IPython.display import Javascript as d_js
 from io import StringIO
 import sys
-# from IPython.utils import io
-
-notebookName = None
-isNotebookNameSet = False
-
-
-class Capturing(list):
-    def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
-        return self
-
-    def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
-        del self._stringio    # free up some memory
-        sys.stdout = self._stdout
 
 
 def has_ipynb_shell():
@@ -68,7 +51,7 @@ def get_notebook_server_path():
                 return relative_path
 
 
-def get_notebook_path():
+def get_notebook_path_py():
     try:  # Python 3
         from notebook.notebookapp import list_running_servers
     except ImportError:  # Python 2
@@ -91,30 +74,41 @@ def get_notebook_path():
                 if nn["kernel"] and nn['kernel']['id'] == kernel_id:
                     relative_path = nn['notebook']['path']
                     return os.path.join(ss['notebook_dir'], relative_path)
-        else:
-            return os.path.join(os.getcwd(), get_notebook_name_saved())
+
+
+def get_notebook_path():
+    nb_name = None
+    # Try getting the notebook name using IPython API
+    try:
+        nb_name = get_notebook_path_py()
+    except:
+        pass
+
+    # Try using Javascript instead
+    if nb_name is None:
+        saved_name = get_notebook_name_saved()
+        if saved_name:
+            nb_name = os.path.join(os.getcwd(), saved_name)
+
+    return nb_name
 
 
 def set_notebook_name():
     from IPython import get_ipython
     get_ipython().run_cell_magic('javascript',
-                                 '', "IPython.notebook.kernel.execute('nb_name = \"' + IPython.notebook.notebook_name + '\"')")
+                                 '', "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
 
 
 def get_notebook_name_saved():
-    from IPython import get_ipython
-    with Capturing() as cap:
-        list(get_ipython().run_code(
-            'print(globals()["nb_name"]) if "nb_name" in globals().keys() else None'))
-    if len(cap) > 0:
-        return cap[0]
-    else:
-        return None
+    return None
 
 
 def get_notebook_name():
     """Return the name of the notebook"""
-    return os.path.basename(get_notebook_path())
+    nb_path = get_notebook_path()
+    if nb_path:
+        return os.path.basename(nb_path)
+    return None
 
 
 def get_notebook_history():
@@ -126,4 +120,4 @@ def get_notebook_history():
 def save_notebook():
     from IPython import get_ipython
     """Save the current Jupyter notebook"""
-    return get_ipython().run_cell_magic('javascript', '', 'require(["base/js/namespace"],function(Jupyter){Jupyter.notebook.save_checkpoint()})')
+    return get_ipython().run_cell_magic('javascript', '', 'window.require && require(["base/js/namespace"],function(Jupyter){Jupyter.notebook.save_checkpoint()})')
