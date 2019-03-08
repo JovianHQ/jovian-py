@@ -1,5 +1,5 @@
-from requests.compat import urljoin
 """Jupyter related utilities"""
+from requests.compat import urljoin
 import json
 import os.path
 import re
@@ -11,11 +11,11 @@ import sys
 
 def has_ipynb_shell():
     """Check if IPython shell is available"""
-    from IPython import get_ipython
     try:
+        from IPython import get_ipython
         cls = get_ipython().__class__.__name__
         return cls == 'ZMQInteractiveShell'
-    except NameError:
+    except:
         return False
 
 
@@ -94,9 +94,10 @@ def get_notebook_path():
 
 
 def set_notebook_name():
-    from IPython import get_ipython
-    get_ipython().run_cell_magic('javascript',
-                                 '', "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
+    if in_notebook():
+        from IPython import get_ipython
+        get_ipython().run_cell_magic('javascript',
+                                     '', "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
 
 
 def get_notebook_name_saved():

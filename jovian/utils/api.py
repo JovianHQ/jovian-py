@@ -71,48 +71,31 @@ def _h():
             "x-jovian-library-version": __version__}
 
 
-# def _create_callback(encoder):
-#     """Create a callback to a progress bar for file uploads"""
-#     if in_notebook():
-#         pbar = tqdm_notebook(total=encoder.len)
-#     else:
-#         pbar = tqdm(total=encoder.len)
-
-#     def callback(monitor):
-#         pbar.update(monitor.bytes_read - pbar.n)
-#         if (monitor.bytes_read == pbar.total):
-#             pbar.close()
-
-#     return callback
-
-FILENAME_MSG = 'Failed to detect notebook filename. Please provide the notebook filename (including .ipynb extension) as the "filename" argument to "jovian.commit".'
-
-
-def create_gist_simple(filename=None):
-    """Upload the current notebook to create a gist"""
-    if not in_notebook():
-        log('Failed to detect Juptyer notebook. Skipping..', error=True)
-        return
-    auth_headers = _h()
-    log('Saving notebook..')
-    save_notebook()
-    sleep(1)
-    if filename is None:
-        path = get_notebook_name()
-        if path is None:
-            log(FILENAME_MSG)
-            raise ApiError('File upload failed: ' + FILENAME_MSG)
-    else:
-        path = filename
-    nb_file = (basename(path), open(path, 'rb'))
-    log('Uploading notebook..')
-    res = post(url=_u('/gist/create'),
-               data={'public': 1},
-               files={'files': nb_file},
-               headers=auth_headers)
+def get_gist(slug):
+    """Get the metadata for a gist"""
+    res = get(url=_u('/gist/' + slug), headers=_h())
     if res.status_code == 200:
         return res.json()['data']
-    raise ApiError('File upload failed: ' + _pretty(res))
+    raise Exception('Failed to retrieve metadata for notebook "' +
+                    slug + '": ' + _pretty(res))
+
+
+def create_gist_simple(filename=None, gist_slug=None):
+    """Upload the current notebook to create a gist"""
+    auth_headers = _h()
+
+    nb_file = (filename, open(filename, 'rb'))
+    log('Uploading notebook..')
+    if gist_slug:
+        return upload_file(gist_slug, nb_file)
+    else:
+        res = post(url=_u('/gist/create'),
+                   data={'public': 1},
+                   files={'files': nb_file},
+                   headers=auth_headers)
+        if res.status_code == 200:
+            return res.json()['data']
+        raise ApiError('File upload failed: ' + _pretty(res))
 
 
 def upload_file(gist_slug, file):
