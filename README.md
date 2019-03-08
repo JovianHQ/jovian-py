@@ -33,6 +33,7 @@ Since this is a beta release, the `jovian` library has some limitations:
 - The library requires Python 3.6 or above
 - The library must be used inside a Jupyter notebook
 - Commits might fail if you use the “Run All” feature in Jupyter
+- The library must be imported and used in different cells 
 
 ## Coming Soon
 
