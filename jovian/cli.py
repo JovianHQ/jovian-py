@@ -2,6 +2,7 @@ import argparse
 import webbrowser
 from jovian.utils.credentials import purge_config
 from jovian.utils.clone import clone, pull
+from jovian.utils.install import install
 from jovian._version import __version__
 
 
@@ -36,6 +37,8 @@ def main():
         pull(args.gist)
     elif command == 'version':
         print('Jovian library version: ' + __version__)
+    elif command == 'install':
+        install()
 
 
 if __name__ == '__main__':

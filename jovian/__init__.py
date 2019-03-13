@@ -71,10 +71,19 @@ def commit(notebook_id=None, capture_env=True, filename=None, env_type='conda'):
     # Save & upload environment
     if capture_env:
         log('Capturing environment..')
+
         if env_type == 'conda':
+            # Capture conda environment
             try:
                 upload_conda_env(slug)
             except CondaError as e:
+                log(str(e), error=True)
+
+        elif env_type == 'pip':
+            # Capture pip environment
+            try:
+                upload_pip_env(slug)
+            except Exception as e:
                 log(str(e), error=True)
 
     # Print commit URL

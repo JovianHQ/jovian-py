@@ -10,8 +10,9 @@ if mo:
     verstr = mo.group(1)
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+
+with open("README.md", "rb") as fh:
+    long_description = fh.read().decode('utf-8', errors='ignore')
 
 setuptools.setup(
     name="jovian",
