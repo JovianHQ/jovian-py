@@ -95,7 +95,7 @@ def request_env_name(env_name, env_fname):
             env_name = None
         # Construct the help message with default value
         if env_name:
-            msg = ENV_NAME_MSG + " (" + env_name + "): "
+            msg = ENV_NAME_MSG + " [" + env_name + "]: "
         else:
             msg = ENV_NAME_MSG + ":"
         # Prompt the user for input
@@ -103,6 +103,7 @@ def request_env_name(env_name, env_fname):
             user_input = raw_input(msg)
         except NameError:
             user_input = input(msg)
+        print('')
         # Sanitize the input
         user_input = user_input.strip()
         # Set the final env name
@@ -187,7 +188,7 @@ def install(env_fname=None, env_name=None):
         log('Environment name not provided. Skipping..')
 
     # Construct the command
-    command = conda_bin + ' env update --debug --file "' + \
+    command = conda_bin + ' env update --file "' + \
         env_fname + '" --name "' + env_name + '"'
 
     # Run the command
@@ -253,5 +254,7 @@ def install(env_fname=None, env_name=None):
                 else:
                     # Display a warning that some packages may be missing
                     log(MISSING_MSG)
+    if success:
+        log('Installation successful! Activate the environment to continue.\n')
     # Return failure
     return success

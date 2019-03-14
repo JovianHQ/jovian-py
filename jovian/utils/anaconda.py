@@ -9,15 +9,22 @@ class CondaError(Exception):
     pass
 
 
+CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
+
+
 def get_conda_bin():
     """Get the path to the Anaconda binary"""
-    conda_bin = os.popen('echo $CONDA_EXE').read().strip()
-    if conda_bin == '' or conda_bin == '$CONDA_EXE':
-        if os.popen('conda').read().strip() == '':
-            raise CondaError(
-                'Anaconda binary not found. Please make sure the "conda" command is in your system PATH or the environment variable $CONDA_EXE points to the anaconda binary')
-        else:
-            conda_bin = 'conda'
+    conda_bin = 'conda'
+    # Try executing the `conda` command
+    if os.popen(conda_bin).read().strip() == '':
+        # If it fails, look for $CONDA_EXE
+        conda_exe = os.popen('echo $CONDA_EXE').read().strip()
+        # Check if it returns a valid path
+        if conda_exe != '' and conda_exe != '$CONDA_EXE':
+            # Update binary and execute again
+            conda_bin = conda_exe
+            if os.popen(conda_bin).read().strip() == '':
+                raise CondaError(CONDA_NOT_FOUND)
     logging.info('Anaconda binary: ' + conda_bin)
     return conda_bin
 
