@@ -12,7 +12,7 @@ class CondaError(Exception):
 def get_conda_bin():
     """Get the path to the Anaconda binary"""
     conda_bin = os.popen('echo $CONDA_EXE').read().strip()
-    if conda_bin == '':
+    if conda_bin == '' or conda_bin == '$CONDA_EXE':
         if os.popen('conda').read().strip() == '':
             raise CondaError(
                 'Anaconda binary not found. Please make sure the "conda" command is in your system PATH or the environment variable $CONDA_EXE points to the anaconda binary')

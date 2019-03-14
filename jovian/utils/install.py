@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 import re
 import subprocess
+from time import sleep
 from sys import stderr
 from jovian.utils.anaconda import get_conda_bin
 from jovian.utils.misc import get_platform
@@ -13,6 +14,13 @@ from jovian.utils.logger import log
 YML_PKG_LINE = r'^\s*-\s*([a-zA-Z0-9._-]+)(\s*==?\s*.*)?\s*$'
 
 YML_NAME_LINE = r'^\s*name\s*:\s*([a-zA-Z0-9._-]+)\s*$'
+
+
+blacklist = [
+    'conda',
+    'conda-env',
+    'attrs'
+]
 
 
 def identify_env_file(env_fname):
@@ -53,21 +61,56 @@ def extract_env_name(env_fname):
     return name
 
 
-ENV_NAME_MSG = "Please provide a name for the conda environment "
+def write_env_name(env_name, env_fname):
+    """Overwrite the environement name into the file"""
+    with open(env_fname) as f:
+        # Read the environment file
+        lines = f.read().split('\n')
+        for i, line in enumerate(lines):
+            # Check if it matches the name line pattern
+            res = re.findall(YML_NAME_LINE, line)
+            if len(res) > 0:
+                # Extract the name
+                name = res[0]
+                # Find its poisition in the line
+                idx = line.find(name)
+                if idx != -1:
+                    # Replace the name
+                    lines[i] = line[:idx] + env_name + line[idx+len(name):]
+    # Save env file with new name
+    out_str = '\n'.join(lines)
+    with open(env_fname, 'w') as f:
+        f.write(out_str)
+
+
+ENV_NAME_MSG = "Please provide a name for the conda environment"
 
 
 def request_env_name(env_name, env_fname):
     """Request the user to provide a name for the environment"""
     if env_name is None:
         env_name = extract_env_name(env_fname)
-        msg = ENV_NAME_MSG + "(" + env_name + "): "
+        # Make sure we're not overwriting the base environment
+        if env_name == 'base':
+            env_name = None
+        # Construct the help message with default value
+        if env_name:
+            msg = ENV_NAME_MSG + " (" + env_name + "): "
+        else:
+            msg = ENV_NAME_MSG + ":"
+        # Prompt the user for input
         try:
             user_input = raw_input(msg)
         except NameError:
             user_input = input(msg)
+        # Sanitize the input
         user_input = user_input.strip()
+        # Set the final env name
         if user_input:
             env_name = user_input
+        if env_name:
+            # Write the chosen name to file
+            write_env_name(env_name, env_fname)
     return env_name
 
 
@@ -86,6 +129,21 @@ def check_notfound(error_str):
     return notfound, pkgs
 
 
+def check_unsatisfiable(error_str):
+    """Check if the error output contains ResolvePackageNotFound"""
+    error_lines = error_str.split('\n')
+    unsatisfiable = False
+    pkgs = []
+    for line in error_lines:
+        if 'UnsatisfiableError:' in line:
+            unsatisfiable = True
+        if unsatisfiable:
+            pkg = extract_pkg(line)
+            if pkg:
+                pkgs.append(pkg)
+    return unsatisfiable, pkgs
+
+
 def sanitize_envfile(env_fname, pkgs):
     """Remove the given packages from the environment file"""
     with open(env_fname) as f:
@@ -94,7 +152,7 @@ def sanitize_envfile(env_fname, pkgs):
         for i, line in enumerate(lines):
             # Extract package name (if present)
             pkg = extract_pkg(line)
-            if pkg and pkg in pkgs:
+            if pkg and (pkg in pkgs or pkg in blacklist):
                 # Comment it out
                 lines[i] = "# " + line
     # Save env file with pkgs commented out
@@ -103,8 +161,16 @@ def sanitize_envfile(env_fname, pkgs):
         f.write(out_str)
 
 
+MISSING_MSG = ("WARNING: Some packages listed in the environment definition file could" +
+               " not be installed, possibly because the environment was recorded on a different" +
+               " operating system. As a result, you have to install some packages manually using " +
+               "'conda install <package_name>' if you face errors while executing the code.\n")
+
+
 def install(env_fname=None, env_name=None):
     """Install packages for a cloned gist"""
+    success = True
+
     # Check for conda and get the binary path
     conda_bin = get_conda_bin()
 
@@ -117,9 +183,11 @@ def install(env_fname=None, env_name=None):
 
     # Get the environment name from user input
     env_name = request_env_name(env_name, env_fname)
+    if env_name is None:
+        log('Environment name not provided. Skipping..')
 
     # Construct the command
-    command = conda_bin + ' env update --file "' + \
+    command = conda_bin + ' env update --debug --file "' + \
         env_fname + '" --name "' + env_name + '"'
 
     # Run the command
@@ -131,6 +199,7 @@ def install(env_fname=None, env_name=None):
     _, error_str = install_task.communicate()
     if error_str:
         # Display the error
+        error_str = error_str.decode('utf8', errors='ignore')
         log('Installation failed!', error=True)
         print(error_str, file=stderr)
 
@@ -139,7 +208,8 @@ def install(env_fname=None, env_name=None):
 
         # Sanitize the environment file if required
         if notfound:
-            log('Ignoring unresolved depedencies and trying again\n')
+            log('Ignoring unresolved depedencies and trying again...\n')
+            sleep(1)
             sanitize_envfile(env_fname, pkgs)
 
             # Try to install again
@@ -151,10 +221,37 @@ def install(env_fname=None, env_name=None):
             _, error_str2 = install_task2.communicate()
             if error_str2:
                 # Display the error
+                error_str2 = error_str2.decode('utf8', errors='ignore')
                 log('Installation failed!', error=True)
                 print(error_str2, file=stderr)
-            else:
-                # Return success
-                return True
+
+                # Check for UnsatisfiableError
+                unsatisfiable, pkgs2 = check_unsatisfiable(error_str2)
+
+                # Sanitize the environement file further
+                if unsatisfiable:
+                    log('Ignoring unsatisfiable depedencies and trying again...\n')
+                    sleep(1)
+                    sanitize_envfile(env_fname, pkgs2)
+
+                # Try to install again
+                log('Executing:\n' + command + "\n")
+                install_task3 = subprocess.Popen(
+                    command, shell=True, stderr=subprocess.PIPE)
+
+                # Extract the error (if any)
+                _, error_str3 = install_task3.communicate()
+
+                if error_str3:
+                    # Display the error
+                    error_str3 = error_str3.decode('utf8', errors='ignore')
+                    log('Installation failed!', error=True)
+                    print(error_str3, file=stderr)
+
+                    # Record the failure
+                    success = False
+                else:
+                    # Display a warning that some packages may be missing
+                    log(MISSING_MSG)
     # Return failure
-    return False
+    return success
