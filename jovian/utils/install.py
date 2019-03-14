@@ -170,8 +170,6 @@ MISSING_MSG = ("WARNING: Some packages listed in the environment definition file
 
 def install(env_fname=None, env_name=None):
     """Install packages for a cloned gist"""
-    success = True
-
     # Check for conda and get the binary path
     conda_bin = get_conda_bin()
 
@@ -179,6 +177,7 @@ def install(env_fname=None, env_name=None):
     env_fname = identify_env_file(env_fname)
     if env_fname is None:
         log('Failed to detect a conda environment YML file. Skipping..', error=True)
+        return
     else:
         log('Detected conda environment file: ' + env_fname + "\n")
 
@@ -186,6 +185,7 @@ def install(env_fname=None, env_name=None):
     env_name = request_env_name(env_name, env_fname)
     if env_name is None:
         log('Environment name not provided. Skipping..')
+        return
 
     # Construct the command
     command = conda_bin + ' env update --file "' + \
@@ -198,10 +198,9 @@ def install(env_fname=None, env_name=None):
 
     # Extract the error (if any)
     _, error_str = install_task.communicate()
+    error_str = error_str.decode('utf8', errors='ignore')
+
     if error_str:
-        # Display the error
-        error_str = error_str.decode('utf8', errors='ignore')
-        log('Installation failed!', error=True)
         print(error_str, file=stderr)
 
         # Check for ResolvePackageNotFound error
@@ -209,6 +208,7 @@ def install(env_fname=None, env_name=None):
 
         # Sanitize the environment file if required
         if notfound:
+            log('Installation failed!', error=True)
             log('Ignoring unresolved depedencies and trying again...\n')
             sleep(1)
             sanitize_envfile(env_fname, pkgs)
@@ -220,10 +220,8 @@ def install(env_fname=None, env_name=None):
 
             # Extract the error (if any)
             _, error_str2 = install_task2.communicate()
+            error_str2 = error_str2.decode('utf8', errors='ignore')
             if error_str2:
-                # Display the error
-                error_str2 = error_str2.decode('utf8', errors='ignore')
-                log('Installation failed!', error=True)
                 print(error_str2, file=stderr)
 
                 # Check for UnsatisfiableError
@@ -231,30 +229,21 @@ def install(env_fname=None, env_name=None):
 
                 # Sanitize the environement file further
                 if unsatisfiable:
+                    log('Installation failed!', error=True)
                     log('Ignoring unsatisfiable depedencies and trying again...\n')
                     sleep(1)
                     sanitize_envfile(env_fname, pkgs2)
 
-                # Try to install again
-                log('Executing:\n' + command + "\n")
-                install_task3 = subprocess.Popen(
-                    command, shell=True, stderr=subprocess.PIPE)
+                    # Try to install again
+                    log('Executing:\n' + command + "\n")
+                    install_task3 = subprocess.Popen(
+                        command, shell=True, stderr=subprocess.PIPE)
 
-                # Extract the error (if any)
-                _, error_str3 = install_task3.communicate()
-
-                if error_str3:
-                    # Display the error
+                    # Extract the error (if any)
+                    _, error_str3 = install_task3.communicate()
                     error_str3 = error_str3.decode('utf8', errors='ignore')
-                    log('Installation failed!', error=True)
-                    print(error_str3, file=stderr)
-
-                    # Record the failure
-                    success = False
-                else:
-                    # Display a warning that some packages may be missing
-                    log(MISSING_MSG)
-    if success:
-        log('Installation successful! Activate the environment to continue.\n')
-    # Return failure
-    return success
+                    if error_str3:
+                        print(error_str3, file=stderr)
+                    else:
+                        # Display a warning that some packages may be missing
+                        log(MISSING_MSG)
