@@ -27,9 +27,12 @@ def identify_env_file(env_fname):
     """Find the right conda environment file through trial and errors"""
     if env_fname is None:
         # Look for platform specific environment files (prefer current)
-        platforms = [get_platform()] + [LINUX, WINDOWS, MACOS]
+        platforms = [get_platform()] + ["", LINUX, WINDOWS, MACOS]
         for platform in platforms:
-            expected_fname = 'environment-' + platform + '.yml'
+            if platform == "":
+                expected_fname = 'environment.yml'
+            else:
+                expected_fname = 'environment-' + platform + '.yml'
             if os.path.exists(expected_fname):
                 env_fname = expected_fname
                 break
