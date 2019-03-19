@@ -6,3 +6,5 @@ FILENAME_MSG = 'Failed to detect notebook filename. Please provide the notebook 
 LINUX = 'linux'
 WINDOWS = 'windows'
 MACOS = 'macos'
+
+PLATFORMS = [LINUX, WINDOWS, MACOS]

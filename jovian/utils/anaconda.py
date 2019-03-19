@@ -2,6 +2,8 @@
 import os
 import logging
 from jovian.utils.api import upload_file
+from jovian.utils.misc import get_platform
+from jovian.utils.constants import PLATFORMS
 
 
 class CondaError(Exception):
@@ -32,7 +34,7 @@ def get_conda_bin():
 def get_conda_env_name():
     """Get the name of the active conda environment"""
     env_name = os.popen('echo $CONDA_DEFAULT_ENV').read().strip()
-    if env_name == '':
+    if env_name == '' or env_name == '$CONDA_DEFAULT_ENV':
         env_name = 'base'
     logging.info('Anaconda environment: ' + env_name)
     return env_name
@@ -53,6 +55,19 @@ def read_conda_env(name=None):
 
 def upload_conda_env(gist_slug):
     """Read and save the current Anaconda environment to server"""
-    name = get_conda_env_name()
-    env_str = read_conda_env(name)
-    return upload_file(gist_slug, ('environment.yml', env_str))
+    # Export environment to YML string
+    env_str = read_conda_env(get_conda_env_name())
+
+    # Upload environment.yml
+    upload_file(gist_slug, ('environment.yml', env_str))
+
+    # Check and include existing os-specific files
+    platform = get_platform()
+    for p in PLATFORMS:
+        pfname = 'environment-' + p + '.yml'
+        if p == platform:
+            # Use the new environment for current platform
+            upload_file(gist_slug, (pfname, env_str))
+        elif os.path.exists(pfname):
+            # Reuse old environments for other platforms
+            upload_file(gist_slug, pfname)
