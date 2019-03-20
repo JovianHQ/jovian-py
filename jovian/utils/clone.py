@@ -1,6 +1,6 @@
 import os
 from requests import get
-from jovian.utils.constants import API_URL
+from jovian.utils.constants import API_URL, ISSUES_MSG
 from jovian._version import __version__
 from jovian.utils.logger import log
 from jovian.utils.rcfile import set_notebook_slug, get_rcdata, rcfile_exists
@@ -46,6 +46,25 @@ def get_gist(slug, fresh):
     raise Exception('Failed to retrieve Gist: ' + _pretty(res))
 
 
+def post_clone_msg(title):
+    return """Cloned successfully to '{}'. 
+
+Next steps:
+$ cd {}   # Enter the directory
+$ jovian install     # Install dependencies
+$ jovian activate    # Activate virtual environment
+$ jupyter notebook   # Start Jupyter
+
+Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
+so please make sure you have it installed and added to path. 
+* If you face issues with `jovian install`, try `conda env update`.
+* If you face issues with `jovian activate`, try `conda activate <env_name>` 
+  or `source activate <env_name>` to activate the virtual environment
+
+{}
+""".format(title, title, ISSUES_MSG)
+
+
 def clone(slug, fresh=True):
     """Download the files for a gist"""
     # Download gist metadata
@@ -74,9 +93,9 @@ def clone(slug, fresh=True):
         if fresh and f['filename'].endswith('.ipynb'):
             set_notebook_slug(f['filename'], slug)
 
-    # Print success message and instructions (TODO)
+    # Print success message and instructions
     if fresh:
-        log('Cloned successfully to ' + title)
+        log(post_clone_msg(title))
     else:
         log('Files dowloaded successfully in current directory')
 

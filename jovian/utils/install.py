@@ -5,9 +5,9 @@ import re
 import subprocess
 from time import sleep
 from sys import stderr
-from jovian.utils.anaconda import get_conda_bin
+from jovian.utils.anaconda import get_conda_bin, CONDA_NOT_FOUND
 from jovian.utils.misc import get_platform
-from jovian.utils.constants import LINUX, WINDOWS, MACOS
+from jovian.utils.constants import LINUX, WINDOWS, MACOS, ISSUES_MSG
 from jovian.utils.logger import log
 
 
@@ -187,7 +187,7 @@ def install(env_fname=None, env_name=None):
     # Get the environment name from user input
     env_name = request_env_name(env_name, env_fname)
     if env_name is None:
-        log('Environment name not provided. Skipping..')
+        log('Environment name not provided/detected. Skipping..')
         return
 
     # Construct the command
@@ -250,3 +250,47 @@ def install(env_fname=None, env_name=None):
                     else:
                         # Display a warning that some packages may be missing
                         log(MISSING_MSG)
+
+    # Print beta warning and github link
+    log(ISSUES_MSG)
+
+
+def activate(env_fname=None):
+    """Read the conda environment file and activate the environment"""
+    # Check for conda and get the binary path
+    try:
+        conda_bin = get_conda_bin()
+    except:
+        log(CONDA_NOT_FOUND, error=True)
+        return False
+
+    # Identify the right environment file, and exit if absent
+    env_fname = identify_env_file(env_fname)
+    if env_fname is None:
+        log('Failed to detect a conda environment YML file. Skipping..', error=True)
+        return False
+    else:
+        log('Detected conda environment file: ' + env_fname + "\n")
+
+    # Get the environment name from user input
+    env_name = extract_env_name(env_fname)
+    if env_name is None:
+        log('Environment name not provided/detected. Skipping..')
+        return False
+
+    # Activate the environment
+    command = conda_bin + " activate " + env_name
+    log('Executing:\n' + command + "\n")
+    task = subprocess.Popen(
+        command, shell=True, stderr=subprocess.PIPE)
+
+    # Extract the error (if any)
+    _, error_str = task.communicate()
+    error_str = error_str.decode('utf8', errors='ignore')
+    print(error_str)
+
+    # TODO: Try again with `source` for older versions of conda
+    # Need to check it across platforms
+
+    # Print beta warning and github link
+    log(ISSUES_MSG)
