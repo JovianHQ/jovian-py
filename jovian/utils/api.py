@@ -80,7 +80,7 @@ def get_gist(slug):
                     slug + '": ' + _pretty(res))
 
 
-def create_gist_simple(filename=None, gist_slug=None):
+def create_gist_simple(filename=None, gist_slug=None, secret=False):
     """Upload the current notebook to create a gist"""
     auth_headers = _h()
 
@@ -90,7 +90,7 @@ def create_gist_simple(filename=None, gist_slug=None):
         return upload_file(gist_slug, nb_file)
     else:
         res = post(url=_u('/gist/create'),
-                   data={'public': 1},
+                   data={'public': 0 if secret else 1},
                    files={'files': nb_file},
                    headers=auth_headers)
         if res.status_code == 200:
