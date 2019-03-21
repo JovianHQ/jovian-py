@@ -2,7 +2,6 @@
 import os
 from getpass import getpass
 import json
-from json.decoder import JSONDecodeError
 import stat
 import shutil
 import uuid
@@ -37,7 +36,8 @@ def purge_config():
 
 def purge_creds():
     """Remove the config directory"""
-    return shutil.rmtree(CREDS_PATH, ignore_errors=True)
+    if os.path.isfile(CREDS_PATH):
+        os.remove(CREDS_PATH)
 
 
 def creds_exist():
@@ -50,7 +50,7 @@ def read_creds():
     with open(CREDS_PATH, 'r') as f:
         try:
             return json.load(f)
-        except JSONDecodeError:
+        except ValueError:
             purge_creds()
             return {}
 
