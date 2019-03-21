@@ -3,10 +3,11 @@ from requests import get, post
 from os.path import basename
 from time import sleep
 # from tqdm import tqdm, tqdm_notebook
-from jovian.utils.credentials import read_or_request_key, write_key, CREDS, request_key
+from jovian.utils.credentials import (read_or_request_api_key, write_api_key,
+                                      CREDS, request_api_key, get_guest_key)
 from jovian.utils.logger import log
 from jovian.utils.jupyter import in_notebook, save_notebook, get_notebook_name
-from jovian.utils.constants import API_URL
+from jovian.utils.constants import API_URL, API_KEY
 from jovian._version import __version__
 
 
@@ -40,7 +41,7 @@ def _pretty(res):
     return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
 
 
-def validate_key(key):
+def validate_api_key(key):
     """Validate the API key by making a request to server"""
     res = get(_u('/user/profile'),
               headers={'Authorization': 'Bearer ' + key})
@@ -51,24 +52,26 @@ def validate_key(key):
     raise ApiError(_pretty(res))
 
 
-def get_key():
+def get_api_key():
     """Retrieve and validate the API Key (from memory, config or user input)"""
-    if 'API_KEY' not in CREDS:
-        key, source = read_or_request_key()
-        if not validate_key(key):
+    if API_KEY not in CREDS:
+        key, source = read_or_request_api_key()
+        if not validate_api_key(key):
             log('The current API key is invalid or expired.', error=True)
-            key, source = request_key(), 'request'
-            if not validate_key(key):
+            key, source = request_api_key(), 'request'
+            if not validate_api_key(key):
                 raise ApiError('The API key provided is invalid or expired.')
-        write_key(key, source == 'request')
-    return CREDS['API_KEY']
+        write_api_key(key)
+        return key
+    return CREDS[API_KEY]
 
 
 def _h():
     """Create authorizaiton header with API key"""
-    return {"Authorization": "Bearer " + get_key(),
+    return {"Authorization": "Bearer " + get_api_key(),
             "x-jovian-source": "library",
-            "x-jovian-library-version": __version__}
+            "x-jovian-library-version": __version__,
+            "x-jovian-guest": get_guest_key()}
 
 
 def get_gist(slug):
