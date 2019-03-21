@@ -2,10 +2,14 @@
 import os
 from getpass import getpass
 import json
+from json.decoder import JSONDecodeError
 import stat
 import shutil
+import uuid
+from uuid import UUID
 from jovian.utils.logger import log
-from jovian.utils.constants import WEBAPP_URL
+from jovian.utils.constants import WEBAPP_URL, API_KEY, GUEST_KEY
+
 
 CREDS = {}
 
@@ -31,6 +35,11 @@ def purge_config():
     return shutil.rmtree(CONFIG_DIR, ignore_errors=True)
 
 
+def purge_creds():
+    """Remove the config directory"""
+    return shutil.rmtree(CREDS_PATH, ignore_errors=True)
+
+
 def creds_exist():
     """Check if credentials file exits"""
     return os.path.exists(CREDS_PATH)
@@ -39,35 +48,92 @@ def creds_exist():
 def read_creds():
     """Read the credentials file"""
     with open(CREDS_PATH, 'r') as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except JSONDecodeError:
+            purge_creds()
+            return {}
 
 
-def write_creds(creds):
+def write_creds(creds, update_cache=True):
     """Write the given credentials to file"""
     init_config()
     with open(CREDS_PATH, 'w') as f:
         json.dump(creds, f)
     os.chmod(CREDS_PATH, stat.S_IREAD | stat.S_IWRITE)
 
+    if update_cache:
+        _get_or_init_creds()
 
-def write_key(key, write_to_file=True):
-    """Write the API key to memory, and the credentials file"""
+
+def _get_or_init_creds():
     global CREDS
-    CREDS['API_KEY'] = key
-    if write_to_file:
-        write_creds(CREDS)
+    CREDS = read_creds() if creds_exist() else {}
+    return CREDS
 
 
-def request_key():
+def _write_key(key, key_name):
+    creds = _get_or_init_creds()
+    if key_name in creds and creds[key_name] == key:
+        return
+    else:
+        creds[key_name] = key
+        write_creds(creds)
+
+
+def write_guest_key(key):
+    """Write the GUEST key to memory, and the credentials file"""
+    _write_key(key, GUEST_KEY)
+
+
+def write_api_key(key):
+    """Write the API key to memory, and the credentials file"""
+    _write_key(key, API_KEY)
+
+
+def request_api_key():
     """Ask the user to provide the API key"""
     log("Please enter your API key (from " + WEBAPP_URL + " ):")
     api_key = getpass()
     return api_key
 
 
-def read_or_request_key():
-    """Read credentials file, and ask the user for API Key, if required"""
-    if creds_exist():
-        return read_creds()['API_KEY'], 'read'
+def read_or_request_api_key():
+    """Read credentials file, or ask the user for API Key, if required"""
+    creds = _get_or_init_creds()
+
+    if API_KEY in creds:
+        return creds[API_KEY], 'read'
     else:
-        return request_key(), 'request'
+        return request_api_key(), 'request'
+
+
+def _generate_guest_key():
+    """Generate GUEST key"""
+    return uuid.uuid4().hex
+
+
+def _read_or_generate_guest_key():
+    """Read credentials file, or generate GUEST key, if required"""
+    creds = _get_or_init_creds()
+    return creds[GUEST_KEY] if GUEST_KEY in creds else _generate_guest_key()
+
+
+def _validate_guest_key(key):
+    """Validate GUEST key"""
+    try:
+        val = UUID(key, version=4)
+    except ValueError:
+        return False
+    return val.hex == key
+
+
+def get_guest_key():
+    if GUEST_KEY not in CREDS:
+        key = _read_or_generate_guest_key()
+        if not _validate_guest_key(key):
+            key = _generate_guest_key()
+        write_guest_key(key)
+        return key
+
+    return CREDS[GUEST_KEY]

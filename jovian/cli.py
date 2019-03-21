@@ -1,6 +1,5 @@
 import argparse
 import webbrowser
-from jovian.utils.credentials import purge_config
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install
 from jovian._version import __version__
@@ -11,12 +10,12 @@ def exec_clone(slug):
 
 
 def exec_init():
-    from jovian.utils.api import get_key
-    print('[jovian] Visit https://jvn.io/ to sign up and generate an API key.')
+    from jovian.utils.api import get_api_key
+    from jovian.utils.credentials import get_guest_key
     # webbrowser.open('https://jvn.io/')
-    purge_config()
-    get_key()
-    print('Credentials validated and saved to ~/.jovian/credentials.json.')
+    get_guest_key()
+    get_api_key()
+    print('Initialization finished')
 
 
 def main():

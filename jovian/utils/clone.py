@@ -2,6 +2,7 @@ import os
 from requests import get
 from jovian.utils.constants import API_URL, ISSUES_MSG
 from jovian._version import __version__
+from jovian.utils.credentials import get_guest_key
 from jovian.utils.logger import log
 from jovian.utils.rcfile import set_notebook_slug, get_rcdata, rcfile_exists
 
@@ -35,7 +36,8 @@ def _h(fresh):
     """Create a header to provide library metadata"""
     return {"x-jovian-source": "library",
             "x-jovian-library-version": __version__,
-            "x-jovian-command": "clone" if fresh else "pull"}
+            "x-jovian-command": "clone" if fresh else "pull",
+            "x-jovian-guest": get_guest_key()}
 
 
 def get_gist(slug, fresh):
