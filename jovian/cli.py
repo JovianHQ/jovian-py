@@ -1,7 +1,7 @@
 import argparse
 import webbrowser
 from jovian.utils.clone import clone, pull
-from jovian.utils.install import install
+from jovian.utils.install import install, activate
 from jovian._version import __version__
 
 
@@ -38,6 +38,8 @@ def main():
         print('Jovian library version: ' + __version__)
     elif command == 'install':
         install()
+    elif command == 'activate':
+        activate()
 
 
 if __name__ == '__main__':
