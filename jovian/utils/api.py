@@ -104,7 +104,7 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
 def upload_file(gist_slug, file):
     """Upload an additional file to a gist"""
     if type(file) == str:
-        file = (basename(file), open('file', 'rb'))
+        file = (basename(file), open(file, 'rb'))
     res = post(url=_u('/gist/' + gist_slug + '/upload'),
                files={'files': file}, headers=_h())
     if res.status_code == 200:
