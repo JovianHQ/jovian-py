@@ -98,12 +98,20 @@ def request_api_key():
     return api_key
 
 
+def read_api_key_opt():
+    """Read credentials file, or return None"""
+    creds = _get_or_init_creds()
+    api_key = creds[API_KEY] if API_KEY in creds else None
+
+    return api_key, 'read'
+
+
 def read_or_request_api_key():
     """Read credentials file, or ask the user for API Key, if required"""
-    creds = _get_or_init_creds()
+    api_key, source = read_api_key_opt()
 
-    if API_KEY in creds:
-        return creds[API_KEY], 'read'
+    if api_key is not None:
+        return api_key, source
     else:
         return request_api_key(), 'request'
 
