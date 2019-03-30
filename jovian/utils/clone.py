@@ -68,8 +68,8 @@ Replace <env_name> with the name of your environment (without the '<' & '>')
 Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
 so please make sure you have it installed and added to path. 
 * If you face issues with `jovian install`, try `conda env update`.
-* If you face issues with `jovian activate`, try `conda activate <env_name>` 
-  or `source activate <env_name>` to activate the virtual environment.
+* If you face issues with `conda activate`, try `source activate <env_name>` 
+  or `activate <env_name>` to activate the virtual environment.
 
 {}
 """.format(title, title, ISSUES_MSG)
