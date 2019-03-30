@@ -61,14 +61,15 @@ def post_clone_msg(title):
 Next steps:
 $ cd {}   # Enter the directory
 $ jovian install     # Install dependencies
-$ jovian activate    # Activate virtual environment
+$ conda activate <env_name> # Activate environment
 $ jupyter notebook   # Start Jupyter
 
+Replace <env_name> with the name of your environment (without the '<' & '>')
 Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
 so please make sure you have it installed and added to path. 
 * If you face issues with `jovian install`, try `conda env update`.
 * If you face issues with `jovian activate`, try `conda activate <env_name>` 
-  or `source activate <env_name>` to activate the virtual environment
+  or `source activate <env_name>` to activate the virtual environment.
 
 {}
 """.format(title, title, ISSUES_MSG)
@@ -76,6 +77,9 @@ so please make sure you have it installed and added to path.
 
 def clone(slug, fresh=True):
     """Download the files for a gist"""
+    # Print issues link
+    log(ISSUES_MSG)
+
     # Download gist metadata
     log('Fetching ' + slug + "..")
     gist = get_gist(slug, fresh)
