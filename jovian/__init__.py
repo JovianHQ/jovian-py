@@ -145,7 +145,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             elif os.path.isdir(fname):
                 log('Ignoring directory "' + fname + '"', error=True)
             else:
-                log('Ignoring "' + fname + '" (not found)')
+                log('Ignoring "' + fname + '" (not found)', error=True)
 
     # Print commit URL
     log('Committed successfully! ' + WEBAPP_URL +
