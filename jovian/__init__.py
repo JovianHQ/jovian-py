@@ -1,3 +1,4 @@
+import os
 from jovian._version import __version__
 from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
@@ -13,12 +14,13 @@ set_notebook_name()
 _current_slug = None
 
 
-def commit(secret=False, nb_filename=None, capture_env=True, env_type='conda', notebook_id=None):
+def commit(secret=False, nb_filename=None, files=[], capture_env=True,
+           env_type='conda', notebook_id=None, create_new=None):
     """Save the notebook, capture environment and upload to the cloud for sharing.
 
     In most cases, commit works well with the default arguments. It attempts to 
     1. Save the Jupyter notebook
-    2. Upload the notebook to https://jvn.io
+    2. Upload the notebook (and additional scripts, CSVs etc.) to https://jvn.io 
     3. Capture the python environment (using Anaconda or pip)
     4. Upload the python environment to cloud
 
@@ -39,6 +41,9 @@ def commit(secret=False, nb_filename=None, capture_env=True, env_type='conda', n
             certain environments like Jupyter Lab, the detection may fail and the filename
             needs to be provided using this argument.
 
+        files (array, optional): Any additional scripts (.py files), CSVs that are required to
+            run the notebook. These will be available in the files tab on https://jvn.io .
+
         capture_env (bool, optional): If `True`, the Python environment (python version,
             libraries etc.) are captured and uploaded along with the notebook.
 
@@ -50,6 +55,9 @@ def commit(secret=False, nb_filename=None, capture_env=True, env_type='conda', n
             hosted on https://jvn.io . In most cases, this argument is not required, and the library
             can automatically infer whether you are looking to update an existing notebook or create
             a new one.
+
+        create_new (bool, optional): If set to True, doesn't update the existing notebook on 
+            https://jvn.io (if one is detected). Instead, it creates a new notebook when commit is called.
 
     """
     global _current_slug
@@ -74,7 +82,7 @@ def commit(secret=False, nb_filename=None, capture_env=True, env_type='conda', n
         return
 
     # Check whether to create a new gist, or update an old one
-    if notebook_id is None:
+    if not create_new and notebook_id is None:
         # First preference to the in-memory slug variable
         if _current_slug is not None:
             notebook_id = _current_slug
@@ -122,6 +130,22 @@ def commit(secret=False, nb_filename=None, capture_env=True, env_type='conda', n
                 upload_pip_env(slug)
             except Exception as e:
                 log(str(e), error=True)
+
+    # Upload additional files
+    if files and len(files) > 0:
+        log('Uploading additional files..')
+
+        # Upload each file
+        for fname in files:
+            if os.path.exists(fname) and not os.path.isdir(fname):
+                try:
+                    upload_file(slug, fname)
+                except Exception as e:
+                    log(str(e), error=True)
+            elif os.path.isdir(fname):
+                log('Ignoring directory "' + fname + '"', error=True)
+            else:
+                log('Ignoring "' + fname + '" (not found)')
 
     # Print commit URL
     log('Committed successfully! ' + WEBAPP_URL +

@@ -24,7 +24,7 @@ def _u(path):
 def _msg(res):
     try:
         data = res.json()
-        if 'errors' in data and len(data['errors'] > 0):
+        if 'errors' in data and len(data['errors']) > 0:
             return data['errors'][0]['message']
         if 'message' in data:
             return data['message']

@@ -13,3 +13,4 @@ PLATFORMS = [LINUX, WINDOWS, MACOS]
 
 API_KEY = "API_KEY"
 GUEST_KEY = "GUEST_KEY"
+STORAGE_ALLOWED_EXTENSIONS = tuple('ipynb yml yaml py txt csv'.split())
