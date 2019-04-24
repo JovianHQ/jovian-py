@@ -75,6 +75,13 @@ def _h():
             "x-jovian-guest": get_guest_key()}
 
 
+def _v(version):
+    """Create version query parameter string"""
+    if version is not None:
+        return "?gist_version=" + str(version)
+    return ""
+
+
 def get_gist(slug):
     """Get the metadata for a gist"""
     res = get(url=_u('/gist/' + slug), headers=_h())
@@ -102,24 +109,39 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
         raise ApiError('File upload failed: ' + _pretty(res))
 
 
-def upload_file(gist_slug, file):
+def upload_file(gist_slug, file, version=None):
     """Upload an additional file to a gist"""
     if type(file) == str:
         file = (basename(file), open(file, 'rb'))
-    res = post(url=_u('/gist/' + gist_slug + '/upload'),
+    res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     raise ApiError('File upload failed: ' + _pretty(res))
 
 
-def post_block(gist_slug, version, block, data_type):
-    """Upload metrics, hyperparameters and other information to server"""
-    url = _u('/gist/' + gist_slug + '/data?gist_version=' + version)
-    data = [{"localTimestamp": timestamp_ms(), "data": block,
-             'recordType': data_type}]
-    res = post(url, json=data, headers=_h())
+def post_blocks(blocks, version=None):
+    url = _u('/data/record' + _v(version))
+    res = post(url, json=blocks, headers=_h())
     if res.status_code == 200:
-        return res.json()
+        return res.json()['data']
     else:
-        raise ApiError(f'Data logging failed: ' + _pretty(res))
+        raise ApiError('Data logging failed: ' + _pretty(res))
+
+
+def post_block(data, data_type, version=None):
+    """Upload metrics, hyperparameters and other information to server"""
+    blocks = [{"localTimestamp": timestamp_ms(),
+               "data": data,
+               'recordType': data_type}]
+    return post_blocks(blocks, version)
+
+
+def commit_records(gist_slug, tracking_slugs, version=None):
+    """Associated tracked records with a commit"""
+    url = _u('/data/' + gist_slug + '/commit' + _v(version))
+    res = post(url, json=tracking_slugs, headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    else:
+        raise ApiError('Data logging failed: ' + _pretty(res))

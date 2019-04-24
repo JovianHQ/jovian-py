@@ -1,5 +1,6 @@
 import platform
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
+import time
 
 
 def get_platform():
