@@ -3,7 +3,7 @@ from jovian._version import __version__
 from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
 from jovian.utils.pip import upload_pip_env
-from jovian.utils.api import create_gist_simple, upload_file, get_gist
+from jovian.utils.api import create_gist_simple, upload_file, get_gist, post_block
 from jovian.utils.logger import log
 from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
@@ -12,6 +12,7 @@ from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdat
 set_notebook_name()
 
 _current_slug = None
+_data_blocks = []
 
 
 def commit(secret=False, nb_filename=None, files=[], capture_env=True,
@@ -150,3 +151,19 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
     # Print commit URL
     log('Committed successfully! ' + WEBAPP_URL +
         "/" + owner['username'] + "/" + slug)
+
+
+def log_hyperparams(data):
+    """Record hyperparameters for the current experiment"""
+    global _data_blocks
+    run_id = get_run_id()
+    api.post_block(run_id, data, 'hyperparams')
+    print('[swiftace] Hyperparameters logged.')
+
+
+def log_metrics(data):
+    """Record metrics for the current experiment"""
+    global _data_blocks
+    run_id = get_run_id()
+    api.post_block(run_id, data, 'metrics')
+    print('[swiftace] Metrics logged.')

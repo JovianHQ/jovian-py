@@ -8,6 +8,7 @@ from jovian.utils.credentials import (read_or_request_api_key, write_api_key,
 from jovian.utils.logger import log
 from jovian.utils.jupyter import in_notebook, save_notebook, get_notebook_name
 from jovian.utils.constants import API_URL, API_KEY
+from jovian.utils.misc import timestamp_ms
 from jovian._version import __version__
 
 
@@ -55,7 +56,7 @@ def validate_api_key(key):
 def get_api_key():
     """Retrieve and validate the API Key (from memory, config or user input)"""
     if API_KEY not in CREDS:
-        key, source = read_or_request_api_key()
+        key, _ = read_or_request_api_key()
         if not validate_api_key(key):
             log('The current API key is invalid or expired.', error=True)
             key, source = request_api_key(), 'request'
@@ -110,3 +111,15 @@ def upload_file(gist_slug, file):
     if res.status_code == 200:
         return res.json()['data']
     raise ApiError('File upload failed: ' + _pretty(res))
+
+
+def post_block(gist_slug, version, block, data_type):
+    """Upload metrics, hyperparameters and other information to server"""
+    url = _u('/gist/' + gist_slug + '/data?gist_version=' + version)
+    data = [{"localTimestamp": timestamp_ms(), "data": block,
+             'recordType': data_type}]
+    res = post(url, json=data, headers=_h())
+    if res.status_code == 200:
+        return res.json()
+    else:
+        raise ApiError(f'Data logging failed: ' + _pretty(res))
