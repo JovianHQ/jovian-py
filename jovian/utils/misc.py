@@ -1,5 +1,6 @@
 import platform
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
+import time
 
 
 def get_platform():
@@ -14,3 +15,8 @@ def get_platform():
         return WINDOWS
     elif system == 'Darwin':
         return MACOS
+
+
+def timestamp_ms():
+    """Return the current timestamp (in milliseconds)"""
+    return int(time.time() * 1000)

@@ -8,6 +8,7 @@ from jovian.utils.credentials import (read_or_request_api_key, write_api_key,
 from jovian.utils.logger import log
 from jovian.utils.jupyter import in_notebook, save_notebook, get_notebook_name
 from jovian.utils.constants import API_URL, API_KEY
+from jovian.utils.misc import timestamp_ms
 from jovian._version import __version__
 
 
@@ -55,7 +56,7 @@ def validate_api_key(key):
 def get_api_key():
     """Retrieve and validate the API Key (from memory, config or user input)"""
     if API_KEY not in CREDS:
-        key, source = read_or_request_api_key()
+        key, _ = read_or_request_api_key()
         if not validate_api_key(key):
             log('The current API key is invalid or expired.', error=True)
             key, source = request_api_key(), 'request'
@@ -72,6 +73,13 @@ def _h():
             "x-jovian-source": "library",
             "x-jovian-library-version": __version__,
             "x-jovian-guest": get_guest_key()}
+
+
+def _v(version):
+    """Create version query parameter string"""
+    if version is not None:
+        return "?gist_version=" + str(version)
+    return ""
 
 
 def get_gist(slug):
@@ -101,12 +109,39 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
         raise ApiError('File upload failed: ' + _pretty(res))
 
 
-def upload_file(gist_slug, file):
+def upload_file(gist_slug, file, version=None):
     """Upload an additional file to a gist"""
     if type(file) == str:
         file = (basename(file), open(file, 'rb'))
-    res = post(url=_u('/gist/' + gist_slug + '/upload'),
+    res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     raise ApiError('File upload failed: ' + _pretty(res))
+
+
+def post_blocks(blocks, version=None):
+    url = _u('/data/record' + _v(version))
+    res = post(url, json=blocks, headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    else:
+        raise ApiError('Data logging failed: ' + _pretty(res))
+
+
+def post_block(data, data_type, version=None):
+    """Upload metrics, hyperparameters and other information to server"""
+    blocks = [{"localTimestamp": timestamp_ms(),
+               "data": data,
+               'recordType': data_type}]
+    return post_blocks(blocks, version)
+
+
+def commit_records(gist_slug, tracking_slugs, version=None):
+    """Associated tracked records with a commit"""
+    url = _u('/data/' + gist_slug + '/commit' + _v(version))
+    res = post(url, json=tracking_slugs, headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    else:
+        raise ApiError('Data logging failed: ' + _pretty(res))

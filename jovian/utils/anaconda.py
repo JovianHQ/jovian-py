@@ -53,7 +53,7 @@ def read_conda_env(name=None):
     return env_str
 
 
-def upload_conda_env(gist_slug):
+def upload_conda_env(gist_slug, version=None):
     """Read and save the current Anaconda environment to server"""
     # Export environment to YML string
     env_str = read_conda_env(get_conda_env_name())
@@ -67,7 +67,7 @@ def upload_conda_env(gist_slug):
         pfname = 'environment-' + p + '.yml'
         if p == platform:
             # Use the new environment for current platform
-            upload_file(gist_slug, (pfname, env_str))
+            upload_file(gist_slug, (pfname, env_str), version)
         elif os.path.exists(pfname):
             # Reuse old environments for other platforms
-            upload_file(gist_slug, pfname)
+            upload_file(gist_slug, pfname, version)

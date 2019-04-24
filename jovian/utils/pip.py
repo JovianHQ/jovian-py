@@ -13,6 +13,6 @@ def read_pip_env():
     return deps_str
 
 
-def upload_pip_env(gist_slug):
+def upload_pip_env(gist_slug, version=None):
     """Read and upload the current virtual environment to server"""
-    return upload_file(gist_slug, ('requirements.txt', read_pip_env()))
+    return upload_file(gist_slug, ('requirements.txt', read_pip_env(), version))

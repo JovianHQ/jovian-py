@@ -3,7 +3,7 @@ from jovian._version import __version__
 from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
 from jovian.utils.pip import upload_pip_env
-from jovian.utils.api import create_gist_simple, upload_file, get_gist
+from jovian.utils.api import create_gist_simple, upload_file, get_gist, post_block, commit_records
 from jovian.utils.logger import log
 from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
@@ -12,6 +12,7 @@ from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdat
 set_notebook_name()
 
 _current_slug = None
+_data_blocks = []
 
 
 def commit(secret=False, nb_filename=None, files=[], capture_env=True,
@@ -61,6 +62,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     """
     global _current_slug
+    global _data_blocks
 
     # Check if we're in a Jupyter environment
     if not in_notebook():
@@ -107,7 +109,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         return
 
     # Extract slug and owner from created gist
-    slug, owner = res['slug'], res['owner']
+    slug, owner, version = res['slug'], res['owner'], res['version']
 
     # Set/update the slug information
     _current_slug = slug
@@ -120,14 +122,14 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         if env_type == 'conda':
             # Capture conda environment
             try:
-                upload_conda_env(slug)
+                upload_conda_env(slug, version)
             except CondaError as e:
                 log(str(e), error=True)
 
         elif env_type == 'pip':
             # Capture pip environment
             try:
-                upload_pip_env(slug)
+                upload_pip_env(slug, version)
             except Exception as e:
                 log(str(e), error=True)
 
@@ -139,7 +141,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         for fname in files:
             if os.path.exists(fname) and not os.path.isdir(fname):
                 try:
-                    upload_file(slug, fname)
+                    upload_file(slug, fname, version)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
@@ -147,6 +149,35 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
+    # Record metrics & hyperparameters
+    if len(_data_blocks) > 0:
+        log('Recording metrics & hyperparameters..')
+        commit_records(slug, _data_blocks, version)
+
     # Print commit URL
     log('Committed successfully! ' + WEBAPP_URL +
         "/" + owner['username'] + "/" + slug)
+
+
+def log_hyperparams(data):
+    """Record hyperparameters for the current experiment
+
+    Arguments:
+        data: An dict or an array of dicts to be recorded
+    """
+    global _data_blocks
+    res = post_block(data, 'hyperparams')
+    _data_blocks.append(res['tracking']['trackingSlug'])
+    log('Hypermaters logged.')
+
+
+def log_metrics(data):
+    """Record metrics for the current experiment
+
+    Arguments:
+        data: An dict or an array of dicts to be recorded
+    """
+    global _data_blocks
+    res = post_block(data, 'metrics')
+    _data_blocks.append(res['tracking']['trackingSlug'])
+    log('Metrics logged.')
