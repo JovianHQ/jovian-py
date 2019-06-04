@@ -3,7 +3,8 @@ from jovian._version import __version__
 from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
 from jovian.utils.pip import upload_pip_env
-from jovian.utils.api import create_gist_simple, upload_file, get_gist, post_block, commit_records
+from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
+                              post_block, commit_records)
 from jovian.utils.logger import log
 from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
@@ -93,8 +94,8 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     # Check if the current user can push to this slug
     if notebook_id is not None:
-        gist_meta = get_gist(notebook_id)
-        if not gist_meta['isOwner']:
+        gist_access = get_gist_access(notebook_id)
+        if not gist_access['write']:
             notebook_id = None
 
     # Log whether this is an update or creation
