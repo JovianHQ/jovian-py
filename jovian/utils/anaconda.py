@@ -59,7 +59,7 @@ def upload_conda_env(gist_slug, version=None):
     env_str = read_conda_env(get_conda_env_name())
 
     # Upload environment.yml
-    upload_file(gist_slug, ('environment.yml', env_str))
+    upload_file(gist_slug, ('environment.yml', env_str), version)
 
     # Check and include existing os-specific files
     platform = get_platform()
