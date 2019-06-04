@@ -91,6 +91,15 @@ def get_gist(slug):
                     slug + '": ' + _pretty(res))
 
 
+def get_gist_access(slug):
+    """Get the access permission of a gist"""
+    res = get(url=_u('/gist/' + slug + '/check-access'), headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    raise Exception('Failed to retrieve access permission for notebook "' +
+                    slug + '": ' + _pretty(res))
+
+
 def create_gist_simple(filename=None, gist_slug=None, secret=False):
     """Upload the current notebook to create a gist"""
     auth_headers = _h()
