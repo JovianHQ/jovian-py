@@ -61,6 +61,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         create_new (bool, optional): If set to True, doesn't update the existing notebook on 
             https://jvn.io (if one is detected). Instead, it creates a new notebook when commit is called.
 
+        artifacts (array, optional): Any outputs files or artifacts generated from the modeling processing.
+            This can include model weights/checkpoints, generated CSVs, images etc.
+
     """
     global _current_slug
     global _data_blocks
