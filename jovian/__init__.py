@@ -17,7 +17,7 @@ _data_blocks = []
 
 
 def commit(secret=False, nb_filename=None, files=[], capture_env=True,
-           env_type='conda', notebook_id=None, create_new=None):
+           env_type='conda', notebook_id=None, create_new=None, artifacts=[]):
     """Save the notebook, capture environment and upload to the cloud for sharing.
 
     In most cases, commit works well with the default arguments. It attempts to 
@@ -147,6 +147,23 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
                     log(str(e), error=True)
             elif os.path.isdir(fname):
                 log('Ignoring directory "' + fname + '"', error=True)
+            else:
+                log('Ignoring "' + fname + '" (not found)', error=True)
+
+    # Upload artifacts
+    if artifacts and len(artifacts) > 0:
+        log('Uploading artifacts..')
+
+        # Upload each artifact
+        for fname in artifacts:
+            if os.path.exists(fname) and not os.path.isdir(fname):
+                try:
+                    upload_file(slug, fname, version, artifact=True)
+                except Exception as e:
+                    log(str(e), error=True)
+            elif os.path.isdir(fname):
+                log('Ignoring directory "' + fname +
+                    '". Please include files directly', error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
