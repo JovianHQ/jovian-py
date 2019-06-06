@@ -105,7 +105,13 @@ def request_env_name(env_name, env_fname):
         try:
             user_input = raw_input(msg)
         except NameError:
-            user_input = input(msg)
+            try:
+                user_input = input(msg)
+            except EOFError:
+                if env_name == None:
+                    user_input = ''
+                    env_name == 'base'
+                pass
         print('')
         # Sanitize the input
         user_input = user_input.strip()
