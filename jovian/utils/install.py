@@ -105,7 +105,10 @@ def request_env_name(env_name, env_fname):
         try:
             user_input = raw_input(msg)
         except NameError:
-            user_input = input(msg)
+            try:
+                user_input = input(msg)
+            except EOFError:
+                user_input = ''
         print('')
         # Sanitize the input
         user_input = user_input.strip()
@@ -115,6 +118,8 @@ def request_env_name(env_name, env_fname):
         if env_name:
             # Write the chosen name to file
             write_env_name(env_name, env_fname)
+        else:
+            env_name = 'base'
     return env_name
 
 

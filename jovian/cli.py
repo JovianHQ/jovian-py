@@ -22,6 +22,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('command')
     parser.add_argument('gist', nargs='?')
+    parser.add_argument('-n', '--name')
 
     args = parser.parse_args()
     command = args.command
@@ -37,7 +38,7 @@ def main():
     elif command == 'version':
         print('Jovian library version: ' + __version__)
     elif command == 'install':
-        install()
+        install(env_name=args.name)
     elif command == 'activate':
         activate()
 
