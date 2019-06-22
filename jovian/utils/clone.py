@@ -47,9 +47,17 @@ def _h(fresh):
     return headers
 
 
-def get_gist(slug, fresh):
+def _v(version):
+    """Create version query parameter string"""
+    if version is not None:
+        return "?gist_version=" + str(version)
+    return ""
+
+
+def get_gist(slug, version, fresh):
     """Download a gist"""
-    res = get(url=_u('/gist/' + slug), headers=_h(fresh))
+    url = _u('/gist/' + slug + _v(version))
+    res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve Gist: ' + _pretty(res))
@@ -75,14 +83,15 @@ so please make sure you have it installed and added to path.
 """.format(title, title, ISSUES_MSG)
 
 
-def clone(slug, fresh=True):
+def clone(slug, version=None, fresh=True):
     """Download the files for a gist"""
     # Print issues link
     log(ISSUES_MSG)
 
     # Download gist metadata
-    log('Fetching ' + slug + "..")
-    gist = get_gist(slug, fresh)
+    ver_str = '(version ' + version + ')' if version else ''
+    log('Fetching ' + slug + " " + ver_str + "..")
+    gist = get_gist(slug, version, fresh)
     title = gist['title']
 
     # If fresh clone, create directory
@@ -116,11 +125,11 @@ def clone(slug, fresh=True):
 RCFILE_NOTFOUND = "Could not detect '.jovianrc' file. Make sure you are running 'jovian pull' inside a directory cloned with 'jovian clone'."
 
 
-def pull(slug=None):
+def pull(slug=None, version=None):
     """Get the latest files associated with the current gist"""
     # If a slug is provided, just use that
     if slug:
-        clone(slug, fresh=False)
+        clone(slug, version, fresh=False)
         return
 
     # Check if .jovianrc exists
@@ -132,4 +141,4 @@ def pull(slug=None):
     nbs = get_rcdata()['notebooks']
     for fname in nbs:
         # Get the latest files for each notebook
-        clone(nbs[fname]['slug'], fresh=False)
+        clone(nbs[fname]['slug'], version, fresh=False)
