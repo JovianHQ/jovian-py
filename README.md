@@ -47,7 +47,7 @@ Here's what `jovian.commit` does:
 Once a notebook is uploaded to Jovian, anyone (including you) can download the notebook and it's Python dependencies by running `jovian clone <notebook_id>` command on the Linux/Mac terminal or Windows Command Prompt. Try clicking the 'Clone' button at the top of this page to copy the command (including notebook ID) to clipboard. 
 
 ```
-pip instal jovian --upgrade
+pip install jovian --upgrade
 jovian clone 903a04b17036436b843d70443ef5d7ad
 ```
 
