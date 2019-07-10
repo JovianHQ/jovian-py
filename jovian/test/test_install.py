@@ -3,16 +3,18 @@ import unittest
 from jovian.utils.envfile import (check_notfound, check_unsatisfiable, extract_env_name,
                                   extract_pkg, get_environment_dict, identify_env_file)
 
+FILES_PREFIX = 'jovian/test/resources/'     # change based on which dir you're running the tests in
+# eg: for running only this file, change FILES_PREFIX = 'resources/'
+
 
 class InstallUtilsTest(unittest.TestCase):
 
     def test_identify_env_file(self):
         env_fname = identify_env_file(env_fname=None)
-
-        self.assertIsNone(env_fname)       # no such file in current directory.
+        self.assertEqual(env_fname, 'environment.yml')
 
     def test_get_environment_dict(self):
-        env_filename = 'resources/environment.yml'
+        env_filename = FILES_PREFIX + 'environment.yml'
         expected = {'prefix': '/home/admin/anaconda3/envs/test-env', 'dependencies':
             ['six=1.11.0', 'sqlite'], 'channels': ['defaults'], 'name': 'test-env'}
         environment = get_environment_dict(env_fname=env_filename)
@@ -23,12 +25,12 @@ class InstallUtilsTest(unittest.TestCase):
             get_environment_dict(env_fname='non-existent-file.yml')
 
         # with self.assertRaises(yaml.YAMLError):    # we're printing the exception, not raising it.
-        #     get_environment_dict(env_fname='invalid-yaml-file.yml')
+        #     get_environment_dict(env_fname=FILES_PREFIX + 'invalid-yaml-file.yml')
 
     def test_extract_env_name(self):
-        env_filename = 'resources/environment.yml'
+        env_filename = FILES_PREFIX + 'environment.yml'
         name = extract_env_name(env_fname=env_filename)
-        name2 = extract_env_name(env_fname='resources/empty-yaml-file.yml')
+        name2 = extract_env_name(env_fname=FILES_PREFIX+'empty-yaml-file.yml')
 
         self.assertEqual(name, 'test-env')
         self.assertIsNone(name2)
