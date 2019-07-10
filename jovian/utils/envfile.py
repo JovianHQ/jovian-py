@@ -160,12 +160,11 @@ def remove_packages(dependencies, pkgs):
         if isinstance(dependency, str):
             if dependency not in pkgs and dependency not in blacklist:
                 new_dependencies.append(dependency)
-        elif isinstance(dependency, dict):
-            if dependency.get('pip') and len(dependency['pip']) > 0:
-                new_pip_dependencies = remove_packages(dependencies=dependency['pip'], pkgs=pkgs)
-                new_dependencies.append({
-                    'pip': new_pip_dependencies
-                })
+        elif isinstance(dependency, dict) and dependency.get('pip') and len(dependency['pip']) > 0:
+            new_pip_dependencies = remove_packages(dependencies=dependency['pip'], pkgs=pkgs)
+            new_dependencies.append({
+                'pip': new_pip_dependencies
+            })
     return new_dependencies
 
 
