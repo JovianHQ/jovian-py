@@ -1,0 +1,7 @@
+channels:
+- defaults
+dependencies:
+- six=1.11.0
+- sqlite
+name: test-env
+prefix: /home/admin/anaconda3/envs/test-env

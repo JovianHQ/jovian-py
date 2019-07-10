@@ -137,7 +137,6 @@ def identify_env_file(env_fname):
         # Check for standard environment.yml file
         if os.path.exists('environment.yml'):
             env_fname = 'environment.yml'
-
     return env_fname
 
 
@@ -150,7 +149,7 @@ def extract_pkg(line):
 def extract_env_name(env_fname):
     """Extract the name of the environment from the env file"""
     environment = get_environment_dict(env_fname=env_fname)
-    name = environment.get('name')
+    name = environment.get('name') if environment else None
     return name
 
 
