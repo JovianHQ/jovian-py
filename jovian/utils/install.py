@@ -6,14 +6,40 @@ from sys import stderr
 from jovian.utils.anaconda import get_conda_bin, CONDA_NOT_FOUND
 from jovian.utils.constants import ISSUES_MSG
 from jovian.utils.logger import log
-from jovian.utils.envfile import (check_notfound, check_unsatisfiable, extract_env_name,
+from jovian.utils.envfile import (check_error, check_pip_failed, extract_env_name,
                                   identify_env_file, request_env_name, sanitize_envfile)
 
 
-MISSING_MSG = ("WARNING: Some packages listed in the environment definition file could" +
-               " not be installed, possibly because the environment was recorded on a different" +
-               " operating system. As a result, you have to install some packages manually using " +
-               "'conda install <package_name>' if you face errors while executing the code.\n")
+def run_command(command, env_fname):
+    # Run the command
+    log('Executing:\n' + command + "\n")
+
+    install_task = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE)
+    # Extract the error (if any)
+    _, error_string = install_task.communicate()
+    error_string = error_string.decode('utf8', errors='ignore')
+    if error_string:
+        print(error_string, file=stderr)
+        # Check for errors
+        error, pkgs = check_error(error_string)
+        pip_failed = check_pip_failed(error_string)
+
+        if error:
+            log('Installation failed!', error=True)
+            log('Ignoring ' + error + ' dependencies and trying again...\n')
+            sleep(1)
+            sanitize_envfile(env_fname=env_fname, pkgs=pkgs)
+            run_command(command=command, env_fname=env_fname)
+
+        elif pip_failed:
+            # TODO: Extract env details and run pip subcommand.
+            print('pip failed')
+            return False
+
+    else:
+        # Print beta warning and github link
+        log(ISSUES_MSG)
+        return True
 
 
 def install(env_fname=None, env_name=None):
@@ -39,64 +65,11 @@ def install(env_fname=None, env_name=None):
     command = conda_bin + ' env update --file "' + \
         env_fname + '" --name "' + env_name + '"'
 
-    # Run the command
-    log('Executing:\n' + command + "\n")
-    install_task = subprocess.Popen(
-        command, shell=True, stderr=subprocess.PIPE)
-
-    # Extract the error (if any)
-    _, error_str = install_task.communicate()
-    error_str = error_str.decode('utf8', errors='ignore')
-    if error_str:
-        print(error_str, file=stderr)
-
-        # Check for ResolvePackageNotFound error
-        notfound, pkgs = check_notfound(error_str)
-
-        # Sanitize the environment file if required
-        if notfound:
-            log('Installation failed!', error=True)
-            log('Ignoring unresolved dependencies and trying again...\n')
-            sleep(1)
-            sanitize_envfile(env_fname, pkgs)
-
-            # Try to install again
-            log('Executing:\n' + command + "\n")
-            install_task2 = subprocess.Popen(
-                command, shell=True, stderr=subprocess.PIPE)
-
-            # Extract the error (if any)
-            _, error_str2 = install_task2.communicate()
-            error_str2 = error_str2.decode('utf8', errors='ignore')
-            if error_str2:
-                print(error_str2, file=stderr)
-
-                # Check for UnsatisfiableError
-                unsatisfiable, pkgs2 = check_unsatisfiable(error_str2)
-
-                # Sanitize the environment file further
-                if unsatisfiable:
-                    log('Installation failed!', error=True)
-                    log('Ignoring unsatisfiable depedencies and trying again...\n')
-                    sleep(1)
-                    sanitize_envfile(env_fname, pkgs2)
-
-                    # Try to install again
-                    log('Executing:\n' + command + "\n")
-                    install_task3 = subprocess.Popen(
-                        command, shell=True, stderr=subprocess.PIPE)
-
-                    # Extract the error (if any)
-                    _, error_str3 = install_task3.communicate()
-                    error_str3 = error_str3.decode('utf8', errors='ignore')
-                    if error_str3:
-                        print(error_str3, file=stderr)
-                    else:
-                        # Display a warning that some packages may be missing
-                        log(MISSING_MSG)
-
-    # Print beta warning and github link
-    log(ISSUES_MSG)
+    success = run_command(command=command, env_fname=env_fname)
+    if success:
+        print('Dependencies installed successfully.')
+    else:
+        print('Some pip packages failed to install.')
 
 
 def activate(env_fname=None):

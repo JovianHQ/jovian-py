@@ -2,8 +2,8 @@ import os
 import re
 import yaml
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
+from jovian.utils.logger import log
 from jovian.utils.misc import get_platform
-
 
 YML_PKG_LINE = r'^\s*-\s*([a-zA-Z0-9._-]+)(\s*==?\s*.*)?\s*$'
 
@@ -88,34 +88,37 @@ def request_env_name(env_name, env_fname):
     return env_name
 
 
-def check_notfound(error_str):
-    """Check if the error output contains ResolvePackageNotFound"""
+MISSING_MSG = ("WARNING: Some packages listed in the environment definition file could" +
+               " not be installed, possibly because the environment was recorded on a different" +
+               " operating system. As a result, you have to install some packages manually using " +
+               "'conda install <package_name>' if you face errors while executing the code.\n")
+
+
+def check_error(error_str):
+    """Check if the error output contains ResolvePackageNotFound or UnsatisfiableError"""
     error_lines = error_str.split('\n')
-    notfound = False
+    error = None
     pkgs = []
     for line in error_lines:
         if 'ResolvePackageNotFound:' in line:
-            notfound = True
-        if notfound:
+            error = 'unresolved'
+        elif 'UnsatisfiableError:' in line:
+            error = 'unsatisfiable'
+            log(MISSING_MSG)
+        if error:
             pkg = extract_pkg(line)
             if pkg:
                 pkgs.append(pkg)
-    return notfound, pkgs
+    return error, pkgs
 
 
-def check_unsatisfiable(error_str):
-    """Check if the error output contains ResolvePackageNotFound"""
+def check_pip_failed(error_str):
+    """Check if the error output contains Pip failed message"""
     error_lines = error_str.split('\n')
-    unsatisfiable = False
-    pkgs = []
     for line in error_lines:
-        if 'UnsatisfiableError:' in line:
-            unsatisfiable = True
-        if unsatisfiable:
-            pkg = extract_pkg(line)
-            if pkg:
-                pkgs.append(pkg)
-    return unsatisfiable, pkgs
+        if 'CondaEnvException: Pip failed' in line:
+            return True
+    return False
 
 
 def identify_env_file(env_fname):
