@@ -1,9 +1,9 @@
 import unittest
 # import yaml
-from jovian.utils.envfile import (check_notfound, check_unsatisfiable, extract_env_name,
+from jovian.utils.envfile import (check_error, extract_env_name,
                                   extract_pkg, get_environment_dict, identify_env_file)
 
-FILES_PREFIX = 'jovian/test/resources/'     # change based on which dir you're running the tests in
+FILES_PREFIX = 'jovian/tests/resources/'     # change based on which dir you're running the tests in
 # eg: for running only this file, change FILES_PREFIX = 'resources/'
 
 
@@ -42,27 +42,18 @@ class InstallUtilsTest(unittest.TestCase):
                         - sixx=1.11.0'''
         error_str2 = '''UnsatisfiableError: 
                                 - six=1.91.0'''
-        notfound, pkgs = check_notfound(error_str)
-        notfound2, pkgs2 = check_notfound(error_str2)
+        error_str3 = '''AnyOtherException: 
+                                - six=1.91.0'''
+        error, pkgs = check_error(error_str)
+        error2, pkgs2 = check_error(error_str2)
+        error3, pkgs3 = check_error(error_str3)
 
-        self.assertTrue(notfound)
+        self.assertEqual(error, 'unresolved')
         self.assertListEqual(pkgs, ['sixx=1.11.0'])
-        self.assertFalse(notfound2)
-        self.assertListEqual(pkgs2, [])
-
-    def test_unsatisfiable(self):
-        error_str = '''UnsatisfiableError: 
-                        - six=1.91.0'''
-
-        error_str2 = '''AnyOtherException: 
-                        - six=1.91.0'''
-        unsatisfiable, pkgs = check_unsatisfiable(error_str)
-        unsatisfiable2, pkgs2 = check_unsatisfiable(error_str2)
-
-        self.assertTrue(unsatisfiable)
-        self.assertListEqual(pkgs, ['six=1.91.0'])
-        self.assertFalse(unsatisfiable2, False)
-        self.assertListEqual(pkgs2, [])
+        self.assertEqual(error2, 'unsatisfiable')
+        self.assertListEqual(pkgs2, ['six=1.91.0'])
+        self.assertIsNone(error3)
+        self.assertListEqual(pkgs3, [])
 
     def test_extract_pkg(self):
         lines = [['- six=1.11.0', 'six=1.11.0'], ['sqlite', None], ['', None], ['- six=1.11.0',
