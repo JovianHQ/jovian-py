@@ -45,7 +45,7 @@ def dump_environment_to_yaml_file(env_fname, environment):
 def write_env_name(env_name, env_fname):
     """Overwrite the environment name into the file"""
     environment = get_environment_dict(env_fname=env_fname)
-    if environment:
+    if environment and (not environment.get('name') or environment.get('name') != env_name):
         environment['name'] = env_name
         dump_environment_to_yaml_file(env_fname=env_fname, environment=environment)
 
@@ -150,7 +150,7 @@ def extract_pkg(line):
 def extract_env_name(env_fname):
     """Extract the name of the environment from the env file"""
     environment = get_environment_dict(env_fname=env_fname)
-    name = environment['name'] if environment else None
+    name = environment.get('name')
     return name
 
 
@@ -161,17 +161,18 @@ def remove_packages(dependencies, pkgs):
             if dependency not in pkgs and dependency not in blacklist:
                 new_dependencies.append(dependency)
         elif isinstance(dependency, dict):
-            new_pip_dependencies = remove_packages(dependencies=dependency['pip'], pkgs=pkgs)
-            new_dependencies.append({
-                'pip': new_pip_dependencies
-            })
+            if dependency.get('pip') and len(dependency['pip']) > 0:
+                new_pip_dependencies = remove_packages(dependencies=dependency['pip'], pkgs=pkgs)
+                new_dependencies.append({
+                    'pip': new_pip_dependencies
+                })
     return new_dependencies
 
 
 def sanitize_envfile(env_fname, pkgs):
     """Remove the given packages from the environment file"""
     environment = get_environment_dict(env_fname=env_fname)
-    dependencies = environment['dependencies']
+    dependencies = environment.get('dependencies')
     dependencies = remove_packages(dependencies=dependencies, pkgs=pkgs)
     environment['dependencies'] = dependencies
 
