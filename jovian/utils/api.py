@@ -113,6 +113,8 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
                    data={'public': 0 if secret else 1},
                    files={'files': nb_file},
                    headers=auth_headers)
+        if nb_file[1] and not nb_file[1].closed:
+            nb_file[1].close()
         if res.status_code == 200:
             return res.json()['data']
         raise ApiError('File upload failed: ' + _pretty(res))

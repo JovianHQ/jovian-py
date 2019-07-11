@@ -189,7 +189,7 @@ def log_hyperparams(data):
     global _data_blocks
     res = post_block(data, 'hyperparams')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    log('Hypermaters logged.')
+    log('Hyperparameters logged.')
 
 
 def log_metrics(data):
