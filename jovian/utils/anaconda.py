@@ -59,7 +59,7 @@ def upload_conda_env(gist_slug, version=None):
     env_str = read_conda_env(get_conda_env_name())
 
     # Upload environment.yml
-    upload_file(gist_slug, ('environment.yml', env_str), version)
+    upload_file(gist_slug=gist_slug, file=('environment.yml', env_str), version=version)
 
     # Check and include existing os-specific files
     platform = get_platform()
@@ -67,7 +67,8 @@ def upload_conda_env(gist_slug, version=None):
         pfname = 'environment-' + p + '.yml'
         if p == platform:
             # Use the new environment for current platform
-            upload_file(gist_slug, (pfname, env_str), version)
+            upload_file(gist_slug=gist_slug, file=(pfname, env_str), version=version)
         elif os.path.exists(pfname):
             # Reuse old environments for other platforms
-            upload_file(gist_slug, pfname, version)
+            upload_file(gist_slug=gist_slug, file=pfname, version=version)
+

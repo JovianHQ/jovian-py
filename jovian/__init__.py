@@ -126,14 +126,14 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         if env_type == 'conda':
             # Capture conda environment
             try:
-                upload_conda_env(slug, version)
+                upload_conda_env(gist_slug=slug, version=version)
             except CondaError as e:
                 log(str(e), error=True)
 
         elif env_type == 'pip':
             # Capture pip environment
             try:
-                upload_pip_env(slug, version)
+                upload_pip_env(gist_slug=slug, version=version)
             except Exception as e:
                 log(str(e), error=True)
 
@@ -145,7 +145,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         for fname in files:
             if os.path.exists(fname) and not os.path.isdir(fname):
                 try:
-                    upload_file(slug, fname, version)
+                    upload_file(gist_slug=slug, file=fname, version=version)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
@@ -161,7 +161,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         for fname in artifacts:
             if os.path.exists(fname) and not os.path.isdir(fname):
                 try:
-                    upload_file(slug, fname, version, artifact=True)
+                    upload_file(gist_slug=slug, file=fname, version=version, artifact=True)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
