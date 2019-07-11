@@ -1,7 +1,7 @@
 import unittest
 # import yaml
-from jovian.utils.envfile import (check_error, extract_env_name,
-                                  extract_pkg, get_environment_dict, identify_env_file)
+from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages,
+                                  extract_package_from_line, get_environment_dict, identify_env_file)
 
 FILES_PREFIX = 'jovian/tests/resources/'     # change based on which dir you're running the tests in
 # eg: for running only this file, change FILES_PREFIX = 'resources/'
@@ -15,8 +15,10 @@ class InstallUtilsTest(unittest.TestCase):
 
     def test_get_environment_dict(self):
         env_filename = FILES_PREFIX + 'environment.yml'
-        expected = {'prefix': '/home/admin/anaconda3/envs/test-env', 'dependencies':
-            ['six=1.11.0', 'sqlite'], 'channels': ['defaults'], 'name': 'test-env'}
+        expected = {'prefix': '/home/admin/anaconda3/envs/test-env',
+                    'dependencies': ['six=1.11.0', 'six=1.91.0', 'sqlite', {'pip': ['six==1.11.0',
+                                                                             'sqlite==2.0.0']}],
+                    'channels': ['defaults'], 'name': 'test-env'}
         environment = get_environment_dict(env_fname=env_filename)
 
         self.assertDictEqual(environment, expected)
@@ -34,32 +36,49 @@ class InstallUtilsTest(unittest.TestCase):
 
         self.assertEqual(name, 'test-env')
         self.assertIsNone(name2)
-        with self.assertRaises(FileNotFoundError):    # we're printing error, not raising it.
+        with self.assertRaises(FileNotFoundError):
             extract_env_name(env_fname='non-existent-file.yml')
 
-    def test_check_notfound(self):
+    def test_extract_env_packages(self):
+        env_filename = FILES_PREFIX + 'environment.yml'
+        dep = extract_env_packages(env_fname=env_filename)
+        dep2 = extract_env_packages(env_fname=FILES_PREFIX + 'empty-yaml-file.yml')
+
+        self.assertEqual(dep, ['six=1.11.0', 'six=1.91.0', 'sqlite',
+                               'six==1.11.0', 'sqlite==2.0.0'])
+        self.assertListEqual(dep2, [])
+        with self.assertRaises(FileNotFoundError):
+            extract_env_packages(env_fname='non-existent-file.yml')
+
+    def test_check_error(self):
+        env_filename = FILES_PREFIX + 'environment.yml'
+        packages = extract_env_packages(env_fname=env_filename)
+
         error_str = '''ResolvePackageNotFound: 
-                        - sixx=1.11.0'''
+                        - six=1.11.0'''
         error_str2 = '''UnsatisfiableError: 
                                 - six=1.91.0'''
         error_str3 = '''AnyOtherException: 
                                 - six=1.91.0'''
-        error, pkgs = check_error(error_str)
-        error2, pkgs2 = check_error(error_str2)
-        error3, pkgs3 = check_error(error_str3)
+        error, pkgs = check_error(error_str=error_str, packages=packages)
+        error2, pkgs2 = check_error(error_str=error_str2, packages=packages)
+        error3, pkgs3 = check_error(error_str=error_str3, packages=packages)
 
         self.assertEqual(error, 'unresolved')
-        self.assertListEqual(pkgs, ['sixx=1.11.0'])
+        self.assertListEqual(pkgs, ['six=1.11.0'])
         self.assertEqual(error2, 'unsatisfiable')
         self.assertListEqual(pkgs2, ['six=1.91.0'])
         self.assertIsNone(error3)
         self.assertListEqual(pkgs3, [])
 
-    def test_extract_pkg(self):
-        lines = [['- six=1.11.0', 'six=1.11.0'], ['sqlite', None], ['', None], ['- six=1.11.0',
-                                                                                'six=1.11.0']]
+    def test_extract_package_from_line(self):
+        env_filename = FILES_PREFIX + 'environment.yml'
+        packages = extract_env_packages(env_fname=env_filename)
+
+        lines = [['- six=1.11.0', 'six=1.11.0'], ['sqlite', 'sqlite'], ['', None],
+                 ['- six=1.11.0', 'six=1.11.0'], ['line containing six==1.11.0', 'six==1.11.0']]
         for line in lines:
-            self.assertEqual(extract_pkg(line=line[0]), line[1])
+            self.assertEqual(extract_package_from_line(line=line[0], packages=packages), line[1])
 
 
 if __name__ == '__main__':

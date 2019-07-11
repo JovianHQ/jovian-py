@@ -1,11 +1,8 @@
 import os
-import re
 import yaml
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
 from jovian.utils.logger import log
 from jovian.utils.misc import get_platform
-
-YML_PKG_LINE = r'^\s*-\s*([a-zA-Z0-9._-]+)(\s*==?\s*.*)?\s*$'
 
 blacklist = [
     'conda',
@@ -94,7 +91,7 @@ MISSING_MSG = ("WARNING: Some packages listed in the environment definition file
                "'conda install <package_name>' if you face errors while executing the code.\n")
 
 
-def check_error(error_str):
+def check_error(error_str, packages=list):
     """Check if the error output contains ResolvePackageNotFound or UnsatisfiableError"""
     error_lines = error_str.split('\n')
     error = None
@@ -106,7 +103,7 @@ def check_error(error_str):
             error = 'unsatisfiable'
             log(MISSING_MSG)
         if error:
-            pkg = extract_pkg(line)
+            pkg = extract_package_from_line(line, packages)
             if pkg:
                 pkgs.append(pkg)
     return error, pkgs
@@ -116,7 +113,7 @@ def check_pip_failed(error_str):
     """Check if the error output contains Pip failed message"""
     error_lines = error_str.split('\n')
     for line in error_lines:
-        if 'CondaEnvException: Pip failed' in line:
+        if 'Pip failed' in line:
             return True
     return False
 
@@ -143,10 +140,12 @@ def identify_env_file(env_fname):
     return env_fname
 
 
-def extract_pkg(line):
-    """Extract the name of a package from a YML package line"""
-    res = re.findall(YML_PKG_LINE, line)
-    return res[0][0]+res[0][1] if len(res) > 0 else None
+def extract_package_from_line(line, packages):
+    """Extract the name of a package from an error line"""
+    for p in packages:
+        if p in line.strip():
+            return p
+    return None
 
 
 def extract_env_name(env_fname):
@@ -154,6 +153,35 @@ def extract_env_name(env_fname):
     environment = get_environment_dict(env_fname=env_fname)
     name = environment.get('name') if environment else None
     return name
+
+
+def extract_env_packages(env_fname):
+    """Extract the packages of the environment from the env file"""
+    environment = get_environment_dict(env_fname=env_fname)
+    if not environment:
+        return []
+    dependencies = environment.get('dependencies')
+    return serialize_packages(dependencies=dependencies)
+
+
+def serialize_packages(dependencies):
+    serialized_dependencies = []
+    for i, dependency in enumerate(dependencies):
+        if isinstance(dependency, str):
+            serialized_dependencies.append(dependency)
+        elif isinstance(dependency, dict) and dependency.get('pip') and len(dependency['pip']) > 0:
+            for d in dependency['pip']:
+                serialized_dependencies.append(d)
+    return serialized_dependencies
+
+
+def extract_pip_packages(packages):
+    pip_packages = []
+    for i, package in enumerate(packages):
+        if isinstance(package, dict) and package.get('pip') and len(package['pip']) > 0:
+            for p in package['pip']:
+                pip_packages.append(p)
+    return pip_packages
 
 
 def remove_packages(dependencies, pkgs):
