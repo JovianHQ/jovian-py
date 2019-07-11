@@ -156,11 +156,23 @@ def extract_env_name(env_fname):
 
 
 def extract_env_packages(env_fname):
-    """Extract the packages of the environment from the env file"""
+    """Extract the (iterable) packages of the environment from the env file
+                (including the pip packages in the same list)           """
     environment = get_environment_dict(env_fname=env_fname)
     if not environment:
         return []
     dependencies = environment.get('dependencies')
+    return serialize_packages(dependencies=dependencies)
+
+
+def extract_pip_packages(env_fname):
+    """Extract the pip packages of the environment from the env file"""
+    environment = get_environment_dict(env_fname=env_fname)
+    if not environment:
+        return []
+    dependencies = environment.get('dependencies')
+    if len(dependencies) > 0:
+        dependencies[:] = (d for d in dependencies if isinstance(d, dict) and d.get('pip'))
     return serialize_packages(dependencies=dependencies)
 
 
@@ -173,15 +185,6 @@ def serialize_packages(dependencies):
             for d in dependency['pip']:
                 serialized_dependencies.append(d)
     return serialized_dependencies
-
-
-def extract_pip_packages(packages):
-    pip_packages = []
-    for i, package in enumerate(packages):
-        if isinstance(package, dict) and package.get('pip') and len(package['pip']) > 0:
-            for p in package['pip']:
-                pip_packages.append(p)
-    return pip_packages
 
 
 def remove_packages(dependencies, pkgs):

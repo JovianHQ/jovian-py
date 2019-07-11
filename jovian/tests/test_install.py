@@ -1,7 +1,8 @@
 import unittest
 # import yaml
 from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages,
-                                  extract_package_from_line, get_environment_dict, identify_env_file)
+                                  extract_package_from_line, extract_pip_packages,
+                                  get_environment_dict, identify_env_file)
 
 FILES_PREFIX = 'jovian/tests/resources/'     # change based on which dir you're running the tests in
 # eg: for running only this file, change FILES_PREFIX = 'resources/'
@@ -17,7 +18,7 @@ class InstallUtilsTest(unittest.TestCase):
         env_filename = FILES_PREFIX + 'environment.yml'
         expected = {'prefix': '/home/admin/anaconda3/envs/test-env',
                     'dependencies': ['six=1.11.0', 'six=1.91.0', 'sqlite', {'pip': ['six==1.11.0',
-                                                                             'sqlite==2.0.0']}],
+                                                                            'sqlite==2.0.0']}],
                     'channels': ['defaults'], 'name': 'test-env'}
         environment = get_environment_dict(env_fname=env_filename)
 
@@ -44,8 +45,19 @@ class InstallUtilsTest(unittest.TestCase):
         dep = extract_env_packages(env_fname=env_filename)
         dep2 = extract_env_packages(env_fname=FILES_PREFIX + 'empty-yaml-file.yml')
 
-        self.assertEqual(dep, ['six=1.11.0', 'six=1.91.0', 'sqlite',
-                               'six==1.11.0', 'sqlite==2.0.0'])
+        self.assertListEqual(dep, ['six=1.11.0', 'six=1.91.0', 'sqlite',
+                                   'six==1.11.0', 'sqlite==2.0.0'])
+        self.assertListEqual(dep2, [])
+        with self.assertRaises(FileNotFoundError):
+            extract_env_packages(env_fname='non-existent-file.yml')
+
+    def test_extract_pip_packages(self):
+        env_filename = FILES_PREFIX + 'environment.yml'
+        env_filename2 = FILES_PREFIX + 'empty-yaml-file.yml'
+        dep = extract_pip_packages(env_fname=env_filename)
+        dep2 = extract_pip_packages(env_fname=env_filename2)
+
+        self.assertListEqual(dep, ['six==1.11.0', 'sqlite==2.0.0'])
         self.assertListEqual(dep2, [])
         with self.assertRaises(FileNotFoundError):
             extract_env_packages(env_fname='non-existent-file.yml')

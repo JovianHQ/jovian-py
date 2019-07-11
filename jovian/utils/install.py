@@ -34,7 +34,7 @@ def run_command(command, env_fname, packages):
 
         elif pip_failed:
             # TODO: Extract env details and run pip sub-command.
-            # pip_packages = extract_pip_packages(packages=packages)
+            # pip_packages = extract_pip_packages(env_fname=env_fname)
             return False
     else:
         # Print beta warning and github link
