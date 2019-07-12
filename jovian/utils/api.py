@@ -121,8 +121,6 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
 
 def upload_file(gist_slug, file, version=None, artifact=False):
     """Upload an additional file to a gist"""
-    if type(file) == str:
-        file = (basename(file), open(file, 'rb'))
     data = {'artifact': 'true'} if artifact else {}
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, data=data, headers=_h())
