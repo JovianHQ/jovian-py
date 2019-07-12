@@ -104,7 +104,7 @@ def check_error(error_str, packages=list):
             log(MISSING_MSG)
         if error:
             pkg = extract_package_from_line(line, packages)
-            if pkg:
+            if pkg and pkg not in pkgs:
                 pkgs.append(pkg)
     return error, pkgs
 
@@ -144,6 +144,10 @@ def extract_package_from_line(line, packages):
     """Extract the name of a package from an error line"""
     for p in packages:
         if p in line.strip():
+            return p
+    """if exact version not found in string, look just for package name"""
+    for p in packages:
+        if '=' in p and p.split('=')[0] in line.strip():
             return p
     return None
 

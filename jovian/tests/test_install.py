@@ -17,8 +17,8 @@ class InstallUtilsTest(unittest.TestCase):
     def test_get_environment_dict(self):
         env_filename = FILES_PREFIX + 'environment.yml'
         expected = {'prefix': '/home/admin/anaconda3/envs/test-env',
-                    'dependencies': ['six=1.11.0', 'six=1.91.0', 'sqlite', {'pip': ['six==1.11.0',
-                                                                            'sqlite==2.0.0']}],
+                    'dependencies': ['mixpanel=1.11.0', 'sigmasix=1.91.0', 'sqlite',
+                                     {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
                     'channels': ['defaults'], 'name': 'test-env'}
         environment = get_environment_dict(env_fname=env_filename)
 
@@ -45,7 +45,7 @@ class InstallUtilsTest(unittest.TestCase):
         dep = extract_env_packages(env_fname=env_filename)
         dep2 = extract_env_packages(env_fname=FILES_PREFIX + 'empty-yaml-file.yml')
 
-        self.assertListEqual(dep, ['six=1.11.0', 'six=1.91.0', 'sqlite',
+        self.assertListEqual(dep, ['mixpanel=1.11.0', 'sigmasix=1.91.0', 'sqlite',
                                    'six==1.11.0', 'sqlite==2.0.0'])
         self.assertListEqual(dep2, [])
         with self.assertRaises(FileNotFoundError):
@@ -67,19 +67,19 @@ class InstallUtilsTest(unittest.TestCase):
         packages = extract_env_packages(env_fname=env_filename)
 
         error_str = '''ResolvePackageNotFound: 
-                        - six=1.11.0'''
+                        - mixpanel=1.11.0'''
         error_str2 = '''UnsatisfiableError: 
-                                - six=1.91.0'''
+                                - sigmasix=1.91.0'''
         error_str3 = '''AnyOtherException: 
-                                - six=1.91.0'''
+                                - sigmasix=1.91.0'''
         error, pkgs = check_error(error_str=error_str, packages=packages)
         error2, pkgs2 = check_error(error_str=error_str2, packages=packages)
         error3, pkgs3 = check_error(error_str=error_str3, packages=packages)
 
         self.assertEqual(error, 'unresolved')
-        self.assertListEqual(pkgs, ['six=1.11.0'])
+        self.assertListEqual(pkgs, ['mixpanel=1.11.0'])
         self.assertEqual(error2, 'unsatisfiable')
-        self.assertListEqual(pkgs2, ['six=1.91.0'])
+        self.assertListEqual(pkgs2, ['sigmasix=1.91.0'])
         self.assertIsNone(error3)
         self.assertListEqual(pkgs3, [])
 
@@ -87,8 +87,8 @@ class InstallUtilsTest(unittest.TestCase):
         env_filename = FILES_PREFIX + 'environment.yml'
         packages = extract_env_packages(env_fname=env_filename)
 
-        lines = [['- six=1.11.0', 'six=1.11.0'], ['sqlite', 'sqlite'], ['', None],
-                 ['- six=1.11.0', 'six=1.11.0'], ['line containing six==1.11.0', 'six==1.11.0']]
+        lines = [['- mixpanel=1.11.0', 'mixpanel=1.11.0'], ['sqlite<3x not compatible', 'sqlite'],
+                 ['', None], ['line containing six < 3.0.x', 'six==1.11.0']]
         for line in lines:
             self.assertEqual(extract_package_from_line(line=line[0], packages=packages), line[1])
 

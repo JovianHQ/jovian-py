@@ -1,8 +1,8 @@
 channels:
 - defaults
 dependencies:
-- six=1.11.0
-- six=1.91.0
+- mixpanel=1.11.0
+- sigmasix=1.91.0
 - sqlite
 - pip:
   - six==1.11.0
