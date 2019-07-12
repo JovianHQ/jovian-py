@@ -11,7 +11,8 @@ class CondaError(Exception):
     pass
 
 
-CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
+CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your ' \
+                  'system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
 
 
 def get_conda_bin():
@@ -70,5 +71,7 @@ def upload_conda_env(gist_slug, version=None):
             upload_file(gist_slug=gist_slug, file=(pfname, env_str), version=version)
         elif os.path.exists(pfname):
             # Reuse old environments for other platforms
-            upload_file(gist_slug=gist_slug, file=pfname, version=version)
+            with open(pfname, 'rb') as f:
+                file = (pfname, f)
+                upload_file(gist_slug=gist_slug, file=file, version=version)
 

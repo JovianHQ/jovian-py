@@ -104,20 +104,19 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
     """Upload the current notebook to create a gist"""
     auth_headers = _h()
 
-    nb_file = (filename, open(filename, 'rb'))
-    log('Uploading notebook..')
-    if gist_slug:
-        return upload_file(gist_slug=gist_slug, file=nb_file)
-    else:
-        res = post(url=_u('/gist/create'),
-                   data={'public': 0 if secret else 1},
-                   files={'files': nb_file},
-                   headers=auth_headers)
-        if nb_file[1] and not nb_file[1].closed:
-            nb_file[1].close()
-        if res.status_code == 200:
-            return res.json()['data']
-        raise ApiError('File upload failed: ' + _pretty(res))
+    with open(filename, 'rb') as f:
+        nb_file = (filename, f)
+        log('Uploading notebook..')
+        if gist_slug:
+            return upload_file(gist_slug=gist_slug, file=nb_file)
+        else:
+            res = post(url=_u('/gist/create'),
+                       data={'public': 0 if secret else 1},
+                       files={'files': nb_file},
+                       headers=auth_headers)
+            if res.status_code == 200:
+                return res.json()['data']
+            raise ApiError('File upload failed: ' + _pretty(res))
 
 
 def upload_file(gist_slug, file, version=None, artifact=False):
@@ -127,8 +126,6 @@ def upload_file(gist_slug, file, version=None, artifact=False):
     data = {'artifact': 'true'} if artifact else {}
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, data=data, headers=_h())
-    if file[1] and not file[1].closed:
-        file[1].close()
     if res.status_code == 200:
         return res.json()['data']
     raise ApiError('File upload failed: ' + _pretty(res))
