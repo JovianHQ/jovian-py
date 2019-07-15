@@ -11,10 +11,12 @@ from jovian.utils.envfile import (check_error, check_pip_failed, extract_env_nam
                                   identify_env_file, request_env_name, sanitize_envfile)
 
 
-def run_command(command, env_fname, packages):
+def run_command(command, env_fname, packages, run=1):
     # Run the command
-    log('Executing:\n' + command + "\n")
+    if run > 3:
+        return
 
+    log('Executing:\n' + command + "\n")
     install_task = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE)
     # Extract the error (if any)
     _, error_string = install_task.communicate()
@@ -30,7 +32,7 @@ def run_command(command, env_fname, packages):
             log('Ignoring ' + error + ' dependencies and trying again...\n')
             sleep(1)
             sanitize_envfile(env_fname=env_fname, pkgs=pkgs)
-            run_command(command=command, env_fname=env_fname, packages=packages)
+            return run_command(command=command, env_fname=env_fname, packages=packages, run=run+1)
 
         elif pip_failed:
             # TODO: Extract env details and run pip sub-command.
@@ -67,11 +69,10 @@ def install(env_fname=None, env_name=None):
 
     packages = extract_env_packages(env_fname=env_fname)
     if len(packages) > 0:
-        success = run_command(command=command, env_fname=env_fname, packages=packages)
-        if success:
-            print('Dependencies installed successfully.')
-        else:
+        success = run_command(command=command, env_fname=env_fname, packages=packages, run=1)
+        if not success:
             print('Some pip packages failed to install.')
+            # TODO: Print conda env created success message.
 
 
 def activate(env_fname=None):

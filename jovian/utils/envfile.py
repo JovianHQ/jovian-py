@@ -91,8 +91,10 @@ MISSING_MSG = ("WARNING: Some packages listed in the environment definition file
                "'conda install <package_name>' if you face errors while executing the code.\n")
 
 
-def check_error(error_str, packages=list):
+def check_error(error_str, packages=None):
     """Check if the error output contains ResolvePackageNotFound or UnsatisfiableError"""
+    if not packages:
+        packages = []
     error_lines = error_str.split('\n')
     error = None
     pkgs = []
