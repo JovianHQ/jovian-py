@@ -11,7 +11,8 @@ class CondaError(Exception):
     pass
 
 
-CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
+CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your ' \
+                  'system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
 
 
 def get_conda_bin():
@@ -59,7 +60,7 @@ def upload_conda_env(gist_slug, version=None):
     env_str = read_conda_env(get_conda_env_name())
 
     # Upload environment.yml
-    upload_file(gist_slug, ('environment.yml', env_str), version)
+    upload_file(gist_slug=gist_slug, file=('environment.yml', env_str), version=version)
 
     # Check and include existing os-specific files
     platform = get_platform()
@@ -67,7 +68,10 @@ def upload_conda_env(gist_slug, version=None):
         pfname = 'environment-' + p + '.yml'
         if p == platform:
             # Use the new environment for current platform
-            upload_file(gist_slug, (pfname, env_str), version)
+            upload_file(gist_slug=gist_slug, file=(pfname, env_str), version=version)
         elif os.path.exists(pfname):
             # Reuse old environments for other platforms
-            upload_file(gist_slug, pfname, version)
+            with open(pfname, 'rb') as f:
+                file = (pfname, f)
+                upload_file(gist_slug=gist_slug, file=file, version=version)
+

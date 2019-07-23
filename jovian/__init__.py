@@ -1,4 +1,5 @@
 import os
+from os.path import basename
 from jovian._version import __version__
 from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
@@ -126,14 +127,14 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         if env_type == 'conda':
             # Capture conda environment
             try:
-                upload_conda_env(slug, version)
+                upload_conda_env(gist_slug=slug, version=version)
             except CondaError as e:
                 log(str(e), error=True)
 
         elif env_type == 'pip':
             # Capture pip environment
             try:
-                upload_pip_env(slug, version)
+                upload_pip_env(gist_slug=slug, version=version)
             except Exception as e:
                 log(str(e), error=True)
 
@@ -145,7 +146,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         for fname in files:
             if os.path.exists(fname) and not os.path.isdir(fname):
                 try:
-                    upload_file(slug, fname, version)
+                    with open(fname, 'rb') as f:
+                        file = (basename(fname), f)
+                        upload_file(gist_slug=slug, file=file, version=version)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
@@ -161,7 +164,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         for fname in artifacts:
             if os.path.exists(fname) and not os.path.isdir(fname):
                 try:
-                    upload_file(slug, fname, version, artifact=True)
+                    with open(fname, 'rb') as f:
+                        file = (basename(fname), f)
+                        upload_file(gist_slug=slug, file=file, version=version, artifact=True)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
@@ -189,7 +194,7 @@ def log_hyperparams(data):
     global _data_blocks
     res = post_block(data, 'hyperparams')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    log('Hypermaters logged.')
+    log('Hyperparameters logged.')
 
 
 def log_metrics(data):
