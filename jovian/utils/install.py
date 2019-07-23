@@ -3,7 +3,7 @@ from __future__ import print_function
 import subprocess
 from time import sleep
 from sys import stderr
-from jovian.utils.anaconda import get_conda_bin, CONDA_NOT_FOUND
+from jovian.utils.anaconda import get_conda_bin, CONDA_NOT_FOUND, print_conda_message
 from jovian.utils.constants import ISSUES_MSG
 from jovian.utils.logger import log
 from jovian.utils.envfile import (check_error, check_pip_failed, extract_env_name,
@@ -72,7 +72,7 @@ def install(env_fname=None, env_name=None):
         success = run_command(command=command, env_fname=env_fname, packages=packages, run=1)
         if not success:
             print('Some pip packages failed to install.')
-            # TODO: Print conda env created success message.
+            print_conda_message(env_name=env_name)
 
 
 def activate(env_fname=None):

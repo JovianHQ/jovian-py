@@ -4,6 +4,7 @@ import logging
 from jovian.utils.api import upload_file
 from jovian.utils.misc import get_platform
 from jovian.utils.constants import PLATFORMS
+from jovian.utils.logger import log
 
 
 class CondaError(Exception):
@@ -75,3 +76,17 @@ def upload_conda_env(gist_slug, version=None):
                 file = (pfname, f)
                 upload_file(gist_slug=gist_slug, file=file, version=version)
 
+
+def print_conda_message(env_name):
+    if env_name:
+        message = ("""
+#
+# To activate this environment, use
+#
+#     $ conda activate %s
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+        """) % env_name
+        log(message)
