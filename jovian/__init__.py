@@ -104,9 +104,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     # Log whether this is an update or creation
     if notebook_id is None:
-        log('Creating a new notebook on https://jvn.io')
+        log('Creating a new notebook on ' + WEBAPP_URL)
     else:
-        log('Updating notebook "' + notebook_id + '" on https://jvn.io')
+        log('Updating notebook "' + notebook_id + '" on ' + WEBAPP_URL)
 
     # Upload the notebook & create/update the gist
     res = create_gist_simple(nb_filename, notebook_id, secret)
