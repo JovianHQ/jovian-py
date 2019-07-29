@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/usr/local/anaconda3/envs/jovian/bin/python",
+  "python.pythonPath": "/usr/bin/python3",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,

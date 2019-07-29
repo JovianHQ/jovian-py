@@ -185,7 +185,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         "/" + owner['username'] + "/" + slug)
 
 
-def log_hyperparams(data):
+def log_hyperparams(data, verbose=True):
     """Record hyperparameters for the current experiment
 
     Arguments:
@@ -194,10 +194,11 @@ def log_hyperparams(data):
     global _data_blocks
     res = post_block(data, 'hyperparams')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    log('Hyperparameters logged.')
+    if(verbose):
+        log('Hyperparameters logged.')
 
 
-def log_metrics(data):
+def log_metrics(data, verbose=True):
     """Record metrics for the current experiment
 
     Arguments:
@@ -206,4 +207,5 @@ def log_metrics(data):
     global _data_blocks
     res = post_block(data, 'metrics')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    log('Metrics logged.')
+    if(verbose):
+        log('Metrics logged.')
