@@ -1,6 +1,8 @@
-from fastai.callback import Callback
 from fastai.basic_train import Learner
+from fastai.callback import Callback
+
 from jovian import log_hyperparams, log_metrics
+from jovian.utils.logger import log
 
 
 class JovianFastaiCallback(Callback):
@@ -15,24 +17,24 @@ class JovianFastaiCallback(Callback):
     def __init__(self, learn: Learner, arch_name):
         self.learn = learn
         self.arch_name = arch_name
-        self.hyp_names = ['arch_name', 'epochs', 'batch_size',
-                          'loss_func', 'opt_func', 'weight_decay', 'learning_rate']
         self.met_names = ['epoch', 'train_loss']
-        # existance of validation dataset
+        # existence of validation dataset
         self.valid_set = self.learn.data.valid_dl.items.any()
         if(self.valid_set):
             self.met_names.append('valid_loss')
 
     def on_train_begin(self, **ka):
 
-        hyp_values = [self.arch_name,
-                      ka['n_epochs'],
-                      self.learn.data.batch_size,
-                      str(self.learn.loss_func.func),
-                      str(self.learn.opt_func.func).split("'")[1],
-                      self.learn.wd,
-                      str(self.learn.opt.lr)]
-        log_hyperparams(dict(zip(self.hyp_names, hyp_values)), verbose=False)
+        hyp_dict = {
+            'arch_name': self.arch_name,
+            'epochs': ka['n_epochs'],
+            'batch_size': self.learn.data.batch_size,
+            'loss_func': str(self.learn.loss_func.func),
+            'opt_func': str(self.learn.opt_func.func).split("'")[1],
+            'weight_decay': self.learn.wd,
+            'learning_rate': str(self.learn.opt.lr)
+        }
+        log_hyperparams(hyp_dict, verbose=False)
 
         if(self.valid_set):
             self.met_names.extend(ka['metrics_names'])
@@ -49,6 +51,4 @@ class JovianFastaiCallback(Callback):
 
     def on_train_end(self, **ka):
         if not(self.valid_set):
-            log_metrics({
-                'val_loss, metrics': "won't be calculated in fastai without valid dataset"
-            })
+            log('Metrics are not calculatd in fastai without a validation dataset')
