@@ -9,18 +9,36 @@ Welcome to Jovian!
 .. meta::
    :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
 
-`Jovian`_ is a platform that helps data scientists and ML engineers
+`Jovian`_ is a platform that helps data scientists and ML engineers:
 
-* track & reproduce data science projects
-* collaborate easily with friends/colleagues, and
-* automate repetitive tasks in their day-to-day workflow.
+* Track & reproduce data science projects
+* Collaborate easily with friends/colleagues, and
+* Automate repetitive tasks in their day-to-day workflow.
 
 .. _Jovian: https://www.jvn.io
 
 
 
 Getting Started
-------------------------
+==================================
+
+Learn more about installing Jovian python library and some of the core features of Jovian.
+
+Run this command in your terminal:
+
+.. code-block:: python
+
+  pip install jovian -q --upgrade
+
+
+Index
+==================================
+* :doc:`intro/installation`
+* :doc:`intro/upload-to-jovian`
+* :doc:`intro/reproduce-notebooks`
+* :doc:`intro/development`
+* :doc:`intro/coming-soon`
+
 
 .. toctree::
    :maxdepth: 2
