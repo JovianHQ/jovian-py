@@ -5,7 +5,7 @@ from jovian import log_hyperparams, log_metrics
 from jovian.utils.logger import log
 
 
-class JovianFastaiCallback(Callback):
+class FastaiCallback(Callback):
     """FastAI callback to log hyperparameters and metrics during model training.
 
     Arguments:
