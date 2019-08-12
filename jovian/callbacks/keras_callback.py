@@ -30,6 +30,7 @@ class KerasCallback(Callback):
         met_dict = {
             'epoch': epoch
         }
+        # logs here is a list that contains all the metrics
         for key, value in logs.items():
             logs[key] = round(value, 4)
         met_dict.update(logs)
