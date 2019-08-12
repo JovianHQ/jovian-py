@@ -25,12 +25,16 @@ setuptools.setup(
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://jovian.ai/",
+    url="https://swiftace.ai/",
     packages=setuptools.find_packages(),
-    classifiers=(
+    classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ),
-    install_requires=['requests', 'uuid', 'pyyaml']
+    ],
+    package_data={"jovian": ['jovian_nb_ext/*']},
+    data_files=[("share/jupyter/nbextensions/jovian_nb_ext", ["jovian/jovian_nb_ext/main.js"]),
+                ("etc/jupyter/nbconfig/notebook.d", ["jovian/jovian_nb_ext/jovian_nb_ext.json"])],
+    include_package_data=True,
+    install_requires=['requests', 'uuid', 'pyyaml', 'jupyter']
 )
