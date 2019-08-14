@@ -1,5 +1,7 @@
 import argparse
 import webbrowser
+import os
+
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
 from jovian._version import __version__
@@ -16,6 +18,13 @@ def exec_init():
     get_guest_key()
     get_api_key()
     print('Initialization finished')
+
+
+def nb_ext(enable=True):
+    if enable:
+        os.system("jupyter nbextension enable jovian_nb_ext/main --sys-prefix")
+    else:
+        os.system("jupyter nbextension disable jovian_nb_ext/main --sys-prefix")
 
 
 def main():
@@ -42,6 +51,10 @@ def main():
         install(env_name=args.name)
     elif command == 'activate':
         activate()
+    elif command == 'enable_ext':
+        nb_ext()
+    elif command == 'disable_ext':
+        nb_ext(enable=False)
 
 
 if __name__ == '__main__':

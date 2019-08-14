@@ -36,5 +36,5 @@ setuptools.setup(
     data_files=[("share/jupyter/nbextensions/jovian_nb_ext", ["jovian/jovian_nb_ext/main.js"]),
                 ("etc/jupyter/nbconfig/notebook.d", ["jovian/jovian_nb_ext/jovian_nb_ext.json"])],
     include_package_data=True,
-    install_requires=['requests', 'uuid', 'pyyaml', 'jupyter']
+    install_requires=['requests', 'uuid', 'pyyaml']
 )
