@@ -318,7 +318,7 @@ define([
       Jupyter.notebook.save_checkpoint();
       remove_ext =
         "import os\n" +
-        "os.system('jupyter nbextension disable jovian_nb_ext/main --user')\n";
+        "os.system('jupyter nbextension disable jovian_nb_ext/main --sys-prefix')\n";
       console.log(remove_ext);
       Jupyter.notebook.kernel.execute(remove_ext);
       location.reload();
