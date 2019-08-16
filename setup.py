@@ -25,7 +25,7 @@ setuptools.setup(
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://jvn.io/",
+    url="https://www.jvn.io/",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
