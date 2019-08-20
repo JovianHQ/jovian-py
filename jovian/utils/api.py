@@ -161,6 +161,7 @@ def notify_on_slack(data):
     url = _u('/slack/notify')
     res = post(url, json=data, headers=_h())
     if res.status_code == 200:
-        return res.json()['data']
+        response = res.json()
+        return response.get('data') if not response.get('errors') else response.get('errors')
     else:
         raise ApiError('Slack trigger failed: ' + _pretty(res))

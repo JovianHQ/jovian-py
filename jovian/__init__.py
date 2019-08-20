@@ -223,4 +223,4 @@ def notify(data, verbose=True):
         if res.get('message_sent'):
             log('message_sent:' + str(res.get('message_sent')))
         else:
-            log(str(res.get('error')), error=True)
+            log(str(res.get('message')), error=True)
