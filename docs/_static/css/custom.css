@@ -1,0 +1,64 @@
+@import "theme.css";
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 60px;
+}
+
+ul {
+  margin-left: 3%;
+}
+.wy-side-nav-search > a img.logo,
+.wy-side-nav-search .wy-dropdown > a img.logo {
+  max-width: 50%;
+}
+
+.wy-side-nav-search {
+  /*background color of the top search bar*/
+  background-color: #008cf6;
+}
+
+.wy-nav-side {
+  /* This relates to the entire color of the sidebar */
+  background-color: rgba(221, 221, 221, 0.3);
+}
+
+.wy-menu a:hover {
+  /*background color of text upon hovering*/
+  background: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.on a:hover {
+  background: rgba(221, 221, 221, 0.05);
+}
+
+.wy-menu-vertical li.toctree-l2.current > a {
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.current > a:hover {
+  /*background color of text upon hovering an open list*/
+  background: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.current {
+  /* selected list bg color */
+  background: white;
+}
+
+.wy-menu-vertical a,
+.wy-menu-vertical li.toctree-l1.current > a {
+  /* Text color of toc */
+  /* list on nav bar when not selected */
+  color: #0069d9;
+}
+
+.wy-nav-content-wrap {
+  /* background color of wrap around main content*/
+  background-color: white;
+}
+
+.wy-nav-top {
+  /*color of nav at top when the window is narrow*/
+  background: #008cf6;
+}
