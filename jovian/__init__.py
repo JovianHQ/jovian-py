@@ -5,7 +5,7 @@ from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
 from jovian.utils.pip import upload_pip_env
 from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
-                              post_block, commit_records)
+                              post_block, commit_records, notify_on_slack)
 from jovian.utils.logger import log
 from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
@@ -194,7 +194,7 @@ def log_hyperparams(data, verbose=True):
     global _data_blocks
     res = post_block(data, 'hyperparams')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    if(verbose):
+    if verbose:
         log('Hyperparameters logged.')
 
 
@@ -207,5 +207,20 @@ def log_metrics(data, verbose=True):
     global _data_blocks
     res = post_block(data, 'metrics')
     _data_blocks.append(res['tracking']['trackingSlug'])
-    if(verbose):
+    if verbose:
         log('Metrics logged.')
+
+
+def notify(data, verbose=True):
+    """Sends the data to Slack connected to Jovian account
+
+    Arguments:
+        :param data: A dict or string of dicts to be pushed to Slack
+        :param verbose: Want to see logs in stdout, default=True
+    """
+    res = notify_on_slack(data=data)
+    if verbose:
+        if res.get('message_sent'):
+            log('message_sent:', str(res.get('message_sent')))
+        else:
+            log('error: ', str(res.get('error')))
