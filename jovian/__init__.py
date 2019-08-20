@@ -221,6 +221,6 @@ def notify(data, verbose=True):
     res = notify_on_slack(data=data)
     if verbose:
         if res.get('message_sent'):
-            log('message_sent:', str(res.get('message_sent')))
+            log('message_sent:' + str(res.get('message_sent')))
         else:
-            log('error: ', str(res.get('error')))
+            log(str(res.get('error')), error=True)
