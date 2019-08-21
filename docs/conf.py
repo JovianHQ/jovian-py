@@ -10,9 +10,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+from recommonmark.transform import AutoStructify
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -27,13 +28,15 @@ author = 'Aakash N S, Siddhant Ujjain'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark']
+extensions = ['recommonmark',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.viewcode',
+              'sphinxcontrib.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 source_suffix = ['.rst', '.md']
-
 master_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
@@ -57,3 +60,17 @@ html_style = 'css/custom.css'
 html_logo = 'jovian_favicon.png'
 html_favicon = 'jovian_favicon.png'
 html_icon = 'jovian_favicon.png'
+
+
+# app setup hook
+github_doc_root = ""
+
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'auto_toc_tree_section': 'Contents',
+        'enable_math': False,
+        'enable_inline_math': False,
+        'enable_eval_rst': True
+    }, True)
+    app.add_transform(AutoStructify)

@@ -26,15 +26,11 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
     2. Upload the notebook (and additional scripts, CSVs etc.) to https://jvn.io 
     3. Capture the python environment (using Anaconda or pip)
     4. Upload the python environment to cloud
-
     Capturing the python environment ensures that the notebook can be reproduced and 
-    executed easily using the `jovian` command line tool. For more details, see 
-    https://jvn.io/getting-started . 
+    executed easily using the `jovian` command line tool.
 
-    Issues and bugs can be reported here: https://github.com/swiftace-ai/jovian-py
 
-    Arguments:
-
+    Args:
         secret (bool, optional): Create a secret notebook on https://jvn.io , which is only 
             accessible via the link, and is not visible on the owner's public profile. By default,
             commited notebooks are public and visible on the owner's profile.
@@ -166,7 +162,8 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
                 try:
                     with open(fname, 'rb') as f:
                         file = (basename(fname), f)
-                        upload_file(gist_slug=slug, file=file, version=version, artifact=True)
+                        upload_file(gist_slug=slug, file=file,
+                                    version=version, artifact=True)
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
