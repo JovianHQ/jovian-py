@@ -164,3 +164,20 @@ def notify_on_slack(data):
         return res.json()
     else:
         raise ApiError('Slack trigger failed: ' + _pretty(res))
+
+
+def add_slack():
+    """prints instructions for connecting Slack, if Slack connection is not already present.
+    if Slack is already connected, prints details about the workspace and the channel"""
+    url = _u('/slack/integration_details')
+    res = get(url, headers=_h())
+    if res.status_code == 200:
+        res = res.json()
+        if not res.get('errors'):
+            slack_account = res.get('data').get('slackAccount')
+            log('Slack already connected. \nWorkspace: {}\nConnected Channel: {}'
+                .format(slack_account.get('workspace'), slack_account.get('channel')))
+        else:
+            log(str(res.get('errors')[0].get('message')))
+    else:
+        raise ApiError('Slack trigger failed: ' + _pretty(res))

@@ -1,10 +1,11 @@
 import argparse
-import webbrowser
+# import webbrowser
 import os
 
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
 from jovian._version import __version__
+from jovian.utils.api import add_slack
 
 
 def exec_clone(slug, version):
@@ -55,6 +56,8 @@ def main():
         nb_ext()
     elif command == 'disable_ext':
         nb_ext(enable=False)
+    elif command == 'add-slack':
+        add_slack()
 
 
 if __name__ == '__main__':
