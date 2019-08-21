@@ -157,11 +157,10 @@ def commit_records(gist_slug, tracking_slugs, version=None):
 
 
 def notify_on_slack(data):
-    """Push data to Slack, if slack integrated with jovian account"""
+    """Push data to Slack, if slack is integrated with jovian account"""
     url = _u('/slack/notify')
     res = post(url, json=data, headers=_h())
     if res.status_code == 200:
-        response = res.json()
-        return response.get('data') if not response.get('errors') else response.get('errors')
+        return res.json()
     else:
         raise ApiError('Slack trigger failed: ' + _pretty(res))
