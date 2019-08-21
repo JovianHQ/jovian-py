@@ -19,19 +19,14 @@ _data_blocks = []
 
 def commit(secret=False, nb_filename=None, files=[], capture_env=True,
            env_type='conda', notebook_id=None, create_new=None, artifacts=[]):
-    """Save the notebook, capture environment and upload to the cloud for sharing.
+    """Commits a Jupyter Notebook with its environment to Jovian.
 
-    In most cases, commit works well with the default arguments. It attempts to 
-    1. Save the Jupyter notebook
-    2. Upload the notebook (and additional scripts, CSVs etc.) to https://jvn.io 
-    3. Capture the python environment (using Anaconda or pip)
-    4. Upload the python environment to cloud
-    Capturing the python environment ensures that the notebook can be reproduced and 
-    executed easily using the `jovian` command line tool.
+    Saves the checkpoint of the notebook, capture the required dependencies from the python environment and uploads the notebook, env file, additional files like scripts, csv etc. to https://www.jvn.io . Capturing the python environment ensures that the notebook can be reproduced and 
+    executed easily using the {link to reprodue notebooks}.
 
 
     Args:
-        secret (bool, optional): Create a secret notebook on https://jvn.io , which is only 
+        secret (bool, optional): Create a secret notebook on Jovian , which is only 
             accessible via the link, and is not visible on the owner's public profile. By default,
             commited notebooks are public and visible on the owner's profile.
 
@@ -41,7 +36,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             needs to be provided using this argument.
 
         files (array, optional): Any additional scripts (.py files), CSVs that are required to
-            run the notebook. These will be available in the files tab on https://jvn.io .
+            run the notebook. These will be available in the files tab on Jovian .
 
         capture_env (bool, optional): If `True`, the Python environment (python version,
             libraries etc.) are captured and uploaded along with the notebook.
@@ -51,12 +46,12 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
         notebook_id (string, optional): If you wish to update an existing notebook owned by you,
             you can use this argument to provide the base64 ID (present in the URL) of an notebook 
-            hosted on https://jvn.io . In most cases, this argument is not required, and the library
+            hosted on Jovian . In most cases, this argument is not required, and the library
             can automatically infer whether you are looking to update an existing notebook or create
             a new one.
 
         create_new (bool, optional): If set to True, doesn't update the existing notebook on 
-            https://jvn.io (if one is detected). Instead, it creates a new notebook when commit is called.
+            Jovian (if one is detected). Instead, it creates a new notebook when commit is called.
 
         artifacts (array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.

@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/home/prajwal/anaconda3/envs/docs/bin/python",
+  "python.pythonPath": "/usr/local/anaconda3/envs/jovian/bin/python",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -7,6 +7,5 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/*.pyc": true
-  },
-  "restructuredtext.confPath": "${workspaceFolder}/docs"
+  }
 }

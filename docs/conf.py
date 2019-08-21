@@ -30,12 +30,11 @@ author = 'Aakash N S, Siddhant Ujjain'
 # ones.
 extensions = ['recommonmark',
               'sphinx.ext.autodoc',
-              'sphinx.ext.viewcode',
+              'sphinx.ext.linkcode',
               'sphinxcontrib.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
-
 source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
@@ -62,10 +61,11 @@ html_favicon = 'jovian_favicon.png'
 html_icon = 'jovian_favicon.png'
 
 
+autodoc_default_options = {
+    'special-members': True
+}
+
 # app setup hook
-github_doc_root = ""
-
-
 def setup(app):
     app.add_config_value('recommonmark_config', {
         'auto_toc_tree_section': 'Contents',
@@ -74,3 +74,13 @@ def setup(app):
         'enable_eval_rst': True
     }, True)
     app.add_transform(AutoStructify)
+
+# link to the github source
+def linkcode_resolve(domain, info):
+    if domain != 'py':
+        return None
+    if not info['module']:
+        return None
+    filename = info['module'].replace('.', '/')
+    print(info)
+    return "https://github.com/jvn-io/jovian-py/tree/master/{}.py".format(filename)
