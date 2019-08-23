@@ -9,7 +9,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
 from recommonmark.transform import AutoStructify
 import os
 import sys
@@ -61,12 +61,8 @@ html_favicon = 'jovian_favicon.png'
 html_icon = 'jovian_favicon.png'
 
 
-autodoc_default_options = {
-    'special-members': True
-}
-
-# app setup hook
 def setup(app):
+    # app setup hook
     app.add_config_value('recommonmark_config', {
         'auto_toc_tree_section': 'Contents',
         'enable_math': False,
@@ -75,12 +71,12 @@ def setup(app):
     }, True)
     app.add_transform(AutoStructify)
 
-# link to the github source
+
 def linkcode_resolve(domain, info):
+    # link to the github source
     if domain != 'py':
         return None
     if not info['module']:
         return None
     filename = info['module'].replace('.', '/')
-    print(info)
     return "https://github.com/jvn-io/jovian-py/tree/master/{}.py".format(filename)

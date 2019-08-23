@@ -62,3 +62,10 @@ ul {
   /*color of nav at top when the window is narrow*/
   background: #008cf6;
 }
+
+.sig-param {
+  /*  All the arguements of a function
+      By default all the arguments are too close */
+  padding-left: 5px;
+  padding-right: 2px;
+}

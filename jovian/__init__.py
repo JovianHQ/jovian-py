@@ -22,7 +22,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
     """Commits a Jupyter Notebook with its environment to Jovian.
 
     Saves the checkpoint of the notebook, capture the required dependencies from the python environment and uploads the notebook, env file, additional files like scripts, csv etc. to https://www.jvn.io . Capturing the python environment ensures that the notebook can be reproduced and 
-    executed easily using the {link to reprodue notebooks}.
+    executed easily using the ***{links to reprodue notebooks}.***
 
 
     Args:
@@ -180,8 +180,10 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 def log_hyperparams(data, verbose=True):
     """Record hyperparameters for the current experiment
 
-    Arguments:
-        data: An dict or an array of dicts to be recorded
+    Args:
+        data (dict): A python dict or a array of dicts to be recorded as hyperparmeters.
+
+        verbose (bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False. 
     """
     global _data_blocks
     res = post_block(data, 'hyperparams')
@@ -193,8 +195,10 @@ def log_hyperparams(data, verbose=True):
 def log_metrics(data, verbose=True):
     """Record metrics for the current experiment
 
-    Arguments:
-        data: An dict or an array of dicts to be recorded
+    Args:
+        data (dict): A python dict or a array of dicts to be recorded as metrics.
+
+        verbose (bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False. .
     """
     global _data_blocks
     res = post_block(data, 'metrics')
