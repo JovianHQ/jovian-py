@@ -9,7 +9,7 @@ from jovian.utils.logger import log
 class FastaiCallback(Callback):
     """FastAI callback to log hyperparameters and metrics during model training.
 
-    Arguments:
+    Args:
         learn (Learner): A learner object with which you're fitting your model
 
         arch_name (string): A name for the architecture that you're using 
@@ -44,7 +44,7 @@ class FastaiCallback(Callback):
                       smooth_loss.item()]  # smoothened avg. train loss for the epoch
 
         if self.valid_set:
-            # last_metrics is a list with first elem as valid_loss followed by all 
+            # last_metrics is a list with first elem as valid_loss followed by all
             # the metrics of the learner
             met_values.extend([str(last_metrics[0])] + [i.item()
                                                         for i in last_metrics[1:]])
