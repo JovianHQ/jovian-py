@@ -102,5 +102,5 @@ For feedback, suggestions and feature requests, drop us a line at hello@jvn.io o
 
 ## Development and Testing
 
-To run the tests, run the following command in the project directory  
+To run the tests, run the following command in the project root:  
 `python -m unittest discover` [`-v` for verbose]
