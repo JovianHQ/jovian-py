@@ -68,7 +68,7 @@ def get_api_key():
 
 
 def _h():
-    """Create authorizaiton header with API key"""
+    """Create authorization header with API key"""
     return {"Authorization": "Bearer " + get_api_key(),
             "x-jovian-source": "library",
             "x-jovian-library-version": __version__,

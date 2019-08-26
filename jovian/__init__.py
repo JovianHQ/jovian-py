@@ -28,7 +28,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
     Args:
         secret (bool, optional): Create a secret notebook on Jovian , which is only 
             accessible via the link, and is not visible on the owner's public profile. By default,
-            commited notebooks are public and visible on the owner's profile.
+            committed notebooks are public and visible on the owner's profile.
 
         nb_filename (string, optional): The filename of the jupyter notebook (including 
             the .ipynb extension). This is detected automatically in most cases, but in

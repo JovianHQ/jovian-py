@@ -1,17 +1,13 @@
-.. Jovian documentation master file, created by
-   sphinx-quickstart on Tue Jul 30 17:44:05 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-.. figure:: jovian_favicon.png
-    :width: 70px
-    :height: 71px
-    :align: left
-    :alt: Jovian logo
-
 ###############################
 Welcome to Jovian!
 ###############################
+
+.. figure:: jvn_full_logo.png
+    :align: center
+    :alt: Jovian logo
+    :width: 50%
+
+    ..
 
 .. meta::
    :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
