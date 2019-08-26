@@ -2,19 +2,22 @@
 
 h1 {
   font-size: 30px;
-  margin-bottom: 60px;
 }
 
 ul {
+  /* Indent the side nave bar list*/
   margin-left: 3%;
 }
-.wy-side-nav-search > a img.logo,
-.wy-side-nav-search .wy-dropdown > a img.logo {
-  max-width: 50%;
+
+.wy-side-nav-search > a img.logo {
+  /* Side nav bar logo */
+  background-color: white;
+  border-radius: 10px;
+  max-width: 80%;
 }
 
 .wy-side-nav-search {
-  /*background color of the top search bar*/
+  /* Background color for the search bar along with the logo*/
   background-color: #008cf6;
 }
 
@@ -24,47 +27,44 @@ ul {
 }
 
 .wy-menu a:hover {
-  /*background color of text upon hovering*/
+  /* Background color of text upon hovering on the nav bar list*/
   background: rgba(221, 221, 221, 0.5);
 }
 
-.wy-menu-vertical li.on a:hover {
-  background: rgba(221, 221, 221, 0.05);
-}
-
 .wy-menu-vertical li.toctree-l2.current > a {
+  /* Background color of text selected on a already expanded sub-list */
   background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.current > a:hover {
-  /*background color of text upon hovering an open list*/
+  /* Background color of text upon hovering already expanded sub-list*/
   background: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.current {
-  /* selected list bg color */
+  /* Background color of selected sub-list */
   background: white;
 }
 
 .wy-menu-vertical a,
 .wy-menu-vertical li.toctree-l1.current > a {
-  /* Text color of toc */
-  /* list on nav bar when not selected */
+  /* Text color of toc 
+     List on nav bar when not selected */
   color: #0069d9;
 }
 
 .wy-nav-content-wrap {
-  /* background color of wrap around main content*/
+  /* Background color of wrap around main content */
   background-color: white;
 }
 
 .wy-nav-top {
-  /*color of nav at top when the window is narrow*/
+  /* Color of nav at top when the window is narrow (769px)*/
   background: #008cf6;
 }
 
 .sig-param {
-  /*  All the arguements of a function
+  /*  All the arguments of a function
       By default all the arguments are too close */
   padding-left: 5px;
   padding-right: 2px;

@@ -17,10 +17,10 @@ define([
        * Commits the notebook to Jovian(https://jvn.io).
        *
        * Returns:
-       *  - Commited notebook's link: for successful commit
+       *  - Committed notebook's link: for successful commit
        *  - last line logged: for any other case
        *
-       * Pyhton code uses:
+       * Python code uses:
        *  - jovian.commit()
        */
 
@@ -91,7 +91,7 @@ define([
       Updates the form based on the validation done on the API Key
       - jvn_modal : jQuery Object ref. for the modal
       - shown     : 
-        - true: when modal is alredy open
+        - true: when modal is already open
         - false: when triggered to show a new modal 
      */
     function updateForm(jvn_modal, shown = false) {
@@ -104,7 +104,7 @@ define([
        *  - nil     : Form with a input box(glow in blue).
        *
        * Params:
-       *  - jvn_modal : refrence to jQuery modal object.
+       *  - jvn_modal : reference to jQuery modal object.
        *  - shown     :
        *    - true  : Triggered from a modal(modal already shown).
        *    - false : Triggered from the toolbar button(modal not shown).
@@ -116,7 +116,7 @@ define([
           jvn_modal.find("#text_box").hide();
 
           if (!shown) {
-            jvn_notif.element.show(); // show "commiting to jovain..." on the menubar
+            jvn_notif.element.show(); // show "committing to jovian..." on the menubar
 
             jvnCommit().then(log_data => {
               function copyToClipboard() {
@@ -170,7 +170,7 @@ define([
             return "saved_valid_key";
           }
         } else if (key_status === "invalid") {
-          // show error message and mkae the glow red
+          // show error message and make the glow red
           jvn_modal.find("#text_box").val("");
           jvn_modal.find("#input_div").addClass("has-error");
           jvn_modal.find("#e_label").show();
@@ -205,7 +205,7 @@ define([
        *    - div :
        *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jvn.io)
        *      - input : id: text_box | class: form-control | placeholder: {default_text}
-       *      - label : id: e_label | text: Invalid API key | hidden: by deafult
+       *      - label : id: e_label | text: Invalid API key | hidden: by default
        *
        */
       const form = $("<form/>").addClass("form-horizontal");
@@ -250,7 +250,7 @@ define([
 
     const modalInit = function() {
       /**
-       * Initilizes a dialog modal triggered by the button on the toolbar
+       * Initializes a dialog modal triggered by the button on the toolbar
        *
        * Body: formUI()
        *
@@ -280,7 +280,7 @@ define([
               jvn_modal.data("bs.modal").isShown = false; // Retains the modal
 
               updateForm(jvn_modal, true).then(x => {
-                jvn_modal.data("bs.modal").isShown = true; // Modal can be dissmissed after this
+                jvn_modal.data("bs.modal").isShown = true; // Modal can be dismissed after this
 
                 if (x == "saved_valid_key") {
                   jvn_modal.find(".close").click();
@@ -324,7 +324,7 @@ define([
       location.reload();
     }
     /* 
-      Adding a button for the nbextension in the notebooks's toolbar 
+      Adding a button for the nbextension in the notebook's toolbar 
       */
     const prefix = "Jovian";
     //toolbar button to commit to Jovian
@@ -339,7 +339,7 @@ define([
       prefix
     );
 
-    //toolbar button to remove the jovain extension
+    //toolbar button to remove the jovian extension
     const remove_ext_action = {
       icon: "fa-times",
       help: "Disable jovian ext",
@@ -356,11 +356,11 @@ define([
       remove_ext_name
     ]);
 
-    //adding jovain logo and Commit text next to it
+    //adding jovian logo and Commit text next to it
     $(jvn_btn_grp.find("button")[0])
       .css(
         "background",
-        // jovain logo, encoded to base64
+        // jovian logo, encoded to base64
         " url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAjCAIAAAAMti2GAAABTGlDQ1BpY2MAACjPY2BgUkksKMhhYWBgyM0rKQpyd1KIiIxSYH/IwA6EvAxiDAqJycUFjgEBPkAlDDAaFXy7xsAIoi/rgsw6JTW1SbVewNdipvDVi69EmxjwA66U1OJkIP0HiFOTC4pKGBgYU4Bs5fKSAhC7A8gWKQI6CsieA2KnQ9gbQOwkCPsIWE1IkDOQfQPIVkjOSASawfgDyNZJQhJPR2JD7QUBbpfM4oKcxEqFAGMGqoOS1IoSEO2cX1BZlJmeUaLgCAylVAXPvGQ9HQUjA0NzBgZQmENUfw4EhyWj2BmEWPN9Bgbb/f///9+NEPPaz8CwEaiTaydCTMOCgUGQm4HhxM6CxKJEsBAzEDOlpTEwfFrOwMAbycAgfAGoJ7o4zdgILM/I48TAwHrv///PagwM7JMZGP5O+P//96L///8uBmq+w8BwIA8AFSFl7ghfNBMAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAP8A/wD/oL2nkwAAAAd0SU1FB+MIBgkzIxDC+FwAAANlSURBVEjHtZZNTxtHGMf/M+O3uA5OttgG27UxSmrSppEhRJzKxTckc6nEuQeOfAOuPcIFiS/ByQcUwQfgVGMhgtI3NTah1KwJccB2bNaeeXpYt8QvyGvTzGm1+9+fnvnNPrPDiAifZ9j6JhoShyeyek0AOMOToPjSw/4fdP6dWntZ//CRAGge9tMP9yyied/EwbEsVQmAVHgcEKGHPV6RUg6Mrhm0n28qAgAbx4uYcLTPs1wur62tLS0tbW5u1mq1AYTk36k/i4pzEGF0hD2LiI5AOp1eXV01DGN3dzcSiaRSKatVZ/OyXCMGKMKTcTHu7czrum4YBoB6vV4qlawKqVxT9lia36ZdYHZS2DqLRiqVSiaTPp9vcXExmUxaFfKmqPLnijEQweflT8OiOxOPx7e2tnRdDwaDXq/XKno/LyvXxBkk4dsQD4z0nqKmaZqmdd+/FX1Vo4PjpnntsOFFzCZ6kYnIMAwi4pzb7XbGbj75W13/oau3F4oxKMKYl38TEj1jxWJxeXl5YWFhZWWlUqlYqno/1/xogDMowndh4bvfuwPr9fre3l4ulzs/P280Gp8+6l11qUoHb1sN5rJjdlIwS73dNnqjfzuTp++VWXLwAZ8aFwNib0ETIZOTNXNyhGcRoVnbj/qjLyp0eCJNAy4HZmNiGHBP9C8FWfjQsvGVxr8eG8ZGD7QiZN7I63+XOhEVD9zDFd2FLl6pV39JxkCA28GeT/T/V1hFvz5V+pXiDESIjvJHgf7/CktoqfBzrtlotTdmouK+a0gbneizS/X6VHIGAjwuNjMx5AL2QL86kedlYgykMOnjMd/wNtrQDYlMTjYlADCGmQnxhXN4G23ov0vq14I0F3DkHpuJ3slGG/rwRF5UyNxFHwV4dPRONm7QRhOZnJQKADjH85jNZb+TjRv0yXv1+1nLxkM3S0Ss2pBSmucbIQRr33lb6Gy+eVEhApoKj8dEWLNqI5/Pm2cEv9/vdDo/fWQDQEBY4z9+7zC3pKdh4by9vS8vL9PpdCKRCAQChUJhfX29XC4DmJubc7vdbVEacGxvb3s8Hr/fH4/H/X6/KSEejx8dHXUkB0ZvbGx4PJ7/KhNCTE9P7+zsdCfZoEf3arWayWSy2ayu606nc2pqan5+PhQKdScHRlsf/wCBmeWmRK6m9QAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOS0wOC0wNlQwOTo1MTozNS0wNDowMBKu+PQAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTktMDgtMDZUMDk6NTE6MzUtMDQ6MDBj80BIAAAAAElFTkSuQmCC') no-repeat 5px / 15px 17px"
       )
       .append(
@@ -374,7 +374,7 @@ define([
 
     // Menubar notification when committing
     const jvn_notif = Jupyter.notification_area.widget("jvn");
-    jvn_notif.inner.text("Commiting to Jovian....");
+    jvn_notif.inner.text("Committing to Jovian....");
     jvn_notif.element.attr("disabled", true);
   }
 

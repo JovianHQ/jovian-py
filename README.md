@@ -1,15 +1,14 @@
 # Jovian
 
-[Jovian](www.jvn.io) is a platform that helps data scientists and ML engineers 
+[Jovian](www.jvn.io) is a platform that helps data scientists and ML engineers
 
-* track & reproduce data science projects
-* collaborate easily with friends/colleagues, and
-* automate repetitive tasks in their day-to-day workflow.
-
+- track & reproduce data science projects
+- collaborate easily with friends/colleagues, and
+- automate repetitive tasks in their day-to-day workflow.
 
 ## Uploading your work to Jovian
 
-It's really easy to get started with Jovian! 
+It's really easy to get started with Jovian!
 
 ### Step 1: Install the `jovian` python library
 
@@ -35,16 +34,15 @@ jovian.commit()
 
 Here's what `jovian.commit` does:
 
-* It saves and uploads the Jupyter notebook to your [Jovian](https://jvn.io) account.
-* It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
-* It returns a link that you can use to view and share your notebook with friends or colleagues.
+- It saves and uploads the Jupyter notebook to your [Jovian](https://jvn.io) account.
+- It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
+- It returns a link that you can use to view and share your notebook with friends or colleagues.
 
 **NOTE**: When you run `jovian.commit` for the first time, you'll be asked to provide an API, which you can find on [your Jovian account](https://jvn.io).
 
-
 ## Reproducing uploaded notebooks
 
-Once a notebook is uploaded to Jovian, anyone (including you) can download the notebook and it's Python dependencies by running `jovian clone <notebook_id>` command on the Linux/Mac terminal or Windows Command Prompt. Try clicking the 'Clone' button at the top of this page to copy the command (including notebook ID) to clipboard. 
+Once a notebook is uploaded to Jovian, anyone (including you) can download the notebook and it's Python dependencies by running `jovian clone <notebook_id>` command on the Linux/Mac terminal or Windows Command Prompt. Try clicking the 'Clone' button at the top of this page to copy the command (including notebook ID) to clipboard.
 
 ```
 pip install jovian --upgrade
@@ -76,7 +74,7 @@ Updating existing notebooks is really easy too! Just run `jovian.commit` once ag
 jovian.commit()
 ```
 
-Jovian keeps track of existing notebooks using a `.jovianrc` file next to your notebook. If you don't want to update the current notebook, but create a new notebook instead, simply delete the `.jovianrc` file. Note that if you rename your notebook, Jovian will upload a new notebooko when you commit, instead of updating the old one.
+Jovian keeps track of existing notebooks using a `.jovianrc` file next to your notebook. If you don't want to update the current notebook, but create a new notebook instead, simply delete the `.jovianrc` file. Note that if you rename your notebook, Jovian will upload a new notebook when you commit, instead of updating the old one.
 
 If you run into issues with updating a notebook, or want to replace a notebook in your account using a new/renamed notebook, you can provide the `notebook_id` argument to `jovian.commit`.
 
@@ -93,7 +91,6 @@ cd jovian-demo # Enter cloned directory
 jovian pull    # Pull the latest changes
 ```
 
-
 ## Coming Soon
 
 - Callbacks for Tensorflow, Keras, PyTorch and FastAI to record hyperparameters and metrics automatically
@@ -103,8 +100,7 @@ jovian pull    # Pull the latest changes
 
 For feedback, suggestions and feature requests, drop us a line at hello@jvn.io or create a ticket in the [issues tab](https://github.com/jvn-io/jovian-py/issues) .
 
+## Development and Testing
 
-## Development and Testing   
-To run the tests, run the following command in the project directory    
-`python -m unittest discover`     [`-v` for verbose]
-
+To run the tests, run the following command in the project directory  
+`python -m unittest discover` [`-v` for verbose]
