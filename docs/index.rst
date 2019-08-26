@@ -1,10 +1,13 @@
-.. Jovian documentation master file, created by
-   sphinx-quickstart on Tue Jul 30 17:44:05 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
+###############################
 Welcome to Jovian!
-==================================
+###############################
+
+.. figure:: jvn_full_logo.png
+    :align: center
+    :alt: Jovian logo
+    :width: 50%
+
+    ..
 
 .. meta::
    :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
@@ -30,23 +33,39 @@ Run this command in your terminal:
 
   pip install jovian -q --upgrade
 
-
-Index
-==================================
-* :doc:`intro/installation`
-* :doc:`intro/upload-to-jovian`
-* :doc:`intro/reproduce-notebooks`
-* :doc:`intro/development`
-* :doc:`intro/coming-soon`
-
+.. toctree::
+  Home <self>
+  :hidden:
 
 .. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Getting Started
+  :maxdepth: 2
+  :hidden:
+  :caption: Getting Started
 
-   intro/installation
-   intro/upload-to-jovian
-   intro/reproduce-notebooks
-   intro/development
-   intro/coming-soon
+  intro/installation
+  intro/upload-to-jovian
+  intro/reproduce-notebooks
+  intro/development
+  intro/coming-soon
+
+.. toctree::
+  :caption: Jovian
+  :hidden:
+
+  jvn/commit
+  jvn/logger
+  jvn/cli
+
+.. toctree::
+  :caption: Jupyter Notebook Extension
+  :hidden:
+
+  nbext/commit
+  nbext/disable
+
+.. toctree::
+  :caption: Callbacks
+  :hidden:
+
+  callbacks/fastai
+  callbacks/keras

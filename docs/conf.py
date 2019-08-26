@@ -1,58 +1,59 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
+import os
+import sys
 
-# -- Path setup --------------------------------------------------------------
+from recommonmark.transform import AutoStructify
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
-import sphinx_rtd_theme
-
-
-# -- Project information -----------------------------------------------------
+sys.path.insert(0, os.path.abspath('../')) # source path to access the module 
 
 project = 'Jovian'
 copyright = '2019, SwiftAce Inc'
 author = 'Aakash N S, Siddhant Ujjain'
 
-
-# -- General configuration ---------------------------------------------------
-
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-extensions = ['recommonmark']
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-
-source_suffix = ['.rst', '.md']
+extensions = ['recommonmark', # to use .md along with .rst
+              'sphinx.ext.autodoc', # import doc from docstrings
+              'sphinx.ext.linkcode', # linking the source code on github
+              'sphinxcontrib.napoleon'] # to support Google style docstrings for autdoc
 
 master_doc = 'index'
+source_suffix = ['.rst', '.md']
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
-# -- Options for HTML output -------------------------------------------------
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
 html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_style = 'css/custom.css' # adding some custom styles on the theme
+
+html_logo = 'jvn_full_logo.png'
+html_theme_options = {
+    'logo_only' : True # to display only logo on the side nav bar
+}
+
+html_icon = 'jovian_favicon.png' # icon next to title on the browser's tab
+
+def setup(app):
+    """Enables to embed reStructuredText(rst) in a markdown(.md)
+    
+    https://recommonmark.readthedocs.io/en/latest/auto_structify.html#embed-restructuredtext
+    """
+
+    app.add_config_value('recommonmark_config', {
+        'auto_toc_tree_section': 'Contents',
+        'enable_math': False,
+        'enable_inline_math': False,
+        'enable_eval_rst': True
+    }, True)
+    app.add_transform(AutoStructify)
+
+def linkcode_resolve(domain, info):
+    """To provide github source link for the methods
+    
+    https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html
+    """
+
+    if domain != 'py':
+        return None
+    if not info['module']:
+        return None
+    filename = info['module'].replace('.', '/')
+    return "https://github.com/jvn-io/jovian-py/tree/master/{}.py".format(filename)

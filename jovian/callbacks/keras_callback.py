@@ -7,7 +7,7 @@ from jovian import log_hyperparams, log_metrics
 class KerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
-    Arguments:
+    Args:
         arch_name :  A name for the architecture that you're using
     """
 

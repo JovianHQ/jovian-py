@@ -74,7 +74,7 @@ Updating existing notebooks is really easy too! Just run `jovian.commit` once ag
 jovian.commit()
 ```
 
-Jovian keeps track of existing notebooks using a `.jovianrc` file next to your notebook. If you don't want to update the current notebook, but create a new notebook instead, simply delete the `.jovianrc` file. Note that if you rename your notebook, Jovian will upload a new notebooko when you commit, instead of updating the old one.
+Jovian keeps track of existing notebooks using a `.jovianrc` file next to your notebook. If you don't want to update the current notebook, but create a new notebook instead, simply delete the `.jovianrc` file. Note that if you rename your notebook, Jovian will upload a new notebook when you commit, instead of updating the old one.
 
 If you run into issues with updating a notebook, or want to replace a notebook in your account using a new/renamed notebook, you can provide the `notebook_id` argument to `jovian.commit`.
 
