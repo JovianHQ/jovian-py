@@ -8,18 +8,19 @@ from jovian.utils.logger import log
 
 class FastaiCallback(Callback):
     """Fastai callback to automatically log hyperparameters and metrics.
- 
+
     Args:
         learn (Learner): A learner object reference of your current model.
 
         arch_name (string): A name for the model you're training. 
-    
-    .. code-block::
 
-        from jovian.callbacks.fastai_callback import FastaiCallback
+    Example
+        .. code-block::
 
-        jvn_cb = FastaiCallback(learn, 'res18')
-        learn.fit_one_cycle(5, callbacks = jvn_cb)
+            from jovian.callbacks.fastai_callback import FastaiCallback
+
+            jvn_cb = FastaiCallback(learn, 'res18')
+            learn.fit_one_cycle(5, callbacks = jvn_cb)
 
     .. admonition:: Tutorial
 

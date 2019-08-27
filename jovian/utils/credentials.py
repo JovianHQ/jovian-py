@@ -94,7 +94,7 @@ def write_api_key(key):
 def request_api_key():
     """Ask the user to provide the API key"""
     log("Please enter your API key (from " + WEBAPP_URL + " ):")
-    api_key = getpass()
+    api_key = getpass(prompt="API Key:")
     return api_key
 
 

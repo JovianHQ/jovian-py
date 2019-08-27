@@ -12,8 +12,8 @@ ul {
 .wy-side-nav-search > a img.logo {
   /* Side nav bar logo */
   background-color: white;
-  border-radius: 10px;
-  max-width: 80%;
+  border-radius: 5px;
+  max-width: 50%;
 }
 
 .wy-side-nav-search {
