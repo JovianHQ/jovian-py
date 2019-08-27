@@ -51,9 +51,9 @@ def main():
         install(env_name=args.name)
     elif command == 'activate':
         activate()
-    elif command == 'enable_ext':
+    elif command == 'enable-ext':
         nb_ext()
-    elif command == 'disable_ext':
+    elif command == 'disable-ext':
         nb_ext(enable=False)
 
 

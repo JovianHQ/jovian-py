@@ -30,7 +30,7 @@ html_theme_options = {
     'logo_only': True  # to display only logo on the side nav bar
 }
 
-html_icon = 'jovian_favicon.png'  # icon next to title on the browser's tab
+html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
 
 
 def setup(app):

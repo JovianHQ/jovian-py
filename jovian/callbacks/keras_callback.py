@@ -9,20 +9,21 @@ class KerasCallback(Callback):
 
     Args:
         arch_name (string):  A name for the model you’re training.
-    
-    .. code-block::
 
-        from jovian.callbacks.keras_callback import KerasCallback
+    Example
+        .. code-block::
 
-        jvn_cb = KerasCallback('resnet18')
-        model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
-    
+            from jovian.callbacks.keras_callback import KerasCallback
+
+            jvn_cb = KerasCallback('resnet18')
+            model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
+
     .. admonition:: Tutorial
 
         Visit `this`_ for a detailed example on using the fastai callback, also visit the *Records* tab
         to see all the logs of that notebook logged by the callback.
     .. _this: https://jvn.io/PrajwalPrashanth/34fd4e72905e460db2d16aafab285537
-        
+
     """
 
     def __init__(self, arch_name: str):
