@@ -12,7 +12,7 @@ author = 'Aakash N S, Siddhant Ujjain'
 extensions = ['recommonmark',  # to use .md along with .rst
               'sphinx.ext.autodoc',  # import doc from docstrings
               'sphinx.ext.linkcode',  # linking the source code on github
-              'sphinxcontrib.napoleon']  # to support Google style docstrings for autdoc
+              'sphinxcontrib.napoleon']  # to support Google style docstrings for autodoc
 
 master_doc = 'index'
 source_suffix = ['.rst', '.md']
