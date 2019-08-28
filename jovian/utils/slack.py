@@ -3,10 +3,13 @@ from requests import get
 from jovian.utils.constants import API_URL
 from jovian.utils.credentials import get_guest_key, read_api_key_opt
 from jovian.utils.logger import log
+from jovian._version import __version__
+
 
 class ApiError(Exception):
     """Error class for web API related Exceptions"""
     pass
+
 
 def _u(path):
     """Make a URL from the path"""
@@ -33,13 +36,13 @@ def _pretty(res):
     return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
 
 
-def _h(fresh):
+def _h():
     """Create a header to provide library metadata"""
     api_key, _ = read_api_key_opt()
 
     headers = {"x-jovian-source": "library",
                "x-jovian-library-version": __version__,
-               "x-jovian-command": "clone" if fresh else "pull",
+               "x-jovian-command": "add-slack",
                "x-jovian-guest": get_guest_key()}
 
     if api_key is not None:
