@@ -3,8 +3,8 @@ import os
 
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
-from jovian._version import __version__
 from jovian.utils.slack import add_slack
+from jovian._version import __version__
 
 
 def exec_clone(slug, version):
