@@ -156,7 +156,7 @@ def commit_records(gist_slug, tracking_slugs, version=None):
         raise ApiError('Data logging failed: ' + _pretty(res))
 
 
-def notify_on_slack(data):
+def post_slack_message(data):
     """Push data to Slack, if slack is integrated with jovian account"""
     url = _u('/slack/notify')
     res = post(url, json=data, headers=_h())
@@ -165,19 +165,3 @@ def notify_on_slack(data):
     else:
         raise ApiError('Slack trigger failed: ' + _pretty(res))
 
-
-def add_slack():
-    """prints instructions for connecting Slack, if Slack connection is not already present.
-    if Slack is already connected, prints details about the workspace and the channel"""
-    url = _u('/slack/integration_details')
-    res = get(url, headers=_h())
-    if res.status_code == 200:
-        res = res.json()
-        if not res.get('errors'):
-            slack_account = res.get('data').get('slackAccount')
-            log('Slack already connected. \nWorkspace: {}\nConnected Channel: {}'
-                .format(slack_account.get('workspace'), slack_account.get('channel')))
-        else:
-            log(str(res.get('errors')[0].get('message')))
-    else:
-        raise ApiError('Slack trigger failed: ' + _pretty(res))
