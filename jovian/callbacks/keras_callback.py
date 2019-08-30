@@ -8,10 +8,25 @@ class KerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
     Args:
-        arch_name :  A name for the architecture that you're using
+        arch_name (string):  A name for the model you’re training.
+
+    Example
+        .. code-block::
+
+            from jovian.callbacks.keras_callback import KerasCallback
+
+            jvn_cb = KerasCallback('resnet18')
+            model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
+
+    .. admonition:: Tutorial
+
+        Visit `this`_ for a detailed example on using the fastai callback, also visit the *Records* tab
+        to see all the logs of that notebook logged by the callback.
+    .. _this: https://jvn.io/PrajwalPrashanth/34fd4e72905e460db2d16aafab285537
+
     """
 
-    def __init__(self, arch_name):
+    def __init__(self, arch_name: str):
         self.arch_name = arch_name
 
     def on_train_begin(self, logs=None):

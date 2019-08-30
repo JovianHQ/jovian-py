@@ -57,15 +57,17 @@ Run this command in your terminal:
   jvn/cli
 
 .. toctree::
+  :caption: Callbacks
+  :hidden:
+
+  callbacks/fastai
+  callbacks/keras
+  
+.. toctree::
   :caption: Jupyter Notebook Extension
   :hidden:
 
   nbext/commit
   nbext/disable
 
-.. toctree::
-  :caption: Callbacks
-  :hidden:
 
-  callbacks/fastai
-  callbacks/keras

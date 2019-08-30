@@ -7,12 +7,26 @@ from jovian.utils.logger import log
 
 
 class FastaiCallback(Callback):
-    """FastAI callback to log hyperparameters and metrics during model training.
+    """Fastai callback to automatically log hyperparameters and metrics.
 
     Args:
-        learn (Learner): A learner object with which you're fitting your model
+        learn (Learner): A learner object reference of your current model.
 
-        arch_name (string): A name for the architecture that you're using 
+        arch_name (string): A name for the model you're training. 
+
+    Example
+        .. code-block::
+
+            from jovian.callbacks.fastai_callback import FastaiCallback
+
+            jvn_cb = FastaiCallback(learn, 'res18')
+            learn.fit_one_cycle(5, callbacks = jvn_cb)
+
+    .. admonition:: Tutorial
+
+        Visit `this`_ for a detailed example on using the keras callback, also visit the *Records* tab
+        to see all the logs of that notebook logged by the callback.
+    .. _this: https://jvn.io/PrajwalPrashanth/7f16274fc3224d829941bc2553ef6061
     """
 
     def __init__(self, learn: Learner, arch_name: str):
