@@ -1,7 +1,8 @@
 from keras.backend import get_value
 from keras.callbacks import Callback
+import json
 
-from jovian import log_hyperparams, log_metrics, reset
+from jovian import log_hyperparams, log_metrics, reset, notify
 
 
 class JovianKerasCallback(Callback):
@@ -28,10 +29,11 @@ class JovianKerasCallback(Callback):
 
     """
 
-    def __init__(self, reset_tracking=True, arch_name='', every_epoch=False):
+    def __init__(self, reset_tracking=True, arch_name='', every_epoch=False, notify=False):
         self.arch_name = arch_name
         self.every_epoch = every_epoch
         self.reset_tracking = reset_tracking
+        self.notify_slack = notify
 
     def on_train_begin(self, logs=None):
         # Reset state if required
@@ -49,6 +51,7 @@ class JovianKerasCallback(Callback):
         if self.arch_name:
             hyp_dict['arch'] = self.arch_name
         log_hyperparams(hyp_dict, verbose=False)
+        self.hyperparams = hyp_dict
 
     def on_epoch_end(self, epoch, logs):
         if self.every_epoch:
@@ -64,3 +67,12 @@ class JovianKerasCallback(Callback):
                 logs[key] = round(value, 4)
             met_dict.update(logs)
             log_metrics(met_dict, verbose=False)
+
+            if self.notify_slack:
+                result = {
+                    'message': 'Training complete after ' + str(self.params['epochs']) + ' epochs.',
+                    'metrics': met_dict
+                }
+                if self.hyperparams:
+                    result['hyperparams'] = self.hyperparams
+                notify(json.dumps(result, indent=2), safe=True)

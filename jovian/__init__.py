@@ -235,13 +235,13 @@ def log_metrics(data, verbose=True):
         log('Metrics logged.')
 
 
-def notify(data, verbose=True):
+def notify(data, verbose=False, safe=False):
     """Sends the data to Slack connected to Jovian account
 
     Arguments:
         data: A dict or string to be pushed to Slack
     """
-    res = post_slack_message(data=data)
+    res = post_slack_message(data=data, safe=safe)
     if verbose:
         if not res.get('errors'):
             log('message_sent:' + str(res.get('data').get('messageSent')))

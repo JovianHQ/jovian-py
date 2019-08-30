@@ -156,12 +156,13 @@ def commit_records(gist_slug, tracking_slugs, version=None):
         raise ApiError('Data logging failed: ' + _pretty(res))
 
 
-def post_slack_message(data):
+def post_slack_message(data, safe=False):
     """Push data to Slack, if slack is integrated with jovian account"""
     url = _u('/slack/notify')
     res = post(url, json=data, headers=_h())
     if res.status_code == 200:
         return res.json()
+    elif safe:
+        return {'data': {'messageSent': False}}
     else:
         raise ApiError('Slack trigger failed: ' + _pretty(res))
-
