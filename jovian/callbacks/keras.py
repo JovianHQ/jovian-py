@@ -36,28 +36,25 @@ class JovianKerasCallback(Callback):
             'epochs': self.params['epochs'],
             'batch_size': self.params['batch_size'],
             'loss_func': self.model.loss,
-            'opt_func': str(self.model.optimizer.__class__).split("'")[1],
-            'weight_decay': self.model.optimizer.initial_decay,
-            'learning_rate': str(get_value(self.model.optimizer.lr))
+            'opt': str(self.model.optimizer.__class__).split("'")[1].split('.')[-1],
+            'wt_decay': self.model.optimizer.initial_decay,
+            'lr': str(get_value(self.model.optimizer.lr))
         }
         if self.arch_name:
             hyp_dict['arch'] = self.arch_name
         log_hyperparams(hyp_dict, verbose=False)
 
     def on_epoch_end(self, epoch, logs):
-        if not self.every_epoch:
-            return
-        met_dict = {'epoch': epoch}
-        # logs here is a list that contains all the metrics
-        for key, value in logs.items():
-            logs[key] = round(value, 4)
-        met_dict.update(logs)
-        log_metrics(met_dict, verbose=False)
+        if self.every_epoch:
+            met_dict = {'epoch': epoch}
+            for key, value in logs.items():
+                logs[key] = round(value, 4)
+            met_dict.update(logs)
+            log_metrics(met_dict, verbose=False)
 
-    def on_train_end(self, logs):
-        met_dict = {}
-        # logs here is a list that contains all the metrics
-        for key, value in logs.items():
-            logs[key] = round(value, 4)
-        met_dict.update(logs)
-        log_metrics(met_dict, verbose=False)
+        elif epoch == self.params['epochs'] - 1:
+            met_dict = {}
+            for key, value in logs.items():
+                logs[key] = round(value, 4)
+            met_dict.update(logs)
+            log_metrics(met_dict, verbose=False)
