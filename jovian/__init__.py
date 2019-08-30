@@ -17,46 +17,53 @@ _current_slug = None
 _data_blocks = []
 
 
+def reset():
+    """Reset the tracked hyperparameters & metrics (for a fresh experiment)"""
+    global _current_slug
+    global _data_blocks
+    _current_slug = None
+    _data_blocks = []
+
+
 def commit(secret=False, nb_filename=None, files=[], capture_env=True,
            env_type='conda', notebook_id=None, create_new=None, artifacts=[]):
     """Commits a Jupyter Notebook with its environment to Jovian.
 
-    Saves the checkpoint of the notebook, capture the required dependencies from the python environment and uploads the notebook, env file, additional files like scripts, csv etc. to https://www.jvn.io . Capturing the python environment ensures that the notebook can be reproduced and 
-    executed easily using the ***{links to reprodue notebooks}.***
-
+    Saves the checkpoint of the notebook, capture the required dependencies from the python environment and uploads the notebook, env file, additional files like scripts, csv etc. to https: // www.jvn.io . Capturing the python environment ensures that the notebook can be reproduced and
+    executed easily using the ** *{links to reprodue notebooks}.***
 
     Args:
-        secret (bool, optional): Create a secret notebook on Jovian , which is only 
+        secret(bool, optional): Create a secret notebook on Jovian, which is only
             accessible via the link, and is not visible on the owner's public profile. By default,
             committed notebooks are public and visible on the owner's profile.
 
-        nb_filename (string, optional): The filename of the jupyter notebook (including 
+        nb_filename(string, optional): The filename of the jupyter notebook(including
             the .ipynb extension). This is detected automatically in most cases, but in
             certain environments like Jupyter Lab, the detection may fail and the filename
             needs to be provided using this argument.
 
-        files (array, optional): Any additional scripts (.py files), CSVs that are required to
+        files(array, optional): Any additional scripts(.py files), CSVs that are required to
             run the notebook. These will be available in the files tab on Jovian .
 
-        capture_env (bool, optional): If `True`, the Python environment (python version,
+        capture_env(bool, optional): If `True`, the Python environment(python version,
             libraries etc.) are captured and uploaded along with the notebook.
 
-        env_type (string, optional): The type of environment to be captured. Allowed options are
+        env_type(string, optional): The type of environment to be captured. Allowed options are
             'conda' and 'pip'.
 
-        notebook_id (string, optional): If you wish to update an existing notebook owned by you,
-            you can use this argument to provide the base64 ID (present in the URL) of an notebook 
+        notebook_id(string, optional): If you wish to update an existing notebook owned by you,
+            you can use this argument to provide the base64 ID(present in the URL) of an notebook
             hosted on Jovian . In most cases, this argument is not required, and the library
             can automatically infer whether you are looking to update an existing notebook or create
             a new one.
 
-        create_new (bool, optional): If set to True, doesn't update the existing notebook on 
-            Jovian (if one is detected). Instead, it creates a new notebook when commit is called.
+        create_new(bool, optional): If set to True, doesn't update the existing notebook on
+            Jovian(if one is detected). Instead, it creates a new notebook when commit is called.
 
-        artifacts (array, optional): Any outputs files or artifacts generated from the modeling processing.
+        artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
-    
-    .. attention::
+
+    .. attention: :
         Pass notebook's name to nb_filename in ceratin environments like Jupyter Lab, password protected notebooks as sometimes it may fail to detect automatically in these environments.
 
     """
@@ -184,15 +191,15 @@ def log_hyperparams(data, verbose=True):
     """Record hyperparameters for the current experiment
 
     Args:
-        data (dict): A python dict or a array of dicts to be recorded as hyperparmeters.
+        data(dict): A python dict or a array of dicts to be recorded as hyperparmeters.
 
-        verbose (bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False. 
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
 
-    Example::
+    Example: :
 
         hyperparmas = {
-            arch_name   : "cnn_1"
-            lr          : .001
+            arch_name: "cnn_1"
+            lr: .001
         }
         jovian.log_hyperparams(hyperparams)
     """
@@ -207,19 +214,19 @@ def log_metrics(data, verbose=True):
     """Record metrics for the current experiment
 
     Args:
-        data (dict): A python dict or a array of dicts to be recorded as metrics.
+        data(dict): A python dict or a array of dicts to be recorded as metrics.
 
-        verbose (bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
-    
-    Example::
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
+
+    Example: :
 
         metrics = {
-            epoch       : 1
-            train_loss  : .5
-            val_loss    : .3
-            acc         : .94
+            epoch: 1
+            train_loss: .5
+            val_loss: .3
+            acc: .94
         }
-        jovian.log_metrics(metrics) 
+        jovian.log_metrics(metrics)
     """
     global _data_blocks
     res = post_block(data, 'metrics')

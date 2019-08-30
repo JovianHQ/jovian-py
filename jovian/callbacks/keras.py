@@ -1,13 +1,14 @@
 from keras.backend import get_value
 from keras.callbacks import Callback
 
-from jovian import log_hyperparams, log_metrics
+from jovian import log_hyperparams, log_metrics, reset
 
 
 class JovianKerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
     Args:
+        reset_tracking (string, optional): Will clear previously tracked hyperparameters & metrics, and start a fresh recording
         arch_name (string, optional): A name for the model you’re training.
         every_epoch (bool, optional): Whether to record losses & metrics for every epoch. Defaults to False.
 
@@ -16,7 +17,7 @@ class JovianKerasCallback(Callback):
 
             from jovian.callbacks.keras import JovianKerasCallback
 
-            jvn_cb = JovianKerasCallback(arch_name='resnet18', every)
+            jvn_cb = JovianKerasCallback(arch_name='resnet18')
             model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
 
     .. admonition:: Tutorial
@@ -27,11 +28,16 @@ class JovianKerasCallback(Callback):
 
     """
 
-    def __init__(self, arch_name='', every_epoch=False):
+    def __init__(self, reset_tracking=True, arch_name='', every_epoch=False):
         self.arch_name = arch_name
         self.every_epoch = every_epoch
+        self.reset_tracking = reset_tracking
 
     def on_train_begin(self, logs=None):
+        # Reset state if required
+        if self.reset_tracking:
+            reset()
+
         hyp_dict = {
             'epochs': self.params['epochs'],
             'batch_size': self.params['batch_size'],
