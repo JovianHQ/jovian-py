@@ -4,18 +4,19 @@ from keras.callbacks import Callback
 from jovian import log_hyperparams, log_metrics
 
 
-class KerasCallback(Callback):
+class JovianKerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
     Args:
-        arch_name (string):  A name for the model you’re training.
+        arch_name (string, optional): A name for the model you’re training.
+        every_epoch (bool, optional): Whether to record losses & metrics for every epoch. Defaults to False.
 
     Example
         .. code-block::
 
-            from jovian.callbacks.keras_callback import KerasCallback
+            from jovian.callbacks.keras import JovianKerasCallback
 
-            jvn_cb = KerasCallback('resnet18')
+            jvn_cb = JovianKerasCallback(arch_name='resnet18', every)
             model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
 
     .. admonition:: Tutorial
@@ -26,12 +27,12 @@ class KerasCallback(Callback):
 
     """
 
-    def __init__(self, arch_name: str):
+    def __init__(self, arch_name='', every_epoch=False):
         self.arch_name = arch_name
+        self.every_epoch = every_epoch
 
     def on_train_begin(self, logs=None):
         hyp_dict = {
-            'arch_name': self.arch_name,
             'epochs': self.params['epochs'],
             'batch_size': self.params['batch_size'],
             'loss_func': self.model.loss,
@@ -39,12 +40,22 @@ class KerasCallback(Callback):
             'weight_decay': self.model.optimizer.initial_decay,
             'learning_rate': str(get_value(self.model.optimizer.lr))
         }
+        if self.arch_name:
+            hyp_dict['arch'] = self.arch_name
         log_hyperparams(hyp_dict, verbose=False)
 
     def on_epoch_end(self, epoch, logs):
-        met_dict = {
-            'epoch': epoch
-        }
+        if not self.every_epoch:
+            return
+        met_dict = {'epoch': epoch}
+        # logs here is a list that contains all the metrics
+        for key, value in logs.items():
+            logs[key] = round(value, 4)
+        met_dict.update(logs)
+        log_metrics(met_dict, verbose=False)
+
+    def on_train_end(self, logs):
+        met_dict = {}
         # logs here is a list that contains all the metrics
         for key, value in logs.items():
             logs[key] = round(value, 4)
