@@ -1,9 +1,9 @@
 import argparse
-import webbrowser
 import os
 
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
+from jovian.utils.slack import add_slack
 from jovian._version import __version__
 
 
@@ -14,7 +14,6 @@ def exec_clone(slug, version):
 def exec_init():
     from jovian.utils.api import get_api_key
     from jovian.utils.credentials import get_guest_key
-    # webbrowser.open('https://jvn.io/')
     get_guest_key()
     get_api_key()
     print('Initialization finished')
@@ -55,6 +54,8 @@ def main():
         nb_ext()
     elif command == 'disable_ext':
         nb_ext(enable=False)
+    elif command == 'add-slack':
+        add_slack()
 
 
 if __name__ == '__main__':
