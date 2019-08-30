@@ -8,14 +8,15 @@ class JovianKerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
     Args:
-        arch_name (string):  A name for the model you’re training.
+        arch_name (string, optional): A name for the model you’re training.
+        every_epoch (bool, optional): Whether to record losses & metrics for every epoch. Defaults to False.
 
     Example
         .. code-block::
 
-            from jovian.callbacks.keras_callback import KerasCallback
+            from jovian.callbacks.keras import JovianKerasCallback
 
-            jvn_cb = KerasCallback('resnet18')
+            jvn_cb = JovianKerasCallback(arch_name='resnet18', every)
             model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
 
     .. admonition:: Tutorial
