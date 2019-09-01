@@ -11,6 +11,11 @@ from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdata
 
+try:
+    from jovian._flavor import __flavor__
+except ImportError as e:
+    __flavor__ = "jovian"
+
 set_notebook_name()
 
 _current_slug = None

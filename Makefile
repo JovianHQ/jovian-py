@@ -26,4 +26,3 @@ publish-pro:
 	make clean
 	make build-pro
 	make upload
-

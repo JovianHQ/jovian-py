@@ -3,6 +3,7 @@ import re
 import setuptools
 
 VERSIONFILE = "./jovian/_version.py"
+FLAVORFILE = "./jovian/_flavor.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)
@@ -15,6 +16,10 @@ else:
 
 if pkg_name is None:
     raise RuntimeError("Please provide valid package name")
+
+with open(FLAVORFILE, "w") as f:
+    f.write("__flavor__ = \"{}\"".format(pkg_name))
+
 
 with open("README.md", "rb") as fh:
     long_description = fh.read().decode('utf-8', errors='ignore')
