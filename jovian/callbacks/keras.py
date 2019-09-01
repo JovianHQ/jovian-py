@@ -9,16 +9,18 @@ class JovianKerasCallback(Callback):
     """Keras Callback to log hyperparameters and metrics during model training.
 
     Args:
-        reset_tracking (string, optional): Will clear previously tracked hyperparameters & metrics, and start a fresh recording
+        reset_tracking (string, optional): Will clear previously tracked hyperparameters & metrics, and start a fresh recording. Defaults to True.
         arch_name (string, optional): A name for the model you’re training.
-        every_epoch (bool, optional): Whether to record losses & metrics for every epoch. Defaults to False.
+        every_epoch (bool, optional): Whether to record losses & metrics for every epoch or just the final loss & metric. Defaults to False.
+        notify (bool, optional): Whether to send notification on slack when the training ends. Defaults to False.
 
     Example
         .. code-block::
 
             from jovian.callbacks.keras import JovianKerasCallback
 
-            jvn_cb = JovianKerasCallback(arch_name='resnet18')
+            # To record logs of every epoch and to notify on slack
+            jvn_cb = JovianKerasCallback(arch_name='resnet18', every_epoch=True, notify=True)
             model.fit(x_train, y_train, ...., callbacks=[jvn_cb])
 
     .. admonition:: Tutorial

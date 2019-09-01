@@ -63,8 +63,8 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
 
-    .. attention: :
-        Pass notebook's name to nb_filename in ceratin environments like Jupyter Lab, password protected notebooks as sometimes it may fail to detect automatically in these environments.
+    .. attention::
+        Pass notebook's name to nb_filename in certain environments like Jupyter Lab, password protected notebooks as sometimes it may fail to detect automatically in these environments.
 
     """
     global _current_slug
@@ -195,13 +195,14 @@ def log_hyperparams(data, verbose=True):
 
         verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
 
-    Example: :
+    Example
+        .. code-block::
 
-        hyperparmas = {
-            arch_name: "cnn_1"
-            lr: .001
-        }
-        jovian.log_hyperparams(hyperparams)
+            hyperparmas = {
+                arch_name: "cnn_1"
+                lr: .001
+            }
+            jovian.log_hyperparams(hyperparams)
     """
     global _data_blocks
     res = post_block(data, 'hyperparams')
@@ -218,15 +219,16 @@ def log_metrics(data, verbose=True):
 
         verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
 
-    Example: :
+    Example
+        .. code-block::
 
-        metrics = {
-            epoch: 1
-            train_loss: .5
-            val_loss: .3
-            acc: .94
-        }
-        jovian.log_metrics(metrics)
+            metrics = {
+                epoch: 1
+                train_loss: .5
+                val_loss: .3
+                acc: .94
+            }
+            jovian.log_metrics(metrics)
     """
     global _data_blocks
     res = post_block(data, 'metrics')
