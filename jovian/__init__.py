@@ -245,7 +245,7 @@ def log_dataset(data, verbose=True):
     """Record dataset details for the current experiment
 
     Args:
-        data(dict): A python dict or a array of dicts to be recorded as hyperparmeters.
+        data(dict): A python dict or a array of dicts to be recorded as Dataset.
 
         verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
 
