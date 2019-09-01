@@ -77,4 +77,4 @@ class JovianKerasCallback(Callback):
                 }
                 if self.hyperparams:
                     result['hyperparams'] = self.hyperparams
-                notify(json.dumps(result, indent=2), safe=True)
+                notify(json.dumps(result, indent=2), verbose=False, safe=True)

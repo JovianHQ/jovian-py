@@ -18,6 +18,7 @@
     "chmod",
     "contextlib",
     "csvs",
+    "dataset",
     "deps",
     "env",
     "envfile",

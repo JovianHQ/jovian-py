@@ -267,7 +267,7 @@ def log_dataset(data, verbose=True):
         log('Dataset logged.')
 
 
-def notify(data, verbose=False, safe=False):
+def notify(data, verbose=True, safe=False):
     """Sends the data to Slack connected to Jovian account
 
     Arguments:
