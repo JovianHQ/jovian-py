@@ -1,6 +1,0 @@
-#! /bin/bash
-
-./scripts/clean
-python setup.py sdist bdist_wheel
-twine upload dist/*
-./scripts/clean
