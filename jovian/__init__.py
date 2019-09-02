@@ -7,14 +7,16 @@ from jovian.utils.pip import upload_pip_env
 from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
                               post_block, commit_records, post_slack_message)
 from jovian.utils.logger import log
-from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
+from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdata
+from jovian.utils.misc import get_flavor
+from jovian.utils.credentials import read_webapp_url
 
-try:
-    from jovian._flavor import __flavor__
-except ImportError as e:
-    __flavor__ = "jovian"
+
+WEBAPP_URL = read_webapp_url()
+
+__flavor__ = get_flavor()
 
 set_notebook_name()
 

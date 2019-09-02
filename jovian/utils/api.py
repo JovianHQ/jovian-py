@@ -3,11 +3,11 @@ from requests import get, post
 from os.path import basename
 from time import sleep
 # from tqdm import tqdm, tqdm_notebook
-from jovian.utils.credentials import (read_or_request_api_key, write_api_key,
-                                      CREDS, request_api_key, get_guest_key)
+from jovian.utils.credentials import (read_api_url, read_or_request_api_key,
+                                      write_api_key, request_api_key, get_guest_key,
+                                      read_creds, API_TOKEN_KEY)
 from jovian.utils.logger import log
 from jovian.utils.jupyter import in_notebook, save_notebook, get_notebook_name
-from jovian.utils.constants import API_URL, API_KEY
 from jovian.utils.misc import timestamp_ms
 from jovian._version import __version__
 
@@ -19,7 +19,7 @@ class ApiError(Exception):
 
 def _u(path):
     """Make a URL from the path"""
-    return API_URL + path
+    return read_api_url() + path
 
 
 def _msg(res):
@@ -55,16 +55,17 @@ def validate_api_key(key):
 
 def get_api_key():
     """Retrieve and validate the API Key (from memory, config or user input)"""
-    if API_KEY not in CREDS:
+    creds = read_creds()
+    if API_TOKEN_KEY not in creds:
         key, _ = read_or_request_api_key()
         if not validate_api_key(key):
             log('The current API key is invalid or expired.', error=True)
-            key, source = request_api_key(), 'request'
+            key, _ = request_api_key(), 'request'
             if not validate_api_key(key):
                 raise ApiError('The API key provided is invalid or expired.')
         write_api_key(key)
         return key
-    return CREDS[API_KEY]
+    return creds[API_TOKEN_KEY]
 
 
 def _h():
