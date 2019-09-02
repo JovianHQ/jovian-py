@@ -1,21 +1,31 @@
-import setuptools
+import os
 import re
+import setuptools
 
 VERSIONFILE = "./jovian/_version.py"
+FLAVORFILE = "./jovian/_flavor.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)
+pkg_name = os.getenv("PKG_NAME")
 
 if mo:
     verstr = mo.group(1)
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
+if pkg_name is None:
+    raise RuntimeError("Please provide valid package name")
+
+with open(FLAVORFILE, "w") as f:
+    f.write("__flavor__ = \"{}\"".format(pkg_name))
+
+
 with open("README.md", "rb") as fh:
     long_description = fh.read().decode('utf-8', errors='ignore')
 
 setuptools.setup(
-    name="jovian",
+    name=pkg_name,
     version=verstr,
     author="SwiftAce",
     author_email="opensource@swiftace.ai",
