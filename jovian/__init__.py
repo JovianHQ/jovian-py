@@ -207,9 +207,9 @@ def log_hyperparams(data, verbose=True):
 
             import jovian
 
-            hyperparmas = {
-                arch_name: "cnn_1",
-                lr: .001
+            hyperparams = {
+                'arch_name': 'cnn_1',
+                'lr': .001
             }
             jovian.log_hyperparams(hyperparams)
     """
@@ -234,10 +234,10 @@ def log_metrics(data, verbose=True):
             import jovian
 
             metrics = {
-                epoch: 1,
-                train_loss: .5,
-                val_loss: .3,
-                acc: .94
+                'epoch': 1,
+                'train_loss': .5,
+                'val_loss': .3,
+                'acc': .94
             }
             jovian.log_metrics(metrics)
     """
@@ -262,8 +262,8 @@ def log_dataset(data, verbose=True):
             import jovian
 
             data = {
-                path: '/datasets/mnist',
-                description: "28x28 images of handwritten digits (in grayscale)"
+                'path': '/datasets/mnist',
+                'description': '28x28 images of handwritten digits (in grayscale)'
             }
             jovian.log_dataset(data)
     """
