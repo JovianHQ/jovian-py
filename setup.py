@@ -7,7 +7,7 @@ FLAVORFILE = "./jovian/_flavor.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)
-pkg_name = os.getenv("PKG_NAME")
+pkg_name = os.getenv("PKG_NAME", "jovian")
 
 if mo:
     verstr = mo.group(1)
