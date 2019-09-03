@@ -275,8 +275,24 @@ def log_dataset(data, verbose=True):
 def notify(data, verbose=True, safe=False):
     """Sends the data to Slack connected to Jovian account
 
-    Arguments:
-        data: A dict or string to be pushed to Slack
+    Args:
+        data(dict|string): A dict or string to be pushed to Slack
+
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
+
+        safe(bool, optional): To avoid raising ApiError exception. Defaults to False.
+
+    Example
+        .. code-block::
+
+            import jovian
+
+            data = "Hello from the Integration!"
+            jovian.notify(data)
+
+    .. important::
+        This feature requires for your jovian account to be connected to a slack workspace, visit `Jovian Integrations`_ if it's not done.
+    .. _Jovian Integrations: https://jvn.io/settings/integrations
     """
     res = post_slack_message(data=data, safe=safe)
     if verbose:
