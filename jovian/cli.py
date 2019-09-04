@@ -5,6 +5,7 @@ from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
 from jovian.utils.configure import configure, reset
 from jovian.utils.slack import add_slack
+from jovian.utils.misc import get_flavor
 from jovian._version import __version__
 
 
@@ -40,7 +41,8 @@ def main():
     elif command == 'pull':
         pull(args.gist, args.version)
     elif command == 'version':
-        print('Jovian library version: ' + __version__)
+        print('Jovian library version: ' +
+              __version__ + ' (' + get_flavor() + ')')
     elif command == 'install':
         install(env_name=args.name)
     elif command == 'activate':
