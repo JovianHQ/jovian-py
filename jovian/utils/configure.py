@@ -47,7 +47,7 @@ def configure():
     purge_creds()
 
     # Capture and save organization ID
-    ensure_org()
+    ensure_org(check_pro=False)
 
     # Ask for API Key
     get_guest_key()

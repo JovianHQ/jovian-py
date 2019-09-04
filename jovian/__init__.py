@@ -12,6 +12,7 @@ from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, 
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdata
 from jovian.utils.misc import get_flavor
 from jovian.utils.credentials import read_webapp_url
+from jovian.utils.configure import configure, reset as reset_config
 
 __flavor__ = get_flavor()
 
