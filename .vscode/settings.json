@@ -19,6 +19,7 @@
     "contextlib",
     "csvs",
     "dataset",
+    "datasets",
     "deps",
     "env",
     "envfile",
@@ -76,8 +77,5 @@
     "verstrline",
     "vsre"
   ],
-  "cSpell.ignoreWords": [
-    "jvn",
-    "notif"
-  ]
+  "cSpell.ignoreWords": ["jvn", "notif"]
 }

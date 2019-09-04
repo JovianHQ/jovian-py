@@ -38,6 +38,19 @@ Run this command in your terminal:
   :hidden:
 
 .. toctree::
+  :hidden:
+  :caption: User Guide
+
+  user_guide/install
+  user_guide/upload
+  user_guide/reproduce
+  user_guide/version
+  user_guide/attach
+  user_guide/track
+  user_guide/compare
+  user_guide/collaborate
+  
+.. toctree::
   :maxdepth: 2
   :hidden:
   :caption: Getting Started
