@@ -3,7 +3,7 @@ import os
 
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
-from jovian.utils.configure import configure
+from jovian.utils.configure import configure, reset
 from jovian.utils.slack import add_slack
 from jovian._version import __version__
 
@@ -30,6 +30,8 @@ def main():
     command = args.command
     if command == 'configure':
         configure()
+    if command == 'reset':
+        reset()
     elif command == 'clone':
         if not args.gist:
             print('Please provide the Gist ID to clone')

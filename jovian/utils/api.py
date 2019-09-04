@@ -98,7 +98,7 @@ def get_gist_access(slug):
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve access permission for notebook "' +
-                    slug + '": ' + _pretty(res))
+                    slug + '" (retry with create_new=True to create a new notebook): ' + _pretty(res))
 
 
 def create_gist_simple(filename=None, gist_slug=None, secret=False):

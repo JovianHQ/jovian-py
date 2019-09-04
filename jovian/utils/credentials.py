@@ -73,7 +73,8 @@ def read_creds():
 
 def creds_exist():
     """Check if credentials file exits"""
-    return read_creds() != {}
+    creds = read_creds()
+    return API_TOKEN_KEY in creds
 
 
 def read_cred(key, default=None):
@@ -175,6 +176,7 @@ def ensure_org():
     if org_id:
         webapp_url = 'https://' + org_id + '.jvn.io/'
     else:
+        org_id = 'public'
         webapp_url = 'https://jvn.io/'
 
     # Try to retrieve the config.json file from webapp
@@ -234,7 +236,7 @@ def write_guest_key(token):
 
 def request_api_key():
     """Ask the user to provide the API key"""
-    log("Please enter your API key (from " + read_webapp_url() + " ):")
+    log("Please enter your API key ( from " + read_webapp_url() + " ):")
     api_key = getpass(prompt="API Key:")
     return api_key
 
