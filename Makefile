@@ -12,7 +12,7 @@ set-flavor:
 	echo '__flavor__ = "jovian"' > ./jovian/_flavor.py
 
 set-flavor-pro:
-	echo '__flavor__ = "jovianpro"' > ./jovian/_flavor.py
+	echo '__flavor__ = "jovian-pro"' > ./jovian/_flavor.py
 
 build:
 	make set-flavor
@@ -20,7 +20,7 @@ build:
 
 build-pro:
 	make set-flavor-pro
-	PKG_NAME=jovianpro python setup.py sdist bdist_wheel
+	PKG_NAME=jovian-pro python setup.py sdist bdist_wheel
 
 upload:
 	twine upload dist/*
