@@ -1,7 +1,6 @@
 import os
 from requests import get
-from jovian.utils.constants import API_URL
-from jovian.utils.credentials import get_guest_key, read_api_key_opt
+from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url
 from jovian.utils.logger import log
 from jovian._version import __version__
 

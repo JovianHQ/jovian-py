@@ -2,7 +2,7 @@
 import os
 from getpass import getpass
 import json
-from json import JSONDecodeError
+from json.decoder import JSONDecodeError
 import stat
 import shutil
 import uuid
@@ -32,8 +32,8 @@ class ConfigError(Exception):
     """Error class for config related Exceptions"""
     pass
 
-# Config directory management
 
+# Config directory management
 
 def config_exists():
     """Check if config directory exists"""
@@ -51,11 +51,6 @@ def init_config():
         os.makedirs(CONFIG_DIR)
 
 
-def creds_exist():
-    """Check if credentials file exits"""
-    return os.path.exists(CREDS_PATH)
-
-
 # Credentials file management
 
 def purge_creds():
@@ -66,12 +61,19 @@ def purge_creds():
 
 def read_creds():
     """Read the credentials file"""
+    if not os.path.exists(CREDS_PATH):
+        return {}
     with open(CREDS_PATH, 'r') as f:
         try:
             return json.load(f)
         except ValueError:
             purge_creds()
             return {}
+
+
+def creds_exist():
+    """Check if credentials file exits"""
+    return read_creds() != {}
 
 
 def read_cred(key, default=None):
@@ -97,8 +99,8 @@ def write_cred(key, value):
     creds[key] = value
     write_creds(creds)
 
-# API URL
 
+# API URL
 
 def write_api_url(value):
     """Write the API URL"""
@@ -106,10 +108,8 @@ def write_api_url(value):
 
 
 def read_api_url():
-    if is_flavor_pro():
-        ensure_org()
-        return read_cred(API_URL_KEY)
-    return DEFAULT_API_URL
+    ensure_org()
+    return read_cred(API_URL_KEY, DEFAULT_API_URL)
 
 
 # Webapp URL
@@ -121,10 +121,8 @@ def write_webapp_url(value):
 
 def read_webapp_url():
     """Read the webapp URL"""
-    if is_flavor_pro():
-        ensure_org()
-        return read_cred(WEBAPP_URL_KEY)
-    return DEFAULT_WEBAPP_URL
+    ensure_org()
+    return read_cred(WEBAPP_URL_KEY, DEFAULT_WEBAPP_URL)
 
 
 # Organization ID
@@ -137,20 +135,26 @@ def write_org_id(value):
 def request_org_id():
     """Ask the user to provide the organization ID"""
     log("Looks like you're a Jovian Pro user. Please enter your company's organization ID on Jovian to continue.")
-    org_id = getpass(prompt="Organization ID:")
-    return org_id
+    msg = "Organization ID:"
+    try:
+        user_input = raw_input(msg)
+    except NameError:
+        try:
+            user_input = input(msg)
+        except EOFError:
+            user_input = ''
+    return user_input
 
 
 def read_org_id():
-    if is_flavor_pro():
-        ensure_org()
-        return read_cred(ORG_ID_KEY)
-    return ''
+    """Read Organization ID"""
+    ensure_org()
+    return read_cred(ORG_ID_KEY, '')
 
 
 def ensure_org():
     # Check the flavor
-    if is_flavor_pro():
+    if not is_flavor_pro():
         return
 
     # Read the credentials
@@ -159,18 +163,19 @@ def ensure_org():
         org_id = creds[ORG_ID_KEY]
         api_url = creds[API_URL_KEY]
         webapp_url = creds[WEBAPP_URL_KEY]
+        if org_id and api_url and webapp_url:
+            return
     except KeyError:
         pass
-
-    # If credentials exist, return
-    if org_id and api_url and webapp_url:
-        return
 
     # Request organization
     org_id = request_org_id()
 
     # Construct the webapp URL
-    webapp_url = 'https://' + org_id + '.jvn.io/'
+    if org_id:
+        webapp_url = 'https://' + org_id + '.jvn.io/'
+    else:
+        webapp_url = 'https://jvn.io/'
 
     # Try to retrieve the config.json file from webapp
     try:

@@ -44,7 +44,8 @@ def write_env_name(env_name, env_fname):
     environment = get_environment_dict(env_fname=env_fname)
     if environment and (not environment.get('name') or environment.get('name') != env_name):
         environment['name'] = env_name
-        dump_environment_to_yaml_file(env_fname=env_fname, environment=environment)
+        dump_environment_to_yaml_file(
+            env_fname=env_fname, environment=environment)
 
 
 ENV_NAME_MSG = "Please provide a name for the conda environment"
@@ -178,7 +179,8 @@ def extract_pip_packages(env_fname):
         return []
     dependencies = environment.get('dependencies')
     if len(dependencies) > 0:
-        dependencies[:] = (d for d in dependencies if isinstance(d, dict) and d.get('pip'))
+        dependencies[:] = (d for d in dependencies if isinstance(
+            d, dict) and d.get('pip'))
     return serialize_packages(dependencies=dependencies)
 
 
@@ -200,7 +202,8 @@ def remove_packages(dependencies, pkgs):
             if dependency not in pkgs and dependency not in blacklist:
                 new_dependencies.append(dependency)
         elif isinstance(dependency, dict) and dependency.get('pip') and len(dependency['pip']) > 0:
-            new_pip_dependencies = remove_packages(dependencies=dependency['pip'], pkgs=pkgs)
+            new_pip_dependencies = remove_packages(
+                dependencies=dependency['pip'], pkgs=pkgs)
             new_dependencies.append({
                 'pip': new_pip_dependencies
             })

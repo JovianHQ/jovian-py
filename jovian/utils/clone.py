@@ -1,15 +1,15 @@
 import os
 from requests import get
-from jovian.utils.constants import API_URL, ISSUES_MSG
+from jovian.utils.constants import ISSUES_MSG
 from jovian._version import __version__
-from jovian.utils.credentials import get_guest_key, read_api_key_opt
+from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url
 from jovian.utils.logger import log
 from jovian.utils.rcfile import set_notebook_slug, get_rcdata, rcfile_exists
 
 
 def _u(path):
     """Make a URL from the path"""
-    return API_URL + path
+    return read_api_url() + path
 
 
 def _msg(res):
