@@ -12,5 +12,6 @@ WINDOWS = 'windows'
 MACOS = 'macos'
 PLATFORMS = [LINUX, WINDOWS, MACOS]
 
-
 STORAGE_ALLOWED_EXTENSIONS = tuple('ipynb yml yaml py txt csv'.split())
+
+DEFAULT_ORG_ID = "public"

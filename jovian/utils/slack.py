@@ -1,8 +1,11 @@
 import os
+
 from requests import get
-from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url
-from jovian.utils.logger import log
+
 from jovian._version import __version__
+from jovian.utils.credentials import (get_guest_key, read_api_key_opt,
+                                      read_api_url, read_org_id)
+from jovian.utils.logger import log
 
 
 class ApiError(Exception):
@@ -12,7 +15,7 @@ class ApiError(Exception):
 
 def _u(path):
     """Make a URL from the path"""
-    return API_URL + path
+    return read_api_url() + path
 
 
 def _msg(res):
@@ -42,7 +45,8 @@ def _h():
     headers = {"x-jovian-source": "library",
                "x-jovian-library-version": __version__,
                "x-jovian-command": "add-slack",
-               "x-jovian-guest": get_guest_key()}
+               "x-jovian-guest": get_guest_key(),
+               "x-jovian-org": read_org_id()}
 
     if api_key is not None:
         headers["Authorization"] = "Bearer " + api_key

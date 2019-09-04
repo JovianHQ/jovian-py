@@ -1,16 +1,18 @@
 """Utilities to read, write and manage the credentials file"""
-import os
-from getpass import getpass
 import json
-import stat
+import os
 import shutil
+import stat
 import uuid
-import requests
+from getpass import getpass
 from uuid import UUID
+
+import requests
+
+from jovian.utils.constants import (DEFAULT_API_URL, DEFAULT_ORG_ID,
+                                    DEFAULT_WEBAPP_URL)
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
-from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_WEBAPP_URL
-
 
 try:
     # Python 3
@@ -117,6 +119,7 @@ def write_api_url(value):
 
 
 def read_api_url():
+    """Read the API URL"""
     ensure_org()
     return read_cred(API_URL_KEY, DEFAULT_API_URL)
 
@@ -158,10 +161,11 @@ def request_org_id():
 def read_org_id():
     """Read Organization ID"""
     ensure_org()
-    return read_cred(ORG_ID_KEY, '')
+    return read_cred(ORG_ID_KEY, DEFAULT_ORG_ID)
 
 
 def ensure_org(check_pro=True):
+    """Check and set Organization ID"""
     # Check the flavor
     if check_pro and not is_flavor_pro():
         return
@@ -184,7 +188,7 @@ def ensure_org(check_pro=True):
     if org_id:
         webapp_url = 'https://' + org_id + '.jvn.io/'
     else:
-        org_id = 'public'
+        org_id = DEFAULT_ORG_ID
         webapp_url = 'https://jvn.io/'
 
     # Try to retrieve the config.json file from webapp
