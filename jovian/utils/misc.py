@@ -33,4 +33,4 @@ def get_flavor():
 
 def is_flavor_pro():
     """Get the flavor of the library (jovian or jovian-pro)"""
-    return get_flavor() == 'jovian-pro'
+    return get_flavor() == 'jovian-pro' or get_flavor() == 'jovianpro'

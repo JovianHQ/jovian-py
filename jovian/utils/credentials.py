@@ -135,7 +135,7 @@ def write_org_id(value):
 
 def request_org_id():
     """Ask the user to provide the organization ID"""
-    log("Looks like you're a Jovian Pro user. Please enter your company's organization ID on Jovian to continue.")
+    log("If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).")
     msg = "Organization ID:"
     try:
         user_input = raw_input(msg)
@@ -153,9 +153,9 @@ def read_org_id():
     return read_cred(ORG_ID_KEY, '')
 
 
-def ensure_org():
+def ensure_org(check_pro=True):
     # Check the flavor
-    if not is_flavor_pro():
+    if check_pro and not is_flavor_pro():
         return
 
     # Read the credentials

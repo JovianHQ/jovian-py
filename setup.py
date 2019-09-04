@@ -14,11 +14,11 @@ if mo:
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
-if pkg_name is None:
-    raise RuntimeError("Please provide valid package name")
+# if pkg_name is None:
+#     raise RuntimeError("Please provide valid package name")
 
-with open(FLAVORFILE, "w") as f:
-    f.write("__flavor__ = \"{}\"".format(pkg_name))
+# with open(FLAVORFILE, "w") as f:
+#     f.write("__flavor__ = \"{}\"".format(pkg_name))
 
 
 with open("README.md", "rb") as fh:
