@@ -2,7 +2,6 @@
 import os
 from getpass import getpass
 import json
-from json.decoder import JSONDecodeError
 import stat
 import shutil
 import uuid
@@ -11,6 +10,15 @@ from uuid import UUID
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
 from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_WEBAPP_URL
+
+
+try:
+    # Python 3
+    from json.decoder import JSONDecodeError
+except ImportError:
+    # Python 2
+    JSONDecodeError = ValueError
+
 
 # Keys used in credentials file
 API_TOKEN_KEY = "API_KEY"
