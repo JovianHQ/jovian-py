@@ -3,20 +3,14 @@ import os
 
 from jovian.utils.clone import clone, pull
 from jovian.utils.install import install, activate
+from jovian.utils.configure import configure, reset
 from jovian.utils.slack import add_slack
+from jovian.utils.misc import get_flavor
 from jovian._version import __version__
 
 
 def exec_clone(slug, version):
     clone(slug, version)
-
-
-def exec_init():
-    from jovian.utils.api import get_api_key
-    from jovian.utils.credentials import get_guest_key
-    get_guest_key()
-    get_api_key()
-    print('Initialization finished')
 
 
 def nb_ext(enable=True):
@@ -35,8 +29,10 @@ def main():
 
     args = parser.parse_args()
     command = args.command
-    if command == 'init':
-        exec_init()
+    if command == 'configure':
+        configure()
+    if command == 'reset':
+        reset()
     elif command == 'clone':
         if not args.gist:
             print('Please provide the Gist ID to clone')
@@ -45,14 +41,15 @@ def main():
     elif command == 'pull':
         pull(args.gist, args.version)
     elif command == 'version':
-        print('Jovian library version: ' + __version__)
+        print('Jovian library version: ' +
+              __version__ + ' (' + get_flavor() + ')')
     elif command == 'install':
         install(env_name=args.name)
     elif command == 'activate':
         activate()
-    elif command == 'enable-ext':
+    elif command == 'enable-extension':
         nb_ext()
-    elif command == 'disable-ext':
+    elif command == 'disable-extension':
         nb_ext(enable=False)
     elif command == 'add-slack':
         add_slack()

@@ -7,14 +7,13 @@ from jovian.utils.pip import upload_pip_env
 from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
                               post_block, commit_records, post_slack_message)
 from jovian.utils.logger import log
-from jovian.utils.constants import WEBAPP_URL, FILENAME_MSG, RC_FILENAME
+from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdata
+from jovian.utils.misc import get_flavor
+from jovian.utils.credentials import read_webapp_url
 
-try:
-    from jovian._flavor import __flavor__
-except ImportError as e:
-    __flavor__ = "jovian"
+__flavor__ = get_flavor()
 
 set_notebook_name()
 
@@ -110,9 +109,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     # Log whether this is an update or creation
     if notebook_id is None:
-        log('Creating a new notebook on ' + WEBAPP_URL)
+        log('Creating a new notebook on ' + read_webapp_url())
     else:
-        log('Updating notebook "' + notebook_id + '" on ' + WEBAPP_URL)
+        log('Updating notebook "' + notebook_id + '" on ' + read_webapp_url())
 
     # Upload the notebook & create/update the gist
     res = create_gist_simple(nb_filename, notebook_id, secret)
@@ -188,8 +187,8 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         commit_records(slug, _data_blocks, version)
 
     # Print commit URL
-    log('Committed successfully! ' + WEBAPP_URL +
-        "/" + owner['username'] + "/" + slug)
+    log('Committed successfully! ' + read_webapp_url() +
+        owner['username'] + "/" + slug)
 
 
 def log_hyperparams(data, verbose=True):
