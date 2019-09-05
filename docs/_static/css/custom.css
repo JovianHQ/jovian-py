@@ -64,6 +64,7 @@ ul {
   color: #0069d9;
 }
 
+.wy-nav-content,
 .wy-nav-content-wrap {
   /* Background color of wrap around main content */
   background-color: white;
