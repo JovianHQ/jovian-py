@@ -75,7 +75,12 @@
     "unittest",
     "verstr",
     "verstrline",
-    "vsre"
+    "vsre",
+    "webapp"
   ],
-  "cSpell.ignoreWords": ["jvn", "notif"]
+  "cSpell.ignoreWords": [
+    "jvn",
+    "notif",
+    "seealso"
+  ]
 }

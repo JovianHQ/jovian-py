@@ -49,6 +49,7 @@ Run this command in your terminal:
   user_guide/track
   user_guide/compare
   user_guide/collaborate
+  user_guide/pro
   
 .. toctree::
   :maxdepth: 2
