@@ -16,6 +16,12 @@ To install via Jupyter Notebook, you can run the following command in a cell.
 !pip install jovian --upgrade
 ```
 
+If you come across `Permission denied` error you install with sudo permission.
+
+```
+$ sudo pip install jovian --upgrade
+```
+
 **TODO-SB: Add gif of Installation.**
 
 ### Jovian-pro
