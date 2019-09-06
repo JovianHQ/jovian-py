@@ -5,6 +5,8 @@ without the context of the code.
 
 Jovian makes its easy for anyone to track information about dataset used, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.
 
+These information of a notebook are all added to `Records` Tab where you can toggle and view each version's log.
+
 ```
 import jovian
 ```
@@ -41,9 +43,17 @@ metrics = {
 jovian.log_metrics(metrics)
 ```
 
+### Reset
+
+If you're not satisfied with some experiment and want to discard the previously recorded parameters to start a fresh experiment. Use
+
+```
+jovian.reset()
+```
+
 The input to any of these can be a [python dict](https://docs.python.org/3/tutorial/datastructures.html#dictionaries). So, you can add custom parameters that are related to your experiment and have it record values manually, or automate it to record the values of a variable in a loop.
 Visit [this](../jvn/logger.md) page for these logging API reference.
 
 We have callbacks for [keras](../callbacks/keras.md) and [fastai](../callbacks/fastai.md) to automatically record hyperparams and metrics check it out.
 
-Click `Next` to look at how to compare them.
+Click `Next` to look at how to compare all of these information of all the versions.
