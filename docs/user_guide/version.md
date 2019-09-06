@@ -14,8 +14,11 @@ All the versions are comparable, you can view additions, deletions made among an
 
 #### How to view differences?
 
-1. Click on `Version` drop down on the right top.
-2. CLick on `Compare Versions`
-3. Select any 2 versions with the use of check boxes and click on `View Diff` button.
+1. [Commit](../jvn/commit) different version and visit [Jovian](https://www.jvn.io)
+2. Click on `Version` drop down on the right top.
+3. CLick on `Compare Versions`
+4. Select any 2 versions with the use of check boxes and click on `View Diff` button.
 
 **TODO-SB: GIF for visiting compare versions and viewing diff of two versions and also the functionality to show or hide common part of the code.**
+
+There are more things to be compared, but first let's add more content to compare. Click on `Next`.
