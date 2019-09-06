@@ -40,7 +40,7 @@ It prompts for a virtual environment name where it will install all the required
 In this way, Jovian seamlessly ensures the end-to-end reproducibility of your Jupyter notebooks across different operating systems.
 
 ```eval_rst
-.. note:: You have to own the notebook or have to be collaborator to commit changes to the same project notebook. If not you can commit any changes made to your profile as a new notebook.
+.. note:: You have to own the notebook or have to be a collaborator to commit changes to the same project notebook. If not you can commit any changes made to your profile as a new notebook.
 ```
 
 ### Pull

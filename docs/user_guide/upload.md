@@ -60,4 +60,4 @@ Users can comment on any code cells individually and maintain that thread to hav
 
 **TODO-SB: GIF for commenting on notebook cells**
 
-There are many more benefits follow the pages in this section to know more. You can click `Next ->` button or use the side bar `User Guide` section.
+There are many more benefits follow the pages in this section to know more. You can click `Next ->` button or use the side bar `GETTING STARTED` section.
