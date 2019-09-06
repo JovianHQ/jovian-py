@@ -39,7 +39,7 @@ Run this command in your terminal:
 
 .. toctree::
   :hidden:
-  :caption: User Guide
+  :caption: Getting Started
 
   user_guide/install
   user_guide/upload
@@ -50,17 +50,6 @@ Run this command in your terminal:
   user_guide/compare
   user_guide/collaborate
   user_guide/pro
-  
-.. toctree::
-  :maxdepth: 2
-  :hidden:
-  :caption: Getting Started
-
-  intro/installation
-  intro/upload-to-jovian
-  intro/reproduce-notebooks
-  intro/development
-  intro/coming-soon
 
 .. toctree::
   :caption: Jovian
