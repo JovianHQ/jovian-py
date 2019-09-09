@@ -4,13 +4,13 @@
 
 Jovian can be installed using `pip` package manager.
 
-To install via terminal
+To install Jovian via terminal or command line, run:
 
 ```
-$ pip install jovian --upgrade
+pip install jovian --upgrade
 ```
 
-To install via Jupyter Notebook, you can run the following command in a cell.
+You can also install Jovian directly within a [Jupyter Notebook](https://jupyter.org/), by running the following command in a code cell:
 
 ```
 !pip install jovian --upgrade
@@ -18,7 +18,7 @@ To install via Jupyter Notebook, you can run the following command in a cell.
 
 ```eval_rst
 .. caution::
-    If you come across ``Permission denied`` error, install with sudo permission.
+    If you get a ``Permission denied`` error, try installing with sudo permission (on Linux/Mac).
 
     .. code-block::
 
@@ -26,29 +26,28 @@ To install via Jupyter Notebook, you can run the following command in a cell.
 
 ```
 
-**TODO-SB: Add gif of Installation.**
+### Jovian Pro Configuration
 
-### Jovian-pro
+If you are a [Jovian Pro](pro.md) user, run the following commands inside a Jupyter notebook to configure credentials after the installation:
 
-The following command is only for a Jovian-pro user, to configure credentials after the installation of Jovian from the previous section.
-
-Find out more about [Jovian-pro](pro.md).
-
-#### Step 1: Import the library
+**Step 1**: Import the library
 
 ```
 import jovian
 ```
 
-#### Step 2: Configure
+**Step 2**: Configure the library
 
 ```
 jovian.configure()
 ```
 
-The above commands prompts for
+The above commands prompt for the following information:
 
-1.  Organization ID: Your organization id provided for authentication.
-2.  API key: You'll get the API key when you're logged on in website. By clicking on the API key button key will be copied to clipboard.
+1.  **Organization ID**: The Organization ID provided by your company for authentication. E.g. if you are accessing Jovian Pro at [https://mycompany.jvn.io](https://mycompany.jvn.io) , your organization ID is `mycompany`.
 
-**TODO-SB: Add gif of configure**
+2.  **API key**: You'll get the API key when you're logged in to your organization's Jovian pro site. By clicking on the _API key_ button, the key will be copied to clipboard.
+
+![](https://i.imgur.com/aI99Qmh.png)
+
+To find out more, visit the [Jovian Pro](pro.md) section.

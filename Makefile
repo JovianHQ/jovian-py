@@ -34,3 +34,8 @@ publish-pro:
 	make clean
 	make build-pro
 	make upload
+
+run-docs:
+	cd docs && make html
+	sphinx-autobuild docs docs/_build/html
+	

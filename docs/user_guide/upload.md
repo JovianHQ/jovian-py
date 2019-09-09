@@ -1,38 +1,38 @@
 ## Uploading Jupyter Notebooks to Jovian
 
-Once you're done with the [installation](install.md).
-The following steps will help you upload the notebook to Jovian. If you're not signed up yet, you should do it at [Jovian](https://www.jvn.io) to use the following.
+Jovian allows you to upload and share Jupyter notebooks instantly with a single command direclty within Jupyter. Make sure you've completed the [installation](install.md) before reading further.
 
-### Upload
+### Uploading a Notebook
 
-#### Step 1: Import the library
+**Step 1**: Import jovian by running the following command within a Jupyter notebook.
 
 ```
 import jovian
 ```
 
-#### Step 2: Commit
-
-Once you done with writing code and running some experiment, you can upload a version to Jovian.
-When doing this for the first you'll be asked for the API key, can get it from [Jovian](https://jvn.io).
-
-**TODO-SB: Add gif to copy API key from webapp**
+**Step 2**: After writing some code, running some experiments, training some models and plotting some charts, you can save and commit your Jupyter notebook.
 
 ```
 jovian.commit()
 ```
 
-- Saves the checkpoint of your notebook.
-- Captures source code, python environment.
-- Uploads it to [Jovian](https://jvn.io) and returns a link to your notebook.
+When you run `jovian.commit` for the first you'll be asked to provide an API key, which you can get from your [Jovian](https://jvn.io) (or Jovian Pro) account.
 
-**TODO-SB: Add gif for committing**
+![](https://i.imgur.com/aI99Qmh.png)
+
+Here's what `jovian.commit` does:
+
+- It saves and uploads the Jupyter notebook to your Jovian (or Jovian Pro) account.
+- It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
+- It returns a link that you can use to view and share your notebook with friends or colleagues.
+
+![](https://i.imgur.com/JUMvVMd.gif)
 
 For more features of commit and API reference visit [Commit](../jvn/commit.md).
 
 ```eval_rst
 .. attention::
-        Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
+        In certain environments like JupyterLab and password protected notebooks, Jovian may not be able to detect the notebook filename automatically. In such cases, pass the notebook's name as the ``nb_filename`` argument to ``jovian.commit``.
 ```
 
 ### What are the benefits of uploading to Jovian?
