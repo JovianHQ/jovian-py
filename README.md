@@ -100,8 +100,13 @@ jovian pull    # Pull the latest changes
 
 For feedback, suggestions and feature requests, drop us a line at hello@jvn.io or create a ticket in the [issues tab](https://github.com/jvn-io/jovian-py/issues) .
 
+## Development and Testing
+
+To run the tests, run the following command in the project root:  
+`python -m unittest discover` [`-v` for verbose]
+
 ## Contributors
 
-Aakash N S
-Prajwal Prashanth
-Siddhant Ujjain
+- Aakash N S
+- Prajwal Prashanth
+- Siddhant Ujjain
