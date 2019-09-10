@@ -143,7 +143,19 @@ Embed the directives with three backticks (`) followed by ```eval_rst``` below t
     ```
     *Note that the `code-block` directive should be in the line after the `Example` along with a `tab` indentation, the code should be in the line after the `code-block` with a further tab indentation. 
 
-Check out these cheetsheets of [rst](https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html) and [this for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). 
+Check out these cheetsheets of [rst](https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html) and [this for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
+
+### Creating your docs preview
+
+- Sign up for a [readthedocs account](https://readthedocs.org/).
+- Connect the account with your GitHub account. 
+- Visit a project's admin settings
+- Set the `Repository URL` as ```https://github.com/jvn-io/jovian-py```
+- Goto Versions Tab
+- Select the particular branch 
+- Set it to active
+- Once the project is built, goto the versions tab, click on the branch under active versions.
+- Include this link for a preview in your PR.
 
 **Optional: Adding a git prompt**
 
