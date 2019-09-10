@@ -104,3 +104,7 @@ For feedback, suggestions and feature requests, drop us a line at hello@jvn.io o
 
 To run the tests, run the following command in the project root:  
 `python -m unittest discover` [`-v` for verbose]
+
+## Contributors
+
+- Zilong Ye
