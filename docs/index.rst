@@ -41,15 +41,15 @@ Run this command in your terminal:
   :hidden:
   :caption: Getting Started
 
-  user_guide/install
-  user_guide/upload
-  user_guide/reproduce
-  user_guide/version
-  user_guide/attach
-  user_guide/track
-  user_guide/compare
-  user_guide/collaborate
-  user_guide/pro
+  user_guide/1_install
+  user_guide/2_upload
+  user_guide/3_reproduce
+  user_guide/4_version
+  user_guide/5_attach
+  user_guide/6_track
+  user_guide/7_compare
+  user_guide/8_collaborate
+  user_guide/9_pro
 
 .. toctree::
   :caption: Jovian
