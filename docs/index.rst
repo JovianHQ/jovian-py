@@ -70,5 +70,3 @@ Run this command in your terminal:
 
   nbext/commit
   nbext/disable
-
-
