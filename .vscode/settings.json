@@ -1,5 +1,4 @@
 {
-  "python.pythonPath": "/usr/local/anaconda3/envs/jovian/bin/python",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -8,6 +7,12 @@
     "**/.DS_Store": true,
     "**/*.pyc": true
   },
+  "editor.rulers": [120],
+  "python.formatting.autopep8Args": [
+    "--max-line-length",
+    "120",
+    "--experimental"
+  ],
   "restructuredtext.confPath": "${workspaceFolder}/docs",
   "cSpell.words": [
     "aakash",
@@ -78,9 +83,7 @@
     "vsre",
     "webapp"
   ],
-  "cSpell.ignoreWords": [
-    "jvn",
-    "notif",
-    "seealso"
-  ]
+  "cSpell.ignoreWords": ["jvn", "notif", "seealso"],
+  "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
+  "editor.formatOnSave": true
 }
