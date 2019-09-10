@@ -1,26 +1,26 @@
-## Contributing Guide
+# Contributing Guide
 
-### Getting Started
+## Development Setup
 
 This guide will help you setup and contribute to jovian.
 
-**Step 1: Clone the repo:**
+**Step 1: Clone the repository**
 
 ```
-git clone git clone https://github.com/jvn-io/jovian-py.git
+git clone https://github.com/jvn-io/jovian-py.git
 ```
 
-`cd` into the `jovian-py` folder:
+Move into the `jovian-py` folder:
 
 ```
 cd jovian-py
 ```
 
-**Step 2: Setup the Python environment for devolopment:**
+**Step 2: Setup the Python environment for development**
 
-Create a new Python environment using [conda](conda.io).
+Create a new Python environment using [conda](https://docs.conda.io/en/latest/).
 
-_Make sure you have [conda](https://docs.conda.io/en/latest/) setup on your pc_
+_Make sure you have [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) setup on your pc_
 
 ```
 conda create -n jovian-py-dev python=3.5 -y
@@ -38,7 +38,9 @@ Install the dependencies by running:
 pip install -r requirements.txt
 ```
 
-To ensure that VSCode and other code editors use the correct conda environment, run the following command to add the path of the `jovian-py-dev` env to your `.bashrc` file:
+To ensure that [VSCode](https://code.visualstudio.com/) and other code editors use the correct conda environment, run the following command to add the path of the `jovian-py-dev` env to your `.bashrc` file:
+
+*Ensure that you have activated `jovian-py-dev` the environment before running the following command* 
 
 ```
 echo -e "\n\nexport JOVIAN_PY_DEV_PYTHONPATH=$CONDA_PREFIX/bin/python" >> ~/.bashrc
@@ -46,8 +48,11 @@ echo -e "\n\nexport JOVIAN_PY_DEV_PYTHONPATH=$CONDA_PREFIX/bin/python" >> ~/.bas
 source ~/.bashrc
 ```
 
-The installation of dependencies is complete.
-When working on jovian, please ensure that you activate the `jovian-py-dev` environment inside the `jovian-py` folder. You can deactivate the environment using:
+The installation of dependencies is now complete.
+
+When working on Jovian, please ensure that you activate the `jovian-py-dev` environment inside the `jovian-py` folder. 
+
+You can deactivate the environment using:
 
 ```
 conda deactivate
@@ -70,10 +75,11 @@ This should print out:
 **Step 4: Setup Code Editor:**
 
 We recommend using [VSCode](https://code.visualstudio.com/),
-
-_Make sure VSCode can be [launched from the command line](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)_
+_Make sure VSCode can be [launched from the command line](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)_.
 
 We recommend using the following extensions in VSCode:
+
+*Read more about VSCode Extensions [here](https://code.visualstudio.com/docs/editor/extension-gallery)*
 
 - [Python Extension](https://code.visualstudio.com/docs/languages/python)
 - [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)
@@ -86,7 +92,7 @@ Launch VSCode inside the folder type:
 code .
 ```
 
-### Contributing to Docs
+## Contributing to Docs
 
 The documentation website of Jovian is hosted at [jovian-py.readthedocs.io](https://jovian-py.readthedocs.io/en/latest/)
 
