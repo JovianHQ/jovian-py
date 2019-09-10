@@ -4,7 +4,7 @@ help:
 	echo "Check the Makefile for supported commands"
 
 export-env:
-	conda env export > environment.yml --no-builds
+	pip freeze > requirements.txt
 
 clean:
 	trash ./*.egg-info
