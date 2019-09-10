@@ -1,5 +1,11 @@
 @import "theme.css";
 
+.rst-content img {
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: rgba(52, 64, 77, 0.2) 0px 1px 5px;
+}
+
 h1 {
   font-size: 30px;
 }

@@ -18,7 +18,7 @@ jovian.commit()
 
 When you run `jovian.commit` for the first you'll be asked to provide an API key, which you can get from your [Jovian](https://jvn.io) (or Jovian Pro) account.
 
-![](https://i.imgur.com/aI99Qmh.png)
+![](https://i.imgur.com/taLLUVd.png)
 
 Here's what `jovian.commit` does:
 
