@@ -1,6 +1,4 @@
-{
-  "python.pythonPath": "/usr/local/anaconda3/envs/jovian/bin/python",
-  "files.exclude": {
+{   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -79,5 +77,6 @@
   "cSpell.ignoreWords": [
     "jvn",
     "notif"
-  ]
+  ],
+  "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}"
 }

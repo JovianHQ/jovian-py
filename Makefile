@@ -1,4 +1,7 @@
-.PHONY: export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro 
+.PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs 
+
+help:
+	echo "Check the Makefile for supported commands"
 
 export-env:
 	conda env export > environment.yml --no-builds
@@ -34,3 +37,7 @@ publish-pro:
 	make clean
 	make build-pro
 	make upload
+
+run-docs:
+	cd docs && make html
+	sphinx-autobuild docs docs/_build/html
