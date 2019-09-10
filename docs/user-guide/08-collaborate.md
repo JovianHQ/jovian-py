@@ -6,7 +6,7 @@ Jovian allows you to add collaborators to work with you on a ML Project.
 
 Click on `Share` button of the notebook and add them by their username or email id registered with Jovian.
 
-TODO: Add image/GIF
+<!-- TODO: Add image/GIF -->
 
 This will allow the contributors to be able to [commit](02-upload.md) changes to the same notebook project. The experiments by all the collaborators will also show up in the [compare table](07-compare.md). tab.
 
@@ -14,7 +14,7 @@ This will allow the contributors to be able to [commit](02-upload.md) changes to
 
 Users can comment on any code cells individually and maintain that thread to have specific discussion about a part of the source code with context.
 
-TODO: Add image/GIF
+<!-- TODO: Add image/GIF -->
 
 ### Maintain secret notebooks
 

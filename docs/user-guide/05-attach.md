@@ -35,5 +35,5 @@ All the attached files are listed under `Files` Tab.
 3. Deleted
 4. View Raw
 5. Uploaded
-
-**TODO: Visiting, opening, renaming, downloading those files in webapp**
+<!-- 
+TODO: Visiting, opening, renaming, downloading those files in webapp -->
