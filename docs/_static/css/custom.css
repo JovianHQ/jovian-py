@@ -1,6 +1,7 @@
 @import "theme.css";
 
-.rst-content img {
+img.screenshot {
+  /* Add border radius and shadow for screenshots */
   border-radius: 4px;
   overflow: hidden;
   box-shadow: rgba(52, 64, 77, 0.2) 0px 1px 5px;

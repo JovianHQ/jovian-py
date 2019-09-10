@@ -50,7 +50,7 @@ The above command prompts for the following information:
 
 2.  **API key**: You'll get the API key when you're logged in to your organization's Jovian Pro site. By clicking on the _API key_ button, the key will be copied to clipboard.
 
-![](https://i.imgur.com/taLLUVd.png)
+<img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
 
 ```eval_rst
 .. note::
