@@ -8,7 +8,7 @@ Click on `Share` button of the notebook and add them by their username or email 
 
 TODO: Add image/GIF
 
-This will allow the contributors to be able to [commit](upload.md) changes to the same notebook project. The experiments by all the collaborators will also show up in the [compare table](compare.md) tab.
+This will allow the contributors to be able to [commit](02-upload.md) changes to the same notebook project. The experiments by all the collaborators will also show up in the [compare table](07-compare.md). tab.
 
 ### Comment on individual code cells
 
