@@ -63,7 +63,7 @@ Run this command in your terminal:
 
   callbacks/fastai
   callbacks/keras
-  
+
 .. toctree::
   :caption: Jupyter Notebook Extension
   :hidden:
