@@ -4,7 +4,7 @@
 
 Click on `Share` button of the notebook and add them by their username or email id registered with Jovian.
 
-Now even they can [commit](upload.md) changes to the same notebook project. Can compare the experiments by all the collaborators in the [compare table](compare.md).
+Now even they can [commit](02-upload.md) changes to the same notebook project. Can compare the experiments by all the collaborators in the [compare table](07-compare.md).
 
 ### Comment on individual code cells
 

@@ -42,15 +42,15 @@ Run this command in your terminal:
   :hidden:
   :caption: Getting Started
 
-  user_guide/1_install
-  user_guide/2_upload
-  user_guide/3_reproduce
-  user_guide/4_version
-  user_guide/5_attach
-  user_guide/6_track
-  user_guide/7_compare
-  user_guide/8_collaborate
-  user_guide/9_pro
+  user-guide/01-install
+  user-guide/02-upload
+  user-guide/03-reproduce
+  user-guide/04-version
+  user-guide/05-attach
+  user-guide/06-track
+  user-guide/07-compare
+  user-guide/08-collaborate
+  user-guide/09-pro
 
 .. toctree::
   :caption: Jovian
