@@ -111,6 +111,14 @@ def write_cred(key, value):
     write_creds(creds)
 
 
+def purge_cred_key(key):
+    """Remove a particular key from config"""
+    creds = read_creds()
+    if key in creds:
+        del creds[key]
+        write_creds(creds)
+
+
 # API URL
 
 def write_api_url(value):
@@ -232,6 +240,11 @@ def ensure_org(check_pro=True):
     write_org_id(org_id)
     write_api_url(api_url)
     write_webapp_url(webapp_url)
+
+
+def purge_api_key():
+    """Remove API token from config"""
+    purge_cred_key(API_TOKEN_KEY)
 
 
 def write_api_key(value):

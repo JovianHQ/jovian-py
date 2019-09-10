@@ -1,11 +1,13 @@
+from functools import wraps
 from os.path import basename
 from time import sleep
 
-from requests import get, post
+from requests import get as mkget
+from requests import post as mkpost
 
 from jovian._version import __version__
 from jovian.utils.credentials import (API_TOKEN_KEY, get_guest_key,
-                                      read_api_url, read_creds,
+                                      purge_api_key, read_api_url, read_creds,
                                       read_or_request_api_key, read_org_id,
                                       request_api_key, write_api_key)
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
@@ -43,15 +45,40 @@ def _pretty(res):
     return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
 
 
+def retry(request):
+    """Decorator to make get/post requests retryable"""
+    @wraps(request)
+    def _request_wrapper(*args, **kwargs):
+        for i in range(2):
+            res = request(*args, **kwargs)
+            if res.status_code == 401:
+                log('The current API key is invalid or expired.', error=True)
+                purge_api_key()
+                # This will ensure that fresh api token is requested
+                kwargs['headers'] = _h()
+            else:
+                return res
+        return res
+
+    return _request_wrapper
+
+
+@retry
+def get(url, params=None, **kwargs):
+    """Retryable GET request"""
+    return mkget(url, params=None, **kwargs)
+
+
+@retry
+def post(url, data=None, json=None, **kwargs):
+    """Retryable POST request"""
+    return mkpost(url, data=None, json=None, **kwargs)
+
+
 def validate_api_key(key):
     """Validate the API key by making a request to server"""
-    res = get(_u('/user/profile'),
-              headers={'Authorization': 'Bearer ' + key})
-    if res.status_code == 200:
-        return True
-    else:
-        return False
-    raise ApiError(_pretty(res))
+    res = mkget(_u('/user/profile'), headers={'Authorization': 'Bearer ' + key})
+    return res.status_code == 200
 
 
 def get_api_key():
@@ -76,7 +103,6 @@ def _h():
             "x-jovian-library-version": __version__,
             "x-jovian-guest": get_guest_key(),
             "x-jovian-org": read_org_id()}
-
 
 
 def _v(version):
