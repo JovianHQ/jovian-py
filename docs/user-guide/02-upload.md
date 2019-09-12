@@ -39,7 +39,7 @@ For more features of `jovian.commit` and API reference visit [Commit](../jvn/com
 
 #### Benefits of Jovian
 
-**Easy Sharing and Collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](08-collaborate.md)).
+**Easy sharing and collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](08-collaborate.md)).
 
 <img src="https://i.imgur.com/D6JU35G.gif" class="screenshot">
 
