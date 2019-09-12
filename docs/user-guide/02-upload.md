@@ -1,8 +1,8 @@
 ## Uploading Jupyter Notebooks to Jovian
 
-Jovian allows you to upload and share [Jupyter notebooks](https://jupyter.org/) instantly with a single command, directly within Jupyter notebook. Make sure you've completed the [installation](01-install.md) before reading further.
+Jovian allows you to upload and share [Jupyter notebooks](https://jupyter.org/) instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](01-install.md) before reading further.
 
-### Uploading a Notebook
+#### Uploading Notebooks
 
 **Step 1**: Import `jovian` by running the following command within a Jupyter notebook.
 
@@ -26,7 +26,7 @@ Here's what `jovian.commit` does:
 - It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
 - It returns a link that you can use to view and share your notebook with friends or colleagues.
 
-![](https://i.imgur.com/JUMvVMd.gif)
+<img src="https://i.imgur.com/1cFeiC7.gif" class="screenshot">
 
 <!-- TODO: Redo the GIF -->
 
@@ -37,27 +37,19 @@ For more features of `jovian.commit` and API reference visit [Commit](../jvn/com
         In certain environments like JupyterLab and password protected notebooks, ``jovian`` may not be able to detect the notebook filename automatically. In such cases, pass the notebook's name as the ``nb_filename`` argument to ``jovian.commit``.
 ```
 
-### What are the benefits of uploading to Jovian?
+#### Benefits of Jovian
 
-#### Share the notebooks with ease
+**Easy Sharing and Collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](08-collaborate.md)).
 
-Uploaded notebooks can be public/secret. You can get stars from the people who benefit from your notebook.
+<img src="https://i.imgur.com/D6JU35G.gif" class="screenshot">
 
-Secret Notebooks(Private) won't be on your public profile but anyone with the link can access it.
+**Cell-level comments and discussions**: Jovian's powerful commenting interface allows your team to discuss specific parts of a notebook with cell-level comment threads. Just hover over a cell and click the _Comment_ button. You'll receive an email when someone comments on your notebook, or replies to your comment.
 
-<!-- TODO-SB: GIF for Sharing notebooks, making them secret/public -->
+<img src="https://i.imgur.com/15vj2qv.png" class="screenshot">
 
-#### Collaborate with teammates/colleagues
+**End-to-end reproducibility**:
+Jovian automatically captures Python libraries used in your notebook, so anyone (including you) can reproduce your work on any computer with a single command: `jovian clone`. You can also use the 'Run' dropdown on the Jovian notebook page to run your notebooks on free cloud GPU platforms like Google Colab, Kaggle Kernels and BinderHub.
 
-Team up and add collaborators.
-Even they can add their version of notebook to the same project.
+<img src="https://i.imgur.com/kGPlFCp.png" class="screenshot">
 
-<!-- **TODO-SB: GIF for adding Collaborators** -->
-
-#### Comment on individual code cells
-
-Users can comment on any code cells individually and maintain that thread to have specific discussion about a part of the source code with context.
-
-<!-- **TODO-SB: GIF for commenting on notebook cells** -->
-
-There are many more benefits follow the pages in this section to know more. You can click `Next ->` button or use the side bar `GETTING STARTED` section.
+This is just a small selection of features that Jovian offers. Continue reading by clicking the `Next ->` button to learn more, or use the sidebar to jump to a specific section.

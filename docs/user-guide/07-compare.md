@@ -1,6 +1,6 @@
 ## Comparing and Analyzing experiments
 
-Once you have more than 2 [versions](4_version.md) of a notebook, you will be able to use `Compare Versions` present in the `Version` dropdown on the top right corner.
+Once you have more than 2 [versions](04-version.md) of a notebook, you will be able to use `Compare Versions` present in the `Version` dropdown on the top right corner.
 
 Here you can observe all types of information about all of your versions.
 
@@ -16,7 +16,7 @@ Here you can observe all types of information about all of your versions.
 
 ### Sort
 
-You can sort any column or a sub-column (For ex:  accuracy or any other metric, date of creation etc.) by clicking on the column header.
+You can sort any column or a sub-column (For ex: accuracy or any other metric, date of creation etc.) by clicking on the column header.
 
 ### Show, Hide and Reorder columns
 
