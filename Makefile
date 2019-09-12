@@ -1,5 +1,8 @@
 .PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs 
 
+activate:
+	conda activate jovian-pro-dev
+
 help:
 	echo "Check the Makefile for supported commands"
 

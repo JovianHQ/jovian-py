@@ -69,7 +69,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             This can include model weights/checkpoints, generated CSVs, images etc.
 
     .. attention::
-        Pass notebook's name to nb_filename in certain environments like Jupyter Lab, password protected notebooks as sometimes it may fail to detect automatically in these environments.
+        Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
 
     """
     global _current_slug

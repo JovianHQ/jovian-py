@@ -24,6 +24,7 @@
     "contextlib",
     "csvs",
     "dataset",
+    "datasets",
     "deps",
     "env",
     "envfile",
@@ -79,9 +80,15 @@
     "unittest",
     "verstr",
     "verstrline",
-    "vsre"
+    "vsre",
+    "webapp"
   ],
-  "cSpell.ignoreWords": ["jvn", "notif"],
+  "cSpell.ignoreWords": [
+    "jvn",
+    "mycompany",
+    "notif",
+    "seealso"
+  ],
   "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
   "editor.formatOnSave": true
 }
