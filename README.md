@@ -112,3 +112,4 @@ To run the tests, run the following command in the project root:
 - Siddhant Ujjain
 - Mayank Saboo
 - Zilong Ye
+- Bingnan Zhou
