@@ -25,7 +25,8 @@ Welcome to Jovian!
 Getting Started
 ==================================
 
-Learn more about installing Jovian python library and some of the core features of Jovian.
+Learn more about installing Jovian python library and some
+of the core features of Jovian.
 
 Run this command in your terminal:
 
@@ -38,15 +39,18 @@ Run this command in your terminal:
   :hidden:
 
 .. toctree::
-  :maxdepth: 2
   :hidden:
   :caption: Getting Started
 
-  intro/installation
-  intro/upload-to-jovian
-  intro/reproduce-notebooks
-  intro/development
-  intro/coming-soon
+  user-guide/01-install
+  user-guide/02-upload
+  user-guide/03-reproduce
+  user-guide/04-version
+  user-guide/05-attach
+  user-guide/06-track
+  user-guide/07-compare
+  user-guide/08-collaborate
+  user-guide/09-pro
 
 .. toctree::
   :caption: Jovian
@@ -62,12 +66,10 @@ Run this command in your terminal:
 
   callbacks/fastai
   callbacks/keras
-  
+
 .. toctree::
   :caption: Jupyter Notebook Extension
   :hidden:
 
   nbext/commit
   nbext/disable
-
-

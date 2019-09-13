@@ -1,12 +1,19 @@
 @import "theme.css";
 
+img.screenshot {
+  /* Add border radius and shadow for screenshots */
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: rgba(52, 64, 77, 0.2) 0px 1px 5px;
+}
+
 h1 {
   font-size: 30px;
 }
 
 ul {
   /* Indent the side nave bar list*/
-  margin-left: 3%;
+  margin-left: 2%;
 }
 
 .wy-side-nav-search > a img.logo {
@@ -31,19 +38,30 @@ ul {
   background: rgba(221, 221, 221, 0.5);
 }
 
+.wy-menu-vertical li.current {
+  /* Background color of selected sub-list */
+  background: white;
+}
+
+.wy-menu-vertical li.current > a:hover,
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a:hover {
+  /* Background color of text upon hovering already expanded sub-list*/
+  background: rgba(221, 221, 221, 0.5);
+}
+
 .wy-menu-vertical li.toctree-l2.current > a {
   /* Background color of text selected on a already expanded sub-list */
   background-color: rgba(221, 221, 221, 0.5);
 }
 
-.wy-menu-vertical li.current > a:hover {
-  /* Background color of text upon hovering already expanded sub-list*/
-  background: rgba(221, 221, 221, 0.5);
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+  /* Background color of text sub-list of a selected sub-list */
+  background-color: white;
 }
 
-.wy-menu-vertical li.current {
-  /* Background color of selected sub-list */
-  background: white;
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3.current > a {
+  /* Background color of text selected sub-list of a selected sub-list */
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical a,
@@ -53,6 +71,7 @@ ul {
   color: #0069d9;
 }
 
+.wy-nav-content,
 .wy-nav-content-wrap {
   /* Background color of wrap around main content */
   background-color: white;
