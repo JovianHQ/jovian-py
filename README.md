@@ -110,4 +110,5 @@ To run the tests, run the following command in the project root:
 - Aakash N S
 - Prajwal Prashanth
 - Siddhant Ujjain
+- Mayank Saboo
 - Zilong Ye
