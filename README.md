@@ -115,3 +115,4 @@ To run the tests, run the following command in the project root:
 - Zilong Ye
 - Prerakbhai Bhakta
 - Bingnan Zhou
+- Leonardo Ramirez
