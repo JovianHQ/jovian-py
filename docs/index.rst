@@ -58,6 +58,7 @@ Run this command in your terminal:
 
   jvn/commit
   jvn/logger
+  jvn/notif
   jvn/cli
 
 .. toctree::
