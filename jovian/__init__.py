@@ -34,8 +34,9 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
            env_type='conda', notebook_id=None, create_new=None, artifacts=[]):
     """Commits a Jupyter Notebook with its environment to Jovian.
 
-    Saves the checkpoint of the notebook, capture the required dependencies from the python environment and uploads the notebook, env file, additional files like scripts, csv etc. to https: // www.jvn.io . Capturing the python environment ensures that the notebook can be reproduced and
-    executed easily using the ** *{links to reprodue notebooks}.***
+    Saves the checkpoint of the notebook, captures the required dependencies from 
+    the python environment and uploads the notebook, env file, additional files like scripts, csv etc.
+    to `Jovian`_. Capturing the python environment ensures that the notebook can be reproduced.
 
     Args:
         secret(bool, optional): Create a secret notebook on Jovian, which is only
@@ -70,7 +71,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     .. attention::
         Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
-
+    .. _Jovian: https://jvn.io
     """
     global _current_slug
     global _data_blocks
@@ -273,10 +274,28 @@ def log_dataset(data, verbose=True):
 
 
 def notify(data, verbose=True, safe=False):
-    """Sends the data to Slack connected to Jovian account
+    """Sends the data to the `Slack`_ workspace connected with your `Jovian`_ account.
 
-    Arguments:
-        data: A dict or string to be pushed to Slack
+    Args:
+        data(dict|string): A dict or string to be pushed to Slack
+
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
+
+        safe(bool, optional): To avoid raising ApiError exception. Defaults to False.
+
+    Example
+        .. code-block::
+
+            import jovian
+
+            data = "Hello from the Integration!"
+            jovian.notify(data)
+
+    .. important::
+        This feature requires for your Jovian account to be connected to a Slack workspace, visit `Jovian Integrations`_ to integrate them and to control the type of notifications.
+    .. _Slack: https://slack.com
+    .. _Jovian: https://jvn.io
+    .. _Jovian Integrations: https://jvn.io/settings/integrations
     """
     res = post_slack_message(data=data, safe=safe)
     if verbose:
