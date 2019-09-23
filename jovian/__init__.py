@@ -51,11 +51,11 @@ def reset():
 
             jovian.reset()
 
-            data = {
+            newData = {
                 'path': '/datasets/mnist',
                 'description': 'a new set of data post-reset'
             }
-            jovian.log_dataset(data)
+            jovian.log_dataset(newData)
     """
     global _current_slug
     global _data_blocks
