@@ -1,72 +1,15 @@
-from os.path import basename
-from time import sleep
-
-from requests import get, post
-
 from jovian._version import __version__
-from jovian.utils.credentials import (API_TOKEN_KEY, get_guest_key,
-                                      read_api_url, read_creds,
-                                      read_or_request_api_key, read_org_id,
-                                      request_api_key, write_api_key)
-from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.credentials import (get_api_key, get_guest_key, read_api_url,
+                                      read_org_id)
+from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.misc import timestamp_ms
-
-
-class ApiError(Exception):
-    """Error class for web API related Exceptions"""
-    pass
+from jovian.utils.request import get, post, pretty
 
 
 def _u(path):
     """Make a URL from the path"""
     return read_api_url() + path
-
-
-def _msg(res):
-    try:
-        data = res.json()
-        if 'errors' in data and len(data['errors']) > 0:
-            return data['errors'][0]['message']
-        if 'message' in data:
-            return data['message']
-        if 'msg' in data:
-            return data['msg']
-    except:
-        if res.text:
-            return res.text
-        return 'Something went wrong'
-
-
-def _pretty(res):
-    """Make a human readable output from an HTML response"""
-    return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
-
-
-def validate_api_key(key):
-    """Validate the API key by making a request to server"""
-    res = get(_u('/user/profile'),
-              headers={'Authorization': 'Bearer ' + key})
-    if res.status_code == 200:
-        return True
-    else:
-        return False
-    raise ApiError(_pretty(res))
-
-
-def get_api_key():
-    """Retrieve and validate the API Key (from memory, config or user input)"""
-    creds = read_creds()
-    if API_TOKEN_KEY not in creds:
-        key, _ = read_or_request_api_key()
-        if not validate_api_key(key):
-            log('The current API key is invalid or expired.', error=True)
-            key, _ = request_api_key(), 'request'
-            if not validate_api_key(key):
-                raise ApiError('The API key provided is invalid or expired.')
-        write_api_key(key)
-        return key
-    return creds[API_TOKEN_KEY]
 
 
 def _h():
@@ -76,7 +19,6 @@ def _h():
             "x-jovian-library-version": __version__,
             "x-jovian-guest": get_guest_key(),
             "x-jovian-org": read_org_id()}
-
 
 
 def _v(version):
@@ -92,7 +34,7 @@ def get_gist(slug):
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve metadata for notebook "' +
-                    slug + '": ' + _pretty(res))
+                    slug + '": ' + pretty(res))
 
 
 def get_gist_access(slug):
@@ -101,7 +43,7 @@ def get_gist_access(slug):
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve access permission for notebook "' +
-                    slug + '" (retry with create_new=True to create a new notebook): ' + _pretty(res))
+                    slug + '" (retry with create_new=True to create a new notebook): ' + pretty(res))
 
 
 def create_gist_simple(filename=None, gist_slug=None, secret=False):
@@ -120,7 +62,7 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
                        headers=auth_headers)
             if res.status_code == 200:
                 return res.json()['data']
-            raise ApiError('File upload failed: ' + _pretty(res))
+            raise ApiError('File upload failed: ' + pretty(res))
 
 
 def upload_file(gist_slug, file, version=None, artifact=False):
@@ -130,7 +72,7 @@ def upload_file(gist_slug, file, version=None, artifact=False):
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
-    raise ApiError('File upload failed: ' + _pretty(res))
+    raise ApiError('File upload failed: ' + pretty(res))
 
 
 def post_blocks(blocks, version=None):
@@ -139,7 +81,7 @@ def post_blocks(blocks, version=None):
     if res.status_code == 200:
         return res.json()['data']
     else:
-        raise ApiError('Data logging failed: ' + _pretty(res))
+        raise ApiError('Data logging failed: ' + pretty(res))
 
 
 def post_block(data, data_type, version=None):
@@ -157,7 +99,7 @@ def commit_records(gist_slug, tracking_slugs, version=None):
     if res.status_code == 200:
         return res.json()['data']
     else:
-        raise ApiError('Data logging failed: ' + _pretty(res))
+        raise ApiError('Data logging failed: ' + pretty(res))
 
 
 def post_slack_message(data, safe=False):
@@ -169,4 +111,4 @@ def post_slack_message(data, safe=False):
     elif safe:
         return {'data': {'messageSent': False}}
     else:
-        raise ApiError('Slack trigger failed: ' + _pretty(res))
+        raise ApiError('Slack trigger failed: ' + pretty(res))

@@ -11,6 +11,7 @@ import requests
 
 from jovian.utils.constants import (DEFAULT_API_URL, DEFAULT_ORG_ID,
                                     DEFAULT_WEBAPP_URL)
+from jovian.utils.error import ApiError, ConfigError
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
 
@@ -36,11 +37,6 @@ CREDS_FNAME = 'credentials.json'
 CREDS_PATH = CONFIG_DIR + '/' + CREDS_FNAME
 
 CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jvn.io .'
-
-
-class ConfigError(Exception):
-    """Error class for config related Exceptions"""
-    pass
 
 
 # Config directory management
@@ -109,6 +105,14 @@ def write_cred(key, value):
         return
     creds[key] = value
     write_creds(creds)
+
+
+def purge_cred_key(key):
+    """Remove a particular key from config"""
+    creds = read_creds()
+    if key in creds:
+        del creds[key]
+        write_creds(creds)
 
 
 # API URL
@@ -234,9 +238,40 @@ def ensure_org(check_pro=True):
     write_webapp_url(webapp_url)
 
 
+def purge_api_key():
+    """Remove API token from config"""
+    purge_cred_key(API_TOKEN_KEY)
+
+
 def write_api_key(value):
     """Write the API key to memory, and the credentials file"""
     write_cred(API_TOKEN_KEY, value)
+
+
+def _u(path):
+    """Make a URL from the path"""
+    return read_api_url() + path
+
+
+def validate_api_key(key):
+    """Validate the API key by making a request to server"""
+    res = requests.get(_u('/user/profile'), headers={'Authorization': 'Bearer ' + key})
+    return res.status_code == 200
+
+
+def get_api_key():
+    """Retrieve and validate the API Key (from memory, config or user input)"""
+    creds = read_creds()
+    if API_TOKEN_KEY not in creds:
+        key, _ = read_or_request_api_key()
+        if not validate_api_key(key):
+            log('The current API key is invalid or expired.', error=True)
+            key, _ = request_api_key(), 'request'
+            if not validate_api_key(key):
+                raise ApiError('The API key provided is invalid or expired.')
+        write_api_key(key)
+        return key
+    return creds[API_TOKEN_KEY]
 
 
 # Guest token
