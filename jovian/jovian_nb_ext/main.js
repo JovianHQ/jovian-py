@@ -28,6 +28,8 @@ define([
         const jvnLog = data => {
           resolve(data.content.text.trim());
         };
+        /* Saves checkpoints before committing*/
+        Jupyter.notebook.save_checkpoint();
 
         const nb_filename = Jupyter.notebook.notebook_name;
         const jvn_commit =
@@ -87,13 +89,6 @@ define([
         });
       });
 
-    /*
-      Updates the form based on the validation done on the API Key
-      - jvn_modal : jQuery Object ref. for the modal
-      - shown     : 
-        - true: when modal is already open
-        - false: when triggered to show a new modal 
-     */
     function updateForm(jvn_modal, shown = false) {
       /**
        * Updates the form layout.
@@ -188,14 +183,6 @@ define([
       return val;
     }
 
-    /*
-      Body of the Form
-      
-      form - class:form-horizontal
-        div - 
-          label - id:i_label | text:API key
-          input - id:text_box | type:textarea | placeholder:{default_text}
-      */
     const formUI = function() {
       /**
        * Body of the Form
