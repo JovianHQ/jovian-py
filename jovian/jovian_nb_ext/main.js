@@ -342,7 +342,7 @@ define([
     //toolbar button to remove the jovian extension
     const remove_ext_action = {
       icon: "fa-times",
-      help: "Disable jovian ext",
+      help: "Disable Jovian Extension",
       handler: removeExtension
     };
     const remove_ext_name = Jupyter.actions.register(
