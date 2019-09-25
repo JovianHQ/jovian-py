@@ -7,7 +7,7 @@ This guide will help you setup and contribute to jovian.
 **Step 1: Clone the repository**
 
 ```
-git clone https://github.com/jvn-io/jovian-py.git
+git clone https://github.com/jovianml/jovian-py.git
 ```
 
 Move into the `jovian-py` folder:
@@ -150,7 +150,7 @@ Check out these cheetsheets of [rst](https://thomas-cokelaer.info/tutorials/sphi
 - Sign up for a [readthedocs account](https://readthedocs.org/).
 - Connect the account with your GitHub account. 
 - Visit a project's admin settings
-- Set the `Repository URL` as ```https://github.com/jvn-io/jovian-py```
+- Set the `Repository URL` as ```https://github.com/jovianml/jovian-py```
 - Goto Versions Tab
 - Select the particular branch 
 - Set it to active

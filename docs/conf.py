@@ -59,4 +59,4 @@ def linkcode_resolve(domain, info):
     if not info['module']:
         return None
     filename = info['module'].replace('.', '/')
-    return "https://github.com/jvn-io/jovian-py/tree/master/{}.py".format(filename)
+    return "https://github.com/jovianml/jovian-py/tree/master/{}.py".format(filename)

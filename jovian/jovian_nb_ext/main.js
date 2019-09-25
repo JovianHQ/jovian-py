@@ -14,7 +14,7 @@ define([
 
     const jvnCommit = () =>
       /**
-       * Commits the notebook to Jovian(https://jvn.io).
+       * Commits the notebook to Jovian(https://jovian.ml).
        *
        * Returns:
        *  - Committed notebook's link: for successful commit
@@ -203,7 +203,7 @@ define([
        * Layout:
        *  - form : class: form-horizontal
        *    - div :
-       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jvn.io)
+       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jovian.ml)
        *      - input : id: text_box | class: form-control | placeholder: {default_text}
        *      - label : id: e_label | text: Invalid API key | hidden: by default
        *
@@ -219,7 +219,7 @@ define([
         .text("Please enter your API key from ")
         .append(
           $("<a/>")
-            .attr("href", "https://jvn.io")
+            .attr("href", "https://jovian.ml")
             .attr("target", "_blank")
             .text("Jovian")
         );
