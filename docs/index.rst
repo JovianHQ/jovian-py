@@ -18,7 +18,7 @@ Welcome to Jovian!
 * Collaborate easily with friends/colleagues, and
 * Automate repetitive tasks in their day-to-day workflow.
 
-.. _Jovian: https://www.jvn.io
+.. _Jovian: https://www.jovian.ml
 
 
 

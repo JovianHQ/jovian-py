@@ -71,7 +71,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     .. attention::
         Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
-    .. _Jovian: https://jvn.io
+    .. _Jovian: https://jovian.ml
     """
     global _current_slug
     global _data_blocks
@@ -294,8 +294,8 @@ def notify(data, verbose=True, safe=False):
     .. important::
         This feature requires for your Jovian account to be connected to a Slack workspace, visit `Jovian Integrations`_ to integrate them and to control the type of notifications.
     .. _Slack: https://slack.com
-    .. _Jovian: https://jvn.io
-    .. _Jovian Integrations: https://jvn.io/settings/integrations
+    .. _Jovian: https://jovian.ml
+    .. _Jovian Integrations: https://jovian.ml/settings/integrations
     """
     res = post_slack_message(data=data, safe=safe)
     if verbose:

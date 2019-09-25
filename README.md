@@ -1,6 +1,6 @@
 # Jovian
 
-[Jovian](www.jvn.io) is a platform that helps data scientists and ML engineers
+[Jovian](www.jovian.ml) is a platform that helps data scientists and ML engineers
 
 - track & reproduce data science projects
 - collaborate easily with friends/colleagues, and
@@ -34,11 +34,11 @@ jovian.commit()
 
 Here's what `jovian.commit` does:
 
-- It saves and uploads the Jupyter notebook to your [Jovian](https://jvn.io) account.
+- It saves and uploads the Jupyter notebook to your [Jovian](https://jovian.ml) account.
 - It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
 - It returns a link that you can use to view and share your notebook with friends or colleagues.
 
-**NOTE**: When you run `jovian.commit` for the first time, you'll be asked to provide an API, which you can find on [your Jovian account](https://jvn.io).
+**NOTE**: When you run `jovian.commit` for the first time, you'll be asked to provide an API, which you can find on [your Jovian account](https://jovian.ml).
 
 ## Reproducing uploaded notebooks
 
@@ -98,7 +98,7 @@ jovian pull    # Pull the latest changes
 - Real time monitoring and email/Slack notifications for long running training jobs
 - Check out and reproduce tracked experiments on any machine with a single command
 
-For feedback, suggestions and feature requests, drop us a line at hello@jvn.io or create a ticket in the [issues tab](https://github.com/jvn-io/jovian-py/issues) .
+For feedback, suggestions and feature requests, drop us a line at hello@jovian.ml or create a ticket in the [issues tab](https://github.com/JovianML/jovian-py/issues) .
 
 ## Development and Testing
 
