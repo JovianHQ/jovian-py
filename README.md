@@ -98,7 +98,7 @@ jovian pull    # Pull the latest changes
 - Real time monitoring and email/Slack notifications for long running training jobs
 - Check out and reproduce tracked experiments on any machine with a single command
 
-For feedback, suggestions and feature requests, drop us a line at hello@jovian.ml or create a ticket in the [issues tab](https://github.com/jovianml/jovian-py/issues) .
+For feedback, suggestions and feature requests, drop us a line at hello@jovian.ml or create a ticket in the [issues tab](https://github.com/JovianML/jovian-py/issues) .
 
 ## Development and Testing
 
