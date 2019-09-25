@@ -1,4 +1,5 @@
-.PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs 
+.PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs
+VERSION:=`cat jovian/_version.py`
 
 activate:
 	conda activate jovian-pro-dev
@@ -35,11 +36,13 @@ publish:
 	make clean
 	make build
 	make upload
+	sh ./deployAlert.sh PUBLIC $(VERSION)
 
 publish-pro:
 	make clean
 	make build-pro
 	make upload
+	sh ./deployAlert.sh PRO $(VERSION)
 
 run-docs:
 	cd docs && make html
