@@ -104,7 +104,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             notebook_id = get_notebook_slug(nb_filename)
 
     # Check if notebook exists is a uuid or 'username/title'
-    if notebok_id is not None and '/' in notebook_id:
+    if notebook_id is not None and '/' in notebook_id:
         notebook_id = get_gist(notebook_id)['slug']
 
     # Check if the current user can push to this slug
