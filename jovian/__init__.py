@@ -5,7 +5,7 @@ from time import sleep
 from jovian.utils.anaconda import upload_conda_env, CondaError
 from jovian.utils.pip import upload_pip_env
 from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
-                              post_block, commit_records, post_slack_message)
+                              post_block, commit_records, post_slack_message, get_gist)
 from jovian.utils.logger import log
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
@@ -102,6 +102,10 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             notebook_id = _current_slug
         else:
             notebook_id = get_notebook_slug(nb_filename)
+
+    # Check if notebook exists is a uuid or 'username/title'
+    if '/' in notebook_id:
+        notebook_id = get_gist(notebook_id)['slug']
 
     # Check if the current user can push to this slug
     if notebook_id is not None:
