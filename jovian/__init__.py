@@ -24,38 +24,13 @@ _data_blocks = []
 
 def reset():
     """Reset the tracked hyperparameters & metrics (for a fresh experiment)
+    
     Example
         .. code-block::
 
             import jovian
 
-            data = {
-                'path': '/datasets/mnist',
-                'description': '28x28 images of handwritten digits (in grayscale)'
-            }
-            jovian.log_dataset(data)
-
-            hyperparams = {
-                'arch_name': 'cnn_1',
-                'lr': .001
-            }
-            jovian.log_hyperparams(hyperparams)
-
-            metrics = {
-                'epoch': 1,
-                'train_loss': .5,
-                'val_loss': .3,
-                'acc': .94
-            }
-            jovian.log_metrics(metrics)
-
             jovian.reset()
-
-            newData = {
-                'path': '/datasets/mnist',
-                'description': 'a new set of data post-reset'
-            }
-            jovian.log_dataset(newData)
     """
     global _current_slug
     global _data_blocks
