@@ -26,7 +26,7 @@ $ jovian disable-ext
 The changes are observed when the webpage of the notebook is refreshed.
 
 
-#### Here's what `/j Commit` button doesdoes:
+#### Here's what `/j Commit` button does:
 
 It saves the current state of the notebook. It captures and uploads the required dependencies from the python environment and python environment itself. Capturing the python environment and dependencies ensures that the notebook can be reproduced and executed easily. Once the process has been completed a link will be displayed in a pop up, which you can use to view and share your notebook with friends or colleagues.
 
