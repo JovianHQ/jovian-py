@@ -6,4 +6,6 @@
 .. autofunction:: jovian.log_hyperparams
 
 .. autofunction:: jovian.log_metrics
+
+.. autofunction:: jovian.reset
 ```

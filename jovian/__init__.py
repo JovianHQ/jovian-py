@@ -23,7 +23,15 @@ _data_blocks = []
 
 
 def reset():
-    """Reset the tracked hyperparameters & metrics (for a fresh experiment)"""
+    """Reset the tracked hyperparameters & metrics (for a fresh experiment)
+    
+    Example
+        .. code-block::
+
+            import jovian
+
+            jovian.reset()
+    """
     global _current_slug
     global _data_blocks
     _current_slug = None
