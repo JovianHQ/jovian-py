@@ -71,7 +71,7 @@ define([
         };
 
         const validate_api =
-          "from jovian.utils.api import validate_api_key\n" +
+          "from jovian.utils.credentials import validate_api_key\n" +
           "from jovian.utils.credentials import read_api_key_opt, creds_exist\n" +
           "key_status = 'nil'\n" +
           "if creds_exist():\n" +
