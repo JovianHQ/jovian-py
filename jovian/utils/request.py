@@ -29,13 +29,13 @@ def retry(request):
 @retry
 def get(url, params=None, **kwargs):
     """Retryable GET request"""
-    return requests.get(url, params=None, **kwargs)
+    return requests.get(url, params=params, **kwargs)
 
 
 @retry
 def post(url, data=None, json=None, **kwargs):
     """Retryable POST request"""
-    return requests.post(url, data=None, json=None, **kwargs)
+    return requests.post(url, data=data, json=json, **kwargs)
 
 
 def _msg(res):
