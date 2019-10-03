@@ -3,7 +3,7 @@ define([
   "base/js/namespace",
   "base/js/dialog",
   "base/js/keyboard"
-], function($, Jupyter, dialog, keyboard) {
+], function ($, Jupyter, dialog, keyboard) {
   function loadJovianExtension() {
     /**
      *  Jupyter extension to commit the notebook to Jovian.
@@ -46,7 +46,9 @@ define([
           "\tprint(out)";
 
         Jupyter.notebook.kernel.execute(jvn_commit, {
-          iopub: { output: jvnLog }
+          iopub: {
+            output: jvnLog
+          }
         });
       });
 
@@ -60,7 +62,7 @@ define([
        *   - "nil"     : credentials not found (new user or creds are deleted)
        *
        * Python code uses
-       *   - jovian.utils.api.validate_api_key
+       *   - jovian.utils.credentials.validate_api_key
        *   - jovian.utils.credentials.read_api_key_opt
        *   - jovian.utils.credentials.creds_exist
        */
@@ -71,7 +73,7 @@ define([
         };
 
         const validate_api =
-          "from jovian.utils.api import validate_api_key\n" +
+          "from jovian.utils.credentials import validate_api_key\n" +
           "from jovian.utils.credentials import read_api_key_opt, creds_exist\n" +
           "key_status = 'nil'\n" +
           "if creds_exist():\n" +
@@ -83,7 +85,9 @@ define([
           "print(key_status)\n";
 
         Jupyter.notebook.kernel.execute(validate_api, {
-          iopub: { output: valStatus }
+          iopub: {
+            output: valStatus
+          }
         });
       });
 
@@ -196,7 +200,7 @@ define([
           label - id:i_label | text:API key
           input - id:text_box | type:textarea | placeholder:{default_text}
       */
-    const formUI = function() {
+    const formUI = function () {
       /**
        * Body of the Form
        *
@@ -219,9 +223,9 @@ define([
         .text("Please enter your API key from ")
         .append(
           $("<a/>")
-            .attr("href", "https://jovian.ml")
-            .attr("target", "_blank")
-            .text("Jovian")
+          .attr("href", "https://jovian.ml")
+          .attr("target", "_blank")
+          .text("Jovian")
         );
 
       const input_box = $("<input/>")
@@ -240,7 +244,7 @@ define([
         .append(input_box)
         .append(error_msg);
 
-      input_box.bind("keyup paste", function() {
+      input_box.bind("keyup paste", function () {
         error_msg.hide();
         div.removeClass("has-error");
       });
@@ -248,7 +252,7 @@ define([
       return form;
     };
 
-    const modalInit = function() {
+    const modalInit = function () {
       /**
        * Initializes a dialog modal triggered by the button on the toolbar
        *
@@ -268,7 +272,7 @@ define([
           Save: {
             id: "save_button",
             class: "btn-primary",
-            click: function() {
+            click: function () {
               const api_key = $("#text_box").val();
               const write_api =
                 "from jovian.utils.credentials import write_api_key\n" +
@@ -292,9 +296,9 @@ define([
             }
           }
         },
-        open: function() {
+        open: function () {
           // bind enter key for #save_button when the modal is open
-          jvn_modal.find("#text_box").keydown(function(event) {
+          jvn_modal.find("#text_box").keydown(function (event) {
             if (event.which === keyboard.keycodes.enter) {
               jvn_modal
                 .find("#save_button")
@@ -365,9 +369,9 @@ define([
       )
       .append(
         $("<span/>")
-          .addClass("toolbar-btn-label")
-          .attr("style", "margin-left:17px")
-          .text("Commit")
+        .addClass("toolbar-btn-label")
+        .attr("style", "margin-left:17px")
+        .text("Commit")
       )
       .find("i")
       .removeClass("fa-bookmark-o");
