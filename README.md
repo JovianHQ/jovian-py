@@ -43,8 +43,8 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
 
 | |jovian(Python Package)|Jovian(Webapp)|
 |---|:---:|:---:|
-|Issues or Feature Request| [Forum](https://github.com/JovianML/jovian-py/issues) | [Forum](https://github.com/JovianML/jovian-support/issues)
-|Repo or Website| [Repo](https:github.com/JovianML) | [Website](https://joivan.ml/?utm_source=github)
+|Issues or Feature Request| [Forum](https://github.com/JovianML/jovian-py/issues) | [Forum](https://github.com/JovianML/jovian-support/issues) |
+|Repo or Website| [Repo](https:github.com/JovianML) | [Website](https://joivan.ml/?utm_source=github) |
 |Slack Discussions <td colspan="2">[Slack Invite](https://bit.ly/jovian-users) **Channel**: #bug-reports |
 
 ## Contact 
