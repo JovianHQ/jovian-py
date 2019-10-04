@@ -18,16 +18,6 @@ and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
 where even Students and Enthusiasts can leverage the same and also use 
 `Jovian`_ to **Share** and **Showcase** their projects.
 
-
-Learn more about installing Jovian python library and some
-of the core features of Jovian.
-
-Run this command in your terminal:
-
-.. code-block:: python
-
-  pip install jovian -q --upgrade
-=======
 .. _Jovian: https://jovian.ml/?utm_source=docs
 
 .. toctree::
