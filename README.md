@@ -1,118 +1,58 @@
-# Jovian
+# Jovian: The platform for all your Data Science projects
 
-[Jovian](www.jovian.ml) is a platform that helps data scientists and ML engineers
+![](/docs/jvn_full_logo.png)
 
-- track & reproduce data science projects
-- collaborate easily with friends/colleagues, and
-- automate repetitive tasks in their day-to-day workflow.
+jovian is an open-source Python package integrated with [Jovian](https://jovian.ml/?utm_source=github) to provide the tools necessary for Data Scientists and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects where even Students and Enthusiasts can leverage the same and also use [Jovian](https://jovian.ml/?utm_source=github) **Share** and **Showcase** their projects.
 
-## Uploading your work to Jovian
+- [Upload and share Jupyter Notebooks](https://jovian-py.readthedocs.io/en/latest/user-guide/02-upload.html)
+- [Reproduce Notebooks from Jovian](https://jovian-py.readthedocs.io/en/latest/user-guide/03-reproduce.html)
+- [Notebooks as version, view Diffs between versions](https://jovian-py.readthedocs.io/en/latest/user-guide/04-version.html)
+- [Attaching utility files and model outputs with the Notebook](https://jovian-py.readthedocs.io/en/latest/user-guide/05-attach.html)
+- [Tracking Datasets, Hyperparameters and Metrics](https://jovian-py.readthedocs.io/en/latest/user-guide/06-track.html)
+- [Comparing and Analyzing all the experiments](https://jovian-py.readthedocs.io/en/latest/user-guide/07-compare.html)
+- [Collaborate with teammates/colleagues](https://jovian-py.readthedocs.io/en/latest/user-guide/08-collaborate.html)
+- [Stay updated with your model - Slack Notifications]
 
-It's really easy to get started with Jovian!
+**Documentation** : [jovian docs](https://jovian-py.readthedocs.io)
 
-### Step 1: Install the `jovian` python library
-
-You can do this from the terminal, or directly within a Jupyter notebook.
-
-```
-!pip install jovian -q
-```
-
-### Step 2: Import the library
-
-```
-import jovian
-```
-
-### Step 3: Run jovian.commit
-
-After writing some code, running some experiments, training some models and plotting some charts, you can save and commit your Jupyter notebook.
-
-```
-jovian.commit()
-```
-
-Here's what `jovian.commit` does:
-
-- It saves and uploads the Jupyter notebook to your [Jovian](https://jovian.ml) account.
-- It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
-- It returns a link that you can use to view and share your notebook with friends or colleagues.
-
-**NOTE**: When you run `jovian.commit` for the first time, you'll be asked to provide an API, which you can find on [your Jovian account](https://jovian.ml).
-
-## Reproducing uploaded notebooks
-
-Once a notebook is uploaded to Jovian, anyone (including you) can download the notebook and it's Python dependencies by running `jovian clone <notebook_id>` command on the Linux/Mac terminal or Windows Command Prompt. Try clicking the 'Clone' button at the top of this page to copy the command (including notebook ID) to clipboard.
+## Installation
+---
 
 ```
 pip install jovian --upgrade
-jovian clone 903a04b17036436b843d70443ef5d7ad
 ```
 
-Once cloned, you can enter the directly and setup the virtual environment using `jovian install`.
+> **Caution**:
+>
+> If you get a `Permission denied` error, try installing with sudo permission (on Linux/Mac).
+>
+> ```
+> sudo pip install jovian --upgrade
+> ```
+>
+> Another alternative is to try installing with the `--user` flag, but you’ll need to ensure that the target directory is added to your system `PATH`.
+>
+> ```
+> pip install jovian --upgrade --user
+> ```
 
-```
-cd jovian-demo
-jovian install
-```
+Visit [Docs](https://jovian-py.readthedocs.io) for more.
 
-Jovian uses [conda](https://conda.io) internally, so make sure you have it installed before running the above commands. Once the libraries are installed, you can activate the environment and start Jupyter in the usual way:
+## Contribution Guidelines
+---
+If you want to contribute to **jovian**(Python package), review the [**Contribution Page**](https://github.com/JovianML/jovian-py/blob/master/CONTRIBUTING.md).
 
-```
-conda activate jovian-demo
-jupyter notebook
-```
+| |jovian(Python Package)|Jovian(Webapp)|
+|---|:---:|:---:|
+|Issues or Feature Request| [Forum](https://github.com/JovianML/jovian-py/issues) | [Forum](https://github.com/JovianML/jovian-support/issues)
+|Repo or Website| [Repo](https:github.com/JovianML) | [Website](https://joivan.ml/?utm_source=github)
+|Slack Discussions <td colspan="2">[Slack Invite](https://bit.ly/jovian-users) **Channel**: #bug-reports |
 
-In this way, Jovian seamlessly ensures the end-to-end reproducibility of your Jupyter notebooks.
+## Contact 
+---
 
-## Updating existing notebooks
-
-Updating existing notebooks is really easy too! Just run `jovian.commit` once again, and Jovian will automatically identify and update the current notebook on your Jovian account.
-
-```
-# Updating the notebook
-jovian.commit()
-```
-
-Jovian keeps track of existing notebooks using a `.jovianrc` file next to your notebook. If you don't want to update the current notebook, but create a new notebook instead, simply delete the `.jovianrc` file. Note that if you rename your notebook, Jovian will upload a new notebook when you commit, instead of updating the old one.
-
-If you run into issues with updating a notebook, or want to replace a notebook in your account using a new/renamed notebook, you can provide the `notebook_id` argument to `jovian.commit`.
-
-```
-jovian.commit(notebook_id="903a04b17036436b843d70443ef5d7ad")
-```
-
-## Getting new changes on cloned notebooks
-
-Once a notebook has been updated, the new changes can be retrieved at any cloned location using the `jovian pull` command.
-
-```
-cd jovian-demo # Enter cloned directory
-jovian pull    # Pull the latest changes
-```
-
-## Coming Soon
-
-- Callbacks for Tensorflow, Keras, PyTorch and FastAI to record hyperparameters and metrics automatically
-- Full support for Windows, Python 2.7+, non-Anaconda environments and `.py` script files
-- Real time monitoring and email/Slack notifications for long running training jobs
-- Check out and reproduce tracked experiments on any machine with a single command
-
-For feedback, suggestions and feature requests, drop us a line at hello@jovian.ml or create a ticket in the [issues tab](https://github.com/JovianML/jovian-py/issues) .
-
-## Development and Testing
-
-To run the tests, run the following command in the project root:  
-`python -m unittest discover` [`-v` for verbose]
-
-## Contributors
-
-- Aakash N S
-- Prajwal Prashanth
-- Siddhant Ujjain
-- Mayank Saboo
-- Douglas Weisse
-- Zilong Ye
-- Prerakbhai Bhakta
-- Bingnan Zhou
-- Leonardo Ramirez
+Mail : hello@jovian.ml 
+<br>
+Twitter : [@JovianML](https://twitter.com/JovianML)
+<br>
+Slack : [Slack Invite](https://bit.ly/jovian-users) 
