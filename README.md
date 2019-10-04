@@ -41,11 +41,27 @@ Visit [Docs](https://jovian-py.readthedocs.io) for more.
 
 If you want to contribute to **jovian**(Python package), review the [**Contribution Page**](https://github.com/JovianML/jovian-py/blob/master/CONTRIBUTING.md).
 
-| |jovian(Python Package)|Jovian(Webapp)|
-|---|:---:|:---:|
-|Issues or Feature Request| [Forum](https://github.com/JovianML/jovian-py/issues) | [Forum](https://github.com/JovianML/jovian-support/issues) |
-|Repo or Website| [Repo](https:github.com/JovianML) | [Website](https://joivan.ml/?utm_source=github) |
-|Slack Discussions <td colspan="2">[Slack Invite](https://bit.ly/jovian-users) **Channel**: #bug-reports |
+<table>
+    <tr>
+        <th> </th>
+        <th>jovian(Python Package)</th>
+        <th>Jovian(Webapp)</th>
+    </tr>
+    <tr>
+        <td>Issues or Feature Request</td>
+        <td align="center"> <a href="https://github.com/JovianML/jovian-py/issues)">Forum</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML/jovian-support/issues)">Forum</a> </td>
+    </tr>
+    <tr>
+        <td>Repository and Website</td>
+        <td align="center"> <a href="https:github.com/JovianML">Repo</a> </td>
+        <td align="center"> <a href="https://joivan.ml/?utm_source=github">Website</a> </td>
+    </tr>
+    <tr>
+        <td>Slack Discussions</td>
+        <td align="center" colspan=2> <a href="https://bit.ly/jovian-users">Slack Invite</a> </td>
+    </tr>
+</table>
 
 ## Contact 
 
