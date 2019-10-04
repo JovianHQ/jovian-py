@@ -46,7 +46,9 @@ define([
           "\tprint(out)";
 
         Jupyter.notebook.kernel.execute(jvn_commit, {
-          iopub: { output: jvnLog }
+          iopub: {
+            output: jvnLog
+          }
         });
       });
 
@@ -60,7 +62,7 @@ define([
        *   - "nil"     : credentials not found (new user or creds are deleted)
        *
        * Python code uses
-       *   - jovian.utils.api.validate_api_key
+       *   - jovian.utils.credentials.validate_api_key
        *   - jovian.utils.credentials.read_api_key_opt
        *   - jovian.utils.credentials.creds_exist
        */
@@ -71,7 +73,7 @@ define([
         };
 
         const validate_api =
-          "from jovian.utils.api import validate_api_key\n" +
+          "from jovian.utils.credentials import validate_api_key\n" +
           "from jovian.utils.credentials import read_api_key_opt, creds_exist\n" +
           "key_status = 'nil'\n" +
           "if creds_exist():\n" +
@@ -83,7 +85,9 @@ define([
           "print(key_status)\n";
 
         Jupyter.notebook.kernel.execute(validate_api, {
-          iopub: { output: valStatus }
+          iopub: {
+            output: valStatus
+          }
         });
       });
 
