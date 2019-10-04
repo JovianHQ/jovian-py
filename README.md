@@ -11,12 +11,11 @@ jovian is an open-source Python package integrated with [Jovian](https://jovian.
 - [Tracking Datasets, Hyperparameters and Metrics](https://jovian-py.readthedocs.io/en/latest/user-guide/06-track.html)
 - [Comparing and Analyzing all the experiments](https://jovian-py.readthedocs.io/en/latest/user-guide/07-compare.html)
 - [Collaborate with teammates/colleagues](https://jovian-py.readthedocs.io/en/latest/user-guide/08-collaborate.html)
-- [Stay updated with your model - Slack Notifications]
+- [Stay connected with your model training, live updates with Slack Notifications](https://jovian-py.readthedocs.io/en/latest/jvn/notif.html)
 
 **Documentation** : [jovian docs](https://jovian-py.readthedocs.io)
 
 ## Installation
----
 
 ```
 pip install jovian --upgrade
@@ -38,8 +37,8 @@ pip install jovian --upgrade
 
 Visit [Docs](https://jovian-py.readthedocs.io) for more.
 
-## Contribution Guidelines
----
+## Contribution Guidelines 
+
 If you want to contribute to **jovian**(Python package), review the [**Contribution Page**](https://github.com/JovianML/jovian-py/blob/master/CONTRIBUTING.md).
 
 | |jovian(Python Package)|Jovian(Webapp)|
@@ -49,7 +48,6 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
 |Slack Discussions <td colspan="2">[Slack Invite](https://bit.ly/jovian-users) **Channel**: #bug-reports |
 
 ## Contact 
----
 
 Mail : hello@jovian.ml 
 <br>
