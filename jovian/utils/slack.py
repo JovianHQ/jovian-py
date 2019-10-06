@@ -1,16 +1,9 @@
-import os
-
-from requests import get
-
 from jovian._version import __version__
-from jovian.utils.credentials import (get_guest_key, read_api_key_opt,
-                                      read_api_url, read_org_id)
+from jovian.utils.credentials import (get_api_key, get_guest_key, read_api_url,
+                                      read_org_id)
+from jovian.utils.error import ApiError
 from jovian.utils.logger import log
-
-
-class ApiError(Exception):
-    """Error class for web API related Exceptions"""
-    pass
+from jovian.utils.request import get, pretty
 
 
 def _u(path):
@@ -18,40 +11,14 @@ def _u(path):
     return read_api_url() + path
 
 
-def _msg(res):
-    try:
-        data = res.json()
-        if 'errors' in data and len(data['errors'] > 0):
-            return data['errors'][0]['message']
-        if 'message' in data:
-            return data['message']
-        if 'msg' in data:
-            return data['msg']
-    except:
-        if res.text:
-            return res.text
-        return 'Something went wrong'
-
-
-def _pretty(res):
-    """Make a human readable output from an HTML response"""
-    return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
-
-
 def _h():
     """Create a header to provide library metadata"""
-    api_key, _ = read_api_key_opt()
-
-    headers = {"x-jovian-source": "library",
-               "x-jovian-library-version": __version__,
-               "x-jovian-command": "add-slack",
-               "x-jovian-guest": get_guest_key(),
-               "x-jovian-org": read_org_id()}
-
-    if api_key is not None:
-        headers["Authorization"] = "Bearer " + api_key
-
-    return headers
+    return {"Authorization": "Bearer " + get_api_key(),
+            "x-jovian-source": "library",
+            "x-jovian-library-version": __version__,
+            "x-jovian-command": "add-slack",
+            "x-jovian-guest": get_guest_key(),
+            "x-jovian-org": read_org_id()}
 
 
 def _v(version):
@@ -75,4 +42,4 @@ def add_slack():
         else:
             log(str(res.get('errors')[0].get('message')))
     else:
-        raise ApiError('Slack trigger failed: ' + _pretty(res))
+        raise ApiError('Slack trigger failed: ' + pretty(res))

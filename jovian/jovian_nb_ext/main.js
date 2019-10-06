@@ -14,7 +14,7 @@ define([
 
     const jvnCommit = () =>
       /**
-       * Commits the notebook to Jovian(https://jvn.io).
+       * Commits the notebook to Jovian(https://jovian.ml).
        *
        * Returns:
        *  - Committed notebook's link: for successful commit
@@ -46,7 +46,9 @@ define([
           "\tprint(out)";
 
         Jupyter.notebook.kernel.execute(jvn_commit, {
-          iopub: { output: jvnLog }
+          iopub: {
+            output: jvnLog
+          }
         });
       });
 
@@ -60,7 +62,7 @@ define([
        *   - "nil"     : credentials not found (new user or creds are deleted)
        *
        * Python code uses
-       *   - jovian.utils.api.validate_api_key
+       *   - jovian.utils.credentials.validate_api_key
        *   - jovian.utils.credentials.read_api_key_opt
        *   - jovian.utils.credentials.creds_exist
        */
@@ -71,7 +73,7 @@ define([
         };
 
         const validate_api =
-          "from jovian.utils.api import validate_api_key\n" +
+          "from jovian.utils.credentials import validate_api_key\n" +
           "from jovian.utils.credentials import read_api_key_opt, creds_exist\n" +
           "key_status = 'nil'\n" +
           "if creds_exist():\n" +
@@ -83,7 +85,9 @@ define([
           "print(key_status)\n";
 
         Jupyter.notebook.kernel.execute(validate_api, {
-          iopub: { output: valStatus }
+          iopub: {
+            output: valStatus
+          }
         });
       });
 
@@ -203,7 +207,7 @@ define([
        * Layout:
        *  - form : class: form-horizontal
        *    - div :
-       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jvn.io)
+       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jovian.ml)
        *      - input : id: text_box | class: form-control | placeholder: {default_text}
        *      - label : id: e_label | text: Invalid API key | hidden: by default
        *
@@ -219,7 +223,7 @@ define([
         .text("Please enter your API key from ")
         .append(
           $("<a/>")
-            .attr("href", "https://jvn.io")
+            .attr("href", "https://jovian.ml")
             .attr("target", "_blank")
             .text("Jovian")
         );
@@ -342,7 +346,7 @@ define([
     //toolbar button to remove the jovian extension
     const remove_ext_action = {
       icon: "fa-times",
-      help: "Disable jovian ext",
+      help: "Disable Jovian Extension",
       handler: removeExtension
     };
     const remove_ext_name = Jupyter.actions.register(

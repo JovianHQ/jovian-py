@@ -8,31 +8,12 @@ from jovian.utils.credentials import (get_guest_key, read_api_key_opt,
                                       read_api_url, read_org_id)
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
+from jovian.utils.request import pretty
 
 
 def _u(path):
     """Make a URL from the path"""
     return read_api_url() + path
-
-
-def _msg(res):
-    try:
-        data = res.json()
-        if 'errors' in data and len(data['errors'] > 0):
-            return data['errors'][0]['message']
-        if 'message' in data:
-            return data['message']
-        if 'msg' in data:
-            return data['msg']
-    except:
-        if res.text:
-            return res.text
-        return 'Something went wrong'
-
-
-def _pretty(res):
-    """Make a human readable output from an HTML response"""
-    return '(HTTP ' + str(res.status_code) + ') ' + _msg(res)
 
 
 def _h(fresh):
@@ -60,11 +41,17 @@ def _v(version):
 
 def get_gist(slug, version, fresh):
     """Download a gist"""
-    url = _u('/gist/' + slug + _v(version))
+    if '/' in slug:
+        parts = slug.split('/')
+        username, title = parts[0], parts[1]
+        url = _u('user/' + username + '/gist/' + title + _v(version))
+    else:
+        url = _u('gist/' + slug + _v(version))
+    print(url)
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
-    raise Exception('Failed to retrieve Gist: ' + _pretty(res))
+    raise Exception('Failed to retrieve Gist: ' + pretty(res))
 
 
 def post_clone_msg(title):
