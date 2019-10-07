@@ -356,9 +356,10 @@ define([
             .select();
         }
       });
-      const check_paras = 'stored_paras_E4CBF7433620A84597C6E11B46CE0712 = "null"\n'
-        + '%store -r stored_paras_E4CBF7433620A84597C6E11B46CE0712\n'
-        + 'print (stored_paras_E4CBF7433620A84597C6E11B46CE0712)';
+      const python_id = Jupyter.notebook.notebook_name.replace(".ipynb", "") + "_stored_paras_E4CBF7433620A84597C6E11B46CE0712";
+      const check_paras = python_id + ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n'
+        + '%store -r ' + python_id + '\n'
+        + 'print (' + python_id + ')';
       new Promise((resolve, reject) => {
         Jupyter.notebook.kernel.execute(check_paras, {
           iopub: {
@@ -367,7 +368,7 @@ define([
         });    
       }).then(
         result => {
-          if(!result.toLocaleLowerCase().includes("null")){
+          if(!result.includes("F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E")){
             window.jvn_paras = JSON.parse(result.replace(/'/g,'"'));
           };
         }
@@ -608,7 +609,7 @@ define([
                 artifacts: $("#artifacts_box").val()
               };
 
-              const python_id = "stored_paras_E4CBF7433620A84597C6E11B46CE0712";
+              const python_id = Jupyter.notebook.notebook_name.replace(".ipynb", "") + "_stored_paras_E4CBF7433620A84597C6E11B46CE0712";
               const var_in_python = python_id + " = " + JSON.stringify(window.jvn_paras);
               const store_to_python = "%store " + python_id;
               Jupyter.notebook.kernel.execute(
@@ -621,9 +622,10 @@ define([
         },
         open: function() {
           // check if there's stored data
-          const check_paras = 'stored_paras_E4CBF7433620A84597C6E11B46CE0712 = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n'
-            + '%store -r stored_paras_E4CBF7433620A84597C6E11B46CE0712\n'
-            + 'print (stored_paras_E4CBF7433620A84597C6E11B46CE0712)';
+          const python_id = Jupyter.notebook.notebook_name.replace(".ipynb", "") + "_stored_paras_E4CBF7433620A84597C6E11B46CE0712";
+          const check_paras = python_id + ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n'
+            + '%store -r ' + python_id + '\n'
+            + 'print (' + python_id + ')';
           new Promise((resolve, reject) => {
             Jupyter.notebook.kernel.execute(check_paras, {
               iopub: {
