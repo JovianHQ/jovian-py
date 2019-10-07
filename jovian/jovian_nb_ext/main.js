@@ -621,7 +621,7 @@ define([
         },
         open: function() {
           // check if there's stored data
-          const check_paras = 'stored_paras_E4CBF7433620A84597C6E11B46CE0712 = "null"\n'
+          const check_paras = 'stored_paras_E4CBF7433620A84597C6E11B46CE0712 = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n'
             + '%store -r stored_paras_E4CBF7433620A84597C6E11B46CE0712\n'
             + 'print (stored_paras_E4CBF7433620A84597C6E11B46CE0712)';
           new Promise((resolve, reject) => {
@@ -632,7 +632,7 @@ define([
             });    
           }).then(
             result => {
-              if(!result.toLocaleLowerCase().includes("null")){
+              if(!result.includes("F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E")){
                 window.jvn_paras = JSON.parse(result.replace(/'/g,'"'));
               };
             }
