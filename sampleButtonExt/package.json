@@ -31,13 +31,16 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@jupyterlab/application": "^1.0.0",
+    "@jupyterlab/application": "^1.1.3",
     "@jupyterlab/apputils": "^1.1.3",
     "@jupyterlab/docregistry": "^1.1.3",
     "@jupyterlab/notebook": "^1.1.3",
-    "@phosphor/disposable": "^1.3.0"
+    "@phosphor/disposable": "^1.3.0",
+    "@phosphor/widgets": "^1.9.2",
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.3.31",
     "rimraf": "^2.6.1",
     "typescript": "~3.5.2"
   },
