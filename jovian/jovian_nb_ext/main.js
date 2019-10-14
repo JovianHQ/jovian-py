@@ -28,8 +28,6 @@ define([
         const jvnLog = data => {
           resolve(data.content.text.trim());
         };
-        /* Saves checkpoints before committing*/
-        Jupyter.notebook.save_checkpoint();
 
         const nb_filename = Jupyter.notebook.notebook_name;
         const jvn_commit =
@@ -47,8 +45,12 @@ define([
           "else:\n" +
           "\tprint(out)";
 
-        Jupyter.notebook.kernel.execute(jvn_commit, {
-          iopub: { output: jvnLog }
+        /* Saves the notebook creates a checkpoint and then commits*/
+        Jupyter.notebook.save_checkpoint();
+        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+          Jupyter.notebook.kernel.execute(jvn_commit, {
+            iopub: { output: jvnLog }
+          });
         });
       });
 
