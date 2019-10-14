@@ -28,9 +28,15 @@ def _v(version):
     return ""
 
 
-def get_gist(slug):
+def get_gist(slug, version=None):
     """Get the metadata for a gist"""
-    res = get(url=_u('/gist/' + slug), headers=_h())
+    if '/' in slug:
+        parts = slug.split('/')
+        username, title = parts[0], parts[1]
+        url = _u('user/' + username + '/gist/' + title + _v(version))
+    else:
+        url = _u('gist/' + slug + _v(version))
+    res = get(url=url, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve metadata for notebook "' +

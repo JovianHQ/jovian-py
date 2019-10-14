@@ -16,7 +16,7 @@ import jovian
 jovian.commit()
 ```
 
-When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your [Jovian](https://jvn.io) (or Jovian Pro) account.
+When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your [Jovian](https://jovian.ml) (or Jovian Pro) account.
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
 

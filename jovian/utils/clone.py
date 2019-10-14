@@ -41,7 +41,13 @@ def _v(version):
 
 def get_gist(slug, version, fresh):
     """Download a gist"""
-    url = _u('/gist/' + slug + _v(version))
+    if '/' in slug:
+        parts = slug.split('/')
+        username, title = parts[0], parts[1]
+        url = _u('user/' + username + '/gist/' + title + _v(version))
+    else:
+        url = _u('gist/' + slug + _v(version))
+    print(url)
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']

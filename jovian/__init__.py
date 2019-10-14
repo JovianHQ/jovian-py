@@ -1,18 +1,21 @@
 import os
 from os.path import basename
-from jovian._version import __version__
 from time import sleep
-from jovian.utils.anaconda import upload_conda_env, CondaError
-from jovian.utils.pip import upload_pip_env
-from jovian.utils.api import (create_gist_simple, upload_file, get_gist_access,
-                              post_block, commit_records, post_slack_message)
-from jovian.utils.logger import log
+
+from jovian._version import __version__
+from jovian.utils.anaconda import CondaError, upload_conda_env
+from jovian.utils.api import (commit_records, create_gist_simple, get_gist, get_gist_access, post_block,
+                              post_slack_message, upload_file)
+from jovian.utils.configure import configure
+from jovian.utils.configure import reset as reset_config
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
-from jovian.utils.jupyter import set_notebook_name, in_notebook, save_notebook, get_notebook_name
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, make_rcdata
-from jovian.utils.misc import get_flavor
 from jovian.utils.credentials import read_webapp_url
-from jovian.utils.configure import configure, reset as reset_config
+from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
+from jovian.utils.logger import log
+from jovian.utils.misc import get_flavor
+from jovian.utils.pip import upload_pip_env
+from jovian.utils.rcfile import get_notebook_slug, make_rcdata, set_notebook_slug
+from jovian.utils.script import get_file_name, in_script
 
 __flavor__ = get_flavor()
 
@@ -23,7 +26,14 @@ _data_blocks = []
 
 
 def reset():
-    """Reset the tracked hyperparameters & metrics (for a fresh experiment)"""
+    """Reset the tracked hyperparameters & metrics (for a fresh experiment)
+    Example
+        .. code-block::
+
+            import jovian
+
+            jovian.reset()
+    """
     global _current_slug
     global _data_blocks
     _current_slug = None
@@ -71,24 +81,29 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     .. attention::
         Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
-    .. _Jovian: https://jvn.io
+    .. _Jovian: https://jovian.ml
     """
     global _current_slug
     global _data_blocks
 
-    # Check if we're in a Jupyter environment
-    if not in_notebook():
-        log('Failed to detect Juptyer notebook. Skipping..', error=True)
+    # Check if we're in a Jupyter environment or Python script
+    if not in_script() and not in_notebook():
+        log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
         return
 
-    # Save the notebook (uses Javascript, doesn't work everywhere)
-    log('Saving notebook..')
-    save_notebook()
-    sleep(1)
+    # Check if we're in a Jupyter environment
+    if in_notebook():
+        # Save the notebook (uses Javascript, doesn't work everywhere)
+        log('Saving notebook..')
+        save_notebook()
+        sleep(1)
 
     # Get the filename of the notebook (if not provided)
     if nb_filename is None:
-        nb_filename = get_notebook_name()
+        if in_script():
+            nb_filename = get_file_name()
+        elif in_notebook():
+            nb_filename = get_notebook_name()
 
     # Exit with help message if filename wasn't detected (or provided)
     if nb_filename is None:
@@ -102,6 +117,10 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             notebook_id = _current_slug
         else:
             notebook_id = get_notebook_slug(nb_filename)
+
+    # Check if notebook exists is a uuid or 'username/title'
+    if notebook_id is not None and '/' in notebook_id:
+        notebook_id = get_gist(notebook_id)['slug']
 
     # Check if the current user can push to this slug
     if notebook_id is not None:
@@ -294,8 +313,8 @@ def notify(data, verbose=True, safe=False):
     .. important::
         This feature requires for your Jovian account to be connected to a Slack workspace, visit `Jovian Integrations`_ to integrate them and to control the type of notifications.
     .. _Slack: https://slack.com
-    .. _Jovian: https://jvn.io
-    .. _Jovian Integrations: https://jvn.io/settings/integrations
+    .. _Jovian: https://jovian.ml
+    .. _Jovian Integrations: https://jovian.ml/settings/integrations
     """
     res = post_slack_message(data=data, safe=safe)
     if verbose:

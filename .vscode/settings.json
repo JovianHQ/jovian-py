@@ -13,6 +13,7 @@
     "120",
     "--experimental"
   ],
+  "python.sortImports.args": ["-l", "120"],
   "restructuredtext.confPath": "${workspaceFolder}/docs",
   "cSpell.words": [
     "aakash",
@@ -83,12 +84,7 @@
     "vsre",
     "webapp"
   ],
-  "cSpell.ignoreWords": [
-    "jvn",
-    "mycompany",
-    "notif",
-    "seealso"
-  ],
+  "cSpell.ignoreWords": ["jvn", "mycompany", "notif", "seealso"],
   "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
   "editor.formatOnSave": true
 }
