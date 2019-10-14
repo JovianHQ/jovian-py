@@ -48,6 +48,7 @@ define([
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
         Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+          console.log("committing with saved event");
           Jupyter.notebook.kernel.execute(jvn_commit, {
             iopub: { output: jvnLog }
           });
