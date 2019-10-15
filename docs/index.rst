@@ -1,5 +1,5 @@
 ###############################
-Welcome to Jovian!
+Jovian: The platform for all your Data Science projects
 ###############################
 
 .. figure:: jvn_full_logo.png
@@ -12,34 +12,19 @@ Welcome to Jovian!
 .. meta::
    :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
 
-`Jovian`_ is a platform that helps data scientists and ML engineers:
+jovian is an open-source Python package integrated with 
+`Jovian`_ to provide the tools necessary for Data Scientists
+and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
+where even Students and Enthusiasts can leverage the same and also use 
+`Jovian`_ to **Share** and **Showcase** their projects.
 
-* Track & reproduce data science projects
-* Collaborate easily with friends/colleagues, and
-* Automate repetitive tasks in their day-to-day workflow.
-
-.. _Jovian: https://www.jovian.ml
-
-
-
-Getting Started
-==================================
-
-Learn more about installing Jovian python library and some
-of the core features of Jovian.
-
-Run this command in your terminal:
-
-.. code-block:: python
-
-  pip install jovian -q --upgrade
+.. _Jovian: https://jovian.ml/?utm_source=docs
 
 .. toctree::
   Home <self>
   :hidden:
 
 .. toctree::
-  :hidden:
   :caption: Getting Started
 
   user-guide/01-install
@@ -74,3 +59,4 @@ Run this command in your terminal:
 
   nbext/commit
   nbext/disable
+
