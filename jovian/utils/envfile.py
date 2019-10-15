@@ -121,7 +121,7 @@ def check_pip_failed(error_str):
     return False
 
 
-def identify_env_file(env_fname):
+def identify_env_file(env_fname, folder_prefix=""):
     """Find the right conda environment file through trial and errors"""
 
     if env_fname is None:
@@ -129,17 +129,19 @@ def identify_env_file(env_fname):
         platforms = [get_platform()] + ["", LINUX, WINDOWS, MACOS]
         for platform in platforms:
             if platform == "":
-                expected_fname = 'environment.yml'
+                expected_fname = os.path.join(folder_prefix, 'environment.yml')
             else:
-                expected_fname = 'environment-' + platform + '.yml'
+                expected_fname = os.path.join(folder_prefix, 'environment-' + platform + '.yml')
+
             if os.path.exists(expected_fname):
                 env_fname = expected_fname
                 break
 
     if env_fname is None:
         # Check for standard environment.yml file
-        if os.path.exists('environment.yml'):
-            env_fname = 'environment.yml'
+        expected_fname = os.path.join(folder_prefix, 'environment.yml')
+        if os.path.exists(expected_fname):
+            env_fname = expected_fname
     return env_fname
 
 
