@@ -47,3 +47,6 @@ publish-pro:
 run-docs:
 	cd docs && make html
 	sphinx-autobuild docs docs/_build/html
+
+run-tests:
+	python -m unittest discover
