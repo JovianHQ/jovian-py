@@ -1,18 +1,16 @@
 import unittest
-# import yaml
-from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages,
-                                  extract_package_from_line, extract_pip_packages,
-                                  get_environment_dict, identify_env_file)
 
-FILES_PREFIX = 'jovian/tests/resources/'     # change based on which dir you're running the tests in
-# eg: for running only this file, change FILES_PREFIX = 'resources/'
+from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
+                                  extract_pip_packages, get_environment_dict, identify_env_file)
+
+FILES_PREFIX = 'jovian/tests/resources/'
 
 
 class InstallUtilsTest(unittest.TestCase):
 
     def test_identify_env_file(self):
-        env_fname = identify_env_file(env_fname=None)
-        self.assertEqual(env_fname, 'environment.yml')
+        env_fname = identify_env_file(env_fname=None, folder_prefix=FILES_PREFIX)
+        self.assertEqual(env_fname, FILES_PREFIX + 'environment.yml')
 
     def test_get_environment_dict(self):
         env_filename = FILES_PREFIX + 'environment.yml'
