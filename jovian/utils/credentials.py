@@ -8,12 +8,11 @@ from getpass import getpass
 from uuid import UUID
 
 import requests
-
-from jovian.utils.constants import (DEFAULT_API_URL, DEFAULT_ORG_ID,
-                                    DEFAULT_WEBAPP_URL)
+from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_ORG_ID, DEFAULT_WEBAPP_URL
 from jovian.utils.error import ApiError, ConfigError
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
+from jovian.utils.url import urljoin
 
 try:
     # Python 3
@@ -250,7 +249,7 @@ def write_api_key(value):
 
 def _u(path):
     """Make a URL from the path"""
-    return read_api_url() + path
+    return urljoin(read_api_url(), path)
 
 
 def validate_api_key(key):

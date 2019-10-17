@@ -1,14 +1,14 @@
 from jovian._version import __version__
-from jovian.utils.credentials import (get_api_key, get_guest_key, read_api_url,
-                                      read_org_id)
+from jovian.utils.credentials import get_api_key, get_guest_key, read_api_url, read_org_id
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import get, pretty
+from jovian.utils.url import urljoin
 
 
 def _u(path):
     """Make a URL from the path"""
-    return read_api_url() + path
+    return urljoin(read_api_url(), path)
 
 
 def _h():
