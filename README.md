@@ -37,7 +37,7 @@ pip install jovian --upgrade
 
 Visit [Docs](https://jovian-py.readthedocs.io) for more.
 
-## Contribution Guidelines 
+## Contribution Guidelines
 
 If you want to contribute to **jovian**(Python package), review the [**Contribution Page**](https://github.com/JovianML/jovian-py/blob/master/CONTRIBUTING.md).
 
@@ -49,13 +49,13 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
     </tr>
     <tr>
         <td>Issues or Feature Request</td>
-        <td align="center"> <a href="https://github.com/JovianML/jovian-py/issues)">Forum</a> </td>
-        <td align="center"> <a href="https://github.com/JovianML/jovian-support/issues)">Forum</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML/jovian-py/issues">Forum</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML/jovian-support/issues">Forum</a> </td>
     </tr>
     <tr>
         <td>Repository and Website</td>
-        <td align="center"> <a href="https:github.com/JovianML">Repo</a> </td>
-        <td align="center"> <a href="https://joivan.ml/?utm_source=github">Website</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML">Repo</a> </td>
+        <td align="center"> <a href="https://jovian.ml/?utm_source=github">Website</a> </td>
     </tr>
     <tr>
         <td>Slack Discussions</td>
@@ -63,10 +63,10 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
     </tr>
 </table>
 
-## Contact 
+## Contact
 
-Mail : hello@jovian.ml 
+Mail : hello@jovian.ml
 <br>
 Twitter : [@JovianML](https://twitter.com/JovianML)
 <br>
-Slack : [Slack Invite](https://bit.ly/jovian-users) 
+Slack : [Slack Invite](https://bit.ly/jovian-users)
