@@ -4,16 +4,16 @@ from requests import get
 
 from jovian._version import __version__
 from jovian.utils.constants import ISSUES_MSG
-from jovian.utils.credentials import (get_guest_key, read_api_key_opt,
-                                      read_api_url, read_org_id)
+from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url, read_org_id
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
 from jovian.utils.request import pretty
+from jovian.utils.url import urljoin
 
 
 def _u(path):
     """Make a URL from the path"""
-    return read_api_url() + path
+    return urljoin(read_api_url(), path)
 
 
 def _h(fresh):
