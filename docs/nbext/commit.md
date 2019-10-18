@@ -5,14 +5,12 @@ Inorder to use `jovian` extension you will need to first install Jovian on your 
 
 #### Using Jovian Extension
 
-Once you have sucessfully installed Jovian a new button `/j Commit` will appear on the tool bar. 
-
-When using `/j Commit` button for first time you'll be asked to provide an API key.
+Once you have sucessfully installed Jovian, a new button `/j Commit` will appear on the tool bar. When using `/j Commit` button for first time you'll be asked to provide an API key.
 
                           
 <img src="https://i.imgur.com/oNSowtY.png" class="screenshot">
 
- You can get the API key at [Jovian](https://jvn.io). You will need to sign in using your github or google account. If you dont not either of this accounts you will need to sign up. Once you log in, just click on `API key` button, and the key will be copied to the clipboard.
+ You can get the API key at [Jovian](https://jvn.io). You will need to sign in using your github or google account. If you do not have either of this accounts you will need to sign up. Once you log in, just click on `API key` button, and the key will be copied to the clipboard.
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
 
