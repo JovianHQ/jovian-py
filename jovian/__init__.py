@@ -140,7 +140,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         return
 
     # Extract slug and owner from created gist
-    slug, owner, version = res['slug'], res['owner'], res['version']
+    slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
 
     # Set/update the slug information
     _current_slug = slug
@@ -209,7 +209,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
 
     # Print commit URL
     log('Committed successfully! ' + read_webapp_url() +
-        owner['username'] + "/" + slug)
+        owner['username'] + "/" + title)
 
 
 def log_hyperparams(data, verbose=True):
