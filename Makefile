@@ -1,6 +1,10 @@
 .PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs
 VERSION:=`cat jovian/_version.py`
 
+setup-env:
+	conda create -n jovian-py-dev python=3.5 -y
+	echo "Run:\n\tconda activate jovian-py-dev\n\tpip install -r requirements.txt"
+
 activate:
 	conda activate jovian-pro-dev
 
