@@ -1,0 +1,131 @@
+{
+    "name": "@types/jquery",
+    "version": "3.3.31",
+    "description": "TypeScript definitions for jquery",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Leonard Thieu",
+            "url": "https://github.com/leonard-thieu",
+            "githubUsername": "leonard-thieu"
+        },
+        {
+            "name": "Boris Yankov",
+            "url": "https://github.com/borisyankov",
+            "githubUsername": "borisyankov"
+        },
+        {
+            "name": "Christian Hoffmeister",
+            "url": "https://github.com/choffmeister",
+            "githubUsername": "choffmeister"
+        },
+        {
+            "name": "Steve Fenton",
+            "url": "https://github.com/Steve-Fenton",
+            "githubUsername": "Steve-Fenton"
+        },
+        {
+            "name": "Diullei Gomes",
+            "url": "https://github.com/Diullei",
+            "githubUsername": "Diullei"
+        },
+        {
+            "name": "Tass Iliopoulos",
+            "url": "https://github.com/tasoili",
+            "githubUsername": "tasoili"
+        },
+        {
+            "name": "Jason Swearingen",
+            "url": "https://github.com/jasons-novaleaf",
+            "githubUsername": "jasons-novaleaf"
+        },
+        {
+            "name": "Sean Hill",
+            "url": "https://github.com/seanski",
+            "githubUsername": "seanski"
+        },
+        {
+            "name": "Guus Goossens",
+            "url": "https://github.com/Guuz",
+            "githubUsername": "Guuz"
+        },
+        {
+            "name": "Kelly Summerlin",
+            "url": "https://github.com/ksummerlin",
+            "githubUsername": "ksummerlin"
+        },
+        {
+            "name": "Basarat Ali Syed",
+            "url": "https://github.com/basarat",
+            "githubUsername": "basarat"
+        },
+        {
+            "name": "Nicholas Wolverson",
+            "url": "https://github.com/nwolverson",
+            "githubUsername": "nwolverson"
+        },
+        {
+            "name": "Derek Cicerone",
+            "url": "https://github.com/derekcicerone",
+            "githubUsername": "derekcicerone"
+        },
+        {
+            "name": "Andrew Gaspar",
+            "url": "https://github.com/AndrewGaspar",
+            "githubUsername": "AndrewGaspar"
+        },
+        {
+            "name": "Seikichi Kondo",
+            "url": "https://github.com/seikichi",
+            "githubUsername": "seikichi"
+        },
+        {
+            "name": "Benjamin Jackman",
+            "url": "https://github.com/benjaminjackman",
+            "githubUsername": "benjaminjackman"
+        },
+        {
+            "name": "Poul Sorensen",
+            "url": "https://github.com/s093294",
+            "githubUsername": "s093294"
+        },
+        {
+            "name": "Josh Strobl",
+            "url": "https://github.com/JoshStrobl",
+            "githubUsername": "JoshStrobl"
+        },
+        {
+            "name": "John Reilly",
+            "url": "https://github.com/johnnyreilly",
+            "githubUsername": "johnnyreilly"
+        },
+        {
+            "name": "Dick van den Brink",
+            "url": "https://github.com/DickvdBrink",
+            "githubUsername": "DickvdBrink"
+        },
+        {
+            "name": "Thomas Schulz",
+            "url": "https://github.com/King2500",
+            "githubUsername": "King2500"
+        },
+        {
+            "name": "Terry Mun",
+            "url": "https://github.com/terrymun",
+            "githubUsername": "terrymun"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/jquery"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/sizzle": "*"
+    },
+    "typesPublisherContentHash": "6f3ac74aa9f284b3450b4dcbcabc842bfc2a70fa2d92e745851044d2bb78e94b",
+    "typeScriptVersion": "2.3"
+}
