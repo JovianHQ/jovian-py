@@ -10,12 +10,12 @@ If committing for the first time will ask for an API key. It can be obtained fro
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
 
-**Option 2**: Click the adjacent Dropdown Button to commit with your selection of parameters
+**Option 2**: Click the adjacent Dropdown Button to commit with your selection of parameters.
 
 <img src="https://i.imgur.com/maHhYY2.png" class="screenshot">
 
-The inital parameters are default for `jovian.commit`
+The inital parameters are default for `jovian.commit`.
 
 <img src="https://i.imgur.com/m4fsEIZ.png" class="screenshot">
 
-When ready, the button at the bottom will commit with the custom parameters
+When ready, the button at the bottom will commit with the custom parameters.
