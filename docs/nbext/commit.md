@@ -14,7 +14,7 @@ If committing for the first time will ask for an API key. It can be obtained fro
 
 <img src="https://i.imgur.com/maHhYY2.png" class="screenshot">
 
-The inital parameters are default for `jovian.commit`.
+The inital parameters are default for `jovian.commit` with the filename being what your file is currently named.
 
 <img src="https://i.imgur.com/m4fsEIZ.png" class="screenshot">
 
