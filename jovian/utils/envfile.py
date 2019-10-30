@@ -50,27 +50,20 @@ def write_env_name(env_name, env_fname):
 
 ENV_NAME_MSG = "Please provide a name for the conda environment"
 
+import click
 
 def request_env_name(env_name, env_fname):
     """Request the user to provide a name for the environment"""
     if env_name is None:
         env_name = extract_env_name(env_fname)
         # Make sure we're not overwriting the base environment
-        if env_name == 'base':
-            env_name = None
         # Construct the help message with default value
-        if env_name:
-            msg = ENV_NAME_MSG + " [" + env_name + "]: "
-        else:
-            msg = ENV_NAME_MSG + ":"
         # Prompt the user for input
-        try:
-            user_input = raw_input(msg)
-        except NameError:
-            try:
-                user_input = input(msg)
-            except EOFError:
-                user_input = ''
+        if env_name is None or env_name == 'base':
+            user_input = click.prompt(ENV_NAME_MSG, default='base', show_default=False)
+        else:
+            user_input = click.prompt(ENV_NAME_MSG, default=env_name, show_default=True)
+
         print('')
         # Sanitize the input
         user_input = user_input.strip()
