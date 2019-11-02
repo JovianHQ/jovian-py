@@ -1,4 +1,4 @@
-.PHONY: help export-env clean set-flavor vars set-flavor-pro build build-pro upload publish publish-pro run-docs echo-version bump bump-dev bump-patch bump-release sanity-check-dev sanity-check-release
+.PHONY: help export-env clean set-flavor vars set-flavor-pro build build-pro upload publish publish-pro run-docs
 
 .DEFAULT_GOAL := help
 
@@ -58,7 +58,9 @@ run-docs:
 run-tests:
 	python -m unittest discover
 
+
 ## Version bumping
+.PHONY: show-version bump bump-dev bump-patch bump-release sanity-check-dev sanity-check-release
 
 define new_version
 	$(shell bumpversion $(1) --dry-run --list --allow-dirty | sed -n 's/^ *new_version *= *//p')
