@@ -1,4 +1,4 @@
-.PHONY: help export-env git-clean-check clean set-flavor set-flavor-pro build build-pro upload upload-test publish publish-dev publish-pro run-docs
+.PHONY: help export-env git-clean-check clean set-flavor set-flavor-pro build build-pro upload upload-dev publish publish-dev publish-pro run-docs
 
 .DEFAULT_GOAL := help
 
@@ -46,13 +46,13 @@ build-pro: set-flavor-pro git-clean-check
 upload:
 	twine upload dist/*
 
-upload-test:
+upload-dev:
 	twine upload --repository testpypi dist/*
 
 publish: clean build upload
 	sh ./deployAlert.sh PUBLIC $(VERSION)
 
-publish-test: clean build upload-test
+publish-dev: clean build upload-dev
 
 publish-pro: clean build-pro upload
 	sh ./deployAlert.sh PRO $(VERSION)
