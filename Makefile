@@ -1,4 +1,4 @@
-.PHONY: help export-env clean set-flavor vars set-flavor-pro build build-pro upload publish publish-pro run-docs
+.PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs
 
 .DEFAULT_GOAL := help
 
