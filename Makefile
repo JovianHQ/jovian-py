@@ -1,4 +1,4 @@
-.PHONY: help export-env git-clean-check clean set-flavor vars set-flavor-pro build build-pro upload upload-test publish publish-test publish-pro run-docs
+.PHONY: help export-env git-clean-check clean set-flavor set-flavor-pro build build-pro upload upload-test publish publish-dev publish-pro run-docs
 
 .DEFAULT_GOAL := help
 
