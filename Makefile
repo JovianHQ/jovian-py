@@ -38,10 +38,10 @@ set-flavor-pro:
 	@echo '__flavor__ = "jovian-pro"' > ./jovian/_flavor.py
 
 build: set-flavor git-clean-check
-	PKG_NAME=jovian python setup.py bdist_wheel --universal
+	PKG_NAME=jovian python setup.py bdist_wheel
 
 build-pro: set-flavor-pro git-clean-check
-	PKG_NAME=jovian-pro python setup.py bdist_wheel --universal
+	PKG_NAME=jovian-pro python setup.py bdist_wheel
 
 upload:
 	twine upload dist/*
