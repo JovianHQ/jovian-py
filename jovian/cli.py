@@ -43,7 +43,7 @@ def help(ctx):
 @main.command('version')
 @click.pass_context
 def main_version(ctx):
-    """Print Jovian's version number."""
+    """Print Jovian’s version number."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
     sys.argv[1] = "--version"
@@ -144,7 +144,7 @@ def exec_add_slack(ctx):
 @main.command("enable-extension")
 @click.pass_context
 def extension_enable(ctx):
-    """Enable Jovian's Jupyter notebook extension."""
+    """Enable Jovian’s Jupyter notebook extension."""
 
     setup_extension(enable=True)
 
@@ -152,7 +152,7 @@ def extension_enable(ctx):
 @main.command("disable-extension")
 @click.pass_context
 def extension_disable(ctx):
-    """Disable Jovian's Jupyter notebook extension."""
+    """Disable Jovian’s Jupyter notebook extension."""
 
     setup_extension(enable=False)
 
