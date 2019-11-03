@@ -1,4 +1,4 @@
-.PHONY: help export-env clean set-flavor set-flavor-pro build build-pro upload publish publish-pro run-docs
+.PHONY: help export-env git-clean-check clean set-flavor set-flavor-pro build build-pro upload upload-dev publish publish-dev publish-pro run-docs
 
 .DEFAULT_GOAL := help
 
@@ -17,6 +17,15 @@ help:
 export-env:
 	pip freeze > requirements.txt
 
+git-clean-check:
+	@echo "\n*** Checking that everything is committed**"
+	@if [ -n "$(shell git status -s)" ]; then\
+		echo "git status is not clean. You have uncommitted git files";\
+		exit 1;\
+	else\
+		echo "git status is clean";\
+    fi
+
 clean:
 	trash ./*.egg-info
 	trash ./dist
@@ -28,27 +37,24 @@ set-flavor:
 set-flavor-pro:
 	@echo '__flavor__ = "jovian-pro"' > ./jovian/_flavor.py
 
-build:
-	make set-flavor
+build: set-flavor git-clean-check
 	PKG_NAME=jovian python setup.py sdist bdist_wheel
 
-build-pro:
-	make set-flavor-pro
+build-pro: set-flavor-pro git-clean-check
 	PKG_NAME=jovian-pro python setup.py sdist bdist_wheel
 
 upload:
 	twine upload dist/*
 
-publish:
-	make clean
-	make build
-	make upload
+upload-dev:
+	twine upload --repository testpypi dist/*
+
+publish: clean sanity-check-release build upload
 	sh ./deployAlert.sh PUBLIC $(VERSION)
 
-publish-pro:
-	make clean
-	make build-pro
-	make upload
+publish-dev: clean build upload-dev
+
+publish-pro: clean sanity-check-release build-pro upload
 	sh ./deployAlert.sh PRO $(VERSION)
 
 run-docs:
