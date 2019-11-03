@@ -49,7 +49,7 @@ upload:
 upload-dev:
 	twine upload --repository testpypi dist/*
 
-publish: clean build upload
+publish: clean sanity-check-release build upload
 	sh ./deployAlert.sh PUBLIC $(VERSION)
 
 publish-dev: clean build upload-dev
