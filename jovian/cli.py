@@ -1,5 +1,3 @@
-import argparse
-import os
 import sys
 
 import click
@@ -7,30 +5,26 @@ import click
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
 from jovian.utils.configure import configure, reset
+from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
 from jovian.utils.slack import add_slack
-
-
-def nb_ext(enable=True):
-    if enable:
-        os.system("jupyter nbextension enable jovian_nb_ext/main --sys-prefix")
-    else:
-        os.system("jupyter nbextension disable jovian_nb_ext/main --sys-prefix")
 
 
 @click.group()
 @click.version_option(version=__version__, prog_name="Jovian")
 @click.pass_context
 def main(ctx, log_level="info"):
-    """Try out a demo with:
+    """Keep track of your Jupyter notebooks using Jovian.
 
-        $ jovian clone aakashns/jovian-tutorial
-
-    Or use within your Jupyter notebook:
+    Use within your Jupyter notebooks:
 
         [1] import jovian
 
         [2] jovian.commit()
+
+    Or try out a demo with:
+
+        $ jovian clone aakashns/jovian-tutorial
     """
 
     pass
@@ -152,7 +146,7 @@ def exec_add_slack(ctx):
 def extension_enable(ctx):
     """Enable Jovian's Jupyter notebook extension."""
 
-    nb_ext(enable=True)
+    setup_extension(enable=True)
 
 
 @main.command("disable-extension")
@@ -160,7 +154,7 @@ def extension_enable(ctx):
 def extension_disable(ctx):
     """Disable Jovian's Jupyter notebook extension."""
 
-    nb_ext(enable=False)
+    setup_extension(enable=False)
 
 
 if __name__ == '__main__':
