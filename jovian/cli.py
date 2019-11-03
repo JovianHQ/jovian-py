@@ -46,7 +46,7 @@ def help(ctx):
     main()
 
 
-@main.group('version', invoke_without_command=True)
+@main.command('version')
 @click.pass_context
 def main_version(ctx):
     """Print Jovian's version number."""
@@ -72,31 +72,36 @@ def reset_config(ctx):
     reset()
 
 
-@main.command("install")
+@main.command("install", short_help="Install packages from environment file.")
 @click.argument('name_argv', nargs=-1)
 @click.pass_context
 def install_env(ctx, name_argv):
-    """Install packages from environment file."""
+    """Install packages from environment file:
 
-    if len(name_argv) > 1:
-        print("usage")
-        return
+        $ jovian install
 
-    name = name_argv[0] if len(name_argv) == 1 else None
-    install(env_name=name)
+    or, install from specific environment file
+
+        $ jovian install environment-linux.yml
+    """
+
+    num_args = len(name_argv)
+
+    if num_args == 0:
+        install()
+    elif num_args == 1:
+        install(env_name=name_argv[0])
+    else:
+        # Show help
+        sys.argv[1] = "--help"
+        install_env()
 
 
 @main.command("activate")
-@click.argument('name_argv', nargs=-1)
 @click.pass_context
 def activate_env(ctx, name_argv):
     """Activate conda environment from environment file."""
 
-    if len(name_argv) > 1:
-        click.echo("usage:")
-        return
-
-    name = name_argv[0] if len(name_argv) == 1 else None
     activate()
 
 
@@ -117,12 +122,12 @@ def exec_clone(ctx, notebook, version):
     clone(notebook, version)
 
 
-@main.command("pull", short_help="Fetch a notebook hosted on Jovian(into current directory).")
+@main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
 @click.pass_context
 def exec_pull(ctx, notebook, version):
-    """Fetch a notebook hosted on Jovian(into current directory):
+    """Fetch new version of notebook hosted on Jovian(into current directory):
 
         $ jovian pull aakashns/jovian-tutorial
 
@@ -142,22 +147,17 @@ def exec_add_slack(ctx):
     add_slack()
 
 
-@main.group("extension", invoke_without_command=False)
+@main.command("enable-extension")
 @click.pass_context
-def extension(ctx):
-    """Enable/Disable Jovian's Jupyter notebook extension."""
-    pass
-
-
-@extension.command("enable")
-def extension_enable():
+def extension_enable(ctx):
     """Enable Jovian's Jupyter notebook extension."""
 
     nb_ext(enable=True)
 
 
-@extension.command("disable")
-def disable_enable():
+@main.command("disable-extension")
+@click.pass_context
+def extension_disable(ctx):
     """Disable Jovian's Jupyter notebook extension."""
 
     nb_ext(enable=False)
