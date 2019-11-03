@@ -54,7 +54,7 @@ publish: clean sanity-check-release build upload
 
 publish-dev: clean build upload-dev
 
-publish-pro: clean build-pro upload
+publish-pro: clean sanity-check-release build-pro upload
 	sh ./deployAlert.sh PRO $(VERSION)
 
 run-docs:
