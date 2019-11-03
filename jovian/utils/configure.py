@@ -1,20 +1,16 @@
-from jovian.utils.credentials import creds_exist, purge_creds
-from jovian.utils.logger import log
-from jovian.utils.credentials import ensure_org, get_guest_key
+import click
+
 from jovian.utils.api import get_api_key
+from jovian.utils.credentials import creds_exist, ensure_org, get_guest_key, purge_creds
+from jovian.utils.logger import log
 
 
 def reset():
     if creds_exist():
-        msg = 'Do you want to remove the existing configuration? (y/N):'
-        try:
-            user_input = raw_input(msg)
-        except NameError:
-            try:
-                user_input = input(msg)
-            except EOFError:
-                user_input = ''
-        if user_input == 'y' or user_input == 'Y':
+        msg = 'Do you want to remove the existing configuration?'
+        confirm = click.confirm(msg)
+
+        if confirm:
             log('Removing existing configuration. Run "jovian configure" to set up Jovian')
             purge_creds()
         else:
@@ -29,15 +25,10 @@ def configure():
     # Check if already exists
     if creds_exist():
         log('It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).')
-        msg = 'Do you want to overwrite the existing configuration? (y/N):'
-        try:
-            user_input = raw_input(msg)
-        except NameError:
-            try:
-                user_input = input(msg)
-            except EOFError:
-                user_input = ''
-        if user_input == 'y' or user_input == 'Y':
+        msg = 'Do you want to overwrite the existing configuration?'
+        confirm = click.confirm(msg)
+
+        if confirm:
             log('Removing existing configuration..')
         else:
             log('Skipping..')
