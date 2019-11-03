@@ -24,15 +24,15 @@ with open("README.md", "rb") as fh:
 setuptools.setup(
     name=pkg_name,
     version=verstr,
-    author="SwiftAce",
-    author_email="opensource@swiftace.ai",
+    author="Jovian",
+    author_email="hello@jovian.ml",
     entry_points={
         'console_scripts': ['jovian=jovian.cli:main'],
     },
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://swiftace.ai/",
+    url="https://jovian.ml/",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
