@@ -17,7 +17,7 @@ extensions = ['recommonmark',  # to use .md along with .rst
 master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
-autodoc_mock_imports = ["torch", "fastai", "keras"]
+autodoc_mock_imports = ["torch", "fastai", "keras", "click"]
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
