@@ -26,6 +26,9 @@ _data_blocks = []
 
 
 def notify_update_available():
+    """Compares the installed and latest version of the library and notifies 
+    the user when they import the library and there is a update available.
+    """
     try:
         latest_version = requests.get('https://pypi.org/pypi/jovian/json', timeout=3).json()['info']['version']
         if latest_version > __version__:
