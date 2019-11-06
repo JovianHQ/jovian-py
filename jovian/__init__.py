@@ -1,4 +1,5 @@
 import os
+import requests
 from os.path import basename
 from time import sleep
 
@@ -20,9 +21,20 @@ from jovian.utils.script import get_file_name, in_script
 __flavor__ = get_flavor()
 
 set_notebook_name()
-
 _current_slug = None
 _data_blocks = []
+
+
+def notify_update_available():
+    try:
+        latest_version = requests.get('https://pypi.org/pypi/jovian/json', timeout=3).json()['info']['version']
+        if latest_version > __version__:
+            print('Update available: {0} --> {1}'.format(__version__, latest_version))
+    except:
+        pass
+
+
+notify_update_available()
 
 
 def reset():
