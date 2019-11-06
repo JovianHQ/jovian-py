@@ -210,7 +210,7 @@ define([
         .text("Please enter your API key from ")
         .append(
           $("<a/>")
-            .attr("href", "https://jovian.ml")
+            .attr("href", "https://jovian.ml?utm_source=nb-ext")
             .attr("target", "_blank")
             .text("Jovian")
         );

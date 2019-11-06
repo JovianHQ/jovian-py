@@ -32,7 +32,7 @@ setuptools.setup(
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://jovian.ml/",
+    url="https://jovian.ml/?utm_source=pypi",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
