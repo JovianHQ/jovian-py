@@ -30,15 +30,57 @@ define([
         };
 
         const nb_filename = Jupyter.notebook.notebook_name;
+        var commit = '\tcommit(nb_filename="' + nb_filename + '")\n';
+
+        // if we have a set of params already, then use it to call commit.
+        if (window.jvn_params != null) {
+          const secret =
+            window.jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+              ? "False"
+              : "True";
+          const capture_env =
+            window.jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) ==
+            "F"
+              ? "False"
+              : "True";
+          const create_new =
+            window.jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+              ? "False"
+              : "True";
+          const env_type =
+            window.jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+              ? "conda"
+              : "pip";
+
+          commit =
+            "\tcommit(" +
+            'nb_filename="' +
+            window.jvn_params.nb_filename +
+            '"' +
+            ",secret=" +
+            secret +
+            "" +
+            ",capture_env=" +
+            capture_env +
+            "" +
+            ",create_new=" +
+            create_new +
+            "" +
+            ',env_type="' +
+            env_type +
+            '"' +
+            //',notebook_id="' + window.jvn_params.notebook_id + '"' +
+            ")\n";
+        }
+
+        console.log(commit);
         const jvn_commit =
           "from jovian import commit\n" +
           "import io\n" +
           "from contextlib import redirect_stdout\n" +
           "f = io.StringIO()\n" +
           "with redirect_stdout(f):\n" +
-          '\tcommit(nb_filename="' +
-          nb_filename +
-          '")\n' +
+          commit +
           "out = f.getvalue().splitlines()[-1]\n" +
           "if(out.split()[1] == 'Committed'):\n" +
           "\tprint(out.split()[-1])\n" +
@@ -302,18 +344,271 @@ define([
             .select();
         }
       });
-      updateForm(jvn_modal);
+      getParams()
+        .then(jvn_params => (window.jvn_params = jvn_params))
+        .then(() => updateForm(jvn_modal));
     };
 
-    function removeExtension() {
-      Jupyter.notebook.save_checkpoint();
-      remove_ext =
-        "import os\n" +
-        "os.system('jupyter nbextension disable jovian_nb_ext/main --sys-prefix')\n";
-      console.log(remove_ext);
-      Jupyter.notebook.kernel.execute(remove_ext);
-      location.reload();
-    }
+    const formParamsUI = function() {
+      /**
+       * Body of the Form
+       *
+       * Layout:
+       *  - form : class: form-horizontal
+       *    - div :
+       *      - label : text: Create a secret notebook?
+       *      - div   : class: form-check
+       *        - input : class: form-check-input | type : raido | name : secret_opt | value : True
+       *        - label : class: form-check-label | text : True  | css : margin-right:1em
+       *        - input : class: form-check-input | type : raido | name : secret_opt | value : False
+       *        - label : class: form-check-label | text : False
+       *      - label : text: The filename of the jupyter notebook
+       *      - input : id: nb_filename_box | class: form-control | value: Jupyter.notebook.notebook_name
+       *      - label : text: Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - array
+       *      - input : id: files_box | class: form-control | value: []
+       *      - label : text: To capture and and upload Python environment along with the notebook?
+       *      - div   : class: form-check
+       *        - input : class: form-check-input | type : raido | name : cap_opt | value : True
+       *        - label : class: form-check-label | text : True  | css : margin-right:1em
+       *        - input : class: form-check-input | type : raido | name : cap_opt | value : False
+       *        - label : class: form-check-label | text : False
+       *      - label : text: Which type of environment to be captured?
+       *      - select  : id: env_opt
+       *        - option : text: conda
+       *        - option : text: pip   | css : margin-left : 1em
+       *      - label : text: To provide the base64 ID(present in the URL) of an notebook hosted on Jovian? - String
+       *      - input : id: notebook_id_box | class: form-control | value: None
+       *      - label : text: To create a new notebook?
+       *      - div   : class: form-check
+       *        - input : class: form-check-input | type : raido | name : create_opt | value : True
+       *        - label : class: form-check-label | text : True  | css : margin-right:1em
+       *        - input : class: form-check-input | type : raido | name : create_opt | value : False
+       *        - label : class: form-check-label | text : False
+       *      - label : text: Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - array
+       *      - input : id: artifacts_box | class: form-control | value: []
+       *
+       */
+      const form = $("<form/>").addClass("form-horizontal");
+
+      const div = $("<div/>")
+        .attr("id", "input_div")
+        .appendTo(form);
+
+      const secret_label = $("<label/>").text("Create a secret notebook?");
+      const secret_box = $("<div/>")
+        .addClass("form-check")
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "secret_opt")
+            .attr("value", "True")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("True")
+            .css("margin-right", "1em")
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "secret_opt")
+            .attr("value", "False")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("False")
+        );
+
+      const nb_filename_label = $("<label/>").text(
+        "The filename of the jupyter notebook"
+      );
+      const nb_filename_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "nb_filename_box")
+        .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""));
+
+      const files_label = $("<label/>").text(
+        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - array"
+      );
+      const files_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "files_box")
+        .val("[]");
+
+      const capture_env_label = $("<label/>").text(
+        "To capture and and upload Python environment along with the notebook?"
+      );
+      const capture_env_box = $("<div/>")
+        .addClass("form-check")
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "cap_opt")
+            .attr("value", "True")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("True")
+            .css("margin-right", "1em")
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "cap_opt")
+            .attr("value", "False")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("False")
+        );
+
+      const env_type_label = $("<label/>").text(
+        "Which type of environment to be captured?"
+      );
+      const env_type_box = $("<select/>")
+        .attr("id", "env_opt")
+        .append($("<option/>").text("conda"))
+        .append($("<option/>").text("pip"))
+        .css("margin-left", "1em");
+
+      const notebook_id_label = $("<label/>").text(
+        "To provide the base64 ID(present in the URL) of an notebook hosted on Jovian? - String"
+      );
+      const notebook_id_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "notebook_id_box")
+        .val("None");
+
+      const create_new_label = $("<label/>").text("To create a new notebook?");
+      const create_new_box = $("<div/>")
+        .addClass("form-check")
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "create_opt")
+            .attr("value", "True")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("True")
+            .css("margin-right", "1em")
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "create_opt")
+            .attr("value", "False")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("False")
+        );
+      const artifacts_label = $("<label/>").text(
+        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - array"
+      );
+      const artifacts_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "artifacts_box")
+        .val("[]");
+
+      div
+        .append(secret_label)
+        .append(secret_box)
+        .append("<br>")
+        .append(nb_filename_label)
+        .append(nb_filename_box)
+        .append("<br>")
+        .append(files_label)
+        .append(files_box)
+        .append("<br>")
+        .append(capture_env_label)
+        .append(capture_env_box)
+        .append("<br>")
+        .append(env_type_label)
+        .append(env_type_box)
+        .append("<br>")
+        .append(notebook_id_label)
+        .append(notebook_id_box)
+        .append("<br>")
+        .append(create_new_label)
+        .append(create_new_box)
+        .append("<br>")
+        .append(artifacts_label)
+        .append(artifacts_box);
+
+      return form;
+    };
+
+    const saveParams = function() {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: formParamsUI()
+       *
+       * Button:
+       *  - Commit: store all params to window.jvn_params, and commit to Jovian
+       */
+      const jvn_params_modal = dialog.modal({
+        show: false,
+        title: "Set up Parameters to Jovian",
+        body: formParamsUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        buttons: {
+          Commit: {
+            id: "save_params_button",
+            class: "btn-primary",
+            click: function() {
+              storeParamsInPython();
+              modalInit();
+            }
+          }
+        },
+        open: function() {
+          getParams().then(jvn_params => {
+            if (jvn_params == null) {
+              $("#nb_filename_box").val(
+                Jupyter.notebook.notebook_name.replace(".ipynb", "")
+              );
+              $($("input[name=secret_opt")[1]).prop("checked", true);
+              $($("input[name=cap_opt")[0]).prop("checked", true);
+              $($("input[name=create_opt")[1]).prop("checked", true);
+              $("#env_opt option:contains('conda')").prop("selected", true);
+            } else {
+              $("#nb_filename_box").val(
+                jvn_params.nb_filename.replace(".ipynb", "")
+              );
+              jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=secret_opt")[1]).prop("checked", true)
+                : $($("input[name=secret_opt")[0]).prop("checked", true);
+              jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=cap_opt")[1]).prop("checked", true)
+                : $($("input[name=cap_opt")[0]).prop("checked", true);
+              jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=create_opt")[1]).prop("checked", true)
+                : $($("input[name=create_opt")[0]).prop("checked", true);
+              jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+                ? $("#env_opt option:contains('conda')").prop("selected", true)
+                : $("#env_opt option:contains('pip')").prop("selected", true);
+            }
+          });
+        }
+      });
+      jvn_params_modal.modal("show");
+    };
+
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
       */
@@ -331,20 +626,20 @@ define([
     );
 
     //toolbar button to remove the jovian extension
-    const remove_ext_action = {
-      icon: "fa-times",
-      help: "Disable Jovian Extension",
-      handler: removeExtension
+    const set_params_ext_action = {
+      icon: "fa-angle-double-down",
+      help: "Show a list of parameters for user to set up",
+      handler: saveParams
     };
-    const remove_ext_name = Jupyter.actions.register(
-      remove_ext_action,
-      "remove_ext",
+    const set_params_ext_name = Jupyter.actions.register(
+      set_params_ext_action,
+      "set_params_ext",
       prefix
     );
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
-      remove_ext_name
+      set_params_ext_name
     ]);
 
     //adding jovian logo and Commit text next to it
@@ -367,6 +662,88 @@ define([
     const jvn_notif = Jupyter.notification_area.widget("jvn");
     jvn_notif.inner.text("Committing to Jovian....");
     jvn_notif.element.attr("disabled", true);
+  }
+
+  function storeParamsInPython() {
+    // This function will be used to stored
+    // the set of parameters into Python
+    // and then we can call getParams()
+    // to get these data
+    const jvn_params = {
+      secret: $("input[name=secret_opt]")
+        .filter(":checked")
+        .val(),
+      nb_filename: $("#nb_filename_box").val() + ".ipynb",
+      files: $("#files_box").val(),
+      capture_env: $("input[name=cap_opt]")
+        .filter(":checked")
+        .val(),
+      env_type: $("#env_opt option:selected").text(),
+      notebook_id: $("#notebook_id_box").val(),
+      create_new: $("input[name=create_opt]")
+        .filter(":checked")
+        .val(),
+      artifacts: $("#artifacts_box").val()
+    };
+
+    const python_id = getStoredId();
+    const var_in_python = python_id + " = " + JSON.stringify(jvn_params);
+    const store_to_python = "%store " + python_id;
+    Jupyter.notebook.kernel.execute(var_in_python + "\n" + store_to_python);
+  }
+
+  function getParams() {
+    // This function we use to check if we
+    // have set parameters of jovian.commit()
+    // already.
+    // If so, we return these parameter,
+    // otherwise, just return null.
+    const python_id = getStoredId();
+    const check_params =
+      python_id +
+      ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n' +
+      "%store -r " +
+      python_id +
+      "\n" +
+      "print (" +
+      python_id +
+      ")";
+    return new Promise((resolve, reject) => {
+      Jupyter.notebook.kernel.execute(check_params, {
+        iopub: {
+          output: data => resolve(data.content.text.trim())
+        }
+      });
+    }).then(result => {
+      if (
+        !result.includes(
+          "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"
+        )
+      ) {
+        const raw_params = result
+          .replace(/"/g, "{_dc_}")
+          .replace(/\\'/g, "{_sc_}");
+        var jvn_params = JSON.parse(raw_params.replace(/'/g, '"'));
+        const nb_filename = jvn_params.nb_filename
+          .replace(/{_dc_}/g, '"')
+          .replace(/{_sc_}/g, "'");
+        jvn_params.nb_filename = nb_filename;
+        return jvn_params;
+      }
+      return null;
+    });
+  }
+
+  function getStoredId() {
+    // This function will be used to
+    // normalize the name of notebook
+    const notebookId = Jupyter.notebook.notebook_name.replace(".ipynb", "");
+    const nomalizedId = notebookId.replace(
+      /&|-|\[|\]|\.|,|=|\(|\)|\{|\}|\||`|~|\"|@|#|\$|\%|\^|\*|\+|\!|\<|\>|\;|\'|\?|\ /g,
+      "_"
+    );
+    const pythonId = "stored_params_for_" + nomalizedId + "_E4CBF73";
+    return pythonId;
   }
 
   return {
