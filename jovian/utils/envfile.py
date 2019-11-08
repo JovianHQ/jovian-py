@@ -1,6 +1,9 @@
 import os
+
+import click
 import yaml
-from jovian.utils.constants import LINUX, WINDOWS, MACOS
+
+from jovian.utils.constants import LINUX, MACOS, WINDOWS
 from jovian.utils.logger import log
 from jovian.utils.misc import get_platform
 
@@ -50,7 +53,6 @@ def write_env_name(env_name, env_fname):
 
 ENV_NAME_MSG = "Please provide a name for the conda environment"
 
-import click
 
 def request_env_name(env_name, env_fname):
     """Request the user to provide a name for the environment"""
