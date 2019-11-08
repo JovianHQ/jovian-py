@@ -13,7 +13,7 @@ jovian is an open-source Python package integrated with [Jovian](https://jovian.
 - [Collaborate with teammates/colleagues](https://jovian-py.readthedocs.io/en/latest/user-guide/08-collaborate.html)
 - [Stay connected with your model training, live updates with Slack Notifications](https://jovian-py.readthedocs.io/en/latest/jvn/notif.html)
 
-**Documentation** : [jovian docs](https://jovian-py.readthedocs.io)
+[![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian-py.readthedocs.io/en/latest/?badge=latest)
 
 ## Installation
 
