@@ -87,10 +87,12 @@ define([
           "else:\n" +
           "\tprint(out)";
 
-        Jupyter.notebook.kernel.execute(jvn_commit, {
-          iopub: {
-            output: jvnLog
-          }
+        /* Saves the notebook creates a checkpoint and then commits*/
+        Jupyter.notebook.save_checkpoint();
+        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+          Jupyter.notebook.kernel.execute(jvn_commit, {
+            iopub: { output: jvnLog }
+          });
         });
       });
 
@@ -133,13 +135,6 @@ define([
         });
       });
 
-    /*
-      Updates the form based on the validation done on the API Key
-      - jvn_modal : jQuery Object ref. for the modal
-      - shown     : 
-        - true: when modal is already open
-        - false: when triggered to show a new modal 
-     */
     function updateForm(jvn_modal, shown = false) {
       /**
        * Updates the form layout.
@@ -234,14 +229,6 @@ define([
       return val;
     }
 
-    /*
-      Body of the Form
-      
-      form - class:form-horizontal
-        div - 
-          label - id:i_label | text:API key
-          input - id:text_box | type:textarea | placeholder:{default_text}
-      */
     const formUI = function() {
       /**
        * Body of the Form
@@ -265,7 +252,7 @@ define([
         .text("Please enter your API key from ")
         .append(
           $("<a/>")
-            .attr("href", "https://jovian.ml")
+            .attr("href", "https://jovian.ml?utm_source=nb-ext")
             .attr("target", "_blank")
             .text("Jovian")
         );

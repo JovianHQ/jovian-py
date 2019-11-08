@@ -1,6 +1,9 @@
 import os
+
+import click
 import yaml
-from jovian.utils.constants import LINUX, WINDOWS, MACOS
+
+from jovian.utils.constants import LINUX, MACOS, WINDOWS
 from jovian.utils.logger import log
 from jovian.utils.misc import get_platform
 
@@ -56,21 +59,13 @@ def request_env_name(env_name, env_fname):
     if env_name is None:
         env_name = extract_env_name(env_fname)
         # Make sure we're not overwriting the base environment
-        if env_name == 'base':
-            env_name = None
         # Construct the help message with default value
-        if env_name:
-            msg = ENV_NAME_MSG + " [" + env_name + "]: "
-        else:
-            msg = ENV_NAME_MSG + ":"
         # Prompt the user for input
-        try:
-            user_input = raw_input(msg)
-        except NameError:
-            try:
-                user_input = input(msg)
-            except EOFError:
-                user_input = ''
+        if env_name is None or env_name == 'base':
+            user_input = click.prompt(ENV_NAME_MSG, default='base', show_default=False)
+        else:
+            user_input = click.prompt(ENV_NAME_MSG, default=env_name, show_default=True)
+
         print('')
         # Sanitize the input
         user_input = user_input.strip()
@@ -121,7 +116,7 @@ def check_pip_failed(error_str):
     return False
 
 
-def identify_env_file(env_fname):
+def identify_env_file(env_fname, folder_prefix=""):
     """Find the right conda environment file through trial and errors"""
 
     if env_fname is None:
@@ -129,17 +124,19 @@ def identify_env_file(env_fname):
         platforms = [get_platform()] + ["", LINUX, WINDOWS, MACOS]
         for platform in platforms:
             if platform == "":
-                expected_fname = 'environment.yml'
+                expected_fname = os.path.join(folder_prefix, 'environment.yml')
             else:
-                expected_fname = 'environment-' + platform + '.yml'
+                expected_fname = os.path.join(folder_prefix, 'environment-' + platform + '.yml')
+
             if os.path.exists(expected_fname):
                 env_fname = expected_fname
                 break
 
     if env_fname is None:
         # Check for standard environment.yml file
-        if os.path.exists('environment.yml'):
-            env_fname = 'environment.yml'
+        expected_fname = os.path.join(folder_prefix, 'environment.yml')
+        if os.path.exists(expected_fname):
+            env_fname = expected_fname
     return env_fname
 
 

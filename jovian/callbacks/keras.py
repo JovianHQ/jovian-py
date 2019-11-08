@@ -27,7 +27,7 @@ class JovianKerasCallback(Callback):
 
         Visit `this`_ for a detailed example on using the fastai callback, also visit the *Records* tab
         to see all the logs of that notebook logged by the callback.
-    .. _this: https://jovian.ml/PrajwalPrashanth/34fd4e72905e460db2d16aafab285537
+    .. _this: https://jovian.ml/PrajwalPrashanth/34fd4e72905e460db2d16aafab285537?utm_source=docs
 
     """
 

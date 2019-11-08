@@ -4,16 +4,16 @@ import os
 import shutil
 import stat
 import uuid
-from getpass import getpass
 from uuid import UUID
 
+import click
 import requests
 
-from jovian.utils.constants import (DEFAULT_API_URL, DEFAULT_ORG_ID,
-                                    DEFAULT_WEBAPP_URL)
+from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_ORG_ID, DEFAULT_WEBAPP_URL
 from jovian.utils.error import ApiError, ConfigError
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
+from jovian.utils.url import urljoin
 
 try:
     # Python 3
@@ -151,15 +151,9 @@ def write_org_id(value):
 def request_org_id():
     """Ask the user to provide the organization ID"""
     log("If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).")
-    msg = "Organization ID:"
-    try:
-        user_input = raw_input(msg)
-    except NameError:
-        try:
-            user_input = input(msg)
-        except EOFError:
-            user_input = ''
-    return user_input
+
+    msg = "Organization ID"
+    return click.prompt(msg, default='', show_default=False)
 
 
 def read_org_id():
@@ -250,7 +244,7 @@ def write_api_key(value):
 
 def _u(path):
     """Make a URL from the path"""
-    return read_api_url() + path
+    return urljoin(read_api_url(), path)
 
 
 def validate_api_key(key):
@@ -284,7 +278,7 @@ def write_guest_key(token):
 def request_api_key():
     """Ask the user to provide the API key"""
     log("Please enter your API key ( from " + read_webapp_url() + " ):")
-    api_key = getpass(prompt="API Key:")
+    api_key = click.prompt("API KEY", hide_input=True)
     return api_key
 
 

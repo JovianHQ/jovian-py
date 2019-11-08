@@ -24,15 +24,15 @@ with open("README.md", "rb") as fh:
 setuptools.setup(
     name=pkg_name,
     version=verstr,
-    author="SwiftAce",
-    author_email="opensource@swiftace.ai",
+    author="Jovian",
+    author_email="hello@jovian.ml",
     entry_points={
         'console_scripts': ['jovian=jovian.cli:main'],
     },
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://swiftace.ai/",
+    url="https://jovian.ml/?utm_source=pypi",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -43,5 +43,5 @@ setuptools.setup(
     data_files=[("share/jupyter/nbextensions/jovian_nb_ext", ["jovian/jovian_nb_ext/main.js"]),
                 ("etc/jupyter/nbconfig/notebook.d", ["jovian/jovian_nb_ext/jovian_nb_ext.json"])],
     include_package_data=True,
-    install_requires=['requests', 'uuid', 'pyyaml']
+    install_requires=['requests', 'uuid', 'pyyaml', 'click']
 )

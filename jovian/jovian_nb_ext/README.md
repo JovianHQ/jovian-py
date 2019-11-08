@@ -6,7 +6,7 @@ Save your API Key and Commit the notebook with a click. ![Screenshot from 2019-0
 
 ### API Key
 
-Visit [Jovian's Website](https://www.jovian.ml), Click on API Key button to copy it to the clipboard.
+Visit [Jovian's Website](https://www.jovian.ml?utm_source=nb-ext-readme), Click on API Key button to copy it to the clipboard.
 
 ![Screenshot from 2019-07-16 16-51-40](/home/prajwal/Pictures/Screenshot from 2019-07-16 16-51-40.png)
 
