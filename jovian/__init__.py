@@ -1,5 +1,4 @@
 import os
-import requests
 from os.path import basename
 from time import sleep
 
@@ -12,6 +11,7 @@ from jovian.utils.configure import reset as reset_config
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.credentials import read_webapp_url
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
+from jovian.utils.latest import notify
 from jovian.utils.logger import log
 from jovian.utils.misc import get_flavor
 from jovian.utils.pip import upload_pip_env
@@ -21,23 +21,10 @@ from jovian.utils.script import get_file_name, in_script
 __flavor__ = get_flavor()
 
 set_notebook_name()
+notify()
+
 _current_slug = None
 _data_blocks = []
-
-
-def notify_update_available():
-    """Compares the installed and latest version of the library and notifies 
-    the user when they import the library and there is a update available.
-    """
-    try:
-        latest_version = requests.get('https://pypi.org/pypi/jovian/json', timeout=3).json()['info']['version']
-        if latest_version > __version__:
-            print('Update available: {0} --> {1}'.format(__version__, latest_version))
-    except:
-        pass
-
-
-notify_update_available()
 
 
 def reset():
