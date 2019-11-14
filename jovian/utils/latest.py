@@ -3,7 +3,7 @@ from random import random
 
 from jovian._version import __version__
 from jovian.utils.logger import log
-from packaging.version import parse
+from pkg_resources import parse_version
 
 
 def get_latest_version():
@@ -33,8 +33,8 @@ def check_update(probability=.2):
                                     (1 == always)
     """
     if random() < probability:
-        latest_version = parse(get_latest_version())
-        current_version = parse(__version__)
+        latest_version = parse_version(get_latest_version())
+        current_version = parse_version(__version__)
         if latest_version > current_version:
             log('Update Available: {0} --> {1}'.format(__version__, latest_version))
             log('Run `!pip install jovian --upgrade` to upgrade')
