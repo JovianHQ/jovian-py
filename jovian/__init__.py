@@ -272,6 +272,7 @@ def log_hyperparams(data, verbose=True):
 
     res = post_block(data, recordType)
     _data_blocks.append((res['tracking']['trackingSlug'], recordType))
+
     if verbose:
         log('Hyperparameters logged.')
 
@@ -351,7 +352,7 @@ def log_git(data, verbose=True):
     _data_blocks.append((res['tracking']['trackingSlug'], recordType))
 
     if verbose:
-        log('Git logged.')Recording metrics & hyperparameters..
+        log('Git logged.')
 
 
 def notify(data, verbose=True, safe=False):
