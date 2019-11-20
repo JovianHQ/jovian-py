@@ -47,3 +47,10 @@ def git_commit_push(message):
             'branch': git_branch(),
             'commit': git_commit(message)
         }
+
+
+def git_rel_path():
+    """Returns relative path from the git root directory."""
+    root_dir = git_root()
+    file_dir = os.path.abspath('')
+    return os.path.relpath(file_dir, root_dir)
