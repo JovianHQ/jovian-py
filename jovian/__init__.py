@@ -128,7 +128,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         if is_git():
             reset(which=['dataset'])  # resets git commit info
 
-            git_commit(message)
+            git_commit(commit_msg)
             log('Git commit Done.')
 
             git_info = {
