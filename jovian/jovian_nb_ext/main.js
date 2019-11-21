@@ -3,7 +3,7 @@ define([
   "base/js/namespace",
   "base/js/dialog",
   "base/js/keyboard"
-], function($, Jupyter, dialog, keyboard) {
+], function ($, Jupyter, dialog, keyboard) {
   function loadJovianExtension() {
     /**
      *  Jupyter extension to commit the notebook to Jovian.
@@ -40,7 +40,7 @@ define([
               : "True";
           const capture_env =
             window.jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) ==
-            "F"
+              "F"
               ? "False"
               : "True";
           const create_new =
@@ -89,7 +89,7 @@ define([
 
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
-        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+        Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
           Jupyter.notebook.kernel.execute(jvn_commit, {
             iopub: { output: jvnLog }
           });
@@ -229,7 +229,7 @@ define([
       return val;
     }
 
-    const formUI = function() {
+    const formUI = function () {
       /**
        * Body of the Form
        *
@@ -273,7 +273,7 @@ define([
         .append(input_box)
         .append(error_msg);
 
-      input_box.bind("keyup paste", function() {
+      input_box.bind("keyup paste", function () {
         error_msg.hide();
         div.removeClass("has-error");
       });
@@ -281,7 +281,7 @@ define([
       return form;
     };
 
-    const modalInit = function() {
+    const modalInit = function () {
       /**
        * Initializes a dialog modal triggered by the button on the toolbar
        *
@@ -301,7 +301,7 @@ define([
           Save: {
             id: "save_button",
             class: "btn-primary",
-            click: function() {
+            click: function () {
               const api_key = $("#text_box").val();
               const write_api =
                 "from jovian.utils.credentials import write_api_key\n" +
@@ -325,9 +325,9 @@ define([
             }
           }
         },
-        open: function() {
+        open: function () {
           // bind enter key for #save_button when the modal is open
-          jvn_modal.find("#text_box").keydown(function(event) {
+          jvn_modal.find("#text_box").keydown(function (event) {
             if (event.which === keyboard.keycodes.enter) {
               jvn_modal
                 .find("#save_button")
@@ -349,7 +349,7 @@ define([
         .then(() => updateForm(jvn_modal));
     };
 
-    const formParamsUI = function() {
+    const formParamsUI = function () {
       /**
        * Body of the Form
        *
@@ -551,7 +551,8 @@ define([
       return form;
     };
 
-    const saveParams = function() {
+    //to save parameters and commit with those parameters
+    const saveParamsAndCommit = function () {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -570,13 +571,13 @@ define([
           Commit: {
             id: "save_params_button",
             class: "btn-primary",
-            click: function() {
+            click: function () {
               storeParamsInPython();
               modalInit();
             }
           }
         },
-        open: function() {
+        open: function () {
           getParams().then(jvn_params => {
             if (jvn_params == null) {
               $("#nb_filename_box").val(
@@ -609,6 +610,61 @@ define([
       jvn_params_modal.modal("show");
     };
 
+    //just save new default parameters
+    const saveParams = function () {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: formParamsUI()
+       *
+       */
+      const jvn_params_modal = dialog.modal({
+        show: false,
+        title: "Set up Parameters to Jovian",
+        body: formParamsUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        buttons: {
+          Set: {
+            id: "save_params_button",
+            class: "btn-primary",
+            click: function () {
+              storeParamsInPython();
+            }
+          }
+        },
+        open: function () {
+          getParams().then(jvn_params => {
+            if (jvn_params == null) {
+              $("#nb_filename_box").val(
+                Jupyter.notebook.notebook_name.replace(".ipynb", "")
+              );
+              $($("input[name=secret_opt")[1]).prop("checked", true);
+              $($("input[name=cap_opt")[0]).prop("checked", true);
+              $($("input[name=create_opt")[1]).prop("checked", true);
+              $("#env_opt option:contains('conda')").prop("selected", true);
+            } else {
+              $("#nb_filename_box").val(
+                jvn_params.nb_filename.replace(".ipynb", "")
+              );
+              jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=secret_opt")[1]).prop("checked", true)
+                : $($("input[name=secret_opt")[0]).prop("checked", true);
+              jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=cap_opt")[1]).prop("checked", true)
+                : $($("input[name=cap_opt")[0]).prop("checked", true);
+              jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+                ? $($("input[name=create_opt")[1]).prop("checked", true)
+                : $($("input[name=create_opt")[0]).prop("checked", true);
+              jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+                ? $("#env_opt option:contains('conda')").prop("selected", true)
+                : $("#env_opt option:contains('pip')").prop("selected", true);
+            }
+          });
+        }
+      });
+      jvn_params_modal.modal("show");
+    };
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
       */
@@ -625,10 +681,15 @@ define([
       prefix
     );
 
-    //toolbar button to remove the jovian extension
+    //toolbar dropdown button for commit
     const set_params_ext_action = {
       icon: "fa-angle-double-down",
       help: "Show a list of parameters for user to set up",
+      handler: saveParamsAndCommit
+    };
+    const set_params_ext_name_default = {
+      icon: "fa-angle-double-down",
+      help: "Show settings",
       handler: saveParams
     };
     const set_params_ext_name = Jupyter.actions.register(
@@ -636,10 +697,16 @@ define([
       "set_params_ext",
       prefix
     );
+    const set_params_ext_name_default = Jupyter.actions.register(
+      set_params_ext_name_default,
+      "set_params_ext",
+      prefix
+    );
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
-      set_params_ext_name
+      set_params_ext_name,
+      set_params_ext_name_default
     ]);
 
     //adding jovian logo and Commit text next to it
