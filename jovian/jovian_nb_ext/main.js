@@ -551,6 +551,92 @@ define([
       return form;
     };
 
+    const settingsUI = function () {
+      /**
+       * Body of the Form
+       *
+       * Layout:
+       *  - form : class: form-horizontal
+       *    - div :
+       *      - label : text: Set Default Commit Parameters
+       *      - input : type: button | id: default_button | class: default-btn | value: Set Default
+       * 
+       *      - label : text: Clear/Change API Key
+       *      - input : type: button | id: api_button | class: api-btn | value: Change Key
+       * 
+       *      - label : text: Disable Jovian
+       *      - input : type: button | id: disable_button | class: disable-btn | value: Disable
+       *
+       */
+      const form = $("<form/>").addClass("form-horizontal");
+
+      const div = $("<div/>")
+        .attr("id", "input_div")
+        .appendTo(form);
+
+      const default_label = $("<label/>").text("Set Default Commit Parameters");
+      const default_box = $("<input/>")
+      .addClass("default-btn")
+      .attr("type","button")
+      .attr("id","default_button")
+      .attr("value","Set Default")
+      .click( function () {
+        //TODO
+      })
+      ;
+
+      const api_label = $("<label/>").text("Clear/Change API Key");
+      const api_box = $("<input/>")
+      .addClass("api-btn")
+      .attr("type","button")
+      .attr("id","api_button")
+      .attr("value","Change Key")
+      .click( function () {
+        //TODO
+      })
+      ;
+
+      const disable_label = $("<label/>").text("Disable Jovian");
+      const disable_box = $("<input/>")
+      .addClass("disable-btn")
+      .attr("type","button")
+      .attr("id","disable_button")
+      .attr("value","Disable")
+      .click( function () {
+        //TODO
+      })
+      ;
+
+      div
+        .append(default_label)
+        .append(default_box)
+        .append("<br>")
+        .append(api_label)
+        .append(api_box)
+        .append("<br>")
+        .append(disable_label)
+        .append(disable_box);
+
+      return form;
+    };
+
+    const settingsDialog = function () {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: settingsUI()
+       *
+       */
+      const jvn_params_modal = dialog.modal({
+        show: false,
+        title: "Jovian Settings",
+        body: settingsUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager
+      });
+      jvn_params_modal.modal("show");
+    };
+
     //to save parameters and commit with those parameters
     const saveParamsAndCommit = function () {
       /**
@@ -687,26 +773,37 @@ define([
       help: "Show a list of parameters for user to set up",
       handler: saveParamsAndCommit
     };
-    const set_params_ext_name_default = {
+    const set_params_ext_action_default = {
       icon: "fa-angle-double-down",
-      help: "Show settings",
+      help: "Set Defaults",
       handler: saveParams
+    };
+    const set_params_ext_action_settings = {
+      icon: "fa-angle-double-down",
+      help: "Show Settings",
+      handler: settingsDialog
     };
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
-      "set_params_ext",
+      "set_commit_params_ext",
       prefix
     );
     const set_params_ext_name_default = Jupyter.actions.register(
-      set_params_ext_name_default,
+      set_params_ext_action_default,
       "set_params_ext",
+      prefix
+    );
+    const set_params_ext_name_settings = Jupyter.actions.register(
+      set_params_ext_action_settings,
+      "set_settings_ext",
       prefix
     );
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
       set_params_ext_name,
-      set_params_ext_name_default
+      set_params_ext_name_default,
+      set_params_ext_name_settings
     ]);
 
     //adding jovian logo and Commit text next to it
