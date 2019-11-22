@@ -87,14 +87,14 @@ define([
           "else:\n" +
           "\tprint(out)";
 
-        /* Saves the notebook creates a checkpoint and then commits*/
-        Jupyter.notebook.save_checkpoint();
-        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
-          Jupyter.notebook.kernel.execute(jvn_commit, {
-            iopub: { output: jvnLog }
-          });
-        });
-      });
+/* Saves the notebook creates a checkpoint and then commits*/
+Jupyter.notebook.save_checkpoint();
+Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+  Jupyter.notebook.kernel.execute(jvn_commit, {
+    iopub: { output: jvnLog }
+  });
+});
+});
 
     const validateApi = () =>
       /**
@@ -609,6 +609,74 @@ define([
       jvn_params_modal.modal("show");
     };
 
+    const formDropDownUI = function() {
+      /** 
+       * module 1:
+       * Draw the dropdown menu
+      **/
+      const div = $("<div/>")
+        .attr("id", "jvn_options")
+        .addClass("btn-group-vertical");
+  
+      const option1 = $("<button/>")
+        .attr("id", "jvn_module1_option1")
+        .addClass("btn btn-primary")
+        .text("Commit w/ options");
+  
+      const option2 = $("<button/>")
+        .attr("id", "jvn_module1_option2")
+        .addClass("btn btn-primary")
+        .text("Open sidebar");
+  
+      const option3 = $("<button/>")
+        .attr("id", "jvn_module1_option3")
+        .addClass("btn btn-primary")
+        .text("Settings");
+      
+  
+      div
+        .append(option1)
+        .append(option2)
+        .append(option3);
+  
+      return div;
+    };
+  
+    const showDropDown = function() {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: formDropDownUI()
+       *
+       * Button:
+       *  - 1: Commit w/ options
+       *  - 2: Open sidebar
+       *  - 3: Settings
+       */
+      const jvn_dropdown_modal = dialog.modal({
+        show: false,
+        body: formDropDownUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        open: function() {
+          $("#jvn_module1_option1").focus();
+          $("#jvn_module1_option1").blur(()=>{jvn_dropdown_modal.modal("hide");});
+          const option1 = $("#jvn_module1_option1");
+          const option2 = $("#jvn_module1_option2");
+          const option3 = $("#jvn_module1_option3");
+          option1.click(()=>saveParams());
+        }
+      });
+      const modal = $(jvn_dropdown_modal).find(".modal-content");
+      const body = modal.find(".modal-body");
+      const jvn_pos = $(jvn_btn_grp.find("button")[0]).offset();
+      jvn_dropdown_modal.html(body.html())
+        .width("140px")
+        .height("100px")
+        .offset({left:jvn_pos.left, top:jvn_pos.top+25})
+        .modal("show");
+    };
+
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
       */
@@ -629,7 +697,7 @@ define([
     const set_params_ext_action = {
       icon: "fa-angle-double-down",
       help: "Show a list of parameters for user to set up",
-      handler: saveParams
+      handler: showDropDown//saveParams
     };
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
