@@ -1,12 +1,14 @@
-import requests
 from random import random
 
-from jovian._version import __version__
-from jovian.utils.logger import log
+import requests
 from pkg_resources import parse_version
 
+from jovian._version import __version__
+from jovian.utils.jupyter import in_notebook
+from jovian.utils.logger import log
 
-def get_latest_version():
+
+def _get_latest_version():
     """Returns Jovian's latest pypi version.
 
     When Internet connection is not available it assumes 
@@ -22,7 +24,16 @@ def get_latest_version():
     return latest_version
 
 
-def check_update(probability=.2):
+def _print_update_message(current_version, latest_version):
+    log('Update Available: {0} --> {1}'.format(current_version, latest_version))
+
+    if in_notebook():
+        log('Run `!pip install jovian --upgrade` to upgrade')
+    else:
+        log('Run `pip install jovian --upgrade` to upgrade\n')
+
+
+def check_update(probability=0.2):
     """Check if there is a update available and logs
     current and latest version with the command to update
     the library.
@@ -33,8 +44,7 @@ def check_update(probability=.2):
                                     (1 == always)
     """
     if random() < probability:
-        latest_version = parse_version(get_latest_version())
+        latest_version = parse_version(_get_latest_version())
         current_version = parse_version(__version__)
         if latest_version > current_version:
-            log('Update Available: {0} --> {1}'.format(__version__, latest_version))
-            log('Run `!pip install jovian --upgrade` to upgrade')
+            _print_update_message(current_version, latest_version)
