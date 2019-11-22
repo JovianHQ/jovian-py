@@ -11,6 +11,7 @@ from jovian.utils.configure import reset as reset_config
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.credentials import read_webapp_url
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
+from jovian.utils.latest import check_update
 from jovian.utils.logger import log
 from jovian.utils.misc import get_flavor
 from jovian.utils.pip import upload_pip_env
@@ -20,6 +21,7 @@ from jovian.utils.script import get_file_name, in_script
 __flavor__ = get_flavor()
 
 set_notebook_name()
+check_update()
 
 _current_slug = None
 _data_blocks = []
