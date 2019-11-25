@@ -114,4 +114,3 @@ def activate(env_fname=None):
 
     # Print beta warning and github link
     log(ISSUES_MSG)
-    log('If the command fails with CommandNotFoundError, please just copy the above code and run it.')
