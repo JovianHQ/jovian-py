@@ -93,7 +93,7 @@ def install_env(ctx, name_argv):
 
 @main.command("activate")
 @click.pass_context
-def activate_env(ctx, name_argv):
+def activate_env(ctx):
     """Activate conda environment from environment file."""
 
     activate()
