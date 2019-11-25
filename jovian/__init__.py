@@ -161,6 +161,7 @@ def commit(secret=False,
             notebook_id = get_notebook_slug(nb_filename)
 
     # Check if notebook exists is a uuid or 'username/title'
+    notebook_readable_id = notebook_id
     if notebook_id is not None and '/' in notebook_id:
         notebook_id = get_gist(notebook_id)['slug']
 
@@ -174,7 +175,7 @@ def commit(secret=False,
     if notebook_id is None:
         log('Creating a new notebook on ' + read_webapp_url())
     else:
-        log('Updating notebook "' + notebook_id + '" on ' + read_webapp_url())
+        log('Updating notebook "' + notebook_readable_id + '" on ' + read_webapp_url())
 
     # Upload the notebook & create/update the gist
     res = create_gist_simple(nb_filename, notebook_id, secret)
