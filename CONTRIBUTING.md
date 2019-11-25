@@ -81,6 +81,7 @@ We recommend using the following extensions in VSCode:
 
 *Read more about VSCode Extensions [here](https://code.visualstudio.com/docs/editor/extension-gallery)*
 
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) `Important` (To make the formatting consistent and avoid unwanted whitespace changes)
 - [Python Extension](https://code.visualstudio.com/docs/languages/python)
 - [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)
 - [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
