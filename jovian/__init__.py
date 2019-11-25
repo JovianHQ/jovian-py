@@ -48,8 +48,16 @@ def reset(which=[]):
     _data_blocks = [(i, j) for (i, j) in _data_blocks if j not in which]
 
 
-def commit(secret=False, nb_filename=None, files=[], capture_env=True,
-           env_type='conda', notebook_id=None, create_new=None, artifacts=[], git=False, commit_msg="jovian commit"):
+def commit(secret=False,
+           nb_filename=None,
+           files=[],
+           capture_env=True,
+           env_type='conda',
+           notebook_id=None,
+           create_new=None,
+           artifacts=[],
+           do_git_commit=True,
+           git_commit_msg="jovian commit"):
     """Commits a Jupyter Notebook with its environment to Jovian.
 
     Saves the checkpoint of the notebook, captures the required dependencies from 
@@ -124,11 +132,11 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         return
 
     # Commit to git and log commit hash
-    if git:
+    if do_git_commit:
         if is_git():
             reset(which=['git'])  # resets git commit info
 
-            git_commit(commit_msg)
+            git_commit(git_commit_msg)
             log('Git commit Done.')
 
             git_info = {
@@ -338,10 +346,10 @@ def log_dataset(data, verbose=True):
 
 
 def log_git(data, verbose=True):
-    """Record the git information.
+    """Record the git-related information.
 
     Args:
-        data(dict): A python dict or a array of dicts to be recorded as Dataset.
+        data(dict): A python dict or a array of dicts to be recorded as a git related block.
 
         verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
     """
