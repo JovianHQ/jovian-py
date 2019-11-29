@@ -3,7 +3,7 @@ define([
   "base/js/namespace",
   "base/js/dialog",
   "base/js/keyboard"
-], function ($, Jupyter, dialog, keyboard) {
+], function($, Jupyter, dialog, keyboard) {
   function loadJovianExtension() {
     /**
      *  Jupyter extension to commit the notebook to Jovian.
@@ -40,7 +40,7 @@ define([
               : "True";
           const capture_env =
             window.jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) ==
-              "F"
+            "F"
               ? "False"
               : "True";
           const create_new =
@@ -89,7 +89,7 @@ define([
 
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
-        Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
+        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
           Jupyter.notebook.kernel.execute(jvn_commit, {
             iopub: { output: jvnLog }
           });
@@ -229,7 +229,7 @@ define([
       return val;
     }
 
-    const formUI = function () {
+    const formUI = function() {
       /**
        * Body of the Form
        *
@@ -273,7 +273,7 @@ define([
         .append(input_box)
         .append(error_msg);
 
-      input_box.bind("keyup paste", function () {
+      input_box.bind("keyup paste", function() {
         error_msg.hide();
         div.removeClass("has-error");
       });
@@ -281,7 +281,7 @@ define([
       return form;
     };
 
-    const modalInit = function () {
+    const modalInit = function() {
       /**
        * Initializes a dialog modal triggered by the button on the toolbar
        *
@@ -301,7 +301,7 @@ define([
           Save: {
             id: "save_button",
             class: "btn-primary",
-            click: function () {
+            click: function() {
               const api_key = $("#text_box").val();
               const write_api =
                 "from jovian.utils.credentials import write_api_key\n" +
@@ -325,9 +325,9 @@ define([
             }
           }
         },
-        open: function () {
+        open: function() {
           // bind enter key for #save_button when the modal is open
-          jvn_modal.find("#text_box").keydown(function (event) {
+          jvn_modal.find("#text_box").keydown(function(event) {
             if (event.which === keyboard.keycodes.enter) {
               jvn_modal
                 .find("#save_button")
@@ -349,7 +349,7 @@ define([
         .then(() => updateForm(jvn_modal));
     };
 
-    const formParamsUI = function () {
+    const formParamsUI = function() {
       /**
        * Body of the Form
        *
@@ -551,7 +551,7 @@ define([
       return form;
     };
 
-    const settingsUI = function () {
+    const settingsUI = function() {
       /**
        * Body of the Form
        *
@@ -559,11 +559,11 @@ define([
        *  - form : class: form-horizontal
        *    - div :
        *      - label : text: Set Default Commit Parameters
-       *      - input : type: button | id: default_button | class: default-btn | value: Set Default
-       * 
+       *      - input : type: button | value: Set Default
+       *
        *      - label : text: Clear/Change API Key
        *      - input : type: button | id: api_button | class: api-btn | value: Change Key
-       * 
+       *
        *      - label : text: Disable Jovian
        *      - input : type: button | id: disable_button | class: disable-btn | value: Disable
        *
@@ -575,41 +575,40 @@ define([
         .appendTo(form);
 
       const default_label = $("<label/>").text("Set Default Commit Parameters");
-      const default_box = $("<input/>")
-      .addClass("default-btn")
-      .attr("type","button")
-      .attr("id","default_button")
-      .attr("value","Set Default")
-      .click( function () {
-        //TODO
-      })
-      ;
+      
+      const set_params_only_ext_action = {
+        help: "Set Default Commit Parameters",
+        handler: saveParams
+      };
+      const set_params_only_ext_action_name = Jupyter.actions.register(
+        set_params_only_ext_action,
+        "Set Default",
+        prefix
+      );
 
       const api_label = $("<label/>").text("Clear/Change API Key");
       const api_box = $("<input/>")
-      .addClass("api-btn")
-      .attr("type","button")
-      .attr("id","api_button")
-      .attr("value","Change Key")
-      .click( function () {
-        //TODO
-      })
-      ;
+        .addClass("api-btn")
+        .attr("type", "button")
+        .attr("id", "api_button")
+        .attr("value", "Change Key")
+        .click(function() {
+          //TODO
+        });
 
       const disable_label = $("<label/>").text("Disable Jovian");
       const disable_box = $("<input/>")
-      .addClass("disable-btn")
-      .attr("type","button")
-      .attr("id","disable_button")
-      .attr("value","Disable")
-      .click( function () {
-        //TODO
-      })
-      ;
+        .addClass("disable-btn")
+        .attr("type", "button")
+        .attr("id", "disable_button")
+        .attr("value", "Disable")
+        .click(function() {
+          //TODO
+        });
 
       div
         .append(default_label)
-        .append(default_box)
+        .append(set_params_only_ext_action_name)
         .append("<br>")
         .append(api_label)
         .append(api_box)
@@ -620,7 +619,7 @@ define([
       return form;
     };
 
-    const settingsDialog = function () {
+    const settingsDialog = function() {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -638,7 +637,7 @@ define([
     };
 
     //to save parameters and commit with those parameters
-    const saveParamsAndCommit = function () {
+    const saveParamsAndCommit = function() {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -657,13 +656,13 @@ define([
           Commit: {
             id: "save_params_button",
             class: "btn-primary",
-            click: function () {
+            click: function() {
               storeParamsInPython();
               modalInit();
             }
           }
         },
-        open: function () {
+        open: function() {
           getParams().then(jvn_params => {
             if (jvn_params == null) {
               $("#nb_filename_box").val(
@@ -697,7 +696,7 @@ define([
     };
 
     //just save new default parameters
-    const saveParams = function () {
+    const saveParams = function() {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -714,12 +713,12 @@ define([
           Set: {
             id: "save_params_button",
             class: "btn-primary",
-            click: function () {
+            click: function() {
               storeParamsInPython();
             }
           }
         },
-        open: function () {
+        open: function() {
           getParams().then(jvn_params => {
             if (jvn_params == null) {
               $("#nb_filename_box").val(
@@ -773,12 +772,7 @@ define([
       help: "Show a list of parameters for user to set up",
       handler: saveParamsAndCommit
     };
-    const set_params_ext_action_default = {
-      icon: "fa-angle-double-down",
-      help: "Set Defaults",
-      handler: saveParams
-    };
-    const set_params_ext_action_settings = {
+    const set_settings_ext_action = {
       icon: "fa-angle-double-down",
       help: "Show Settings",
       handler: settingsDialog
@@ -788,13 +782,8 @@ define([
       "set_commit_params_ext",
       prefix
     );
-    const set_params_ext_name_default = Jupyter.actions.register(
-      set_params_ext_action_default,
-      "set_params_ext",
-      prefix
-    );
-    const set_params_ext_name_settings = Jupyter.actions.register(
-      set_params_ext_action_settings,
+    const set_settings_ext_name = Jupyter.actions.register(
+      set_settings_ext_action,
       "set_settings_ext",
       prefix
     );
@@ -802,8 +791,7 @@ define([
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
       set_params_ext_name,
-      set_params_ext_name_default,
-      set_params_ext_name_settings
+      set_settings_ext_name
     ]);
 
     //adding jovian logo and Commit text next to it
