@@ -575,7 +575,7 @@ define([
         .appendTo(form);
 
       const default_label = $("<label/>").text("Set Default Commit Parameters");
-      
+
       const set_params_only_ext_action = {
         help: "Set Default Commit Parameters",
         handler: saveParams
@@ -587,34 +587,38 @@ define([
       );
 
       const api_label = $("<label/>").text("Clear/Change API Key");
-      const api_box = $("<input/>")
-        .addClass("api-btn")
-        .attr("type", "button")
-        .attr("id", "api_button")
-        .attr("value", "Change Key")
-        .click(function() {
-          //TODO
-        });
+
+      const remove_api_ext_action = {
+        help: "Change API Key",
+        handler: changeAPI
+      };
+      const remove_api_ext_name = Jupyter.actions.register(
+        remove_api_ext_action,
+        "remove_api_ext",
+        prefix
+      );
 
       const disable_label = $("<label/>").text("Disable Jovian");
-      const disable_box = $("<input/>")
-        .addClass("disable-btn")
-        .attr("type", "button")
-        .attr("id", "disable_button")
-        .attr("value", "Disable")
-        .click(function() {
-          //TODO
-        });
+
+      const remove_ext_action = {
+        help: "Disable Jovian Extension",
+        handler: removeExtension
+      };
+      const remove_ext_name = Jupyter.actions.register(
+        remove_ext_action,
+        "remove_ext",
+        prefix
+      );
 
       div
         .append(default_label)
         .append(set_params_only_ext_action_name)
         .append("<br>")
         .append(api_label)
-        .append(api_box)
+        .append(remove_api_ext_name)
         .append("<br>")
         .append(disable_label)
-        .append(disable_box);
+        .append(remove_ext_name);
 
       return form;
     };
@@ -750,6 +754,85 @@ define([
       });
       jvn_params_modal.modal("show");
     };
+
+    // disables the extension
+    function removeExtension() {
+      Jupyter.notebook.save_checkpoint();
+      remove_ext =
+        "import os\n" +
+        "os.system('jupyter nbextension disable jovian_nb_ext/main --sys-prefix')\n";
+      console.log(remove_ext);
+      Jupyter.notebook.kernel.execute(remove_ext);
+      location.reload();
+    }
+
+    // changes the API key
+    function changeAPI() {
+      new Promise(resolve => {
+        const valStatus = data => {
+          resolve(data.content.text.trim());
+        };
+
+        const purge_api =
+          "from jovian.utils.credentials import purge_creds\n" +
+          "purge_creds()";
+
+        Jupyter.notebook.kernel.execute(purge_api);
+      });
+      const jvn_modal = dialog.modal({
+        show: false,
+        title: "Commit to Jovian",
+        body: formUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        buttons: {
+          Save: {
+            id: "save_button",
+            class: "btn-primary",
+            click: function() {
+              const api_key = $("#text_box").val();
+              const write_api =
+                "from jovian.utils.credentials import write_api_key\n" +
+                "write_api_key('" +
+                api_key +
+                "')\n";
+
+              Jupyter.notebook.kernel.execute(write_api);
+              jvn_modal.data("bs.modal").isShown = false; // Retains the modal
+
+              updateForm(jvn_modal, true).then(x => {
+                jvn_modal.data("bs.modal").isShown = true; // Modal can be dismissed after this
+
+                if (x == "saved_valid_key") {
+                  jvn_modal.find(".close").click();
+                  alert(
+                    "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
+                  );
+                }
+              });
+            }
+          }
+        },
+        open: function() {
+          // bind enter key for #save_button when the modal is open
+          jvn_modal.find("#text_box").keydown(function(event) {
+            if (event.which === keyboard.keycodes.enter) {
+              jvn_modal
+                .find("#save_button")
+                .first()
+                .click();
+              return false;
+            }
+          });
+
+          // Select the input when modal is open, easy to paste the key without the need for user to click first
+          jvn_modal
+            .find("#text_box")
+            .focus()
+            .select();
+        }
+      });
+    }
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
       */
@@ -777,6 +860,8 @@ define([
       help: "Show Settings",
       handler: settingsDialog
     };
+
+    // 
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
       "set_commit_params_ext",
