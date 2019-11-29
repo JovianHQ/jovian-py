@@ -15,13 +15,14 @@ import {
 } from '@jupyterlab/docregistry';
 
 import {
-  NotebookPanel, INotebookModel, //CellList
+  NotebookPanel, INotebookModel
 } from '@jupyterlab/notebook';
 
 import '../style/index.css';
 
 import askParameters from './module2';
-  
+import NBKernel from './NBKernel';
+
 let positionIndex:number = 9;
 
 let commitButton:any, dropdownButton:any;
@@ -95,11 +96,23 @@ class dropdown implements DocumentRegistry.IWidgetExtension<NotebookPanel, INote
   /**
    * Create a new extension object.
    */
-  createNew(panel: NotebookPanel, context: DocumentRegistry.IContext<INotebookModel>): IDisposable {
+   createNew(panel: NotebookPanel, context: DocumentRegistry.IContext<INotebookModel>): IDisposable {
     
-    let callback = () => {
+     let callback = () => {
       // display the dropdown menu 
       alert("dropdown");
+      
+      NBKernel.execute("import jovian as jvn\njvn.commit()").then(
+        (result) => {
+          alert(result);
+        }
+      )
+
+      NBKernel.execute("print (1+3)\nprint ('Jovian Test!')").then(
+        (result) => {
+          alert(result);
+        }
+      )
 
     };
 
