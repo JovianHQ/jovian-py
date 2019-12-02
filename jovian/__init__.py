@@ -139,7 +139,8 @@ def commit(secret=False,
             reset(which=['git'])  # resets git commit info
 
             git_commit(git_commit_msg)
-            log('Git commit Done.')
+            log('Commiting to git with' + git_current_commit + "as git commit message.")
+            log("Git hash:" + git_current_commit())
 
             git_info = {
                 'remoteRepository': git_remote(),
@@ -148,9 +149,6 @@ def commit(secret=False,
                 'relativePath': git_rel_path()
             }
             log_git(git_info, verbose=False)
-
-        else:
-            log('Failed to detect a git repo. Please check the diretory you are committing from.')
 
     # Check whether to create a new gist, or update an old one
     if not create_new and notebook_id is None:
