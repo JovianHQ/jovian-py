@@ -117,13 +117,13 @@ def exec_clone(ctx, notebook, version):
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
-@click.option('-n', '--notebook', 'notebook')
+@click.argument('notebook')
 @click.option('-v', '--version', 'version')
 @click.pass_context
 def exec_pull(ctx, notebook, version):
     """Fetch new version of notebook hosted on Jovian(into current directory):
 
-        $ jovian pull 
+        $ jovian pull aakashns/jovian-tutorial
 
     Or fetch a specific version of notebook:
 
