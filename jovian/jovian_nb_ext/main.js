@@ -861,7 +861,7 @@ define([
       handler: settingsDialog
     };
 
-    // 
+    //
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
       "set_commit_params_ext",
