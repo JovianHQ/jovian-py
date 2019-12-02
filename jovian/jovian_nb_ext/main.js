@@ -34,26 +34,18 @@ define([
 
         // if we have a set of params already, then use it to call commit.
         if (window.jvn_params != null) {
-          const secret =
-            window.jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
-              ? "False"
-              : "True";
-          const capture_env =
-            window.jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) ==
-            "F"
-              ? "False"
-              : "True";
-          const create_new =
-            window.jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
-              ? "False"
-              : "True";
-          const env_type =
-            window.jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
-              ? "conda"
-              : "pip";
+          const secret = window.jvn_params.secret;
+          const capture_env = window.jvn_params.capture_env;
+          const create_new = window.jvn_params.create_new;
+          const env_type = window.jvn_params.env_type;
+          const files = window.jvn_params.files;
+          // const notebook_id = window.jvn_params.notebook_id;
+          // const artifacts = window.jvn_params.artifacts;
+          // const do_git_commit = window.jvn_params.do_git_commit;
+          // const git_commit_msg = window.jvn_params.git_commit_msg;
 
           commit =
-            "\tcommit(" +
+            "commit(" +
             'nb_filename="' +
             window.jvn_params.nb_filename +
             '"' +
@@ -66,10 +58,12 @@ define([
             ",create_new=" +
             create_new +
             "" +
+            ",files=" +
+            files +
+            "" +
             ',env_type="' +
             env_type +
             '"' +
-            //',notebook_id="' + window.jvn_params.notebook_id + '"' +
             ")\n";
         }
 
@@ -80,6 +74,7 @@ define([
           "from contextlib import redirect_stdout\n" +
           "f = io.StringIO()\n" +
           "with redirect_stdout(f):\n" +
+          "\t" +
           commit +
           "out = f.getvalue().splitlines()[-1]\n" +
           "if(out.split()[1] == 'Committed'):\n" +
@@ -394,7 +389,9 @@ define([
         .attr("id", "input_div")
         .appendTo(form);
 
-      const secret_label = $("<label/>").text("Create a secret notebook?");
+      const secret_label = $("<label/>").text(
+        "Create a secret notebook?  ....."
+      );
       const secret_box = $("<div/>")
         .addClass("form-check")
         .append(
@@ -590,16 +587,16 @@ define([
               $("#nb_filename_box").val(
                 jvn_params.nb_filename.replace(".ipynb", "")
               );
-              jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.secret == "False"
                 ? $($("input[name=secret_opt")[1]).prop("checked", true)
                 : $($("input[name=secret_opt")[0]).prop("checked", true);
-              jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.capture_env == "False"
                 ? $($("input[name=cap_opt")[1]).prop("checked", true)
                 : $($("input[name=cap_opt")[0]).prop("checked", true);
-              jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.create_new == "False"
                 ? $($("input[name=create_opt")[1]).prop("checked", true)
                 : $($("input[name=create_opt")[0]).prop("checked", true);
-              jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+              jvn_params.env_type == "conda"
                 ? $("#env_opt option:contains('conda')").prop("selected", true)
                 : $("#env_opt option:contains('pip')").prop("selected", true);
             }
