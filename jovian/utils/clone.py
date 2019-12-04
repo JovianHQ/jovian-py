@@ -47,7 +47,7 @@ def get_gist(slug, version, fresh):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    print(url)
+    # print(url)
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
@@ -55,23 +55,24 @@ def get_gist(slug, version, fresh):
 
 
 def post_clone_msg(title):
-    return """Cloned successfully to '{}'. 
+    import click
+    log("Cloned successfully to '{}'".format(title), color='bright_green') 
+    click.echo(click.style('\nNext steps:', fg='yellow', underline=True) + \
+               click.style("""
+  $ cd {}                     
+  $ jovian install            
+  $ conda activate <env_name> 
+  $ jupyter notebook""".format(title), bold=True))
+    
 
-Next steps:
-$ cd {}   # Enter the directory
-$ jovian install     # Install dependencies
-$ conda activate <env_name> # Activate environment
-$ jupyter notebook   # Start Jupyter
-
+    print("""
 Replace <env_name> with the name of your environment (without the '<' & '>')
 Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
 so please make sure you have it installed and added to path. 
 * If you face issues with `jovian install`, try `conda env update`.
 * If you face issues with `conda activate`, try `source activate <env_name>` 
   or `activate <env_name>` to activate the virtual environment.
-
-{}
-""".format(title, title, ISSUES_MSG)
+""".format(title, title))
 
 
 def clone(slug, version=None, fresh=True):
@@ -108,7 +109,7 @@ def clone(slug, version=None, fresh=True):
 
     # Print success message and instructions
     if fresh:
-        log(post_clone_msg(title))
+        post_clone_msg(title)
     else:
         log('Files dowloaded successfully in current directory')
 
