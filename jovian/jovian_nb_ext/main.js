@@ -875,7 +875,7 @@ define([
       prefix
     );
 
-    //toolbar dropdown button for commit
+    //////////////For testing untill on dropdown///////////////
     const set_params_ext_action = {
       icon: "fa-angle-double-down",
       help: "Show a list of parameters for user to set up",
@@ -887,7 +887,6 @@ define([
       handler: settingsDialog
     };
 
-    //
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
       "set_commit_params_ext",
@@ -898,11 +897,12 @@ define([
       "set_settings_ext",
       prefix
     );
+    //////////////For testing untill on dropdown///////////////
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
-      set_params_ext_name,
-      set_settings_ext_name
+      set_params_ext_name,//for testing untill dropdown
+      set_settings_ext_name//for testing untill dropdown
     ]);
 
     //adding jovian logo and Commit text next to it
