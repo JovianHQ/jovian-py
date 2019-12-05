@@ -588,13 +588,23 @@ define([
 
       const api_label = $("<label/>").text("Clear/Change API Key");
 
-      const remove_api_ext_action = {
+      const clear_api_ext_action = {
+        help: "Clear API Key",
+        handler: clearAPI
+      };
+      const clear_api_ext_name = Jupyter.actions.register(
+        clear_api_ext_action,
+        "remove_api_ext",
+        prefix
+      );
+
+      const change_api_ext_action = {
         help: "Change API Key",
         handler: changeAPI
       };
-      const remove_api_ext_name = Jupyter.actions.register(
-        remove_api_ext_action,
-        "remove_api_ext",
+      const change_api_ext_name = Jupyter.actions.register(
+        change_api_ext_action,
+        "change_api_ext",
         prefix
       );
 
@@ -615,7 +625,8 @@ define([
         .append(set_params_only_ext_action_name)
         .append("<br>")
         .append(api_label)
-        .append(remove_api_ext_name)
+        .append(clear_api_ext_name)
+        .append(change_api_ext_name)
         .append("<br>")
         .append(disable_label)
         .append(remove_ext_name);
@@ -764,6 +775,21 @@ define([
       console.log(remove_ext);
       Jupyter.notebook.kernel.execute(remove_ext);
       location.reload();
+    }
+
+    //Clear the API key
+    function changeAPI() {
+      new Promise(resolve => {
+        const valStatus = data => {
+          resolve(data.content.text.trim());
+        };
+
+        const purge_api =
+          "from jovian.utils.credentials import purge_creds\n" +
+          "purge_creds()";
+
+        Jupyter.notebook.kernel.execute(purge_api);
+      });
     }
 
     // changes the API key
