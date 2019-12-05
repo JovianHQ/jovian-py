@@ -56,14 +56,13 @@ def get_gist(slug, version, fresh):
 
 def post_clone_msg(title):
     import click
-    log("Cloned successfully to '{}'".format(title), color='bright_green') 
-    click.echo(click.style('\nNext steps:', fg='yellow', underline=True) + \
+    log("Cloned successfully to '{}'".format(title), color='bright_green')
+    click.echo(click.style('\nNext steps:', fg='yellow', underline=True) +
                click.style("""
   $ cd {}                     
   $ jovian install            
   $ conda activate <env_name> 
   $ jupyter notebook""".format(title), bold=True))
-    
 
     print("""
 Replace <env_name> with the name of your environment (without the '<' & '>')
