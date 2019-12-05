@@ -72,7 +72,7 @@ so please make sure you have it installed and added to path.
 * If you face issues with `jovian install`, try `conda env update`.
 * If you face issues with `conda activate`, try `source activate <env_name>` 
   or `activate <env_name>` to activate the virtual environment.
-""".format(title, title))
+""")
 
 
 def clone(slug, version=None, fresh=True):
