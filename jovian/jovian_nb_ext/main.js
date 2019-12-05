@@ -664,7 +664,9 @@ Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
           const option1 = $("#jvn_module1_option1");
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
-          option1.click(()=>saveParams());
+          option1.click(()=>saveParams());//saveParamsAndCommit
+          //option2.click(()=>sidebar());
+          //option3.click(()=>settingsDialog());
         }
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
