@@ -97,7 +97,7 @@ def commit(secret=False,
         artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
 
-        do_git_commit(bool, optional): Whether to perform git commit along with jovian commit.Defaults to False.
+        do_git_commit(bool, optional): Whether to perform git commit along with jovian commit.Defaults to True.
 
         git_commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
             string for custom commit messages.
