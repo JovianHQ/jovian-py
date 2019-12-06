@@ -1,13 +1,15 @@
 import '../style/bootstrap.min.css';
 import { askParameters } from './module2';
+import setting from './module3';
+
 let body:any;
 
 function getDropdown():void{
   initialHeader();
   let header:HTMLElement = initialHeader();
-  header.appendChild(addButton("Commit w/ options",()=>askParameters())); // call commit with parameters
+  header.appendChild(addButton("Commit w/ options",askParameters)); // call commit with parameters
   header.appendChild(addButton("Open sidebar",()=>{alert("Open sidebar");})); // call sidebar
-  header.appendChild(addButton("Settings",()=>alert("Settings"))); // call setting
+  header.appendChild(addButton("Settings",setting)); // call setting
   addRemoveEvent(body);
   correctPosition(header);
   insertAfter(body, document.getElementById("main"));
@@ -15,7 +17,7 @@ function getDropdown():void{
 
 function addButton(value: string,callback:any = ()=>{}):HTMLElement{
   let button:HTMLElement = document.createElement("button");
-  button.className = "btn btn-primary";
+  button.className = "btn btn-light";
   button.innerText = value;
   button.onclick = callback;
   return button;
@@ -37,7 +39,15 @@ function addRemoveEvent(body:HTMLElement):void{
 
 function correctPosition(butGroup:HTMLElement):void {
   let jovian_btn:any = document.getElementsByClassName("jovian-lab-ext");
-  jovian_btn = (jovian_btn[0].getBoundingClientRect().left > 0 ? jovian_btn[0]: jovian_btn[1]) as HTMLElement;
+  let length:number = jovian_btn.length;
+  let temp:any;
+  for (let i = 0; i < length; i++){
+    temp = jovian_btn[i];
+    if (temp.getBoundingClientRect().left > 0){
+      jovian_btn = temp;
+      break;
+    };
+  };
   let position:any = jovian_btn.getBoundingClientRect();
   const left:number = position.left;
   const top:number = position.top + 25;

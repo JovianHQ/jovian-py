@@ -5,22 +5,70 @@ let body:any;
 function askParameters():void{
   let header:HTMLElement = initialHeader();
   (header as any).style["max-height"] = "1000px";
-  header.appendChild(createSecretNB());
-  header.appendChild(fileName());
-  header.appendChild(additionalScripts());
-  header.appendChild(toCaptrue());
-  header.appendChild(whichEnv());
-  header.appendChild(base64Id());
-  header.appendChild(newNB());
-  header.appendChild(artifacts());
-  header.appendChild(addButtons("Commit"));
+  let isSecret:HTMLElement = createSecretNB();
+  let name:HTMLElement = fileName();
+  let moreScripts:HTMLElement = additionalScripts();
+  let ifCaptrue:HTMLElement = toCaptrue();
+  let env:HTMLElement = whichEnv();
+  let baseId:HTMLElement = base64Id();
+  let ifNew:HTMLElement = newNB();
+  let arti = artifacts();
+  header.appendChild(isSecret);
+  header.appendChild(name);
+  header.appendChild(moreScripts);
+  header.appendChild(ifCaptrue);
+  header.appendChild(env);
+  header.appendChild(baseId);
+  header.appendChild(ifNew);
+  header.appendChild(arti);
+  header.appendChild(addButtons("Commit",()=>commitWithParams(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti)));
+  setParameters(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti);
   openWindow();
 }
 
-function commit(jvn_params:any = null):void {
+function setParameters(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void{
+  setEnvs(whatEnv,"pip");
+  setTrueOrFalse(isSecret,false);
+  setTrueOrFalse(ifCaptrue,true);
+  setTrueOrFalse(isNew,false);
+  setInputText(NBName,NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
+  setInputText(base_Id,"");
+  setInputText(moreScripts,"");
+  setInputText(arti,"");
+}
+
+function resetParams():void{
+
+}
+
+function commitWithParams(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void {
+  let secret:string = getTrueOrFalse(isSecret);
+  let name:string = getInputText(NBName);
+  let scripts:string = getInputText(moreScripts); // array
+  let ifCap:string = getTrueOrFalse(ifCaptrue);
+  let env:string = getEnvs(whatEnv);
+  let baseId:string = getInputText(base_Id);
+  let ifNew:string = getTrueOrFalse(isNew);
+  let artis:string = getInputText(arti); // array
+
+  let myCommit:string = "commit(" +
+    "secret=" + secret + "" +
+    ",capture_env=" + ifCap + "" +
+    ",create_new=" + ifNew + "" +
+    ',env_type="' + env + '"';
+  name = name == "" ? name: ',nb_filename="' + name + '.ipynb"';
+  baseId = baseId == "" ? baseId: ',notebook_id="' + baseId + '"';
+  scripts = scripts == "" ? scripts: ',files=' + scripts + '';
+  artis = artis == "" ? artis: ',artifacts=' + artis + '';
+  myCommit += name + baseId + scripts + artis + ")";
+  closeWindow();
+  commit(myCommit);
+}
+
+function commit(commitWithParams:string|null = null):void {
   let commit:string = "\tcommit()\n";
-  if (jvn_params != null){
-    
+  if (commitWithParams != null){
+    commit = "\t" + commitWithParams.trim() + "\n";
   }
   getAPIKeys().then(
     (result) => {
@@ -135,9 +183,11 @@ function createSecretNB():HTMLElement {
 
 function fileName():HTMLElement {
   let div:HTMLElement = document.createElement("div");
+  let inp:HTMLElement = addInput();
+  inp.getElementsByTagName("input")[0].disabled = true;
   div.className = "jvn_params_nbName";
   div.appendChild(addText("The filename of the jupyter notebook"));
-  div.appendChild(addInput());
+  div.appendChild(inp);
   return div;
 }
 
@@ -219,8 +269,11 @@ function addInput(dValue:string = ""):HTMLElement{
 
 function getInputText(input:HTMLElement):string{
   let text:string = input.getElementsByTagName("input")[0].value;
-  //let text:string = (input.firstElementChild.firstElementChild as HTMLInputElement).value;
   return text.trim();
+}
+
+function setInputText(input:HTMLElement, value:string):void{
+  input.getElementsByTagName("input")[0].value = value;
 }
 
 function addTrueOrFalse(dValue:string = ""):HTMLElement{
@@ -241,6 +294,31 @@ function addTrueOrFalse(dValue:string = ""):HTMLElement{
   selection.appendChild(isTrue);
   selection.appendChild(isFalse);
   return div;
+}
+
+function getTrueOrFalse(input:HTMLElement):string{
+  let text:string = getSelection(input);
+  if (text == "isTrue"){
+    return "True";
+  }
+  return "False";
+}
+
+function setTrueOrFalse(input:HTMLElement, isTrue:boolean):void{
+  if (isTrue){
+    setSelection(input,"isTrue");
+  } else {
+    setSelection(input,"isFalse");
+  }
+}
+
+function getSelection(input:HTMLElement):string{
+  let text:string = input.getElementsByTagName("select")[0].value;
+  return text.trim();
+}
+
+function setSelection(input:HTMLElement, value:string):void{
+  input.getElementsByTagName("select")[0].value = value;
 }
 
 function addLink(text:string, link:string):HTMLElement{
@@ -270,6 +348,24 @@ function addEnvs():HTMLElement{
   selection.appendChild(isTrue);
   selection.appendChild(isFalse);
   return div;
+}
+
+function getEnvs(input:HTMLElement):string{
+  let text:string = getSelection(input);
+  if (text == "isConda"){
+    return "conda";
+  } else if (text == "isPip"){
+    return "pip";
+  }  
+  return "unknow";
+}
+
+function setEnvs(input:HTMLElement, value:string):void{
+  if (value.toLowerCase() == "conda"){
+    setSelection(input,"isConda");
+  } else if (value.toLowerCase() == "pip"){
+    setSelection(input,"isPip");
+  }
 }
 
 function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
@@ -327,4 +423,4 @@ function insertAfter (newNode:any, referenceNode:any):void {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-export { askParameters, commit };
+export { askParameters, commit, resetParams };

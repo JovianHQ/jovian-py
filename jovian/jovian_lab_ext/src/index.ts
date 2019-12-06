@@ -7,7 +7,7 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  ToolbarButton,  //InputDialog
+  ToolbarButton
 } from '@jupyterlab/apputils';
 
 import {
@@ -23,7 +23,6 @@ import getDropdown from './module1';
 import {commit} from './module2';
 
 let positionIndex:number = 9;
-let commitButton:any, dropdownButton:any;
 
 class JovainButtonExtension implements DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel> {
 
@@ -65,19 +64,14 @@ class JovainButtonExtension implements DocumentRegistry.IWidgetExtension<Noteboo
 
     button.node.onmouseenter = ()=>{
       let jovian_button:any = button.node.firstChild;
-      jovian_button.style.background = setIcon("rgb(231, 229, 229)");
-      let dropdown:any = dropdownButton.node.firstChild;
-      dropdown.style.background = "rgb(209, 207, 207)";
+      jovian_button.style.background = setIcon("rgb(209, 207, 207)");
     };
 
     button.node.onmouseleave = ()=>{
       let jovian_button:any = button.node.firstChild;
       jovian_button.style.background = setIcon("white");
-      let dropdown:any = dropdownButton.node.firstChild;
-      dropdown.style.background = "white";
     };
 
-    commitButton = button;
     return button;
   }
 }
@@ -114,20 +108,15 @@ class dropdown implements DocumentRegistry.IWidgetExtension<NotebookPanel, INote
     });
 
     button.node.onmouseenter = ()=>{
-      let jovian_button:any = commitButton.node.firstChild;
-      jovian_button.style.background = setIcon("rgb(209, 207, 207)");
       let dropdown:any = button.node.firstChild;
-      dropdown.style.background = "rgb(231, 229, 229)";
+      dropdown.style.background = "rgb(209, 207, 207)";
     };
 
     button.node.onmouseleave = ()=>{
-      let jovian_button:any = commitButton.node.firstChild;
-      jovian_button.style.background = setIcon("white");
       let dropdown:any = button.node.firstChild;
       dropdown.style.background = "white";
     };
 
-    dropdownButton = button;
     return new DisposableDelegate(() => {
       button.dispose();
     });
