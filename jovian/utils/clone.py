@@ -56,7 +56,7 @@ def get_gist(slug, version, fresh):
 
 def post_clone_msg(title):
     import click
-    log("Cloned successfully to '{}'".format(title), color='bright_green')
+    log("Cloned successfully to '{}'".format(title), color='green')
     click.echo(click.style('\nNext steps:', fg='yellow', underline=True) +
                click.style("""
   $ cd {}                     
