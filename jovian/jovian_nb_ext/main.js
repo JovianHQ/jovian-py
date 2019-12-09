@@ -34,26 +34,22 @@ define([
 
         // if we have a set of params already, then use it to call commit.
         if (window.jvn_params != null) {
-          const secret =
-            window.jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
-              ? "False"
-              : "True";
-          const capture_env =
-            window.jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) ==
-            "F"
-              ? "False"
-              : "True";
-          const create_new =
-            window.jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
-              ? "False"
-              : "True";
-          const env_type =
-            window.jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
-              ? "conda"
-              : "pip";
+          const secret = window.jvn_params.secret;
+          const capture_env = window.jvn_params.capture_env;
+          const create_new = window.jvn_params.create_new;
+          const env_type = window.jvn_params.env_type;
+          const files = window.jvn_params.files;
+          var notebook_id;
+          const artifacts = window.jvn_params.artifacts;
+
+          if (window.jvn_params.notebook_id === "") {
+            notebook_id = "None";
+          } else {
+            notebook_id = '"' + window.jvn_params.notebook_id + '"';
+          }
 
           commit =
-            "\tcommit(" +
+            "commit(" +
             'nb_filename="' +
             window.jvn_params.nb_filename +
             '"' +
@@ -66,20 +62,28 @@ define([
             ",create_new=" +
             create_new +
             "" +
+            ",files=" +
+            files +
+            "" +
+            ",notebook_id=" +
+            notebook_id +
+            "" +
+            ",artifacts=" +
+            artifacts +
+            "" +
             ',env_type="' +
             env_type +
             '"' +
-            //',notebook_id="' + window.jvn_params.notebook_id + '"' +
             ")\n";
         }
 
-        console.log(commit);
         const jvn_commit =
           "from jovian import commit\n" +
           "import io\n" +
           "from contextlib import redirect_stdout\n" +
           "f = io.StringIO()\n" +
           "with redirect_stdout(f):\n" +
+          "\t" +
           commit +
           "out = f.getvalue().splitlines()[-1]\n" +
           "if(out.split()[1] == 'Committed'):\n" +
@@ -432,7 +436,7 @@ define([
         .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""));
 
       const files_label = $("<label/>").text(
-        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - array"
+        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames)"
       );
       const files_box = $("<input/>")
         .addClass("form-control")
@@ -480,12 +484,12 @@ define([
         .css("margin-left", "1em");
 
       const notebook_id_label = $("<label/>").text(
-        "To provide the base64 ID(present in the URL) of an notebook hosted on Jovian? - String"
+        "Notebook-id(optional) This is picked up by the library automatically. Incase if you want to commit to a different notebook, enter the address of that notebook like `user_name_on_jovian/notebook_name`"
       );
       const notebook_id_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "notebook_id_box")
-        .val("None");
+        .attr("placeholder", "None");
 
       const create_new_label = $("<label/>").text("To create a new notebook?");
       const create_new_box = $("<div/>")
@@ -516,7 +520,7 @@ define([
             .text("False")
         );
       const artifacts_label = $("<label/>").text(
-        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - array"
+        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames)"
       );
       const artifacts_box = $("<input/>")
         .addClass("form-control")
@@ -590,16 +594,16 @@ define([
               $("#nb_filename_box").val(
                 jvn_params.nb_filename.replace(".ipynb", "")
               );
-              jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.secret == "False"
                 ? $($("input[name=secret_opt")[1]).prop("checked", true)
                 : $($("input[name=secret_opt")[0]).prop("checked", true);
-              jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.capture_env == "False"
                 ? $($("input[name=cap_opt")[1]).prop("checked", true)
                 : $($("input[name=cap_opt")[0]).prop("checked", true);
-              jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.create_new == "False"
                 ? $($("input[name=create_opt")[1]).prop("checked", true)
                 : $($("input[name=create_opt")[0]).prop("checked", true);
-              jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+              jvn_params.env_type == "conda"
                 ? $("#env_opt option:contains('conda')").prop("selected", true)
                 : $("#env_opt option:contains('pip')").prop("selected", true);
             }
@@ -727,7 +731,22 @@ define([
         const nb_filename = jvn_params.nb_filename
           .replace(/{_dc_}/g, '"')
           .replace(/{_sc_}/g, "'");
+        const files = jvn_params.files
+          .replace(/{_dc_}/g, '"')
+          .replace(/{_sc_}/g, "'");
+        const artifacts = jvn_params.artifacts
+          .replace(/{_dc_}/g, '"')
+          .replace(/{_sc_}/g, "'");
+
+        const notebook_id = jvn_params.notebook_id
+          .replace(/{_dc_}/g, '"')
+          .replace(/{_sc_}/g, "'");
+
         jvn_params.nb_filename = nb_filename;
+        jvn_params.files = files;
+        jvn_params.artifacts = artifacts;
+        jvn_params.notebook_id = notebook_id;
+
         return jvn_params;
       }
       return null;
