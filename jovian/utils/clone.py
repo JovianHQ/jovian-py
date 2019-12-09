@@ -47,7 +47,6 @@ def get_gist(slug, version, fresh):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    # print(url)
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']

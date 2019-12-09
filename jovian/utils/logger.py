@@ -8,5 +8,5 @@ def log(msg, error=False, color=None):
     if error:
         click.secho('[jovian] Error: ' + msg, err=True, fg='bright_red')
     else:
-        click.secho('[jovian] ', fg='blue', bold=True, nl=False)
+        click.secho('[jovian] ', bold=True, nl=False)
         click.secho(msg, fg=color)
