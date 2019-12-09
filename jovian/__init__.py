@@ -97,9 +97,9 @@ def commit(secret=False,
         artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
 
-        git(bool, optional): Whether to perform git commit along with jovian commit.Defaults to False.
+        do_git_commit(bool, optional): Whether to perform git commit along with jovian commit.Defaults to True.
 
-        commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
+        git_commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
             string for custom commit messages.
 
     .. attention::
@@ -134,23 +134,20 @@ def commit(secret=False,
         return
 
     # Commit to git and log commit hash
-    if do_git_commit:
-        if is_git():
-            reset(which=['git'])  # resets git commit info
+    if do_git_commit and is_git():
+        reset(which=['git'])  # resets git commit info
 
-            git_commit(git_commit_msg)
-            log('Git commit Done.')
+        git_commit(git_commit_msg)
+        log('Commiting to git with' + git_current_commit + "as git commit message.")
+        log("Git hash:" + git_current_commit())
 
-            git_info = {
-                'remoteRepository': git_remote(),
-                'commitHash': git_current_commit(),
-                'nbFilename': nb_filename,
-                'relativePath': git_rel_path()
-            }
-            log_git(git_info, verbose=False)
-
-        else:
-            log('Failed to detect a git repo. Please check the diretory you are committing from.')
+        git_info = {
+            'remoteRepository': git_remote(),
+            'commitHash': git_current_commit(),
+            'nbFilename': nb_filename,
+            'relativePath': git_rel_path()
+        }
+        log_git(git_info, verbose=False)
 
     # Check whether to create a new gist, or update an old one
     if not create_new and notebook_id is None:
