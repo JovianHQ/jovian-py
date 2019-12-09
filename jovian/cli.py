@@ -126,8 +126,7 @@ def exec_pull(ctx, notebook, version):
         $ jovian pull 
 
     Or fetch a specific version of a specific notebook:
-    (Provide the notebook-name with the username separated by a forward slash,
-    refer the notebook URL.)
+    (Provide the notebook-name with the username separated by a forward slash)
 
         $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
