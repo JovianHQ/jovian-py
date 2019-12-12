@@ -3,10 +3,9 @@ from sys import stderr
 import click
 
 
-def log(msg, error=False, color=None):
+def log(msg, pre=True, error=False, color=None):
     """Print a message to stdout"""
     if error:
-        click.secho('[jovian] Error: ' + msg, err=True, fg='bright_red')
+        click.secho(('[jovian] ' if pre else '') + 'Error: ' + msg, err=True, fg='bright_red')
     else:
-        click.secho('[jovian] ', bold=True, nl=False)
-        click.secho(msg, fg=color)
+        click.echo(('[jovian] ' if pre else '') + click.style(msg, fg=color))

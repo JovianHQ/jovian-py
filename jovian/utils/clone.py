@@ -56,21 +56,21 @@ def get_gist(slug, version, fresh):
 def post_clone_msg(title):
     import click
     log("Cloned successfully to '{}'".format(title), color='green')
-    click.echo(click.style('\nNext steps:', fg='yellow', underline=True) +
-               click.style("""
+    log(click.style('\nNext steps:', fg='yellow', underline=True) +
+        click.style("""
   $ cd {}                     
   $ jovian install            
   $ conda activate <env_name> 
-  $ jupyter notebook""".format(title), bold=True))
+  $ jupyter notebook""".format(title), bold=True), pre=False)
 
-    print("""
+    log("""
 Replace <env_name> with the name of your environment (without the '<' & '>')
 Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
 so please make sure you have it installed and added to path. 
 * If you face issues with `jovian install`, try `conda env update`.
 * If you face issues with `conda activate`, try `source activate <env_name>` 
   or `activate <env_name>` to activate the virtual environment.
-""")
+""", pre=False)
 
 
 def clone(slug, version=None, fresh=True):
