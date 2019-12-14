@@ -218,7 +218,15 @@ def commit(secret=False,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname + '"', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        current_file = os.path.join(folder, file_dir)
+                        try:
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder, version=version)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
@@ -237,8 +245,16 @@ def commit(secret=False,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname +
-                    '". Please include files directly', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        try:
+                            current_file = os.path.join(folder, file_dir)
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder,
+                                            version=version, artifact=True)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
