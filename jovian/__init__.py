@@ -138,7 +138,7 @@ def commit(secret=False,
         reset(which=['git'])  # resets git commit info
 
         git_commit(git_commit_msg)
-        log('Commiting to git with' + git_current_commit + "as git commit message.")
+        log('Commiting to git with' + git_commit_msg + "as git commit message.")
         log("Git hash:" + git_current_commit())
 
         git_info = {
