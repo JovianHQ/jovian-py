@@ -138,8 +138,7 @@ def commit(secret=False,
         reset(which=['git'])  # resets git commit info
 
         git_commit(git_commit_msg)
-        log('Commiting to git with' + git_commit_msg + "as git commit message.")
-        log("Git hash:" + git_current_commit())
+        log('Git repository identified. Performing git commit...')
 
         git_info = {
             'remoteRepository': git_remote(),
@@ -248,7 +247,7 @@ def commit(secret=False,
         # unpack only the trackingSlugs
         _data_blocks_trackingSlugs = [i for i, _ in _data_blocks]
 
-        log('Recording metrics/hyperparameters/dataset/git_commit_information')
+        log('Recording metrics, hyperparameters, datasets  & git information..')
         commit_records(slug, _data_blocks_trackingSlugs, version)
 
     # Print commit URL
