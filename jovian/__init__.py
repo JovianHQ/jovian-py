@@ -141,10 +141,10 @@ def commit(secret=False,
         log('Git repository identified. Performing git commit...')
 
         git_info = {
-            'remoteRepository': git_remote(),
-            'commitHash': git_current_commit(),
-            'nbFilename': nb_filename,
-            'relativePath': git_rel_path()
+            'repository': git_remote(),
+            'commit': git_current_commit(),
+            'filename': nb_filename,
+            'path': git_rel_path()
         }
         log_git(git_info, verbose=False)
 
