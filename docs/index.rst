@@ -46,6 +46,7 @@ where even Students and Enthusiasts can leverage the same and also use
   jvn/logger
   jvn/notif
   jvn/cli
+  jvn/oembed
 
 .. toctree::
   :caption: Callbacks
