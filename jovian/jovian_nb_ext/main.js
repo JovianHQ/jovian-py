@@ -574,62 +574,66 @@ define([
         .attr("id", "input_div")
         .appendTo(form);
 
-      const default_label = $("<label/>").text("Set Default Commit Parameters");
+      const setting_label = $("<label/>").text("Select an Option Below");
 
-      const set_params_only_ext_action = {
-        help: "Set Default Commit Parameters",
-        handler: saveParams
-      };
-      const set_params_only_ext_action_name = Jupyter.actions.register(
-        set_params_only_ext_action,
-        "Set Default",
-        prefix
-      );
-
-      const api_label = $("<label/>").text("Clear/Change API Key");
-
-      const clear_api_ext_action = {
-        help: "Clear API Key",
-        handler: clearAPI
-      };
-      const clear_api_ext_name = Jupyter.actions.register(
-        clear_api_ext_action,
-        "remove_api_ext",
-        prefix
-      );
-
-      const change_api_ext_action = {
-        help: "Change API Key",
-        handler: changeAPI
-      };
-      const change_api_ext_name = Jupyter.actions.register(
-        change_api_ext_action,
-        "change_api_ext",
-        prefix
-      );
-
-      const disable_label = $("<label/>").text("Disable Jovian");
-
-      const remove_ext_action = {
-        help: "Disable Jovian Extension",
-        handler: removeExtension
-      };
-      const remove_ext_name = Jupyter.actions.register(
-        remove_ext_action,
-        "remove_ext",
-        prefix
-      );
+      const setting_options = $("<div/>")
+        .addClass("form-check")
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "setting_opt")
+            .attr("value", "Default")
+            .attr("checked", "True")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("Set Default Commit Parameters")
+        )
+        .append($("<br>"))
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "setting_opt")
+            .attr("value", "Clear")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("Clear API Key")
+        )
+        .append($("<br>"))
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "setting_opt")
+            .attr("value", "Change")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("Change API Key")
+        )
+        .append($("<br>"))
+        .append(
+          $("<input/>")
+            .addClass("form-check-input")
+            .attr("type", "radio")
+            .attr("name", "setting_opt")
+            .attr("value", "Disable")
+        )
+        .append(
+          $("<label/>")
+            .addClass("form-check-label")
+            .text("Disable Jovian Extension")
+        );
 
       div
-        .append(default_label)
-        .append(set_params_only_ext_action_name)
-        .append("<br>")
-        .append(api_label)
-        .append(clear_api_ext_name)
-        .append(change_api_ext_name)
-        .append("<br>")
-        .append(disable_label)
-        .append(remove_ext_name);
+        .append(setting_label)
+        .append(setting_options);
 
       return form;
     };
@@ -646,7 +650,19 @@ define([
         title: "Jovian Settings",
         body: settingsUI,
         notebook: Jupyter.notebook,
-        keyboard_manager: Jupyter.notebook.keyboard_manager
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        buttons: {
+          Confirm: {
+            id: "settings_button",
+            class: "btn-primary",
+            click: function() {
+              if(($("input[name=setting_opt")[0]).prop("checked",true)) saveParams();
+              else if(($("input[name=setting_opt")[1]).prop("checked",true)) clearAPI();
+              else if(($("input[name=setting_opt")[2]).prop("checked",true)) changeAPI();
+              else removeExtension();
+            }
+          }
+        }
       });
       jvn_params_modal.modal("show");
     };
@@ -778,7 +794,7 @@ define([
     }
 
     //Clear the API key
-    function changeAPI() {
+    function clearAPI() {
       new Promise(resolve => {
         const valStatus = data => {
           resolve(data.content.text.trim());
@@ -789,10 +805,15 @@ define([
           "purge_creds()";
 
         Jupyter.notebook.kernel.execute(purge_api);
+        Jupyter.notebook.kernel.execute(validate_api, {
+          iopub: {
+            output: valStatus
+          }
+        });
       });
     }
 
-    // changes the API key
+    // changes the API key ////// TODO
     function changeAPI() {
       new Promise(resolve => {
         const valStatus = data => {
@@ -804,60 +825,12 @@ define([
           "purge_creds()";
 
         Jupyter.notebook.kernel.execute(purge_api);
-      });
-      const jvn_modal = dialog.modal({
-        show: false,
-        title: "Commit to Jovian",
-        body: formUI,
-        notebook: Jupyter.notebook,
-        keyboard_manager: Jupyter.notebook.keyboard_manager,
-        buttons: {
-          Save: {
-            id: "save_button",
-            class: "btn-primary",
-            click: function() {
-              const api_key = $("#text_box").val();
-              const write_api =
-                "from jovian.utils.credentials import write_api_key\n" +
-                "write_api_key('" +
-                api_key +
-                "')\n";
-
-              Jupyter.notebook.kernel.execute(write_api);
-              jvn_modal.data("bs.modal").isShown = false; // Retains the modal
-
-              updateForm(jvn_modal, true).then(x => {
-                jvn_modal.data("bs.modal").isShown = true; // Modal can be dismissed after this
-
-                if (x == "saved_valid_key") {
-                  jvn_modal.find(".close").click();
-                  alert(
-                    "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
-                  );
-                }
-              });
-            }
+        Jupyter.notebook.kernel.execute(validate_api, {
+          iopub: {
+            output: valStatus
           }
-        },
-        open: function() {
-          // bind enter key for #save_button when the modal is open
-          jvn_modal.find("#text_box").keydown(function(event) {
-            if (event.which === keyboard.keycodes.enter) {
-              jvn_modal
-                .find("#save_button")
-                .first()
-                .click();
-              return false;
-            }
-          });
-
-          // Select the input when modal is open, easy to paste the key without the need for user to click first
-          jvn_modal
-            .find("#text_box")
-            .focus()
-            .select();
-        }
-      });
+        });
+      })
     }
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
@@ -901,8 +874,8 @@ define([
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
-      set_params_ext_name,//for testing untill dropdown
-      set_settings_ext_name//for testing untill dropdown
+      set_params_ext_name, //for testing untill dropdown
+      set_settings_ext_name //for testing untill dropdown
     ]);
 
     //adding jovian logo and Commit text next to it
