@@ -93,7 +93,7 @@ def install_env(ctx, name_argv):
 
 @main.command("activate")
 @click.pass_context
-def activate_env(ctx, name_argv):
+def activate_env(ctx):
     """Activate conda environment from environment file."""
 
     activate()
@@ -117,17 +117,18 @@ def exec_clone(ctx, notebook, version):
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
-@click.argument('notebook')
+@click.option('-n', '--notebook', 'notebook')
 @click.option('-v', '--version', 'version')
 @click.pass_context
 def exec_pull(ctx, notebook, version):
-    """Fetch new version of notebook hosted on Jovian(into current directory):
+    """Fetch the new version of notebook hosted on Jovian(inside a cloned directory):
 
-        $ jovian pull aakashns/jovian-tutorial
+        $ jovian pull 
 
-    Or fetch a specific version of notebook:
+    Or fetch a specific version of a specific notebook:
+    (Provide the notebook-name with the username separated by a forward slash)
 
-        $ jovian pull aakashns/jovian-tutorial -v 10
+        $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
 
     pull(notebook, version)

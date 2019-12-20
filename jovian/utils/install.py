@@ -101,6 +101,7 @@ def activate(env_fname=None):
     # Activate the environment
     command = conda_bin + " activate " + env_name
     log('Executing:\n' + command + "\n")
+    log('If the command fails with CommandNotFoundError, please just copy the above code and run it.')
     task = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE)
 
     # Extract the error (if any)

@@ -10,6 +10,7 @@ from jovian.utils.configure import configure
 from jovian.utils.configure import reset as reset_config
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.credentials import read_webapp_url
+from jovian.utils.git import git_commit, git_current_commit, git_remote, git_rel_path, is_git
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
 from jovian.utils.latest import check_update
 from jovian.utils.logger import log
@@ -27,23 +28,38 @@ _current_slug = None
 _data_blocks = []
 
 
-def reset():
-    """Reset the tracked hyperparameters & metrics (for a fresh experiment)
+def reset(which=[]):
+    """Reset the tracked hyperparameters, metrics or dataset (for a fresh experiment)
+
+    Args:
+        which(list, optional): By default resets all type of records. For specific filter
+                            add keywords `metrics`, `hyperparams`, `dataset` individually
+                            or in combinations to reset those type of records.  
     Example
         .. code-block::
 
             import jovian
 
-            jovian.reset()
+            jovian.reset(which=['hyperparams`, `metrics`])
     """
     global _current_slug
     global _data_blocks
+
     _current_slug = None
-    _data_blocks = []
+    # creates a filtered list of record types not in which list
+    _data_blocks = [(i, j) for (i, j) in _data_blocks if j not in which]
 
 
-def commit(secret=False, nb_filename=None, files=[], capture_env=True,
-           env_type='conda', notebook_id=None, create_new=None, artifacts=[]):
+def commit(secret=False,
+           nb_filename=None,
+           files=[],
+           capture_env=True,
+           env_type='conda',
+           notebook_id=None,
+           create_new=None,
+           artifacts=[],
+           do_git_commit=True,
+           git_commit_msg="jovian commit"):
     """Commits a Jupyter Notebook with its environment to Jovian.
 
     Saves the checkpoint of the notebook, captures the required dependencies from 
@@ -81,6 +97,11 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
 
+        do_git_commit(bool, optional): Whether to perform git commit along with jovian commit.Defaults to True.
+
+        git_commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
+            string for custom commit messages.
+
     .. attention::
         Pass notebook's name to nb_filename argument, in certain environments like Jupyter Lab and password protected notebooks sometimes it may fail to detect notebook automatically.
     .. _Jovian: https://jovian.ml?utm_source=docs
@@ -112,6 +133,21 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
         log(FILENAME_MSG)
         return
 
+    # Commit to git and log commit hash
+    if do_git_commit and is_git():
+        reset(which=['git'])  # resets git commit info
+
+        git_commit(git_commit_msg)
+        log('Git repository identified. Performing git commit...')
+
+        git_info = {
+            'repository': git_remote(),
+            'commit': git_current_commit(),
+            'filename': nb_filename,
+            'path': git_rel_path()
+        }
+        log_git(git_info, verbose=False)
+
     # Check whether to create a new gist, or update an old one
     if not create_new and notebook_id is None:
         # First preference to the in-memory slug variable
@@ -121,6 +157,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
             notebook_id = get_notebook_slug(nb_filename)
 
     # Check if notebook exists is a uuid or 'username/title'
+    notebook_readable_id = notebook_id
     if notebook_id is not None and '/' in notebook_id:
         notebook_id = get_gist(notebook_id)['slug']
 
@@ -134,7 +171,7 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
     if notebook_id is None:
         log('Creating a new notebook on ' + read_webapp_url())
     else:
-        log('Updating notebook "' + notebook_id + '" on ' + read_webapp_url())
+        log('Updating notebook "' + notebook_readable_id + '" on ' + read_webapp_url())
 
     # Upload the notebook & create/update the gist
     res = create_gist_simple(nb_filename, notebook_id, secret)
@@ -180,7 +217,15 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname + '"', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        current_file = os.path.join(folder, file_dir)
+                        try:
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder, version=version)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
@@ -199,15 +244,27 @@ def commit(secret=False, nb_filename=None, files=[], capture_env=True,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname +
-                    '". Please include files directly', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        try:
+                            current_file = os.path.join(folder, file_dir)
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder,
+                                            version=version, artifact=True)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
     # Record metrics & hyperparameters
     if len(_data_blocks) > 0:
-        log('Recording metrics & hyperparameters..')
-        commit_records(slug, _data_blocks, version)
+
+        # unpack only the trackingSlugs
+        _data_blocks_trackingSlugs = [i for i, _ in _data_blocks]
+
+        log('Recording metrics, hyperparameters, datasets  & git information..')
+        commit_records(slug, _data_blocks_trackingSlugs, version)
 
     # Print commit URL
     log('Committed successfully! ' + read_webapp_url() +
@@ -234,8 +291,11 @@ def log_hyperparams(data, verbose=True):
             jovian.log_hyperparams(hyperparams)
     """
     global _data_blocks
-    res = post_block(data, 'hyperparams')
-    _data_blocks.append(res['tracking']['trackingSlug'])
+    recordType = 'hyperparams'
+
+    res = post_block(data, recordType)
+    _data_blocks.append((res['tracking']['trackingSlug'], recordType))
+
     if verbose:
         log('Hyperparameters logged.')
 
@@ -262,8 +322,11 @@ def log_metrics(data, verbose=True):
             jovian.log_metrics(metrics)
     """
     global _data_blocks
-    res = post_block(data, 'metrics')
-    _data_blocks.append(res['tracking']['trackingSlug'])
+    recordType = 'metrics'
+
+    res = post_block(data, recordType)
+    _data_blocks.append((res['tracking']['trackingSlug'], recordType))
+
     if verbose:
         log('Metrics logged.')
 
@@ -288,10 +351,31 @@ def log_dataset(data, verbose=True):
             jovian.log_dataset(data)
     """
     global _data_blocks
-    res = post_block(data, 'dataset')
-    _data_blocks.append(res['tracking']['trackingSlug'])
+    recordType = 'dataset'
+
+    res = post_block(data, recordType)
+    _data_blocks.append((res['tracking']['trackingSlug'], recordType))
+
     if verbose:
         log('Dataset logged.')
+
+
+def log_git(data, verbose=True):
+    """Record the git-related information.
+
+    Args:
+        data(dict): A python dict or a array of dicts to be recorded as a git related block.
+
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
+    """
+    global _data_blocks
+    recordType = 'git'
+
+    res = post_block(data, recordType)
+    _data_blocks.append((res['tracking']['trackingSlug'], recordType))
+
+    if verbose:
+        log('Git logged.')
 
 
 def notify(data, verbose=True, safe=False):
