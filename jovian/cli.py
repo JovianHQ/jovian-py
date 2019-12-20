@@ -68,9 +68,8 @@ def reset_config(ctx):
 
 @main.command("install", short_help="Install packages from environment file.")
 @click.option('-n', '--name', 'name')
-@click.argument('name_argv', nargs=-1)
 @click.pass_context
-def install_env(ctx, name_argv):
+def install_env(ctx, name=None):
     """Install packages from environment file:
 
         $ jovian install
@@ -80,12 +79,10 @@ def install_env(ctx, name_argv):
         $ jovian install environment-linux.yml
     """
 
-    num_args = len(name_argv)
-
-    if num_args == 0:
+    if not name:
         install()
-    elif num_args == 1:
-        install(env_name=name_argv[0])
+    elif name:
+        install(env_name=name)
     else:
         # Show help
         sys.argv[1] = "--help"
