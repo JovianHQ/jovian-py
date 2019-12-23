@@ -61,9 +61,11 @@ run-docs:
 	cd docs && make html
 	sphinx-autobuild docs docs/_build/html
 
+test-watch:
+	python -m pytest -f --cov-config .coveragerc --cov jovian jovian/tests
+
 test:
-	coverage run -m unittest discover
-	coverage report -i
+	python -m pytest --cov-config .coveragerc --cov jovian jovian/tests
 
 test-coverage:
 	coverage html -i
