@@ -1,6 +1,6 @@
 import unittest
 
-from jovian.utils.url import urljoin
+from jovian.utils.misc import urljoin
 
 
 class UrlUtilsTest(unittest.TestCase):

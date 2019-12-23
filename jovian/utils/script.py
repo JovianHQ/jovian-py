@@ -10,7 +10,7 @@ def get_script_filename():
 
 
 def in_script():
-    filename = get_file_name()
+    filename = get_script_filename()
     if filename is not None:
         ext = filename.split(".")[-1]
         return ext in VALID_EXT

@@ -4,7 +4,7 @@ from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.misc import timestamp_ms
 from jovian.utils.request import get, post, pretty
-from jovian.utils.url import urljoin
+from jovian.utils.misc import urljoin
 
 
 def _u(path):

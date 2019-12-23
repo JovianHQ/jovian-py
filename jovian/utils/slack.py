@@ -3,7 +3,7 @@ from jovian.utils.credentials import get_api_key, get_guest_key, read_api_url, r
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import get, pretty
-from jovian.utils.url import urljoin
+from jovian.utils.misc import urljoin
 from jovian.utils.api import post_slack_message
 
 

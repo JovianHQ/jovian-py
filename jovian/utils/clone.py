@@ -8,7 +8,7 @@ from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_u
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
 from jovian.utils.request import pretty
-from jovian.utils.url import urljoin
+from jovian.utils.misc import urljoin
 
 
 def _u(path):

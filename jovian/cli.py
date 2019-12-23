@@ -4,7 +4,7 @@ import click
 
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
-from jovian.utils.configure import configure, reset
+from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
 from jovian.utils.slack import add_slack
@@ -60,10 +60,9 @@ def create_config(ctx):
 
 @main.command("reset")
 @click.pass_context
-def reset_config(ctx):
+def reset(ctx):
     """Reset Jovian config."""
-
-    reset()
+    reset_config()
 
 
 @main.command("install", short_help="Install packages from environment file.")

@@ -13,7 +13,7 @@ from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_ORG_ID, DEFAULT_WEBA
 from jovian.utils.error import ApiError, ConfigError
 from jovian.utils.logger import log
 from jovian.utils.misc import is_flavor_pro
-from jovian.utils.url import urljoin
+from jovian.utils.misc import urljoin
 
 try:
     # Python 3
