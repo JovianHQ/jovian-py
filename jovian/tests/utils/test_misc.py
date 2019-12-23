@@ -1,6 +1,7 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 
-from jovian.utils.misc import (is_uuid, get_file_extension, urljoin)
+from jovian.utils.misc import (is_uuid, get_platform, get_file_extension, urljoin)
+from jovian.utils.constants import LINUX, WINDOWS, MACOS
 
 
 class TestIsUUID(TestCase):
@@ -34,6 +35,22 @@ class TestGetFileExtension(TestCase):
         expected_result = ''
 
         self.assertEqual(get_file_extension(file), expected_result)
+
+
+class TestGetPlatform(TestCase):
+    @mock.patch('platform.system', mock.Mock(return_value='Windows'))
+    def test_get_platform_windows(self):
+        self.assertEqual(get_platform(), WINDOWS)
+
+    @mock.patch('platform.system', mock.Mock(return_value='Linux'))
+    def test_get_platform_linux(self):
+        self.assertEqual(get_platform(), LINUX)
+
+    @mock.patch('platform.system', mock.Mock(return_value='Darwin'))
+    def test_get_platform_macos(self):
+        self.assertEqual(get_platform(), MACOS)
+
+    pass
 
 
 class UrlUtilsTest(TestCase):
