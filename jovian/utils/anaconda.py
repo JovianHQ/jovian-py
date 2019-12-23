@@ -3,17 +3,9 @@ import os
 import logging
 from jovian.utils.api import upload_file
 from jovian.utils.misc import get_platform
-from jovian.utils.constants import PLATFORMS
+from jovian.utils.constants import PLATFORMS, CONDA_NOT_FOUND
 from jovian.utils.logger import log
-
-
-class CondaError(Exception):
-    """Error class for Anaconda-related exceptions"""
-    pass
-
-
-CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your ' \
-                  'system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
+from jovian.utils.error import CondaError
 
 
 def get_conda_bin():

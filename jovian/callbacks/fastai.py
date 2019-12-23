@@ -29,18 +29,18 @@ class JovianFastaiCallback(Callback):
     .. _this: https://jovian.ml/PrajwalPrashanth/7f16274fc3224d829941bc2553ef6061?utm_source=docs
     """
 
-    def __init__(self, learn: Learner, arch_name=None, reset=True):
+    def __init__(self, learn: Learner, arch_name=None, reset_tracking=True):
         self.learn = learn
         self.arch_name = arch_name
         self.met_names = ['epoch', 'train_loss']
         # existence of validation dataset
         self.valid_set = self.learn.data.valid_dl.items.any()
-        self.reset = reset
+        self.reset_tracking = reset_tracking
         if self.valid_set:
             self.met_names.append('valid_loss')
 
     def on_train_begin(self, n_epochs: int, metrics_names: list, **ka):
-        if self.reset:
+        if self.reset_tracking:
             reset_records('hyperparams', 'metrics')
         hyp_dict = {
             'epochs': n_epochs,
