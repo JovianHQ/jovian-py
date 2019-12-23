@@ -60,7 +60,7 @@ def commit(message=None,
             (username of current user inferred automatically). If the project does not exist, a new one is 
             created. If it exists, the current notebook is added as a new version to the existing project, if 
             you are a collaborator. If left empty, project name is picked up from the `.jovianrc` file in the 
-            current directory, or a new project is created using the filename as the projecct name.
+            current directory, or a new project is created using the filename as the projecct name. 
 
         new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option 
             are False (use the existing project, if a .jovianrc file exists, if available), True (create a new project)
@@ -77,34 +77,71 @@ def commit(message=None,
     """
     global _current_slug
 
-    # TODO: Capture deprecated arguments
+    # Deprecated argument (secret)
+    if privacy == 'auto' and 'secret' in kwargs:
+        privacy = 'secret' if kwargs['secret'] else 'auto'
+        log('"secret" is deprecated. Use "privacy" instead (allowed options: ' +
+            '"public", "private", "secret", "auto")', error=True)
 
+    # Deprecated argument (nb_filename)
+    if filename is None and 'nb_filename' in kwargs:
+        filename = kwargs['nb_filename']
+        log('"nb_filename" is deprecated. Use "filename" instead', error=True)
+
+    # Deprecated argument (env_type)
+    if 'env_type' in kwargs:
+        environment = kwargs['environment']
+        log('"env_type" is deprecated. Use "environment" instead', error=True)
+
+    # Deprecated argument (capture_env)
+    if 'capture_env' in kwargs and not kwargs['capture_env']:
+        environment = None
+        log('"catpure_env" is deprecated. Use "environment=None" instead', error=True)
+
+    # Deprecated argument (notebook_id)
+    if 'notebook_id' in kwargs:
+        project = kwargs['notebook_id']
+        log('"notebook_id" is deprecated. Use "project" instead.', error=True)
+
+    # Deprecated argument (create_new)
+    if 'create_new' in kwargs:
+        new_project = kwargs['create_new']
+        log('"create_new" is deprecated. Use "new_project" instead.')
+
+    # Depreated argument (artifacts)
+    if 'artifacts' in kwargs:
+        outputs = kwargs['artifacts']
+        log('"artifacts" is deprecated. Use "outputs" instead')
+
+    # Skip if unsupported environment
     if not in_script() and not in_notebook():
         log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
         return
 
+    # Attempt to save Jupyter notebook
     if in_notebook():
-        log('Attempting to save notebook..')
         save_notebook()
+        log('Attempting to save notebook..')
         sleep(1)
 
+    # Extract notebook/script filename
     filename = _parse_filename(filename)
     if filename is None:
         log(FILENAME_MSG)
         return
 
+    # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
 
-    res = api.create_gist_simple(filename, project_id, privacy)
-
-    # TODO: Set the title using `project`, if provided
-    # TODO: Set the version title, using `message`
-
+    # Create or update gist (with title and )
+    res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
 
+    # Cache slug for further commits
     _current_slug = slug
     set_notebook_slug(filename, slug)
 
+    # Attach environment, files, records etc.
     _capture_environment(environment, slug, version)
     _attach_files(files, slug, version)
     _attach_files(outputs, slug, version, output=False)
@@ -147,34 +184,40 @@ def _parse_project(project, filename, new_project):
         return None, None
 
     # Get project metadata for UUID & username/title
-    if is_uuid(project) or '/' in project:
+    if is_uuid(project):
+        project_title = None
+        metadata = api.get_gist(project)
+    elif '/' in project:
+        project_title = project.split('/')[1]
         metadata = api.get_gist(project)
     # Attach username to the title
     else:
+        project_title = project
         username = api.get_current_user()['username']
         metadata = api.get_gist(username + '/' + project)
 
     # Skip if metadata could not be found
     if not metadata:
         log('Failed to retrieve metadata for the project "' + project + '"')
-        return None, None
+        return project_title, None
 
     # Extract information from metadata
-    project_name = metadata['owner']['username'] + metadata['title']
+    username = metadata['owner']['username']
+    project_title = metadata['title']
     project_id = metadata['slug']
 
     # Check if the current user can commit to this project
     permissions = api.get_gist_access(project_id)
     if not permissions['write']:
-        return None, None
+        return project_title, None
 
     # Log whether this is an update or creation
     if project_id is None:
         log('Creating a new notebook on ' + read_webapp_url())
     else:
-        log('Updating notebook "' + project + '" on ' + read_webapp_url())
+        log('Updating notebook "' + username + "/" + project_title + '" on ' + read_webapp_url())
 
-    return project_name, project_id
+    return project_title, project_id
 
 
 def _attach_file(path, gist_slug, version, output=False):
