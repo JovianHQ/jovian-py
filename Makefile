@@ -63,10 +63,10 @@ run-docs:
 
 test:
 	coverage run -m unittest discover
-	coverage report
+	coverage report -i
 
 test-coverage:
-	coverage html
+	coverage html -i
 	open "htmlcov/index.html"
 
 ## Version bumping
