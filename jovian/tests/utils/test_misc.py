@@ -1,29 +1,59 @@
-import unittest
+from unittest import TestCase, mock
 
-from jovian.utils.misc import (is_uuid, get_file_extension, urljoin)
-
-
-class MiscUtilsTest(unittest.TestCase):
-
-    def test_is_uuid(self):
-        text_1 = "374ab608-6ca4-4976-9b3e-44b6e35f9126"
-        text_2 = "this-is-not-a-uuid"
-
-        self.assertTrue(is_uuid(text_1))
-        self.assertFalse(is_uuid(text_2))
-
-    def test_get_file_extension(self):
-        file_1 = "users/siddhant/file.ipynb"
-        file_2 = 123
-
-        expected_result_1 = "ipynb"
-        expected_result_2 = ''
-
-        self.assertEqual(get_file_extension(file_1), expected_result_1)
-        self.assertEqual(get_file_extension(file_2), expected_result_2)
+from jovian.utils.misc import (is_uuid, get_platform, get_file_extension, urljoin)
+from jovian.utils.constants import LINUX, WINDOWS, MACOS
 
 
-class UrlUtilsTest(unittest.TestCase):
+class TestIsUUID(TestCase):
+
+    def test_is_uuid_without_hyphens(self):
+        text = "374ab6086ca449769b3e44b6e35f9126"
+
+        self.assertTrue(is_uuid(text))
+
+    def test_is_uuid_with_hypens(self):
+        text = "374ab608-6ca4-4976-9b3e-44b6e35f9126"
+
+        self.assertTrue(is_uuid(text))
+
+    def test_is_uuid_false(self):
+        text = "this-is-not-a-uuid"
+
+        self.assertFalse(is_uuid(text))
+
+
+class TestGetFileExtension(TestCase):
+
+    def test_get_file_extension_normal(self):
+        file = "users/siddhant/file.ipynb"
+        expected_result = "ipynb"
+
+        self.assertEqual(get_file_extension(file), expected_result)
+
+    def test_get_file_extension_malformed(self):
+        file = 123
+        expected_result = ''
+
+        self.assertEqual(get_file_extension(file), expected_result)
+
+
+class TestGetPlatform(TestCase):
+    @mock.patch('platform.system', mock.Mock(return_value='Windows'))
+    def test_get_platform_windows(self):
+        self.assertEqual(get_platform(), WINDOWS)
+
+    @mock.patch('platform.system', mock.Mock(return_value='Linux'))
+    def test_get_platform_linux(self):
+        self.assertEqual(get_platform(), LINUX)
+
+    @mock.patch('platform.system', mock.Mock(return_value='Darwin'))
+    def test_get_platform_macos(self):
+        self.assertEqual(get_platform(), MACOS)
+
+    pass
+
+
+class UrlUtilsTest(TestCase):
 
     def test_urljoin_normal(self):
         base_url_1 = "https://jovian.ml"

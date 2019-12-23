@@ -68,7 +68,7 @@ test:
 	python -m pytest --cov-config .coveragerc --cov jovian jovian/tests
 
 test-coverage:
-	coverage html
+	coverage html -i
 	open "htmlcov/index.html"
 
 ## Version bumping
