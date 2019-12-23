@@ -1,6 +1,26 @@
 import unittest
 
-from jovian.utils.misc import urljoin
+from jovian.utils.misc import (is_uuid, get_file_extension, urljoin)
+
+
+class MiscUtilsTest(unittest.TestCase):
+
+    def test_is_uuid(self):
+        text_1 = "374ab608-6ca4-4976-9b3e-44b6e35f9126"
+        text_2 = "this-is-not-a-uuid"
+
+        self.assertTrue(is_uuid(text_1))
+        self.assertFalse(is_uuid(text_2))
+
+    def test_get_file_extension(self):
+        file_1 = "users/siddhant/file.ipynb"
+        file_2 = 123
+
+        expected_result_1 = "ipynb"
+        expected_result_2 = ''
+
+        self.assertEqual(get_file_extension(file_1), expected_result_1)
+        self.assertEqual(get_file_extension(file_2), expected_result_2)
 
 
 class UrlUtilsTest(unittest.TestCase):
