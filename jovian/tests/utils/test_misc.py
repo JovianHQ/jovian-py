@@ -1,6 +1,8 @@
+import sys
 from unittest import TestCase, mock
 
-from jovian.utils.misc import (is_uuid, get_platform, get_file_extension, urljoin)
+from jovian.utils.misc import (is_uuid, get_platform, get_file_extension,
+                               urljoin, timestamp_ms, get_flavor, is_flavor_pro)
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
 
 
@@ -120,7 +122,6 @@ class UrlUtilsTest(TestCase):
 
     def test_urljoin_single_path(self):
         path_1 = "///user/siddhant"
-        path_2 = "//user/siddhant/"
 
         expected_result = "user/siddhant"
 
@@ -128,5 +129,37 @@ class UrlUtilsTest(TestCase):
         self.assertEqual(urljoin(path_1), expected_result)
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestTimestampMs(TestCase):
+    @mock.patch('time.time', mock.Mock(return_value=1577112328.529031))
+    def test_timestamp_ms(self):
+        self.assertEqual(timestamp_ms(), 1577112328529)
+
+
+class TestGetFlavor(TestCase):
+    def test_get_flavor(self):
+        self.assertEqual(get_flavor(), "jovian")
+
+    def test_get_flavor_import_error(self):
+        import builtins
+        _original_import = builtins.__import__
+
+        def error_raiser(*args, **kwargs):
+            raise ImportError('fake import error')
+
+        builtins.__import__ = error_raiser
+        flavor = get_flavor()
+        builtins.__import__ = _original_import
+
+        self.assertEqual(flavor, "jovian")
+
+
+class TestIsFlavorPro(TestCase):
+    def test_is_flavor_pro_false(self):
+        import jovian._flavor
+        jovian._flavor.__flavor__ = 'jovian'
+        self.assertEqual(is_flavor_pro(), False)
+
+    def test_is_flavor_pro_true(self):
+        import jovian._flavor
+        jovian._flavor.__flavor__ = 'jovian-pro'
+        self.assertEqual(is_flavor_pro(), True)
