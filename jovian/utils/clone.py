@@ -55,7 +55,7 @@ def get_gist(slug, version, fresh):
 
 
 def post_clone_msg(title):
-    return """Cloned successfully to '{}'. 
+    return """Cloned successfully to '{}'.
 
 Next steps:
 $ cd {}   # Enter the directory
@@ -64,17 +64,17 @@ $ conda activate <env_name> # Activate environment
 $ jupyter notebook   # Start Jupyter
 
 Replace <env_name> with the name of your environment (without the '<' & '>')
-Jovian uses Anaconda ( https://conda.io/ ) under the hood, 
-so please make sure you have it installed and added to path. 
+Jovian uses Anaconda ( https://conda.io/ ) under the hood,
+so please make sure you have it installed and added to path.
 * If you face issues with `jovian install`, try `conda env update`.
-* If you face issues with `conda activate`, try `source activate <env_name>` 
+* If you face issues with `conda activate`, try `source activate <env_name>`
   or `activate <env_name>` to activate the virtual environment.
 
 {}
 """.format(title, title, ISSUES_MSG)
 
 
-def clone(slug, version=None, fresh=True):
+def clone(slug, version=None, fresh=True, include_outputs=True):
     """Download the files for a gist"""
     # Print issues link
     log(ISSUES_MSG)
@@ -99,8 +99,9 @@ def clone(slug, version=None, fresh=True):
     # Download the files
     log('Downloading files..')
     for f in gist['files']:
-        with open(f['filename'], 'wb') as fp:
-            fp.write(get(f['rawUrl']).content)
+        if not f['artifact'] or include_outputs:
+            with open(f['filename'], 'wb') as fp:
+                fp.write(get(f['rawUrl']).content)
 
         # Create .jovianrc for a fresh clone
         if fresh and f['filename'].endswith('.ipynb'):

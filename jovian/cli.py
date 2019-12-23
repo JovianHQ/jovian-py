@@ -100,8 +100,9 @@ def activate_env(ctx):
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
+@click.option('--no-outputs', 'no_outputs')
 @click.pass_context
-def exec_clone(ctx, notebook, version):
+def exec_clone(ctx, notebook, version, no_outputs):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -111,7 +112,7 @@ def exec_clone(ctx, notebook, version):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version)
+    clone(notebook, version, not no_outputs)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
