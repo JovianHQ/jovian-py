@@ -22,7 +22,7 @@ def commit(message=None,
            privacy='auto',
            filename=None,
            project=None,
-           new_project=False,
+           new_project=None,
            git_commit=True,
            git_message='auto',
            **kwargs):
@@ -105,12 +105,12 @@ def commit(message=None,
     # Deprecated argument (create_new)
     if 'create_new' in kwargs:
         new_project = kwargs['create_new']
-        log('"create_new" is deprecated. Use "new_project" instead.')
+        log('"create_new" is deprecated. Use "new_project" instead.', error=True)
 
     # Depreated argument (artifacts)
     if 'artifacts' in kwargs:
         outputs = kwargs['artifacts']
-        log('"artifacts" is deprecated. Use "outputs" instead')
+        log('"artifacts" is deprecated. Use "outputs" instead', error=True)
 
     # Skip if unsupported environment
     if not in_script() and not in_notebook():
@@ -143,7 +143,7 @@ def commit(message=None,
     # Attach environment, files, records etc.
     _capture_environment(environment, slug, version)
     _attach_files(files, slug, version)
-    _attach_files(outputs, slug, version, output=False)
+    _attach_files(outputs, slug, version, output=True)
     _attach_records(slug, version)
 
     log('Committed successfully! ' + read_webapp_url() +
