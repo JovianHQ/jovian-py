@@ -9,6 +9,7 @@ data = {
         }
     }
 }
+
 json_data = """{
     "notebooks": {
         "Testing Jovian.ipynb": {
@@ -27,6 +28,7 @@ class TestRCFileExists(TestCase):
 
 
 class TestSaveRCData(TestCase):
+
     @mock.patch("jovian.utils.rcfile.open", new_callable=mock.mock_open)
     @mock.patch("jovian.utils.rcfile.json.dump")
     def test_save_rcdata_none(self, mock_json, mock_file):
@@ -41,6 +43,7 @@ class TestSaveRCData(TestCase):
 
 
 class TestGetRCData(TestCase):
+
     @mock.patch("jovian.utils.rcfile.rcfile_exists", mock.Mock(return_value=True))
     @mock.patch("jovian.utils.rcfile.json.loads")
     @mock.patch("jovian.utils.rcfile.open", new_callable=mock.mock_open, read_data=json_data)
