@@ -65,8 +65,9 @@ test:
 	coverage run -m unittest discover
 	coverage report
 
-test-coverage-html:
+test-coverage:
 	coverage html
+	open "htmlcov/index.html"
 
 ## Version bumping
 .PHONY: show-version bump bump-dev bump-patch bump-release sanity-check-dev sanity-check-release

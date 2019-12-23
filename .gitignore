@@ -120,3 +120,4 @@ dmypy.json
 jovian/_flavor.py
 
 .coverage
+htmlcov/
