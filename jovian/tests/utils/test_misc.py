@@ -50,8 +50,6 @@ class TestGetPlatform(TestCase):
     def test_get_platform_macos(self):
         self.assertEqual(get_platform(), MACOS)
 
-    pass
-
 
 class UrlUtilsTest(TestCase):
 
