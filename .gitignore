@@ -118,3 +118,5 @@ dmypy.json
 .DS_Store
 
 jovian/_flavor.py
+
+.coverage

@@ -61,9 +61,12 @@ run-docs:
 	cd docs && make html
 	sphinx-autobuild docs docs/_build/html
 
-run-tests:
-	python -m unittest discover
+test:
+	coverage run -m unittest discover
+	coverage report
 
+test-coverage-html:
+	coverage html
 
 ## Version bumping
 .PHONY: show-version bump bump-dev bump-patch bump-release sanity-check-dev sanity-check-release
