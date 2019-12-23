@@ -28,7 +28,14 @@ def _v(version):
     return ""
 
 
-def get_gist(slug, version=None):
+def get_current_user():
+    res = get(url=_u('/user/profile'), headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    raise Exception('Failed to fetch current user profile. ' + pretty(res))
+
+
+def get_gist(slug, version=None, check_exists=True):
     """Get the metadata for a gist"""
     if '/' in slug:
         parts = slug.split('/')
@@ -39,6 +46,8 @@ def get_gist(slug, version=None):
     res = get(url=url, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
+    elif check_exists and res.status_code == 404:
+        return False
     raise Exception('Failed to retrieve metadata for notebook "' +
                     slug + '": ' + pretty(res))
 
@@ -53,7 +62,7 @@ def get_gist_access(slug):
 
 
 def create_gist_simple(filename=None, gist_slug=None, secret=False):
-    """Upload the current notebook to create a gist"""
+    """Upload the current notebook to create/update a gist"""
     auth_headers = _h()
 
     with open(filename, 'rb') as f:
@@ -101,7 +110,7 @@ def post_block(data, data_type, version=None):
     return post_blocks(blocks, version)
 
 
-def commit_records(gist_slug, tracking_slugs, version=None):
+def post_records(gist_slug, tracking_slugs, version=None):
     """Associated tracked records with a commit"""
     url = _u('/data/' + gist_slug + '/commit' + _v(version))
     res = post(url, json=tracking_slugs, headers=_h())

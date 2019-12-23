@@ -1,6 +1,16 @@
 import platform
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
 import time
+from uuid import UUID
+
+
+def is_uuid(text):
+    """Check if the given string is a UUID"""
+    try:
+        _ = UUID(text, version=4)
+        return True
+    except ValueError:
+        return False
 
 
 def get_platform():
@@ -34,3 +44,8 @@ def get_flavor():
 def is_flavor_pro():
     """Get the flavor of the library (jovian or jovian-pro)"""
     return get_flavor() == 'jovian-pro' or get_flavor() == 'jovianpro'
+
+
+def get_file_extension(filename):
+    """Get the extension of a file"""
+    return filename.split('.')[-1] if type(filename) == str else ''

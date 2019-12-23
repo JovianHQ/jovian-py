@@ -1,11 +1,11 @@
 VALID_EXT = ["py"]
 
 
-def get_file_name():
+def get_script_filename():
     try:
         from __main__ import __file__
         return __file__
-    except Exception as e:
+    except:
         return None
 
 
