@@ -1,23 +1,19 @@
-from unittest import TestCase
 from jovian.utils.error import CondaError, ApiError, ConfigError
 
 
-class TestCondaError(TestCase):
-    def test_conda_error(self):
-        msg = 'This is a error'
-        e = CondaError(msg)
-        self.assertEqual(e.args, (msg,))
+def test_conda_error():
+    msg = 'This is a error'
+    e = CondaError(msg)
+    assert e.args == (msg,)
 
 
-class TestApiEror(TestCase):
-    def test_api_error(self):
-        msg = 'This is a error'
-        e = ApiError(msg)
-        self.assertEqual(e.args, (msg,))
+def test_api_error():
+    msg = 'This is a error'
+    e = ApiError(msg)
+    assert e.args == (msg,)
 
 
-class TestConfigError(TestCase):
-    def test_config_error(self):
-        msg = 'This is a error'
-        e = ConfigError(msg)
-        self.assertEqual(e.args, (msg,))
+def test_config_error():
+    msg = 'This is a error'
+    e = ConfigError(msg)
+    assert e.args == (msg,)
