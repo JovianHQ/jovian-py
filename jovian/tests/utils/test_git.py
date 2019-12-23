@@ -13,9 +13,10 @@ class GitSetup(TestCase):
     def setUp(self):
         os.mkdir(self.path)
         os.chdir(self.path)
-        os.system('git init')
-        os.system('git remote add origin ' + self.origin_url)
-        os.system('touch sample.txt && git add . && git commit -m "initial commit"')
+        os.system("""git init
+        git remote add origin {}
+        touch sample.txt && git add . && git commit -m "initial commit"
+        """.format(self.origin_url))
 
     def tearDown(self):
         os.chdir('..')
