@@ -46,5 +46,6 @@ def check_update(probability=0.8):
     if random() < probability:
         latest_version = parse_version(_get_latest_version())
         current_version = parse_version(__version__)
+        print('------\n', current_version)
         if latest_version > current_version:
             _print_update_message(current_version, latest_version)
