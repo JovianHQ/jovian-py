@@ -1,6 +1,7 @@
 from unittest import TestCase, mock
 from jovian.utils.constants import RC_FILENAME
-from jovian.utils.rcfile import rcfile_exists, save_rcdata, get_rcdata, get_notebook_slug, set_notebook_slug
+from jovian.utils.rcfile import (rcfile_exists, save_rcdata, get_rcdata,
+                                 get_notebook_slug, set_notebook_slug, make_rcdata)
 
 data = {
     "notebooks": {
@@ -47,7 +48,13 @@ class TestGetRCData(TestCase):
     @mock.patch("jovian.utils.rcfile.rcfile_exists", mock.Mock(return_value=True))
     @mock.patch("jovian.utils.rcfile.json.loads")
     @mock.patch("jovian.utils.rcfile.open", new_callable=mock.mock_open, read_data=json_data)
-    def test_save_get_rcdata_normal(self, mock_open, mock_loads):
+    def test_save_get_rcdata_true(self, mock_open, mock_loads):
+        self.assertEqual(get_rcdata(), mock_loads.return_value)
+
+    @mock.patch("jovian.utils.rcfile.rcfile_exists", mock.Mock(return_value=False))
+    @mock.patch("jovian.utils.rcfile.json.loads")
+    @mock.patch("jovian.utils.rcfile.open", new_callable=mock.mock_open, read_data=json_data)
+    def test_save_get_rcdata_false(self, mock_open, mock_loads):
         self.assertEqual(get_rcdata(), mock_loads.return_value)
 
 
@@ -82,3 +89,20 @@ class TestSetNotebookSlub(TestCase):
 
         set_notebook_slug(filename, slug)
         mock_save_rcdata.assert_called_with(expected_result)
+
+
+class TestMakeRCData(TestCase):
+
+    @mock.patch("jovian.utils.rcfile.json.dumps")
+    def test_make_rcdata(self, mock_dumps):
+        filename = "Testing Jovian.ipynb"
+        slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
+        expected_result = {
+            "notebooks": {
+                filename: {
+                    "slug": slug
+                }
+            }
+        }
+        make_rcdata(filename, slug)
+        mock_dumps.assert_called_with(expected_result)
