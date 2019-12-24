@@ -45,7 +45,7 @@ def git_commit_push(message):
         return {
             'remote': get_remote(),
             'branch': get_branch(),
-            'commit': commit(message)
+            'commit': get_current_commit()
         }
 
 
