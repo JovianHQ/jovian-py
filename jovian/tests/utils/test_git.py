@@ -13,15 +13,15 @@ class GitMasterBranch(TestCase):
 
     def setUp(self):
         os.mkdir(self.path)
-        os.system('cd ' + self.path)
+        os.chdir(self.path)
         os.system("""git init
-        mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb
-        git add . && git commit -m "initial commit"
-        """)
+        mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb""")
+        os.chdir('nested/folder/deep')
+        os.system('git add . && git commit -m "initial commit"')
 
     def tearDown(self):
-        os.chdir('cd -')
-        os.system('rm -rf ' + self.path)
+        os.chdir('../../../../')
+        shutil.rmtree(self.path)
 
 
 class GitSampleBranch(GitMasterBranch):
@@ -95,7 +95,7 @@ class TestGetRepositoryRoot(GitMasterBranch):
         os.system('cd folder1/folder2')
 
     def test_get_repository_root(self):
-        expected_result = os.path.join(os.path.abspath('..'), path)
+        expected_result = os.path.join(os.path.abspath('../../../'))
         self.assertEqual(get_repository_root(), expected_result)
 
     def tearDown(self):
@@ -105,6 +105,14 @@ class TestGetRepositoryRoot(GitMasterBranch):
 
 
 class TestGetCurrentCommit(GitMasterBranch):
+
+    def test_get_current_commit(self):
+        expected_result = os.popen('git rev-parse HEAD').read().strip()
+
+        self.assertEqual(get_current_commit(), expected_result)
+
+
+class TestGetCurrentCommitSample(GitSampleBranch):
 
     def test_get_current_commit(self):
         expected_result = os.popen('git rev-parse HEAD').read().strip()
@@ -126,18 +134,27 @@ class TestCommit(GitMasterBranch):
 
 class TestGitPush(GitMasterBranch):
 
-    @mock.patch("jovian.utils.git.os")
-    def test_git_push(self, mock_os):
-        expected_result = "git push origin " + get_branch()
+    @mock.patch("jovian.utils.git.os.system")
+    def test_git_push(self, mock_system):
+        expected_result = "git push origin master"
 
         git_push()
-        mock_os.system.assert_called_with(expected_result)
+        mock_system.assert_called_with(expected_result)
+
+
+class TestGitPushSample(GitSampleBranch):
+
+    @mock.patch("jovian.utils.git.os.system")
+    def test_git_push(self, mock_system):
+        expected_result = "git push origin sample_branch"
+
+        git_push()
+        mock_system.assert_called_with(expected_result)
 
 
 class TestGitCommitPush(GitMasterBranch):
 
-    @mock.patch("jovian.utils.git.os")
-    def test_git_commit_push(self, mock_os):
+    def test_git_commit_push(self):
         message = 'sample commit'
         expected_result = {
             'remote': get_remote(),
@@ -151,6 +168,6 @@ class TestGitCommitPush(GitMasterBranch):
 class TestGetRelativePath(GitMasterBranch):
 
     def test_get_relative_path(self):
-        expected_result = "."
+        expected_result = "nested/folder/deep"
 
         self.assertEqual(get_relative_path(), expected_result)
