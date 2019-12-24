@@ -15,7 +15,7 @@ class GitMasterBranch(TestCase):
         os.mkdir(self.path)
         os.chdir(self.path)
         os.system("""git init
-        mkdir -p ./nested/folder/deep && touh ./nested/folder/deep/sample.ipynb""")
+        mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb""")
         os.chdir('nested/folder/deep')
         os.system('git add . && git commit -m "initial commit"')
 
@@ -144,7 +144,7 @@ class TestGitPush(GitMasterBranch):
 class TestGitPushSample(GitSampleBranch):
 
     @mock.patch("jovian.utils.git.os.system")
-    def test_git_push(self, mock_system):
+    def test_git_push_sample(self, mock_system):
         expected_result = "git push origin sample_branch"
 
         git_push()
