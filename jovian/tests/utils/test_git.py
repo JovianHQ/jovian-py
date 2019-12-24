@@ -15,7 +15,7 @@ class GitMasterBranch(TestCase):
         os.mkdir(self.path)
         os.chdir(self.path)
         os.system("""git init
-        mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb""")
+        mkdir -p ./nested/folder/deep && touh ./nested/folder/deep/sample.ipynb""")
         os.chdir('nested/folder/deep')
         os.system('git add . && git commit -m "initial commit"')
 
@@ -40,7 +40,6 @@ class TempFolder(TestCase):
         os.chdir(self.sample_folder)
 
     def tearDown(self):
-        print(os.getcwd())
         shutil.rmtree(self.sample_folder)
         os.chdir(self.owd)
 
