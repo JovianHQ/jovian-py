@@ -33,12 +33,14 @@ WEBAPP_URL_KEY = "WEBAPP_URL"
 HOME = os.path.expanduser('~')
 CONFIG_DIR = HOME + '/.jovian'
 CREDS_FNAME = 'credentials.json'
-CREDS_PATH = os.path.join(CONFIG_DIR, CREDS_FNAME)
-
 CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jovian.ml'
 
-
 # Config directory management
+
+
+def get_creds_path():
+    return os.path.join(CONFIG_DIR, CREDS_FNAME)
+
 
 def config_exists():
     """Check if config directory exists"""
@@ -60,15 +62,17 @@ def init_config():
 
 def purge_creds():
     """Remove the credentials file"""
-    if os.path.isfile(CREDS_PATH):
-        os.remove(CREDS_PATH)
+    creds_path = get_creds_path()
+    if os.path.isfile(creds_path):
+        os.remove(creds_path)
 
 
 def read_creds():
     """Read the credentials file"""
-    if not os.path.exists(CREDS_PATH):
+    creds_path = get_creds_path()
+    if not os.path.exists(creds_path):
         return {}
-    with open(CREDS_PATH, 'r') as f:
+    with open(creds_path, 'r') as f:
         try:
             return json.load(f)
         except ValueError:
@@ -93,9 +97,10 @@ def read_cred(key, default=None):
 def write_creds(creds, update_cache=True):
     """Write the given credentials to file"""
     init_config()
-    with open(CREDS_PATH, 'w') as f:
+    creds_path = get_creds_path()
+    with open(creds_path, 'w') as f:
         json.dump(creds, f)
-    os.chmod(CREDS_PATH, stat.S_IREAD | stat.S_IWRITE)
+    os.chmod(creds_path, stat.S_IREAD | stat.S_IWRITE)
 
 
 def write_cred(key, value):
