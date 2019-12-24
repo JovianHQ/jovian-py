@@ -40,19 +40,17 @@ class TestGetFileExtension(TestCase):
 
 
 class TestGetPlatform(TestCase):
-    @mock.patch('platform.system', mock.Mock(return_value='Windows'))
+    @mock.patch("platform.system", mock.Mock(return_value="Windows"))
     def test_get_platform_windows(self):
         self.assertEqual(get_platform(), WINDOWS)
 
-    @mock.patch('platform.system', mock.Mock(return_value='Linux'))
+    @mock.patch("platform.system", mock.Mock(return_value="Linux"))
     def test_get_platform_linux(self):
         self.assertEqual(get_platform(), LINUX)
 
-    @mock.patch('platform.system', mock.Mock(return_value='Darwin'))
+    @mock.patch("platform.system", mock.Mock(return_value="Darwin"))
     def test_get_platform_macos(self):
         self.assertEqual(get_platform(), MACOS)
-
-    pass
 
 
 class UrlUtilsTest(TestCase):

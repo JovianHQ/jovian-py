@@ -9,7 +9,7 @@ def is_git():
 
 
 def get_branch():
-    return os.popen('git branch | grep * | cut -d \' \' -f2').read().strip()
+    return os.popen('git rev-parse --abbrev-ref HEAD').read().strip()
 
 
 def get_remote():

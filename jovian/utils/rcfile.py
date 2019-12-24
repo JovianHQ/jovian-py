@@ -1,4 +1,4 @@
-"""Utilies the manage the .jovianrc file"""
+"""Utilies to manage the .jovianrc file"""
 import os
 import json
 from jovian.utils.constants import RC_FILENAME
