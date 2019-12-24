@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
 from jovian._version import __version__
+from pkg_resources import parse_version
 
 from jovian.utils.latest import _get_latest_version, _print_update_message, check_update
 
@@ -41,3 +42,17 @@ class TestPrintUpdateMessage(TestCase):
         expected_result = 'Run `pip install jovian --upgrade` to upgrade\n'
         _print_update_message(current_version, latest_version)
         mock_log.assert_any_call(expected_result)
+
+
+class TestGetUpdate(TestCase):
+    current_version = '0.0.1'
+    latest_version = '0.0.2'
+    @mock.patch("jovian.utils.latest._get_latest_version", mock.Mock(return_value=latest_version))
+    @mock.patch("jovian.utils.latest._print_update_message")
+    def test_get_update(self, mock_print_update_message):
+        import jovian
+        jovian.utils.latest.__version__ = '0.0.1'
+        check_update(1)
+        mock_print_update_message.assert_called_with(
+            parse_version(self.current_version),
+            parse_version(self.latest_version))
