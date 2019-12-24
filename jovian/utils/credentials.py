@@ -33,7 +33,7 @@ WEBAPP_URL_KEY = "WEBAPP_URL"
 HOME = os.path.expanduser('~')
 CONFIG_DIR = HOME + '/.jovian'
 CREDS_FNAME = 'credentials.json'
-CREDS_PATH = CONFIG_DIR + '/' + CREDS_FNAME
+CREDS_PATH = os.path.join(CONFIG_DIR, CREDS_FNAME)
 
 CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jovian.ml'
 

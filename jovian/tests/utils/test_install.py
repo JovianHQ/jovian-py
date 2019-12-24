@@ -3,7 +3,7 @@ import unittest
 from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
                                   extract_pip_packages, get_environment_dict, identify_env_file)
 
-FILES_PREFIX = 'jovian/tests/resources/'
+FILES_PREFIX = 'jovian/tests/resources/yaml/'
 
 
 class InstallUtilsTest(unittest.TestCase):
