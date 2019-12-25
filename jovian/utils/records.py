@@ -59,7 +59,6 @@ def log_hyperparams(data, verbose=True):
     record_type = 'hyperparams'
 
     res = api.post_block(data, record_type)
-    print(res)
     _data_blocks.append((res['tracking']['trackingSlug'], record_type))
 
     if verbose:
