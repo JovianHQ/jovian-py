@@ -33,20 +33,6 @@ class CreateNewRCFile(RCFile):
         super().tearDown()
 
 
-class TestRCFileExists(RCFile):
-
-    def setUp(self):
-        super().setUp()
-        os.system('touch .jovianrc')
-
-    def test_rcfile_exists(self):
-        self.assertTrue(rcfile_exists())
-
-    def tearDown(self):
-        os.system('rm .jovianrc')
-        super().tearDown()
-
-
 class TestRCFileDoesNotExist(RCFile):
 
     def test_rcfile_does_not_exists(self):
@@ -71,15 +57,19 @@ class TestSaveRCData(RCFile):
             self.assertEqual(json.load(f), expected_result)
 
 
-class TestGetRCData(RCFile):
+class TestGetRCDataRCFileNotExist(RCFile):
 
-    def test_save_get_rcdata_rcfile_does_not_exist(self):
+    @mock.patch('jovian.utils.rcfile.rcfile_exists', mock.Mock(return_value=False))
+    def test_get_rcdata_rcfile_does_not_exist(self):
         expected_result = {
             "notebooks": {}
         }
         self.assertEqual(get_rcdata(), expected_result)
 
-    def test_save_get_rcdata_rcfile_exists(self):
+
+class TestGetRCData(RCFile):
+
+    def test_get_rcdata_rcfile_exists(self):
         with open(RC_FILENAME, 'w') as f:
             json.dump(data, f, indent=2)
 
