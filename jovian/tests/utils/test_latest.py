@@ -5,13 +5,13 @@ from pkg_resources import parse_version
 from jovian.utils.latest import _get_latest_version, _print_update_message, check_update
 
 
-@mock.patch("jovian.utils.latest.requests.get", mock.Mock(return_value="0.2.0"))
+@mock.patch("requests.get", mock.Mock(return_value="0.2.0"))
 def test_get_latest_version_normal():
     expected_result = __version__
     assert _get_latest_version() == expected_result
 
 
-@mock.patch("jovian.utils.latest.requests.get", mock.Mock(return_value=ConnectionError('fake requests.get error')))
+@mock.patch("requests.get", mock.Mock(return_value=ConnectionError('fake requests.get error')))
 def test_get_latest_version_exception():
     expected_result = __version__
     assert _get_latest_version() == expected_result

@@ -133,7 +133,7 @@ class TestCommit(GitMasterBranch):
 
 class TestGitPush(GitMasterBranch):
 
-    @mock.patch("jovian.utils.git.os.system")
+    @mock.patch("os.system")
     def test_git_push(self, mock_system):
         expected_result = "git push origin master"
 
@@ -143,7 +143,7 @@ class TestGitPush(GitMasterBranch):
 
 class TestGitPushSample(GitSampleBranch):
 
-    @mock.patch("jovian.utils.git.os.system")
+    @mock.patch("os.system")
     def test_git_push_sample(self, mock_system):
         expected_result = "git push origin sample_branch"
 
