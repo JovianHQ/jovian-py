@@ -1,5 +1,4 @@
 import os
-from os.path import basename
 from time import sleep
 
 from jovian._version import __version__
@@ -10,7 +9,8 @@ from jovian.utils.configure import configure
 from jovian.utils.configure import reset as reset_config
 from jovian.utils.constants import FILENAME_MSG, RC_FILENAME
 from jovian.utils.credentials import read_webapp_url
-from jovian.utils.git import git_commit, git_current_commit, git_remote, git_rel_path, is_git
+from jovian.utils.file import expand_files_list, try_upload_file
+from jovian.utils.git import git_commit, git_current_commit, git_rel_path, git_remote, is_git
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
 from jovian.utils.latest import check_update
 from jovian.utils.logger import log
@@ -34,7 +34,7 @@ def reset(which=[]):
     Args:
         which(list, optional): By default resets all type of records. For specific filter
                             add keywords `metrics`, `hyperparams`, `dataset` individually
-                            or in combinations to reset those type of records.  
+                            or in combinations to reset those type of records.
     Example
         .. code-block::
 
@@ -62,7 +62,7 @@ def commit(secret=False,
            git_commit_msg="jovian commit"):
     """Commits a Jupyter Notebook with its environment to Jovian.
 
-    Saves the checkpoint of the notebook, captures the required dependencies from 
+    Saves the checkpoint of the notebook, captures the required dependencies from
     the python environment and uploads the notebook, env file, additional files like scripts, csv etc.
     to `Jovian`_. Capturing the python environment ensures that the notebook can be reproduced.
 
@@ -208,54 +208,18 @@ def commit(secret=False,
         log('Uploading additional files..')
 
         # Upload each file
-        for fname in files:
-            if os.path.exists(fname) and not os.path.isdir(fname):
-                try:
-                    with open(fname, 'rb') as f:
-                        file = (basename(fname), f)
-                        upload_file(gist_slug=slug, file=file, version=version)
-                except Exception as e:
-                    log(str(e), error=True)
-            elif os.path.isdir(fname):
-                for folder, _, f in os.walk(fname):
-                    for file_dir in f:
-                        current_file = os.path.join(folder, file_dir)
-                        try:
-                            with open(current_file, 'rb') as f:
-                                file = (basename(current_file), f)
-                                upload_file(gist_slug=slug, file=file, folder=folder, version=version)
-                        except Exception as e:
-                            log(str(e), error=True)
-            else:
-                log('Ignoring "' + fname + '" (not found)', error=True)
+        files_list = expand_files_list(files)
+        for fn in files_list:
+            try_upload_file(slug, version, fn, artifact=False)
 
     # Upload artifacts
     if artifacts and len(artifacts) > 0:
         log('Uploading artifacts..')
 
         # Upload each artifact
-        for fname in artifacts:
-            if os.path.exists(fname) and not os.path.isdir(fname):
-                try:
-                    with open(fname, 'rb') as f:
-                        file = (basename(fname), f)
-                        upload_file(gist_slug=slug, file=file,
-                                    version=version, artifact=True)
-                except Exception as e:
-                    log(str(e), error=True)
-            elif os.path.isdir(fname):
-                for folder, _, f in os.walk(fname):
-                    for file_dir in f:
-                        try:
-                            current_file = os.path.join(folder, file_dir)
-                            with open(current_file, 'rb') as f:
-                                file = (basename(current_file), f)
-                                upload_file(gist_slug=slug, file=file, folder=folder,
-                                            version=version, artifact=True)
-                        except Exception as e:
-                            log(str(e), error=True)
-            else:
-                log('Ignoring "' + fname + '" (not found)', error=True)
+        artifacts_list = expand_files_list(artifacts)
+        for fn in files_list:
+            try_upload_file(slug, version, fn, artifact=True)
 
     # Record metrics & hyperparameters
     if len(_data_blocks) > 0:
