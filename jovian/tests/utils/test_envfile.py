@@ -191,7 +191,3 @@ class TestWriteEnvName(EnvFile):
     def tearDown(self):
         os.system('rm test.yml')
         super().tearDown()
-
-
-if __name__ == '__main__':
-    unittest.main()
