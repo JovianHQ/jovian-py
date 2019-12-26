@@ -73,10 +73,10 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
         else:
             data = {'visibility': privacy}
 
-            # For compatibility with older endpoints
+            # For compatibility with old version of API endpoint
             if privacy == 'auto':
                 data['public'] = True
-            elif privacy == 'secret':
+            elif privacy == 'secret' or privacy == 'private':
                 data['public'] = False
 
             if title:

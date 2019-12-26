@@ -135,19 +135,23 @@ def commit(message=None,
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
+    username = owner['username']
 
     # Cache slug for further commits
     _current_slug = slug
     set_notebook_slug(filename, slug)
 
-    # Attach environment, files, records etc.
+    # Attach environment, files and outputs
     _capture_environment(environment, slug, version)
     _attach_files(files, slug, version)
     _attach_files(outputs, slug, version, output=True)
+
+    if not git_message or git_message == 'auto':
+        git_message = message or 'jovian commit ' + username + '/' + title + ' v' + str(version)
+    _perform_git_commit(filename, git_commit, git_message)
     _attach_records(slug, version)
 
-    log('Committed successfully! ' + read_webapp_url() +
-        owner['username'] + "/" + title)
+    log('Committed successfully! ' + read_webapp_url() + username + "/" + title)
 
 
 def _parse_filename(filename):
@@ -221,13 +225,13 @@ def _parse_project(project, filename, new_project):
 
 def _attach_file(path, gist_slug, version, output=False):
     """Helper function to attach a single file to a commit"""
-    # try:
-    with open(path, 'rb') as f:
-        file_obj = os.path.basename(path), f
-        folder = os.path.dirname(path)
-        api.upload_file(gist_slug, file_obj, folder, version, output)
-    # except Exception as e:
-    #     log(str(e), error=True)
+    try:
+        with open(path, 'rb') as f:
+            file_obj = os.path.basename(path), f
+            folder = os.path.dirname(path)
+            api.upload_file(gist_slug, file_obj, folder, version, output)
+    except Exception as e:
+        log(str(e), error=True)
 
 
 def _attach_files(paths, gist_slug, version, output=False):
@@ -249,7 +253,7 @@ def _attach_files(paths, gist_slug, version, output=False):
                     fpath = os.path.join(folder, fname)
                     _attach_file(fpath, gist_slug, version, output)
         elif os.path.exists(path):
-            _attach_files(path, gist_slug, version, output)
+            _attach_file(path, gist_slug, version, output)
         else:
             log('Ignoring "' + path + '" (not found)', error=True)
 
@@ -287,7 +291,8 @@ def _perform_git_commit(filename, git_commit, git_message):
             'repository': git.get_remote(),
             'commit': git.get_current_commit(),
             'filename': filename,
-            'path': git.get_relative_path()
+            'path': git.get_relative_path(),
+            'brach': git.get_branch()
         }
         log_git(git_info, verbose=False)
 
