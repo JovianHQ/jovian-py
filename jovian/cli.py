@@ -13,7 +13,7 @@ from jovian.utils.slack import add_slack
 @click.group()
 @click.version_option(version=__version__, prog_name="Jovian")
 @click.pass_context
-def main(ctx=None, log_level="info"):
+def main(ctx, log_level="info"):
     """Keep track of your Jupyter notebooks using Jovian.
 
     Use within your Jupyter notebooks:
@@ -68,7 +68,7 @@ def reset(ctx):
 @main.command("install", short_help="Install packages from environment file.")
 @click.option('-n', '--name', 'name')
 @click.pass_context
-def install_env(ctx=None, name=None):
+def install_env(ctx, name=None):
     """Install packages from environment file:
 
         $ jovian install
