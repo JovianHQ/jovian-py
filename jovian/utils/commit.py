@@ -221,13 +221,13 @@ def _parse_project(project, filename, new_project):
 
 def _attach_file(path, gist_slug, version, output=False):
     """Helper function to attach a single file to a commit"""
-    try:
-        with open(path, 'rb') as f:
-            file_obj = os.path.basename(path), f
-            folder = os.path.dirname(f)
-            api.upload_file(gist_slug, file_obj, folder, version, output)
-    except Exception as e:
-        log(str(e), error=True)
+    # try:
+    with open(path, 'rb') as f:
+        file_obj = os.path.basename(path), f
+        folder = os.path.dirname(f)
+        api.upload_file(gist_slug, file_obj, folder, version, output)
+    # except Exception as e:
+    #     log(str(e), error=True)
 
 
 def _attach_files(paths, gist_slug, version, output=False):
