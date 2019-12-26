@@ -35,7 +35,7 @@ class CreateNewRCFile(RCFile):
 
 class TestRCFileDoesNotExist(RCFile):
 
-    def test_rcfile_does_not_exists(self):
+    def test_rcfile_does_not_exist(self):
         self.assertFalse(rcfile_exists())
 
 
