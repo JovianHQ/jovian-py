@@ -4,7 +4,7 @@ import click
 
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
-from jovian.utils.configure import configure, reset
+from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
 from jovian.utils.slack import add_slack
@@ -60,10 +60,9 @@ def create_config(ctx):
 
 @main.command("reset")
 @click.pass_context
-def reset_config(ctx):
+def reset(ctx):
     """Reset Jovian config."""
-
-    reset()
+    reset_config()
 
 
 @main.command("install", short_help="Install packages from environment file.")
@@ -100,8 +99,9 @@ def activate_env(ctx):
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
+@click.option('--no-outputs', 'no_outputs')
 @click.pass_context
-def exec_clone(ctx, notebook, version):
+def exec_clone(ctx, notebook, version, no_outputs):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -111,7 +111,7 @@ def exec_clone(ctx, notebook, version):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version)
+    clone(notebook, version, not no_outputs)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")

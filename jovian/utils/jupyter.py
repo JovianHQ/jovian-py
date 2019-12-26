@@ -96,8 +96,9 @@ def get_notebook_path():
 def set_notebook_name():
     if in_notebook():
         from IPython import get_ipython
-        get_ipython().run_cell_magic('javascript',
-                                     '', "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
+        get_ipython().run_cell_magic(
+            'javascript', '',
+            "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
 
 
 def get_notebook_name_saved():
@@ -121,4 +122,7 @@ def get_notebook_history():
 def save_notebook():
     from IPython import get_ipython
     """Save the current Jupyter notebook"""
-    return get_ipython().run_cell_magic('javascript', '', 'window.require && require(["base/js/namespace"],function(Jupyter){Jupyter.notebook.save_checkpoint()})')
+    return get_ipython().run_cell_magic(
+        'javascript',
+        '',
+        'window.require && require(["base/js/namespace"],function(Jupyter){Jupyter.notebook.save_checkpoint()})')

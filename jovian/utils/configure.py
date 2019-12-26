@@ -5,12 +5,16 @@ from jovian.utils.credentials import creds_exist, ensure_org, get_guest_key, pur
 from jovian.utils.logger import log
 
 
-def reset():
+def reset_config(confirm=True):
+    """Remove the existing configuration by purging credentials"""
     if creds_exist():
-        msg = 'Do you want to remove the existing configuration?'
-        confirm = click.confirm(msg)
-
         if confirm:
+            msg = 'Do you want to remove the existing configuration?'
+            confirmed = click.confirm(msg)
+        else:
+            confirmed = True
+
+        if confirmed:
             log('Removing existing configuration. Run "jovian configure" to set up Jovian')
             purge_creds()
         else:

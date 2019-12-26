@@ -2,7 +2,7 @@ from torch import Tensor
 from fastai.basic_train import Learner
 from fastai.callback import Callback
 
-from jovian import log_hyperparams, log_metrics
+from jovian.utils.records import log_hyperparams, log_metrics, reset_records
 from jovian.utils.logger import log
 
 
@@ -29,18 +29,20 @@ class JovianFastaiCallback(Callback):
     .. _this: https://jovian.ml/PrajwalPrashanth/7f16274fc3224d829941bc2553ef6061?utm_source=docs
     """
 
-    def __init__(self, learn: Learner, arch_name: str):
+    def __init__(self, learn: Learner, arch_name=None, reset_tracking=True):
         self.learn = learn
         self.arch_name = arch_name
         self.met_names = ['epoch', 'train_loss']
         # existence of validation dataset
         self.valid_set = self.learn.data.valid_dl.items.any()
+        self.reset_tracking = reset_tracking
         if self.valid_set:
             self.met_names.append('valid_loss')
 
     def on_train_begin(self, n_epochs: int, metrics_names: list, **ka):
+        if self.reset_tracking:
+            reset_records('hyperparams', 'metrics')
         hyp_dict = {
-            'arch_name': self.arch_name,
             'epochs': n_epochs,
             'batch_size': self.learn.data.batch_size,
             'loss_func': str(self.learn.loss_func.func),
@@ -48,6 +50,8 @@ class JovianFastaiCallback(Callback):
             'weight_decay': self.learn.wd,
             'learning_rate': str(self.learn.opt.lr)
         }
+        if self.arch_name:
+            hyp_dict['arch_name'] = self.arch_name
         log_hyperparams(hyp_dict)
 
         if self.valid_set:
