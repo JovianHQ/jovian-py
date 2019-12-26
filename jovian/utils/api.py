@@ -72,6 +72,13 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
         else:
             data = {'visibility': privacy}
+
+            # For compatibility with older endpoints
+            if privacy == 'auto':
+                data['public'] = True
+            elif privacy == 'secret':
+                data['public'] = False
+
             if title:
                 data['title'] = title
             if version_title:

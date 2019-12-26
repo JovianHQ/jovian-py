@@ -37,7 +37,7 @@ def help(ctx):
 
     # Pretend user typed 'jovian --help' instead of 'jovian help'.
     sys.argv[1] = "--help"
-    main(ctx)
+    main()
 
 
 @main.command('version')
@@ -47,7 +47,7 @@ def main_version(ctx):
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
     sys.argv[1] = "--version"
-    main(ctx)
+    main()
 
 
 @main.command("configure")
@@ -68,7 +68,7 @@ def reset(ctx):
 @main.command("install", short_help="Install packages from environment file.")
 @click.option('-n', '--name', 'name')
 @click.pass_context
-def install_env(ctx, name=None):
+def install_env(ctx=None, name=None):
     """Install packages from environment file:
 
         $ jovian install
@@ -85,7 +85,7 @@ def install_env(ctx, name=None):
     else:
         # Show help
         sys.argv[1] = "--help"
-        install_env(ctx)
+        install_env()
 
 
 @main.command("activate")

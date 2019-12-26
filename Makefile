@@ -9,7 +9,7 @@ setup-env:
 	@echo "Run:\n\tconda activate jovian-py-dev\n\tpip install -r requirements.txt"
 
 activate:
-	conda activate jovian-pro-dev
+	conda activate jovian-py-dev
 
 help:
 	@echo "Check the Makefile for supported commands"
