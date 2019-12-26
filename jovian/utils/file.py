@@ -24,12 +24,12 @@ def expand_files_list(files_list, dedupe=True):
     return result
 
 
-def try_upload_file(slug, version, current_file, artifact=False):
+def try_upload_file(gist_slug, version, current_file, artifact=False):
     """Safely upload a file"""
     try:
         with open(current_file, 'rb') as f:
             folder = os.path.dirname(current_file)
             file = (os.path.basename(current_file), f)
-            upload_file(gist_slug=slug, file=file, folder=folder, version=version, artifact=artifact)
+            upload_file(gist_slug=gist_slug, file=file, folder=folder, version=version, artifact=artifact)
     except Exception as e:
         log(str(e), error=True)

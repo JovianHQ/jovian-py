@@ -210,7 +210,7 @@ def commit(secret=False,
         # Upload each file
         files_list = expand_files_list(files)
         for fn in files_list:
-            try_upload_file(slug, version, fn, artifact=False)
+            try_upload_file(gist_slug=slug, version=version, current_file=fn, artifact=False)
 
     # Upload artifacts
     if artifacts and len(artifacts) > 0:
@@ -219,7 +219,7 @@ def commit(secret=False,
         # Upload each artifact
         artifacts_list = expand_files_list(artifacts)
         for fn in files_list:
-            try_upload_file(slug, version, fn, artifact=True)
+            try_upload_file(gist_slug=slug, version=version, current_file=fn, artifact=True)
 
     # Record metrics & hyperparameters
     if len(_data_blocks) > 0:
