@@ -13,7 +13,7 @@ from jovian.utils.slack import add_slack
 @click.group()
 @click.version_option(version=__version__, prog_name="Jovian")
 @click.pass_context
-def main(ctx=None, log_level="info"):
+def main(ctx, log_level="info"):
     """Keep track of your Jupyter notebooks using Jovian.
 
     Use within your Jupyter notebooks:
@@ -37,7 +37,7 @@ def help(ctx):
 
     # Pretend user typed 'jovian --help' instead of 'jovian help'.
     sys.argv[1] = "--help"
-    main(ctx)
+    main()
 
 
 @main.command('version')
@@ -47,7 +47,7 @@ def main_version(ctx):
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
     sys.argv[1] = "--version"
-    main(ctx)
+    main()
 
 
 @main.command("configure")
@@ -85,7 +85,7 @@ def install_env(ctx, name=None):
     else:
         # Show help
         sys.argv[1] = "--help"
-        install_env(ctx)
+        install_env()
 
 
 @main.command("activate")
