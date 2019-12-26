@@ -2,7 +2,8 @@ import os
 from unittest import TestCase
 from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
                                   extract_pip_packages, get_environment_dict, identify_env_file,
-                                  dump_environment_to_yaml_file, write_env_name)
+                                  dump_environment_to_yaml_file, write_env_name, remove_packages,
+                                  sanitize_envfile, serialize_packages)
 
 
 class EnvFile(TestCase):
@@ -13,12 +14,17 @@ class EnvFile(TestCase):
         os.chdir('../' * 4)
 
 
-class TestIdentityEnvFile(TestCase):
-    FILES_PREFIX = 'jovian/tests/resources/yaml/'
+class TestIdentityEnvFile(EnvFile):
 
-    def test_identify_env_file(self):
-        env_fname = identify_env_file(env_fname=None, folder_prefix=FILES_PREFIX)
-        self.assertEqual(env_fname, FILES_PREFIX + 'environment.yml')
+    def test_identify_env_file_no_environment_file(self):
+        self.assertIsNone(identify_env_file(env_fname=None))
+
+    def test_identify_env_file_exists(self):
+        os.system('touch environment.yml')
+
+        self.assertEqual(identify_env_file(env_fname=None), 'environment.yml')
+
+        os.system('rm environment.yml')
 
 
 class TestGetEnvironmentDict(EnvFile):
@@ -27,7 +33,7 @@ class TestGetEnvironmentDict(EnvFile):
                            'dependencies': ['mixpanel=1.11.0', 'sigmasix=1.91.0', 'sqlite',
                                             {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
                            'channels': ['defaults'], 'name': 'test-env'}
-        environment = get_environment_dict(env_fname='environment.yml')
+        environment = get_environment_dict(env_fname='environment-test.yml')
 
         self.assertDictEqual(environment, expected_result)
 
@@ -36,7 +42,7 @@ class TestGetEnvironmentDict(EnvFile):
                     'dependencies': ['mixpanel=1.11.0', 'sigmasix=1.91.0', 'sqlite',
                                      {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
                     'channels': ['defaults'], 'name': 'test-env'}
-        environment = get_environment_dict(env_fname='environment.yml')
+        environment = get_environment_dict(env_fname='environment-test.yml')
 
         with self.assertRaises(FileNotFoundError):
             get_environment_dict(env_fname='non-existent-file.yml')
@@ -49,7 +55,7 @@ class TestGetEnvironmentDict(EnvFile):
 
 class TestExtractEnvName(EnvFile):
     def test_extract_env_name(self):
-        name = extract_env_name(env_fname='environment.yml')
+        name = extract_env_name(env_fname='environment-test.yml')
         name2 = extract_env_name(env_fname='empty-yaml-file.yml')
 
         self.assertEqual(name, 'test-env')
@@ -61,7 +67,7 @@ class TestExtractEnvName(EnvFile):
 class TestExtractEnvPackages(EnvFile):
     def test_extract_env_packages(self):
 
-        dep = extract_env_packages(env_fname='environment.yml')
+        dep = extract_env_packages(env_fname='environment-test.yml')
         dep2 = extract_env_packages(env_fname='empty-yaml-file.yml')
 
         self.assertListEqual(dep, ['mixpanel=1.11.0', 'sigmasix=1.91.0', 'sqlite',
@@ -73,7 +79,7 @@ class TestExtractEnvPackages(EnvFile):
 
 class TestExtractPipPackages(EnvFile):
     def test_extract_pip_packages(self):
-        dep = extract_pip_packages(env_fname='environment.yml')
+        dep = extract_pip_packages(env_fname='environment-test.yml')
         dep2 = extract_pip_packages(env_fname='empty-yaml-file.yml')
 
         self.assertListEqual(dep, ['six==1.11.0', 'sqlite==2.0.0'])
@@ -85,7 +91,7 @@ class TestExtractPipPackages(EnvFile):
 class TestCheckError(EnvFile):
     def test_check_error(self):
 
-        packages = extract_env_packages(env_fname='environment.yml')
+        packages = extract_env_packages(env_fname='environment-test.yml')
 
         error_str = '''ResolvePackageNotFound: 
                         - mixpanel=1.11.0'''
@@ -107,7 +113,7 @@ class TestCheckError(EnvFile):
 
 class TestExtractPackageFromLine(EnvFile):
     def test_extract_package_from_line(self):
-        packages = extract_env_packages(env_fname='environment.yml')
+        packages = extract_env_packages(env_fname='environment-test.yml')
 
         lines = [['- mixpanel=1.11.0', 'mixpanel=1.11.0'], ['sqlite<3x not compatible', 'sqlite'],
                  ['', None], ['line containing six < 3.0.x', 'six==1.11.0']]
@@ -116,17 +122,20 @@ class TestExtractPackageFromLine(EnvFile):
 
 
 class TestDumpEnvironmentToYamlFile(EnvFile):
-    def test_dump_environment_to_yaml_file_normal(self):
-        data = {'channels': ['defaults'],
-                'dependencies': ['mixpanel=1.11.0',
-                                 'sigmasix=1.91.0',
-                                 'sqlite',
-                                 {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
-                'name': 'test-env',
-                'prefix': '/home/admin/anaconda3/envs/test-env'}
-        dump_environment_to_yaml_file('test.yml', data)
+    data = {'channels': ['defaults'],
+            'dependencies': ['mixpanel=1.11.0',
+                             'sigmasix=1.91.0',
+                             'sqlite',
+                             {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
+            'name': 'test-env',
+            'prefix': '/home/admin/anaconda3/envs/test-env'}
 
-        self.assertEqual(get_environment_dict('test.yml'), data)
+    def setUp(self):
+        super().setUp()
+        dump_environment_to_yaml_file('test.yml', self.data)
+
+    def test_dump_environment_to_yaml_file_normal(self):
+        self.assertEqual(get_environment_dict('test.yml'), self.data)
 
     def tearDown(self):
         os.system('rm test.yml')
@@ -173,3 +182,64 @@ class TestWriteEnvName(EnvFile):
     def tearDown(self):
         os.system('rm test.yml')
         super().tearDown()
+
+
+class TestRemovePackages(EnvFile):
+
+    def test_remove_packages(self):
+        packages = extract_env_packages(env_fname='environment-test.yml')
+        dependencies = ['dep1', 'dep2', 'mixpanel=1.11.0', 'sqlite']
+
+        expected_result = ['dep1', 'dep2']
+
+        self.assertEqual(remove_packages(dependencies, packages), expected_result)
+
+    def test_remove_packages_pip(self):
+        packages = extract_env_packages(env_fname='environment-test.yml')
+        dependencies = ['dep1', 'mixpanel=1.11.0', {'pip': ['six==1.11.0', 'dep3']}]
+
+        expected_result = ['dep1', {'pip': ['dep3']}]
+
+        self.assertEqual(remove_packages(dependencies, packages), expected_result)
+
+
+class TestSanitizeEnvfile(EnvFile):
+    data = {'channels': ['defaults'],
+            'dependencies': ['mixpanel=1.11.0',
+                             'sigmasix=1.91.0',
+                             'sqlite',
+                             {'pip': ['six==1.11.0', 'sqlite==2.0.0']}],
+            'name': 'test-env',
+            'prefix': '/home/admin/anaconda3/envs/test-env'}
+
+    def setUp(self):
+        super().setUp()
+        dump_environment_to_yaml_file('test.yml', self.data)
+
+    def test_sanitize_envfile(self):
+        packages = ['six==1.11.0', 'sigmasix=1.91.0']
+        sanitize_envfile('test.yml', packages)
+
+        expected_result = {'channels': ['defaults'],
+                           'dependencies': ['mixpanel=1.11.0',
+                                            'sqlite',
+                                            {'pip': ['sqlite==2.0.0']}],
+                           'name': 'test-env',
+                           'prefix': '/home/admin/anaconda3/envs/test-env'}
+        self.assertEqual(get_environment_dict('test.yml'), expected_result)
+
+    def tearDown(self):
+        os.system('rm test.yml')
+        super().tearDown()
+
+
+class TestSerializePackages(EnvFile):
+
+    def test_serialize_packages(self):
+        dependencies = ['dep1', 'mixpanel=1.11.0', {'pip': ['six==1.11.0', 'dep3']}]
+
+        expected_result = ['dep1', 'mixpanel=1.11.0', 'six==1.11.0', 'dep3']
+
+        self.assertEqual(serialize_packages(dependencies), expected_result)
+
+# class Test
