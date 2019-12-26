@@ -1,9 +1,10 @@
 import os
-
+import click
 from requests import get
 
 from jovian._version import __version__
 from jovian.utils.constants import ISSUES_MSG
+
 from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url, read_org_id
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
@@ -47,7 +48,6 @@ def get_gist(slug, version, fresh):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    print(url)
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
@@ -55,23 +55,24 @@ def get_gist(slug, version, fresh):
 
 
 def post_clone_msg(title):
-    return """Cloned successfully to '{}'.
 
-Next steps:
-$ cd {}   # Enter the directory
-$ jovian install     # Install dependencies
-$ conda activate <env_name> # Activate environment
-$ jupyter notebook   # Start Jupyter
+    log("Cloned successfully to '{}'".format(title), color='green')
+    log(click.style('\nNext steps:', fg='yellow', underline=True) +
+        click.style("""
+  $ cd {}                     
+  $ jovian install            
+  $ conda activate <env_name> 
+  $ jupyter notebook
+""".format(title), bold=True), pre=False)
 
+    log("""
 Replace <env_name> with the name of your environment (without the '<' & '>')
 Jovian uses Anaconda ( https://conda.io/ ) under the hood,
 so please make sure you have it installed and added to path.
 * If you face issues with `jovian install`, try `conda env update`.
 * If you face issues with `conda activate`, try `source activate <env_name>`
   or `activate <env_name>` to activate the virtual environment.
-
-{}
-""".format(title, title, ISSUES_MSG)
+""", pre=False)
 
 
 def clone(slug, version=None, fresh=True, include_outputs=True):
@@ -109,7 +110,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True):
 
     # Print success message and instructions
     if fresh:
-        log(post_clone_msg(title))
+        post_clone_msg(title)
     else:
         log('Files dowloaded successfully in current directory')
 
