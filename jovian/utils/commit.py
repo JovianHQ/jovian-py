@@ -291,7 +291,8 @@ def _perform_git_commit(filename, git_commit, git_message):
             'repository': git.get_remote(),
             'commit': git.get_current_commit(),
             'filename': filename,
-            'path': git.get_relative_path()
+            'path': git.get_relative_path(),
+            'brach': git.get_branch()
         }
         log_git(git_info, verbose=False)
 
