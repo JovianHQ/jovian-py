@@ -29,7 +29,7 @@ def reset_records(*args):
     """
     global _data_blocks
 
-    if len(args == 0):
+    if len(args) == 0:
         _data_blocks = []
     else:
         _data_blocks = [(slug, rec_type) for (slug, rec_type) in _data_blocks if rec_type not in args]
