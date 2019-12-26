@@ -1,7 +1,9 @@
-import platform
-from jovian.utils.constants import LINUX, WINDOWS, MACOS
 import time
+import platform
+
 from uuid import UUID
+from jovian.utils.constants import LINUX, WINDOWS, MACOS
+from jovian._version import __version__
 
 
 def is_uuid(text):
@@ -59,3 +61,7 @@ def urljoin(*args):
     trailing_slash = '/' if args[-1].endswith('/') else ''
 
     return '/'.join(map(lambda x: str(x).strip('/'), args)) + trailing_slash
+
+
+def version():
+    return __version__
