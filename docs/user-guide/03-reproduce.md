@@ -6,9 +6,12 @@ A uploaded notebook on Jovian can be reproduced in any other machine. Follow the
 
 1. Visit the link of the uploaded notebook.
 2. Click on the `Clone` button, which copies the clone cli command (along with the notebook_id) to the clipboard.
+
+<img src="https://imgur.com/lGBi6iG.gif" class="screenshot">
+
 3. Paste the command in the terminal, in the directory where you want to clone the notebook project and then run the command.
 
-<!-- **TODO-SB: GIF for clone button** -->
+<img src="https://imgur.com/gGn59Iu.gif" class="screenshot">
 
 The copied command will be of the the following format
 
