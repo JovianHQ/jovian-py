@@ -4,7 +4,9 @@ Now you can commit your Jupyter Notebook with to [Jovian](https://jovian.ml?utm_
 Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
 
 
-#### Using Jovian Jupyter Extension
+## Using Jovian Jupyter Extension
+
+<img src="https://i.imgur.com/RdBnJYy.png" class="screenshot">
 
 Once you have successfully installed jovian, a new button `Commit` will appear on the tool bar. When using `Commit` button for first time you'll be asked to provide an API key. 
                           
@@ -29,25 +31,16 @@ Once the API key has been validated, you can start committing to [Jovian](https:
                             
 <img src="https://i.imgur.com/4GoqzER.png" class="screenshot">
 
-# Use the Dropdown to Commit
+## Commit Dropdown to commit with more options
 
-The Notebook extension allows for two additional methods for committing to Jovian
-
-**Option 1**: Click the Button to commit without any parameters.
-
-<img src="https://i.imgur.com/RdBnJYy.png" class="screenshot">
-
-If committing for the first time will ask for an API key. It can be obtained from your [Jovian](https://jovian.ml) (or Jovian Pro) account.
-
-<img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
-
-**Option 2**: Click the adjacent Dropdown Button to commit with your selection of parameters.
+This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like secret notebook, new notebook project, to add output and artifact files .....
 
 <img src="https://i.imgur.com/maHhYY2.png" class="screenshot">
 
-The inital parameters are default for `jovian.commit` with the filename being what your file is currently named.
+By default the parameters are derived from [jovian.commit](../jvn/commit), once the user changes a certain parameter they are retained.
 
 <img src="https://i.imgur.com/2NKfNGB.png" class="screenshot">
 
-When ready, the button at the bottom will commit with the custom parameters.
+Once the parameters are set to the need click `Commit` to the commit the notebook with these parameters set.
+
 

@@ -97,9 +97,9 @@ def commit(secret=False,
         artifacts(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, images etc.
 
-        git(bool, optional): Whether to perform git commit along with jovian commit.Defaults to False.
+        do_git_commit(bool, optional): Whether to perform git commit along with jovian commit.Defaults to True.
 
-        commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
+        git_commit_msg("jovian commit", optional): Has a default string message as `jovian commit`, pass a
             string for custom commit messages.
 
     .. attention::
@@ -134,23 +134,19 @@ def commit(secret=False,
         return
 
     # Commit to git and log commit hash
-    if do_git_commit:
-        if is_git():
-            reset(which=['git'])  # resets git commit info
+    if do_git_commit and is_git():
+        reset(which=['git'])  # resets git commit info
 
-            git_commit(git_commit_msg)
-            log('Git commit Done.')
+        git_commit(git_commit_msg)
+        log('Git repository identified. Performing git commit...')
 
-            git_info = {
-                'remoteRepository': git_remote(),
-                'commitHash': git_current_commit(),
-                'nbFilename': nb_filename,
-                'relativePath': git_rel_path()
-            }
-            log_git(git_info, verbose=False)
-
-        else:
-            log('Failed to detect a git repo. Please check the diretory you are committing from.')
+        git_info = {
+            'repository': git_remote(),
+            'commit': git_current_commit(),
+            'filename': nb_filename,
+            'path': git_rel_path()
+        }
+        log_git(git_info, verbose=False)
 
     # Check whether to create a new gist, or update an old one
     if not create_new and notebook_id is None:
@@ -221,7 +217,15 @@ def commit(secret=False,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname + '"', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        current_file = os.path.join(folder, file_dir)
+                        try:
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder, version=version)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
@@ -240,8 +244,16 @@ def commit(secret=False,
                 except Exception as e:
                     log(str(e), error=True)
             elif os.path.isdir(fname):
-                log('Ignoring directory "' + fname +
-                    '". Please include files directly', error=True)
+                for folder, _, f in os.walk(fname):
+                    for file_dir in f:
+                        try:
+                            current_file = os.path.join(folder, file_dir)
+                            with open(current_file, 'rb') as f:
+                                file = (basename(current_file), f)
+                                upload_file(gist_slug=slug, file=file, folder=folder,
+                                            version=version, artifact=True)
+                        except Exception as e:
+                            log(str(e), error=True)
             else:
                 log('Ignoring "' + fname + '" (not found)', error=True)
 
@@ -251,7 +263,7 @@ def commit(secret=False,
         # unpack only the trackingSlugs
         _data_blocks_trackingSlugs = [i for i, _ in _data_blocks]
 
-        log('Recording metrics/hyperparameters/dataset/git_commit_information')
+        log('Recording metrics, hyperparameters, datasets  & git information..')
         commit_records(slug, _data_blocks_trackingSlugs, version)
 
     # Print commit URL

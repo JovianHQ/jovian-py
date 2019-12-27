@@ -71,9 +71,12 @@ def create_gist_simple(filename=None, gist_slug=None, secret=False):
             raise ApiError('File upload failed: ' + pretty(res))
 
 
-def upload_file(gist_slug, file, version=None, artifact=False):
+def upload_file(gist_slug, file, folder=None, version=None, artifact=False):
     """Upload an additional file to a gist"""
     data = {'artifact': 'true'} if artifact else {}
+    if folder:
+        data['folder'] = folder
+
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
