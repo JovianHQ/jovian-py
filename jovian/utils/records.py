@@ -38,8 +38,11 @@ def reset(*record_types):
 def _parse_data(data, data_args):
     """Parse different types of arguments"""
     data = data or {}
-    for k in data_args:
-        data[k] = data_args[k]
+    if type(data) == dict:
+        for k in data_args:
+            data[k] = data_args[k]
+    elif type(data) == list and len(data_args.keys()) > 0:
+        data.append(data_args)
     return data if len(data.keys()) > 0 else None
 
 
@@ -69,6 +72,9 @@ def log_hyperparams(data_dict=None, verbose=True, **data_args):
         verbose(bool, optional): By default it prints the acknowledgement, you can remove 
             this by setting the argument to False.
 
+        **data_args(optional): Instead of passing a dictionary, you can also each each 
+            individual key-value pair as a argument (see example below)
+
     Example
         .. code-block::
 
@@ -84,10 +90,13 @@ def log_metrics(data_dict=None, verbose=True, **data_args):
     """Record metrics for the current experiment
 
     Args:
-        data(dict): A python dict or a array of dicts to be recorded as metrics.
+        data_dict(dict, optional): A python dict to be recorded as metrics.
 
         verbose(bool, optional): By default it prints the acknowledgement, you can remove 
             this by setting the argument to False.
+
+        **data_args(any, optional): Instead of passing a dictionary, you can also each each 
+            individual key-value pair as a argument (see example below)
 
     Example
         .. code-block::
@@ -105,10 +114,13 @@ def log_dataset(data_dict=None, verbose=True, **data_args):
     """Record dataset details for the current experiment
 
     Args:
-        data(dict): A python dict or a array of dicts to be recorded as Dataset.
+        data_dict(dict, optional): A python dict to be recorded as dataset.
 
-        verbose(bool, optional): By default it prints the acknowledgement, you can 
-            remove this by setting the argument to False.
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove 
+            this by setting the argument to False.
+
+        **data_args(optional): Instead of passing a dictionary, you can also each each 
+            individual key-value pair as a argument (see example below)
 
     Example
         .. code-block::
