@@ -4,7 +4,7 @@ from jovian.utils.logger import log
 _data_blocks = []
 
 
-def get_records(slug_only=True):
+def get_records(slug_only=False):
     """Get the list of slugs recorded so far"""
     global _data_blocks
     if slug_only:

@@ -22,14 +22,14 @@ class TestGetRecords(FakeRecords):
                            'fake_slug_hyperparams_1',
                            'fake_slug_hyperparams_2']
 
-        self.assertEqual(get_records(), expected_result)
+        self.assertEqual(get_records(slug_only=True), expected_result)
 
     def test_get_records_with_type(self):
         expected_result = [('fake_slug_metrics_1', 'metrics', {}),
                            ('fake_slug_metrics_2', 'metrics', {}),
                            ('fake_slug_hyperparams_1', 'hyperparams', {}),
                            ('fake_slug_hyperparams_2', 'hyperparams', {})]
-        self.assertEqual(get_records(slug_only=False), expected_result)
+        self.assertEqual(get_records(), expected_result)
 
 
 class TestReset(FakeRecords):
@@ -87,7 +87,7 @@ class TestLogMetrics(FakeRecords):
 
     @mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
     def test_log_metrics(self, mock_api_post_block):
-        data = { 'acc': 0.89, 'val_acc': 0.86}
+        data = {'acc': 0.89, 'val_acc': 0.86}
         expected_result = [('fake_slug_metrics_1', 'metrics', {}),
                            ('fake_slug_metrics_2', 'metrics', {}),
                            ('fake_slug_hyperparams_1', 'hyperparams', {}),

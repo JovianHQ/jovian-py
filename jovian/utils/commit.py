@@ -299,7 +299,7 @@ def _perform_git_commit(filename, git_commit, git_message):
 
 def _attach_records(gist_slug, version):
     """Attached records to the current commit"""
-    tracking_slugs = get_records()
+    tracking_slugs = get_records(slug_only=True)
     if len(tracking_slugs) > 0:
         log('Attaching records (metrics, hyperparameters, dataset etc.)')
         api.post_records(gist_slug, tracking_slugs, version)
