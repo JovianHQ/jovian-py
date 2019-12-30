@@ -87,17 +87,14 @@ class TestLogMetrics(FakeRecords):
 
     @mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
     def test_log_metrics(self, mock_api_post_block):
-        data = {
-            'acc': 0.89,
-            'val_acc': 0.86
-        }
+        data = { 'acc': 0.89, 'val_acc': 0.86}
         expected_result = [('fake_slug_metrics_1', 'metrics', {}),
                            ('fake_slug_metrics_2', 'metrics', {}),
                            ('fake_slug_hyperparams_1', 'hyperparams', {}),
                            ('fake_slug_hyperparams_2', 'hyperparams', {}),
                            ('fake_slug_3', 'metrics', data)]
 
-        log_metrics(data)
+        log_metrics(acc=0.89, val_acc=0.86)
         self.assertEqual(jovian.utils.records._data_blocks, expected_result)
 
 
