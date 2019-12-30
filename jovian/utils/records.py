@@ -51,7 +51,7 @@ def log_record(record_type, data=None, verbose=True, **data_args):
     global _data_blocks
     # Create the combined data dictionary
     data = _parse_data(data, data_args)
-    if data is None:
+    if data is None and verbose:
         log('Nothing to record. Skipping..', error=True)
         return
     # Send to API endpoint
