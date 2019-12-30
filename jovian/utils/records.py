@@ -72,7 +72,7 @@ def log_hyperparams(data_dict=None, verbose=True, **data_args):
         verbose(bool, optional): By default it prints the acknowledgement, you can remove 
             this by setting the argument to False.
 
-        **data_args(optional): Instead of passing a dictionary, you can also each each 
+        **data_args(optional): Instead of passing a dictionary, you can also pass each 
             individual key-value pair as a argument (see example below)
 
     Example
@@ -95,7 +95,7 @@ def log_metrics(data_dict=None, verbose=True, **data_args):
         verbose(bool, optional): By default it prints the acknowledgement, you can remove 
             this by setting the argument to False.
 
-        **data_args(any, optional): Instead of passing a dictionary, you can also each each 
+        **data_args(any, optional): Instead of passing a dictionary, you can also pass each 
             individual key-value pair as a argument (see example below)
 
     Example
@@ -119,7 +119,7 @@ def log_dataset(data_dict=None, verbose=True, **data_args):
         verbose(bool, optional): By default it prints the acknowledgement, you can remove 
             this by setting the argument to False.
 
-        **data_args(optional): Instead of passing a dictionary, you can also each each 
+        **data_args(optional): Instead of passing a dictionary, you can also pass each 
             individual key-value pair as a argument (see example below)
 
     Example
