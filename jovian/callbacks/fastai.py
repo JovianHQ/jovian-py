@@ -2,7 +2,7 @@ from torch import Tensor
 from fastai.basic_train import Learner
 from fastai.callback import Callback
 
-from jovian.utils.records import log_hyperparams, log_metrics, reset_records
+from jovian.utils.records import log_hyperparams, log_metrics, reset
 from jovian.utils.logger import log
 
 
@@ -41,7 +41,7 @@ class JovianFastaiCallback(Callback):
 
     def on_train_begin(self, n_epochs: int, metrics_names: list, **ka):
         if self.reset_tracking:
-            reset_records('hyperparams', 'metrics')
+            reset('hyperparams', 'metrics')
         hyp_dict = {
             'epochs': n_epochs,
             'batch_size': self.learn.data.batch_size,
