@@ -1,10 +1,10 @@
 from __future__ import print_function
-from sys import stderr
+import click
 
 
-def log(msg, error=False):
+def log(msg, pre=True, error=False, color=None):
     """Print a message to stdout"""
     if error:
-        print('[jovian] Error: ' + msg, file=stderr)
+        click.secho(('[jovian] ' if pre else '') + 'Error: ' + msg, err=True, fg='bright_red')
     else:
-        print('[jovian] ' + msg)
+        click.echo(('[jovian] ' if pre else '') + click.style(msg, fg=color))
