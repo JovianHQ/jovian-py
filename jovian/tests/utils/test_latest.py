@@ -38,7 +38,7 @@ def test_print_update_message_not_in_notebook(capsys):
 
 
 @mock.patch("jovian.utils.latest._get_latest_version", mock.Mock(return_value='0.0.2'))
-def test_get_update(capsys):
+def test_check_update(capsys):
     expected_result = """[jovian] Update Available: 0.0.1 --> 0.0.2
 [jovian] Run `pip install jovian --upgrade` to upgrade"""
 
@@ -46,5 +46,32 @@ def test_get_update(capsys):
     jovian.utils.latest.__version__ = '0.0.1'
 
     check_update(1)
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result
+
+
+@mock.patch("jovian.utils.latest._get_latest_version", mock.Mock(return_value='0.0.2'))
+@mock.patch("jovian.utils.latest.random", mock.Mock(return_value=0.5))
+def test_check_update_mock_random(capsys):
+    expected_result = """[jovian] Update Available: 0.0.1 --> 0.0.2
+[jovian] Run `pip install jovian --upgrade` to upgrade"""
+
+    import jovian
+    jovian.utils.latest.__version__ = '0.0.1'
+
+    check_update()
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result
+
+
+@mock.patch("jovian.utils.latest._get_latest_version", mock.Mock(return_value='0.0.2'))
+@mock.patch("jovian.utils.latest.random", mock.Mock(return_value=0.9))
+def test_check_update_mock_random_no_output(capsys):
+    expected_result = ""
+
+    import jovian
+    jovian.utils.latest.__version__ = '0.0.1'
+
+    check_update()
     captured = capsys.readouterr()
     assert captured.out.strip() == expected_result
