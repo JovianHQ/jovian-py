@@ -5,9 +5,18 @@ from pkg_resources import parse_version
 from jovian.utils.latest import _get_latest_version, _print_update_message, check_update
 
 
-@mock.patch("requests.get", mock.Mock(return_value="0.2.0"))
+class MockResponse:
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        return self.json_data
+
+
+@mock.patch("requests.get", mock.Mock(return_value=MockResponse({'info': {'version': '0.2.0.dev1'}}, 200)))
 def test_get_latest_version_normal():
-    expected_result = "0.2.0"
+    expected_result = "0.2.0.dev1"
     assert _get_latest_version() == expected_result
 
 
