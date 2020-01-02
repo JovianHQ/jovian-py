@@ -7,7 +7,7 @@ from jovian.utils.misc import get_file_extension, is_uuid
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
-from jovian.utils.records import log_git, get_record_slugs, reset_records
+from jovian.utils.records import log_git, get_records, reset
 from jovian.utils.constants import FILENAME_MSG
 from jovian.utils.logger import log
 from jovian.utils import api, git
@@ -282,7 +282,7 @@ def _capture_environment(environment, gist_slug, version):
 
 def _perform_git_commit(filename, git_commit, git_message):
     if git_commit and git.is_git():
-        reset_records('git')  # resets git commit info
+        reset('git')  # resets git commit info
 
         git.commit(git_message)
         log('Git repository identified. Performing git commit...')
@@ -299,7 +299,7 @@ def _perform_git_commit(filename, git_commit, git_message):
 
 def _attach_records(gist_slug, version):
     """Attached records to the current commit"""
-    tracking_slugs = get_record_slugs()
+    tracking_slugs = get_records(slug_only=True)
     if len(tracking_slugs) > 0:
-        log('Attaching records (metrics, hyperparameters, datasets, git etc.)')
+        log('Attaching records (metrics, hyperparameters, dataset etc.)')
         api.post_records(gist_slug, tracking_slugs, version)
