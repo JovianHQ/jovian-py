@@ -1,18 +1,19 @@
 from unittest import TestCase, mock
 from jovian.utils.records import get_records, reset, log_hyperparams, log_metrics, log_dataset, log_git
 import jovian.utils.records
-_d = jovian.utils.records._data_blocks
+
 
 
 class FakeRecords(TestCase):
     def setUp(self):
+        self._d = jovian.utils.records._data_blocks
         jovian.utils.records._data_blocks = [('fake_slug_metrics_1', 'metrics', {}),
                                              ('fake_slug_metrics_2', 'metrics', {}),
                                              ('fake_slug_hyperparams_1', 'hyperparams', {}),
                                              ('fake_slug_hyperparams_2', 'hyperparams', {})]
 
     def tearDown(self):
-        jovian.utils.records._data_blocks = _d
+        jovian.utils.records._data_blocks = self._d
 
 
 class TestGetRecords(FakeRecords):

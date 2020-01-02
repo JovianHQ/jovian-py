@@ -7,7 +7,7 @@ from jovian.utils.latest import _get_latest_version, _print_update_message, chec
 
 @mock.patch("requests.get", mock.Mock(return_value="0.2.0"))
 def test_get_latest_version_normal():
-    expected_result = __version__
+    expected_result = "0.2.0"
     assert _get_latest_version() == expected_result
 
 
