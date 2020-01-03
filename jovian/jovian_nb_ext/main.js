@@ -38,22 +38,9 @@ define([
           const capture_env = window.jvn_params.capture_env;
           const create_new = window.jvn_params.create_new;
           const env_type = window.jvn_params.env_type;
-          const files =
-            "[" +
-            window.jvn_params.files
-              .split(",")
-              .map(e => "'" + e.trim() + "'")
-              .join(",") +
-            "]";
+          const files = getPythonArray(window.jvn_params.files);
+          const artifacts = getPythonArray(window.jvn_params.artifacts);
           var notebook_id;
-          const artifacts =
-            "[" +
-            window.jvn_params.artifacts
-              .split(",")
-              .map(e => "'" + e.trim() + "'")
-              .join(",") +
-            "]";
-          //window.jvn_params.artifacts;
 
           if (window.jvn_params.notebook_id === "") {
             notebook_id = "None";
@@ -450,12 +437,12 @@ define([
         .prop("disabled", true);
 
       const files_label = $("<label/>").text(
-        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames) such as `jvn.py, commit.py`"
+        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames) such as `utils.py, inputs.csv`"
       );
       const files_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "files_box")
-        .attr("placeholder", "jvn.py, commit.py")
+        .attr("placeholder", "utils.py, inputs.csv")
         .val("");
 
       const capture_env_label = $("<label/>").text(
@@ -535,12 +522,12 @@ define([
             .text("False")
         );
       const artifacts_label = $("<label/>").text(
-        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames) such as `jvn.png, README.md`"
+        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames) such as `submission.csv, weights.h5`"
       );
       const artifacts_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "artifacts_box")
-        .attr("placeholder", "jvn.png, README.md")
+        .attr("placeholder", "submission.csv, weights.h5")
         .val("");
 
       div
@@ -609,7 +596,6 @@ define([
             } else {
               $("#artifacts_box").val(jvn_params.artifacts);
               $("#files_box").val(jvn_params.files);
-              $("#notebook_id_box").val(jvn_params.notebook_id);
               $("#notebook_id_box").val(jvn_params.notebook_id);
               jvn_params.secret == "False"
                 ? $($("input[name=secret_opt")[1]).prop("checked", true)
@@ -764,6 +750,17 @@ define([
         }
       }, 10);
     });
+  }
+
+  function getPythonArray(arrInString) {
+    const arr =
+      "[" +
+      arrInString
+        .split(",")
+        .map(e => "'" + e.trim() + "'")
+        .join(",") +
+      "]";
+    return arr;
   }
 
   function storeParamsInPython() {
