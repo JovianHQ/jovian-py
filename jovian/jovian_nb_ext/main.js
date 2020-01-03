@@ -579,7 +579,7 @@ define([
             class: "btn-primary",
             click: function() {
               storeParamsInPython();
-              modalInit();
+              dropdownOption(jvn_params_modal, modalInit); // use dropdownOption() to prevent keyboard loss when need to ask users API key
             }
           }
         },
@@ -744,7 +744,7 @@ define([
     return new Promise(res => {
       modal.modal("hide");
       let it = setInterval(() => {
-        if ($("#jvn_options").length == 0) {
+        if ($(".modal-backdrop").length == 0) {
           option();
           res(clearInterval(it));
         }
