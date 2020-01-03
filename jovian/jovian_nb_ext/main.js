@@ -660,10 +660,7 @@ define([
             id: "settings_button",
             class: "btn-primary",
             click: function() {
-              if(($("input[name=setting_opt")[0]).prop("checked",true)) saveParams();
-              else if(($("input[name=setting_opt")[1]).prop("checked",true)) clearAPI();
-              else if(($("input[name=setting_opt")[2]).prop("checked",true)) changeAPI();
-              else removeExtension();
+              getChoice();
             }
           }
         }
@@ -767,16 +764,16 @@ define([
               $("#nb_filename_box").val(
                 jvn_params.nb_filename.replace(".ipynb", "")
               );
-              jvn_params.secret.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.secret == "False"
                 ? $($("input[name=secret_opt")[1]).prop("checked", true)
                 : $($("input[name=secret_opt")[0]).prop("checked", true);
-              jvn_params.capture_env.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.capture_env == "False"
                 ? $($("input[name=cap_opt")[1]).prop("checked", true)
                 : $($("input[name=cap_opt")[0]).prop("checked", true);
-              jvn_params.create_new.toLocaleUpperCase().substr(0, 1) == "F"
+              jvn_params.create_new == "False"
                 ? $($("input[name=create_opt")[1]).prop("checked", true)
                 : $($("input[name=create_opt")[0]).prop("checked", true);
-              jvn_params.env_type.toLocaleUpperCase().substr(0, 1) == "C"
+              jvn_params.env_type == "conda"
                 ? $("#env_opt option:contains('conda')").prop("selected", true)
                 : $("#env_opt option:contains('pip')").prop("selected", true);
             }
@@ -800,42 +797,33 @@ define([
     //Clear the API key
     function clearAPI() {
       new Promise(resolve => {
-        const valStatus = data => {
-          resolve(data.content.text.trim());
-        };
-
         const purge_api =
           "from jovian.utils.credentials import purge_creds\n" +
           "purge_creds()";
 
         Jupyter.notebook.kernel.execute(purge_api);
-        Jupyter.notebook.kernel.execute(validate_api, {
-          iopub: {
-            output: valStatus
-          }
-        });
+        alert(
+          "You have cleared the API key"
+        );
+        resolve();
       });
     }
 
-    // changes the API key ////// TODO
+    // changes the API key
     function changeAPI() {
       new Promise(resolve => {
-        const valStatus = data => {
-          resolve(data.content.text.trim());
-        };
-
         const purge_api =
           "from jovian.utils.credentials import purge_creds\n" +
           "purge_creds()";
 
         Jupyter.notebook.kernel.execute(purge_api);
-        Jupyter.notebook.kernel.execute(validate_api, {
-          iopub: {
-            output: valStatus
-          }
-        });
-      })
+        resolve();
+      });
+      setTimeout(() => {
+        modalInit();
+      }, 300);
     }
+
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
       */
@@ -881,6 +869,19 @@ define([
       set_params_ext_name, //for testing untill dropdown
       set_settings_ext_name //for testing untill dropdown
     ]);
+
+    function getChoice() {
+      // This function will be used to
+      // apply the setting choice
+      const setting = $("input[name=setting_opt]")
+      .filter(":checked")
+      .val()
+  
+      if (setting == "Default") saveParams()
+      else if (setting == "Clear") clearAPI()
+      else if (setting == "Change") changeAPI()
+      else removeExtension()
+    }
 
     //adding jovian logo and Commit text next to it
     $(jvn_btn_grp.find("button")[0])
