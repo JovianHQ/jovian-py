@@ -402,8 +402,8 @@
         "signature": "26f2775ecb1136ea1f33c2fea8ff166fadc0d5011f5c2b1c3aeef75b78f00904"
       },
       "/home/bendesu/workspace/senior_design/github/module1And2x/jovian-py/jovian/jovian-jupyter-lab-extension/src/NBKernel.ts": {
-        "version": "fb5c48e6fc1232953d99a1b0ce57a0b1e2c6e95c5079e4c02d5b4be706e76d74",
-        "signature": "9575afbca9b2b82b72018090758a3c5f2671a034cb9726d420a6e42b0f96db2c"
+        "version": "bfed0f947b11e1275353713094b16e38e2ca84a0fda7b1b3cc5924a44ed46b10",
+        "signature": "b84b93e231cc792b93657d2da8b0c8d6fd10ecb6a34cf1aeb9cfc007a5f331dd"
       },
       "/home/bendesu/workspace/senior_design/github/module1And2x/jovian-py/jovian/jovian-jupyter-lab-extension/node_modules/@jupyterlab/application/node_modules/@phosphor/disposable/lib/index.d.ts": {
         "version": "57191ebd5f6e04ee890df9f370761972c84013e5393fb08663dd8b61b347e9e3",
@@ -1134,8 +1134,8 @@
         "signature": "c03247b9d5b88491ca41870ea156bc8e53b5f8ab2d4b97ec8080cd070ff93f87"
       },
       "/home/bendesu/workspace/senior_design/github/module1And2x/jovian-py/jovian/jovian-jupyter-lab-extension/src/module2.ts": {
-        "version": "ffed1e84ddb9ad01c0a04d5cb403f1b668ec91b946e12d2bf9009b40127ac5a6",
-        "signature": "f9a152a8ae1254905a49c29a8d94a93f887e78b3241548c02c78ba51cf067c29"
+        "version": "38e33ccd8d4d089ff74b510ac9bbcb8fcc5afebe8b74d7e9e103f2ee632c82a4",
+        "signature": "485b48f0f83b380d6abda813fba7b3247b64ee63002fdf8391b9d80129554e62"
       },
       "/home/bendesu/workspace/senior_design/github/module1And2x/jovian-py/jovian/jovian-jupyter-lab-extension/src/module3.ts": {
         "version": "b9c70fd51cc6ecdf97e78bd5e5d3ecb219baea8a7b5e84372171199286afe4f0",

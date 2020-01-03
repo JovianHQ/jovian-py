@@ -1,6 +1,7 @@
 import NBKernel from './NBKernel';
 
 let body:any;
+let lock:boolean = false;
 
 function askParameters():void{
   let header:HTMLElement = initialHeader();
@@ -12,7 +13,7 @@ function askParameters():void{
   let env:HTMLElement = whichEnv();
   let baseId:HTMLElement = base64Id();
   let ifNew:HTMLElement = newNB();
-  let arti = artifacts();
+  let arti:HTMLElement = artifacts();
   header.appendChild(isSecret);
   header.appendChild(name);
   header.appendChild(moreScripts);
@@ -27,38 +28,45 @@ function askParameters():void{
 }
 
 function setParameters(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void{
-  setEnvs(whatEnv,"pip");
-  setTrueOrFalse(isSecret,false);
-  setTrueOrFalse(ifCaptrue,true);
-  setTrueOrFalse(isNew,false);
-  setInputText(NBName,NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
-  setInputText(base_Id,"");
-  setInputText(moreScripts,"");
-  setInputText(arti,"");
+  getParams().then(
+    (params:any)=>{
+      if (params == undefined) {
+        setEnvs(whatEnv,"conda");
+        setTrueOrFalse(isSecret,false);
+        setTrueOrFalse(ifCaptrue,true);
+        setTrueOrFalse(isNew,false);
+        setInputText(NBName,NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
+        setInputText(base_Id,"");
+        setInputText(moreScripts,"");
+        setInputText(arti,"");
+      } else {
+        let env_type:string = params.env_type == "conda" ? "conda":"pip";
+        let secret:boolean = params.env_type == "True" ? true:false;
+        let capture_env:boolean = params.capture_env == "True" ? true:false;
+        let create_new:boolean = params.create_new == "True" ? true:false;
+        let notebook_id:string = params.notebook_id;
+        let files:string = params.files;
+        let artifacts:string = params.artifacts;
+        setEnvs(whatEnv, env_type);
+        setTrueOrFalse(isSecret, secret);
+        setTrueOrFalse(ifCaptrue, capture_env);
+        setTrueOrFalse(isNew, create_new);
+        setInputText(NBName, NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
+        setInputText(base_Id, notebook_id);
+        setInputText(moreScripts, files);
+        setInputText(arti, artifacts);
+      }
+    }
+  );
 }
 
-//same as askParameters but setParameters instead of commitWithParams
+//same as askParameters but set parameters to defaults values
 function setDefault():void{
-  let header:HTMLElement = initialHeader();
-  (header as any).style["max-height"] = "1000px";
-  let isSecret:HTMLElement = createSecretNB();
-  let name:HTMLElement = fileName();
-  let moreScripts:HTMLElement = additionalScripts();
-  let ifCaptrue:HTMLElement = toCaptrue();
-  let env:HTMLElement = whichEnv();
-  let baseId:HTMLElement = base64Id();
-  let ifNew:HTMLElement = newNB();
-  let arti = artifacts();
-  header.appendChild(isSecret);
-  header.appendChild(name);
-  header.appendChild(moreScripts);
-  header.appendChild(ifCaptrue);
-  header.appendChild(env);
-  header.appendChild(baseId);
-  header.appendChild(ifNew);
-  header.appendChild(arti);
-  header.appendChild(addButtons("Set Default",()=>setParameters(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti)));
-  openWindow();
+  const python_id = getStoredId();
+  const clearPythonId = "%store -d " + python_id;
+  NBKernel.execute(clearPythonId).then(
+    ()=>askParameters()
+  );
 }
 
 function commitWithParams(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void {
@@ -70,28 +78,135 @@ function commitWithParams(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HT
   let baseId:string = getInputText(base_Id);
   let ifNew:string = getTrueOrFalse(isNew);
   let artis:string = getInputText(arti); // array
+  closeWindow();
+  commit(getFinalCommit(secret,name,scripts,ifCap,env,baseId,ifNew,artis));
+  storeParamsInPython(secret,name,scripts,ifCap,env,baseId,ifNew,artis);
+}
 
+function getFinalCommit(secret:string,name:string,scripts:string,ifCap:string,env:string,baseId:string,ifNew:string,artis:string):string{
   let myCommit:string = "commit(" +
     "secret=" + secret + "" +
     ",capture_env=" + ifCap + "" +
     ",create_new=" + ifNew + "" +
     ',env_type="' + env + '"';
-  name = name == "" ? name: ',nb_filename="' + name + '.ipynb"';
   baseId = baseId == "" ? baseId: ',notebook_id="' + baseId + '"';
-  scripts = scripts == "" ? scripts: ',files=' + scripts + '';
-  artis = artis == "" ? artis: ',artifacts=' + artis + '';
-  myCommit += name + baseId + scripts + artis + ")";
-  closeWindow();
-  commit(myCommit);
+  name = name == "" ? name: ',nb_filename="' + name + '.ipynb"';
+  let filesArr = scripts == "" ? scripts: ',files=' + getPythonArray(scripts) + '';
+  let artisArr = artis == "" ? artis: ',artifacts=' + getPythonArray(artis) + '';
+  myCommit += name + baseId + filesArr + artisArr + ")";
+  return myCommit;
 }
 
-function commit(commitWithParams:string|null = null):void {
+function storeParamsInPython(secret:string,name:string,files:string,ifCap:string,env:string,baseId:string,ifNew:string,artis:string):void {
+  // This function will be used to stored
+  // the set of parameters into Python
+  // and then we can call getParams()
+  // to get these data
+  const jvn_params = {
+    secret: secret,
+    nb_filename: name + ".ipynb",
+    files: files,
+    capture_env: ifCap,
+    env_type: env,
+    notebook_id: baseId,
+    create_new: ifNew,
+    artifacts: artis
+  };
+  const python_id = getStoredId();
+  const var_in_python = python_id + " = " + JSON.stringify(jvn_params);
+  const store_to_python = "%store " + python_id;
+  NBKernel.execute(var_in_python + "\n" + store_to_python);
+}
+
+async function getParams():Promise<any> {
+  // This function we use to check if we
+  // have set parameters of jovian.commit()
+  // already.
+  // If so, we return these parameter,
+  // otherwise, just return null.
+  const python_id = getStoredId();
+  const check_params =
+    python_id +
+    ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n' +
+    "%store -r " +
+    python_id +
+    "\n" +
+    "print (" +
+    python_id +
+    ")";
+  return new Promise((resolve, reject) => {
+    NBKernel.execute(check_params).then(
+      (data:string) => {
+        let result:string = data.trim();
+        if (
+          !result.includes(
+            "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"
+          )
+        ) {
+          const raw_params = result
+          .replace(/"/g, "{_dc_}")
+          .replace(/\\'/g, "{_sc_}");
+          let jvn_params = JSON.parse(raw_params.replace(/'/g, '"'));
+          const nb_filename = jvn_params.nb_filename
+            .replace(/{_dc_}/g, '"')
+            .replace(/{_sc_}/g, "'");
+          const files = jvn_params.files
+            .replace(/{_dc_}/g, '"')
+            .replace(/{_sc_}/g, "'");
+          const artifacts = jvn_params.artifacts
+            .replace(/{_dc_}/g, '"')
+            .replace(/{_sc_}/g, "'");
+
+          const notebook_id = jvn_params.notebook_id
+            .replace(/{_dc_}/g, '"')
+            .replace(/{_sc_}/g, "'");
+
+          jvn_params.nb_filename = nb_filename;
+          jvn_params.files = files;
+          jvn_params.artifacts = artifacts;
+          jvn_params.notebook_id = notebook_id;
+          resolve (jvn_params);
+        } else {
+          resolve (undefined);
+        }
+      }
+    );
+  });
+}
+
+function getStoredId():string {
+  // This function will be used to
+  // normalize the name of notebook
+  const notebookId = NBKernel.currentNotebookName().trim().replace(".ipynb", "");
+  const nomalizedId = notebookId.replace(
+    /&|-|\[|\]|\.|,|=|\(|\)|\{|\}|\||`|~|\"|@|#|\$|\%|\^|\*|\+|\!|\<|\>|\;|\'|\?|\ /g,
+    "_"
+  );
+  const pythonId = "stored_params_for_" + nomalizedId + "_E4CBF73";
+  return pythonId;
+}
+
+async function commit(commitWithParams:string|null = null):Promise<void> {
   let commit:string = "\tcommit()\n";
+  if (lock == true) {
+    return;
+  }
   if (commitWithParams != null){
     commit = "\t" + commitWithParams.trim() + "\n";
+  } else {
+    await getParams().then(
+      (params:any)=> {
+        if (params != undefined){
+          console.log(params);
+          commit = (getFinalCommit(params.secret,NBKernel.currentNotebookName().trim().replace(".ipynb", ""),params.files,params.capture_env,params.env_type,params.notebook_id,params.create_new,params.artifacts));
+          commit = "\t" + commit.trim() + "\n";
+        }
+      }
+    )
   }
+  lock = true;
   getAPIKeys().then(
-    (result) => {
+    async (result) => {
       if (result == true){
         const jvn_commit =
           "from jovian import commit\n" +
@@ -105,7 +220,7 @@ function commit(commitWithParams:string|null = null):void {
           "\tprint(out.split()[-1])\n" +
           "else:\n" +
           "\tprint(out)";
-        NBKernel.execute(jvn_commit).then(
+        await NBKernel.execute(jvn_commit).then(
           (result) => {
             committedWindow((result as string).trim());
           }
@@ -113,6 +228,7 @@ function commit(commitWithParams:string|null = null):void {
       } else {
         askAPIKeys();
       }
+      lock = false;
     }
   );
 }
@@ -214,8 +330,8 @@ function fileName():HTMLElement {
 function additionalScripts():HTMLElement {
   let div:HTMLElement = document.createElement("div");
   div.className = "jvn_params_additions";
-  div.appendChild(addText("Any additional scripts(.py files), CSVs that are required to run the notebook."));
-  div.appendChild(addInput());
+  div.appendChild(addText("Any additional scripts(.py files), CSVs that are required to run the notebook. such as `utils.py, inputs.csv`"));
+  div.appendChild(addInput("utils.py, inputs.csv"));
   return div;
 }
 
@@ -254,8 +370,8 @@ function newNB():HTMLElement {
 function artifacts():HTMLElement {
   let div:HTMLElement = document.createElement("div");
   div.className = "jvn_params_base64Id";
-  div.appendChild(addText("Any outputs files or artifacts generated from the modeling processing?"));
-  div.appendChild(addInput());
+  div.appendChild(addText("Any outputs files or artifacts generated from the modeling processing? such as `submission.csv, weights.h5`"));
+  div.appendChild(addInput("submission.csv, weights.h5"));
   return div;
 }
 
@@ -273,7 +389,7 @@ function addText(title:string):HTMLElement{
   return text;
 }
 
-function addInput(dValue:string = ""):HTMLElement{
+function addInput(placeHolder:string = ""):HTMLElement{
   let div:HTMLElement = document.createElement("div");
   let div1:HTMLElement = document.createElement("div");
   let inp:HTMLInputElement = document.createElement("input");
@@ -281,7 +397,7 @@ function addInput(dValue:string = ""):HTMLElement{
   div1.className = "jp-select-wrapper";
   inp.className = "jp-mod-styled";
   inp.type = "text";
-  inp.defaultValue = dValue;
+  inp.placeholder = placeHolder;
   div.appendChild(div1);
   div1.appendChild(inp);
   return div;
@@ -429,6 +545,17 @@ function initialHeader():HTMLElement{
   header.appendChild(subHeader);
   body = header;
   return subHeader;
+}
+
+function getPythonArray(arrInString:string) {
+  let arrForPython:string =
+    "[" +
+    arrInString
+      .split(",")
+      .map(e => "'" + e.trim() + "'")
+      .join(",") +
+    "]";
+  return arrForPython;
 }
 
 function openWindow():void {

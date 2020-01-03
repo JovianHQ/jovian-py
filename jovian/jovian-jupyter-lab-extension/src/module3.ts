@@ -38,7 +38,7 @@ function setting():void{
         }
       );
     };
-    if (!getCheckBox(clearAPI) && !getCheckBox(setDefaultparams) && !getCheckBox(disabled)){
+    if (!getCheckBox(clearAPI) && !getCheckBox(setDefaultparams) && !getCheckBox(disabled) && !getCheckBox(changeAPI)){
       alert("Settings unchanged!");
       closeWindow();
     }

@@ -6,7 +6,7 @@ import {
 
 class NBKernel {
 
-  async execute(pythonCode:string) {
+  async execute(pythonCode:string):Promise<string> {
     return new Promise((resolve, reject = (msg)=>{console.log(msg)}) => {
       this.currentKernel().then(
         (kernel) => {
