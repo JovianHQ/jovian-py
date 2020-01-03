@@ -37,8 +37,28 @@ function setParameters(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLE
   setInputText(arti,"");
 }
 
-function resetParams():void{
-
+//same as askParameters but setParameters instead of commitWithParams
+function setDefault():void{
+  let header:HTMLElement = initialHeader();
+  (header as any).style["max-height"] = "1000px";
+  let isSecret:HTMLElement = createSecretNB();
+  let name:HTMLElement = fileName();
+  let moreScripts:HTMLElement = additionalScripts();
+  let ifCaptrue:HTMLElement = toCaptrue();
+  let env:HTMLElement = whichEnv();
+  let baseId:HTMLElement = base64Id();
+  let ifNew:HTMLElement = newNB();
+  let arti = artifacts();
+  header.appendChild(isSecret);
+  header.appendChild(name);
+  header.appendChild(moreScripts);
+  header.appendChild(ifCaptrue);
+  header.appendChild(env);
+  header.appendChild(baseId);
+  header.appendChild(ifNew);
+  header.appendChild(arti);
+  header.appendChild(addButtons("Set Default",()=>setParameters(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti)));
+  openWindow();
 }
 
 function commitWithParams(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void {
@@ -423,4 +443,4 @@ function insertAfter (newNode:any, referenceNode:any):void {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-export { askParameters, commit, resetParams };
+export { askParameters, commit, setDefault, askAPIKeys };

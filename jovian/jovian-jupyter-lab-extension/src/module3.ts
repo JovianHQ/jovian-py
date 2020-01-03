@@ -1,25 +1,33 @@
-import { resetParams } from './module2';
+import { setDefault, askAPIKeys } from './module2';
 import NBKernel from './NBKernel';
 let body:any;
 
 function setting():void{
   initialHeader();
   let header:HTMLElement = initialHeader();
+  let setDefaultparams:HTMLElement = addCheckBox("Set Default options for commit");
   let clearAPI:HTMLElement = addCheckBox("Clear the API key");
-  let clearPramas:HTMLElement = addCheckBox("Default options for commit");
+  let changeAPI:HTMLElement = addCheckBox("Change the API key");
   let disabled:HTMLElement = addCheckBox("Disable the extension");
   setCheckBox(clearAPI,true);
+  header.appendChild(setDefaultparams);
   header.appendChild(clearAPI);
-  header.appendChild(clearPramas);
+  header.appendChild(changeAPI);
   header.appendChild(disabled);
   header.appendChild(addButtons("Submit",()=>{
+    if (getCheckBox(setDefaultparams)){
+      setDefault();
+      closeWindow();
+    };
     if (getCheckBox(clearAPI)){
       NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
         ()=>closeWindow()
       );
     };
-    if (getCheckBox(clearPramas)){
-      resetParams();
+    if (getCheckBox(changeAPI)){
+      NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
+        ()=>askAPIKeys()
+      );
       closeWindow();
     };
     if (getCheckBox(disabled)){
@@ -30,7 +38,7 @@ function setting():void{
         }
       );
     };
-    if (!getCheckBox(clearAPI) && !getCheckBox(clearPramas) && !getCheckBox(disabled)){
+    if (!getCheckBox(clearAPI) && !getCheckBox(setDefaultparams) && !getCheckBox(disabled)){
       alert("Settings unchanged!");
       closeWindow();
     }
