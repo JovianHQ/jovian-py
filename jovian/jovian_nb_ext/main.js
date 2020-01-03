@@ -821,7 +821,7 @@ define([
       });
       setTimeout(() => {
         modalInit();
-      }, 300);
+      }, 400);
     }
 
     /* 
