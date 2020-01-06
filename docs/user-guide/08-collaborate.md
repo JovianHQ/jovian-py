@@ -8,7 +8,7 @@ Click on `Share` button of the notebook and add them by their username or email 
 
 <img src="https://i.imgur.com/a68xT5d.gif" class="screenshot">
 
-This will allow the contributors to be able to [commit](02-uplhttps://i.imgur.com/c0mRr6X.gifoad.md) changes to the same notebook project. The experiments by all the collaborators will also show up in the [compare table](07-compare.md). tab.
+This will allow the contributors to be able to [commit](02-upload.md) changes to the same notebook project. The experiments by all the collaborators will also show up in the [compare table](07-compare.md). tab.
 
 ### Comment on individual code cells
 
