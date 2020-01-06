@@ -4,20 +4,21 @@ A uploaded notebook on Jovian can be reproduced in any other machine. Follow the
 
 ### Clone
 
-1. Visit the link of the uploaded notebook.
-2. Click on the `Clone` button, which copies the clone cli command (along with the notebook_id) to the clipboard.
+**1. Visit the link of the uploaded notebook.**
 
-<img src="https://imgur.com/lGBi6iG.gif" class="screenshot">
+**2. Click on the `Clone` button, which copies the clone cli command (along with the notebook_id) to the clipboard.**
 
-3. Paste the command in the terminal, in the directory where you want to clone the notebook project and then run the command.
+<img src="https://i.imgur.com/GPpjea5.gif" class="screenshot">
 
-<img src="https://imgur.com/gGn59Iu.gif" class="screenshot">
+**3. Paste the mcomand in the terminal, in the directory where you want to clone the notebook project and then run the command.**
 
 The copied command will be of the the following format
 
 ```
 jovian clone <notebook_id>
 ```
+
+<img src="https://i.imgur.com/9AmJ9hu.gif" class="screenshot">
 
 ### Install
 
@@ -38,7 +39,7 @@ jovian install
 
 The above command prompts for a virtual environment name where it will install all the required packages. By default it will have the original environment name in the square brackets, just click `enter` key to retain the name else specify the environment name.
 
-<!-- **TODO-SB: GIF for Change directory after clone and then jovian install** -->
+<img src="https://i.imgur.com/ysEWR80.gif" class="screenshot">
 
 In this way, Jovian seamlessly ensures the end-to-end reproducibility of your Jupyter notebooks across different operating systems.
 
@@ -57,7 +58,7 @@ Move to the cloned directory and run
 jovian pull
 ```
 
-<!-- **TODO-SB: GIF to change directory to a cloned directory and use jovian pull** -->
+<img src="https://i.imgur.com/h5p4S07.gif" class="screenshot">
 
 ```eval_rst
 .. attention:: Beware any uncommitted changes will be lost during the process of ``jovian.pull``. When you pull the notebook it will be a duplicate of the latest version of the notebook on Jovian.
