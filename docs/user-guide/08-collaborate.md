@@ -18,7 +18,7 @@ Users can comment on any code cells individually and maintain that thread to hav
 
 ### Maintain secret notebooks
 
-You may set a notebook as secret to hide it from publically being displayed on your profile. Only collaborators and users having the link to the notebook will be able to view it.
+You may set a notebook as secret to hide it from being displayed on your public profile. Only collaborators and users having the link to the notebook will be able to view it.
 You can find the option to `Make Secret` in the settings for each notebook.
 
 <img src="https://i.imgur.com/sHJrtYM.gif" class="screenshot">

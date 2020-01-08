@@ -10,7 +10,7 @@ A uploaded notebook on Jovian can be reproduced in any other machine. Follow the
 
 <img src="https://i.imgur.com/GPpjea5.gif" class="screenshot">
 
-**3. Paste the mcomand in the terminal, in the directory where you want to clone the notebook project and then run the command.**
+**3. Paste the command in the terminal, in the directory where you want to clone the notebook project and then run the command.**
 
 The copied command will be of the the following format
 
@@ -61,5 +61,5 @@ jovian pull
 <img src="https://i.imgur.com/h5p4S07.gif" class="screenshot">
 
 ```eval_rst
-.. attention:: Beware any uncommitted changes will be lost during the process of ``jovian.pull``. When you pull the notebook it will be a duplicate of the latest version of the notebook on Jovian.
+.. attention:: Beware any uncommitted changes will be lost during the process of ``jovian pull``. When you pull the notebook it will be a duplicate of the latest version of the notebook on Jovian.
 ```

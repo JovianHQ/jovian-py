@@ -44,7 +44,7 @@ Select any of the 2 versions by ticking the checkbox next to each version-row of
 
 Select version/versions by ticking the checkbox of the row/rows. This enables both `Archive` and `Delete` ready for the respective actions.
 
-<img src="https://i.imgur.com/57BxYjH.gif" class="screenshot">
+<img src="https://i.imgur.com/K9CEWGh.gif" class="screenshot">
 
 ### Filter
 

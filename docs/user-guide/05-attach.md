@@ -9,6 +9,8 @@ More files can be attached to the notebook such as files with helper code, outpu
 jovian.commit(files=[], artifacts=[])
 ```
 
+<img src="https://i.imgur.com/giVFiKw.gif" class="screenshot">
+
 ### What to include in the `files` argument?
 
 The type of files which is required to run the notebook.
@@ -35,5 +37,3 @@ All the attached files are listed under `Files` Tab.
 3. Deleted
 4. View Raw
 5. Uploaded
-
-<img src="https://i.imgur.com/giVFiKw.gif" class="screenshot">
