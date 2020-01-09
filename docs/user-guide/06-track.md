@@ -6,8 +6,6 @@ Jovian makes its easy for anyone to track information about datasets, hyperparam
 
 These information of a notebook are all added to `Records` Tab where you can toggle and view each version's log.
 
-<!-- TODO: Add Pic.  -->
-
 ```
 import jovian
 ```
@@ -43,6 +41,8 @@ metrics = {
 }
 jovian.log_metrics(metrics)
 ```
+
+<img src="https://i.imgur.com/57BxYjH.gif" class="screenshot">
 
 ### Reset
 

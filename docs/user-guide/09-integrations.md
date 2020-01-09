@@ -5,7 +5,7 @@ Use the same integration to get notification about other activities on Jovian.
 
 ### Connect to a Slack Workspace
 
-Visit [Jovian](https://jovian.ml?utm_source=docs) and click on the `Connect Slack`. You'll be redirected to Slack Webpage. 
+Visit [Jovian](https://jovian.ml?utm_source=docs) and click on the `Connect Slack`. You'll be redirected to Slack Webpage.
 
 <img src="https://i.imgur.com/9NTbh7v.png" class="screenshot">
 
@@ -19,7 +19,7 @@ Choose a workspace from the top right corner and a channel to integrate our Slac
 
 <img src="https://imgur.com/SkK7FGC.png" class="screenshot">
 
-### Integration Preferences 
+### Integration Preferences
 
 You can customize on what notifications you get to your Slack. To update the preferences visit [Jovian Integrations](https://jovian.ml/settings/integrations?utm_source=docs) or you go to your `Profile Dropdown` on the top right corner and click on `Integrations`.
 
