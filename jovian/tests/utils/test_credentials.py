@@ -2,7 +2,7 @@ import os
 from contextlib import contextmanager
 from jovian.utils import credentials
 from jovian.utils.credentials import (get_creds_path, config_exists, purge_config, init_config, purge_creds, read_creds,
-                                      creds_exist, read_cred, write_creds, purge_cred_key)
+                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred)
 
 
 @contextmanager
@@ -101,6 +101,42 @@ def test_write_creds():
         write_creds(creds)
 
         assert read_creds() == creds
+
+        purge_config()
+
+
+def test_write_cred():
+    with fake_creds('.jovian-write-cred', 'credentials.json'):
+        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                 "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                 "ORG_ID": "staging",
+                 "API_URL": "https://api-staging.jovian.ai"}
+        write_creds(creds)
+
+        write_cred('FAKE_KEY', 'fake_value')
+
+        expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                           "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                           "ORG_ID": "staging",
+                           "API_URL": "https://api-staging.jovian.ai",
+                           "FAKE_KEY": "fake_value"}
+        assert read_creds() == expected_result
+
+        purge_config()
+
+
+def test_write_cred_already_exists():
+    with fake_creds('.jovian-write-cred', 'credentials.json'):
+        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                 "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                 "ORG_ID": "staging",
+                 "API_URL": "https://api-staging.jovian.ai"}
+        write_creds(creds)
+
+        write_cred('ORG_ID', 'staging')
+
+        expected_result = creds
+        assert read_creds() == expected_result
 
         purge_config()
 
