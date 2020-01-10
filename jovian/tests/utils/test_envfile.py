@@ -4,7 +4,7 @@ from unittest import TestCase, mock
 from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
                                   extract_pip_packages, get_environment_dict, identify_env_file,
                                   dump_environment_to_yaml_file, write_env_name, remove_packages,
-                                  sanitize_envfile, serialize_packages, request_env_name)
+                                  sanitize_envfile, serialize_packages, request_env_name, check_pip_failed)
 
 
 class EnvFile(TestCase):
@@ -284,3 +284,15 @@ class TestRequestEnvName(EnvFile):
 
         self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
 
+
+class TestCheckPipFailed(TestCase):
+    def test_check_pip_failed_true(self):
+        error_str = '''Could not install
+                       Pip failed with error code 2'''
+
+        self.assertTrue(check_pip_failed(error_str))
+
+    def test_check_pip_failed_false(self):
+        error_str = '''Pip successfully installed package'''
+
+        self.assertFalse(check_pip_failed(error_str))
