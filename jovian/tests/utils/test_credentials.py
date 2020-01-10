@@ -67,7 +67,8 @@ def test_read_creds_folder_exists():
         expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
                            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                            "ORG_ID": "staging",
-                           "API_URL": "https://api-staging.jovian.ai"}
+                           "API_URL": "https://api-staging.jovian.ai",
+                           "API_KEY": "fake_api_key"}
         assert read_creds() == expected_result
 
 
