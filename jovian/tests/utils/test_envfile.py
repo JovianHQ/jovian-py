@@ -111,6 +111,15 @@ class TestCheckError(EnvFile):
         self.assertIsNone(error3)
         self.assertListEqual(pkgs3, [])
 
+    def test_check_error_no_packages(self):
+        error_str = '''ResolvePackageNotFound: 
+                        - mixpanel=1.11.0'''
+        packages = []
+        error, pkgs = check_error(error_str=error_str, packages=packages)
+
+        self.assertEqual(error, 'unresolved')
+        self.assertListEqual(pkgs, [])
+
 
 class TestExtractPackageFromLine(EnvFile):
     def test_extract_package_from_line(self):
@@ -261,7 +270,6 @@ class TestRequestEnvName(EnvFile):
 
         self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
 
-
     @mock.patch("jovian.utils.envfile.extract_env_name", return_value=None)
     @mock.patch("jovian.utils.envfile.click.prompt", return_value="test-env-changed")
     def test_request_env_name_no_env_name(self, mock_prompt, mock_extract_env_name):
@@ -269,13 +277,10 @@ class TestRequestEnvName(EnvFile):
 
         self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
 
-
     @mock.patch("jovian.utils.envfile.extract_env_name", return_value=None)
     @mock.patch("jovian.utils.envfile.click.prompt", return_value="")
     def test_request_env_name_no_env_name_default_to_base(self, mock_prompt, mock_extract_env_name):
         expected_result = 'base'
 
         self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
-
-
 
