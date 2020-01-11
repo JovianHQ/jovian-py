@@ -3,7 +3,9 @@ from unittest import mock
 from contextlib import contextmanager
 from jovian.utils import credentials
 from jovian.utils.credentials import (get_creds_path, config_exists, purge_config, init_config, purge_creds, read_creds,
-                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred, write_api_url)
+                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred, write_api_url,
+                                      request_org_id, write_org_id, read_api_url, read_org_id, write_webapp_url, 
+                                      read_webapp_url, ensure_org)
 
 
 @contextmanager
@@ -168,7 +170,48 @@ def test_purge_cred_key():
 
 def test_write_api_url():
     with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
-        write_api_url("fake_api_url")
+        write_api_url("https://fake_api.jovian.ai/")
 
         from jovian.utils.credentials import API_URL_KEY
-        assert read_cred(API_URL_KEY) == "fake_api_url"
+        assert read_cred(API_URL_KEY) == "https://fake_api.jovian.ai/"
+
+def test_read_api_url():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_api_url("https://fake_api.jovian.ai/")
+        assert read_api_url() == "https://fake_api.jovian.ai/"
+
+def test_write_org_id():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_org_id("fake_org_id")
+
+        from jovian.utils.credentials import ORG_ID_KEY
+        assert read_cred(ORG_ID_KEY) == "fake_org_id"
+
+
+def test_read_org_id():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_org_id("fake_org_id")
+        assert read_org_id() == "fake_org_id"
+
+def test_write_webapp_url():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_webapp_url("http://fake-webapp-url.ai/")
+
+        from jovian.utils.credentials import WEBAPP_URL_KEY
+        assert read_cred(WEBAPP_URL_KEY) == "http://fake-webapp-url.ai/"
+
+
+def test_read_webapp_url():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_webapp_url("http://fake-webapp-url.ai/")
+        assert read_webapp_url() == "http://fake-webapp-url.ai/"
+
+
+@mock.patch("click.prompt", return_value="fake_org_id")
+def test_request_org_id(mock_prompt):
+    assert request_org_id() == "fake_org_id"
+
+@mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
+def test_ensure_org_all_creds_exist(mock_is_flavor_pro):
+    with fake_creds('.jovian', 'credentials.json'):
+        assert ensure_org() == None
