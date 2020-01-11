@@ -3,15 +3,17 @@ from unittest import mock
 from contextlib import contextmanager
 from jovian.utils import credentials
 from jovian.utils.credentials import (get_creds_path, config_exists, purge_config, init_config, purge_creds, read_creds,
-                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred)
+                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred, write_api_url)
 
 
 @contextmanager
-def fake_creds(config_dir, creds_filename):
+def fake_creds(config_dir, creds_filename, purge=False):
     _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
     credentials.CONFIG_DIR = 'jovian/tests/resources/creds/' + config_dir
     credentials.CREDS_FNAME = creds_filename
     yield
+    if purge:
+        purge_config()
     credentials.CONFIG_DIR = _d
     credentials.CREDS_FNAME = _f
 
@@ -42,20 +44,18 @@ def test_get_creds_path():
 
 
 def test_init_config():
-    with fake_creds('.jovian-init-config', 'credentials.json'):
+    with fake_creds('.jovian-init-config', 'credentials.json', purge=True):
         init_config()
         assert os.path.exists('jovian/tests/resources/creds/.jovian-init-config') == True
-        purge_config()
 
 
 def test_purge_creds():
-    with fake_creds('.jovian-purge-creds', 'credentials.json'):
+    with fake_creds('.jovian-purge-creds', 'credentials.json', purge=True):
         os.makedirs(credentials.CONFIG_DIR, exist_ok=True)
         os.system('touch jovian/tests/resources/creds/.jovian-purge-creds/credentials.json')
         assert os.path.exists('jovian/tests/resources/creds/.jovian-purge-creds/credentials.json') == True
         purge_creds()
         assert os.path.exists('jovian/tests/resources/creds/.jovian-purge-creds/credentials.json') == False
-        purge_config()
 
 
 def test_read_creds_no_creds_folder():
@@ -75,6 +75,7 @@ def test_read_creds_folder_exists():
 
 def mock_json_load(*args, **kwargs):
     raise ValueError('fake value error')
+
 
 @mock.patch("jovian.utils.credentials.purge_creds", return_value=None)
 @mock.patch("json.load", side_effect=mock_json_load)
@@ -104,7 +105,7 @@ def test_read_cred_with_default():
 
 
 def test_write_creds():
-    with fake_creds('.jovian-write-creds', 'credentials.json'):
+    with fake_creds('.jovian-write-creds', 'credentials.json', purge=True):
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -113,11 +114,9 @@ def test_write_creds():
 
         assert read_creds() == creds
 
-        purge_config()
-
 
 def test_write_cred():
-    with fake_creds('.jovian-write-cred', 'credentials.json'):
+    with fake_creds('.jovian-write-cred', 'credentials.json', purge=True):
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -133,11 +132,9 @@ def test_write_cred():
                            "FAKE_KEY": "fake_value"}
         assert read_creds() == expected_result
 
-        purge_config()
-
 
 def test_write_cred_already_exists():
-    with fake_creds('.jovian-write-cred', 'credentials.json'):
+    with fake_creds('.jovian-write-cred', 'credentials.json', purge=True):
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -149,11 +146,9 @@ def test_write_cred_already_exists():
         expected_result = creds
         assert read_creds() == expected_result
 
-        purge_config()
-
 
 def test_purge_cred_key():
-    with fake_creds('.jovian-write-creds', 'credentials.json'):
+    with fake_creds('.jovian-write-creds', 'credentials.json', purge=True):
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -168,4 +163,10 @@ def test_purge_cred_key():
 
         assert read_creds() == expected_result
 
-        purge_config()
+
+def test_write_api_url():
+    with fake_creds('.jovian-write-api-url', 'credentials.json', purge=True):
+        write_api_url("fake_api_url")
+
+        from jovian.utils.credentials import API_URL_KEY
+        assert read_cred(API_URL_KEY) == "fake_api_url"
