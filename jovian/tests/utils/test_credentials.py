@@ -1,4 +1,5 @@
 import os
+from unittest import mock
 from contextlib import contextmanager
 from jovian.utils import credentials
 from jovian.utils.credentials import (get_creds_path, config_exists, purge_config, init_config, purge_creds, read_creds,
@@ -70,6 +71,16 @@ def test_read_creds_folder_exists():
                            "API_URL": "https://api-staging.jovian.ai",
                            "API_KEY": "fake_api_key"}
         assert read_creds() == expected_result
+
+
+def mock_json_load(*args, **kwargs):
+    raise ValueError('fake value error')
+
+@mock.patch("jovian.utils.credentials.purge_creds", return_value=None)
+@mock.patch("json.load", side_effect=mock_json_load)
+def test_read_creds_with_value_error(mock_json_load, mock_purge_creds):
+    with fake_creds('.jovian', 'credentials.json'):
+        assert read_creds() == {}
 
 
 def test_creds_exist_true():
