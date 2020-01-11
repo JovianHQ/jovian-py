@@ -11,9 +11,11 @@ def fake_creds(config_dir, creds_filename, purge=False):
     _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
     credentials.CONFIG_DIR = 'jovian/tests/resources/creds/' + config_dir
     credentials.CREDS_FNAME = creds_filename
-    yield
-    if purge:
-        purge_config()
+    try:
+        yield
+    finally:
+        if purge:
+            purge_config()
     credentials.CONFIG_DIR = _d
     credentials.CREDS_FNAME = _f
 
