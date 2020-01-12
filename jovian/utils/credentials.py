@@ -222,9 +222,10 @@ def ensure_org(check_pro=True):
                           config_res.text[:100], e)
 
     # Extract API URL
+    print(config_json)
     try:
         api_url = config_json[API_URL_KEY]
-    except KeyError:
+    except KeyError as e:
         msg = 'Failed to extract API_URL from JSON configuration file ' + \
             config_url + ' . ' + CONTACT_MSG
         log(msg, error=True)

@@ -237,9 +237,11 @@ def mock_requests_get(url, *args, **kwargs):
                 "AUTH_ENV": "production",
                 "LOGIN_REDIRECT_PATH": "https://www.jovian.ml",
                 "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od" }
+
         return MockResponse(data, status_code=200)
     
     elif url == 'https://fakecompany.jovian.ml/config.json':
+
         return MockResponse({"msg" : "Request failed"}, status_code=500, text="Fake internal server error")
     
     elif url == 'https://jsonerror.jovian.ml/config.json':
@@ -252,7 +254,18 @@ def mock_requests_get(url, *args, **kwargs):
         "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od" }
         res = MockResponse(data, status_code=200, text="response of fake json decode error")
         res.json = json_decode_error_raiser
+
         return res
+    
+    elif url == 'https://no-api-key.jovian.ml/config.json':
+        data = { "CONFIG_NAME": "production",
+        "APP_NAME": "Jovian",
+        "APP_DESCRIPTION": "Share Jupyter notebooks instantly",
+        "AUTH_ENV": "production",
+        "LOGIN_REDIRECT_PATH": "https://www.jovian.ml",
+        "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od" }
+
+        return MockResponse(data, status_code=200, text="response with no api key")
 
 def raise_connection_error(*args, **kwargs):
     raise ConnectionError('fake connection error')
@@ -307,7 +320,7 @@ class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="fakecompany")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_with_unsuccessful_response(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-connection-error', 'credentials.json', purge=True):
+        with fake_creds('.jovian-unsuccessful-response', 'credentials.json', purge=True):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -326,7 +339,7 @@ class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="jsonerror")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_with_json_decode_error(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-connection-error', 'credentials.json', purge=True):
+        with fake_creds('.jovian-decode-error', 'credentials.json', purge=True):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -337,4 +350,20 @@ class TestEnsureOrg(TestCase):
                 ensure_org()
             
             msg = "Failed to parse JSON configuration file from https://jsonerror.jovian.ml/config.json"
+            self.assertTrue(msg in context.exception.args[0])
+
+    @mock.patch("requests.get", side_effect=mock_requests_get)
+    @mock.patch("jovian.utils.credentials.request_org_id", return_value="no-api-key")
+    @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
+    def test_ensure_org_api_url_key_error(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
+        with fake_creds('.jovian-api-key-error', 'credentials.json', purge=True):
+            # setUp
+            creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6"}
+            write_creds(creds)
+            
+            with self.assertRaises(ConfigError) as context:
+                ensure_org()
+            
+            msg = "Failed to extract API_URL from JSON configuration file https://no-api-key.jovian.ml/config.json"
             self.assertTrue(msg in context.exception.args[0])
