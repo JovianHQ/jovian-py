@@ -206,7 +206,7 @@ def ensure_org(check_pro=True):
     # Check for a successful response
     if config_res.status_code != 200:
         msg = 'Request to retrieve configuration file ' + config_url + \
-            ' failed with status_code ' + config_res.status_code + ' . ' + CONTACT_MSG
+            ' failed with status_code ' + str(config_res.status_code) + ' . ' + CONTACT_MSG
         log(msg, error=True)
         raise ConfigError(msg + ' Response (truncated):\n' +
                           config_res.text[:100])
