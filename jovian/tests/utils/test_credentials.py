@@ -398,7 +398,7 @@ def test_u():
 def test_validate_api_key(mock_requests_get):
     with fake_creds('.jovian', 'credentials.json'):
         assert validate_api_key('fake_correct_auth_key') == True
-        assert validate_api_key('fake_wrong_auth_key') == False
+        assert validate_api_key('fake_invalid_auth_key') == False
 
 
 def test_write_guest_key():
