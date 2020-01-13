@@ -441,7 +441,7 @@ def test_read_or_generate_guest_key():
 @mock.patch("uuid.uuid4", return_value=UUID('b66406dc-02c3-471b-ac27-d923fb4c6b1e'))
 def test_read_or_generate_guest_key_generate(mock_uuid4):
     with fake_creds('.jovian', 'credentials-no-guest-key.json'):
-        assert _read_or_generate_guest_key() == "b6538d4dfde04fcf993463a828a9cec6"
+        assert _read_or_generate_guest_key() == "b66406dc02c3471bac27d923fb4c6b1e"
 
 def test_validate_guest_key():
     assert _validate_guest_key("b6538d4dfde04fcf993463a828a9cec6") == True
