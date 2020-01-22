@@ -110,7 +110,7 @@ def get_notebook_name():
     nb_path = get_notebook_path()
     if nb_path:
         return os.path.basename(nb_path)
-    if not os.path.exists(nb_path):
+    if nb_path and not os.path.exists(nb_path):
         set_notebook_name()
     return None
 
