@@ -134,6 +134,10 @@ def commit(message=None,
 
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
+    # When jupyter has cached a old notebook name
+    if not res:
+        log(FILENAME_MSG)
+        return
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
 

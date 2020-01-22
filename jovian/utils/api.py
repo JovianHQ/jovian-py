@@ -65,31 +65,34 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
     """Upload the current notebook to create/update a gist"""
     auth_headers = _h()
 
-    with open(filename, 'rb') as f:
-        nb_file = (filename, f)
-        log('Uploading notebook..')
-        if gist_slug:
-            return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
-        else:
-            data = {'visibility': privacy}
+    try:
+        with open(filename, 'rb') as f:
+            nb_file = (filename, f)
+            log('Uploading notebook..')
+            if gist_slug:
+                return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
+            else:
+                data = {'visibility': privacy}
 
-            # For compatibility with old version of API endpoint
-            if privacy == 'auto':
-                data['public'] = True
-            elif privacy == 'secret' or privacy == 'private':
-                data['public'] = False
+                # For compatibility with old version of API endpoint
+                if privacy == 'auto':
+                    data['public'] = True
+                elif privacy == 'secret' or privacy == 'private':
+                    data['public'] = False
 
-            if title:
-                data['title'] = title
-            if version_title:
-                data['version_title'] = version_title
-            res = post(url=_u('/gist/create'),
-                       data=data,
-                       files={'files': nb_file},
-                       headers=auth_headers)
-            if res.status_code == 200:
-                return res.json()['data']
-            raise ApiError('File upload failed: ' + pretty(res))
+                if title:
+                    data['title'] = title
+                if version_title:
+                    data['version_title'] = version_title
+                res = post(url=_u('/gist/create'),
+                           data=data,
+                           files={'files': nb_file},
+                           headers=auth_headers)
+                if res.status_code == 200:
+                    return res.json()['data']
+                raise ApiError('File upload failed: ' + pretty(res))
+    except FileNotFoundError:
+        return False
 
 
 def upload_file(gist_slug, file, folder=None, version=None, artifact=False, version_title=None):
