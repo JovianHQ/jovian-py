@@ -17,9 +17,9 @@ class JovianFastaiCallback(Callback):
     Example
         .. code-block::
 
-            from jovian.callbacks.fastai_callback import FastaiCallback
+            from jovian.callbacks.fastai import JovianFastaiCallback
 
-            jvn_cb = FastaiCallback(learn, 'res18')
+            jvn_cb = JovianFastaiCallback(learn, 'res18')
             learn.fit_one_cycle(5, callbacks = jvn_cb)
 
     .. admonition:: Tutorial
