@@ -36,7 +36,8 @@ where even Students and Enthusiasts can leverage the same and also use
   user-guide/07-compare
   user-guide/08-collaborate
   user-guide/09-integrations
-  user-guide/10-pro
+  user-guide/10-embed
+  user-guide/11-pro
 
 .. toctree::
   :caption: Jovian

@@ -58,4 +58,4 @@ The above command prompts for the following information:
 
 ```
 
-You can learn more about Jovian Pro [here](09-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
+You can learn more about Jovian Pro [here](11-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
