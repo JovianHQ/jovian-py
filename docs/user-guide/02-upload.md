@@ -1,6 +1,6 @@
 ## Uploading Jupyter Notebooks to Jovian
 
-Jovian allows you to upload and share [Jupyter notebooks](https://jupyter.org/) instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](01-install.md) before reading further.
+Jovian allows you to upload and share <a href="https://jupyter.org/" target=_blank> Jupyter Notebook</a> instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](01-install.md) before reading further.
 
 #### Uploading Notebooks
 
@@ -16,19 +16,17 @@ import jovian
 jovian.commit()
 ```
 
-When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your [Jovian](https://jovian.ml?utm_source=docs) (or Jovian Pro) account.
+When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> (or Jovian Pro) account.
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
 
 Here's what `jovian.commit` does:
 
-- It saves and uploads the Jupyter notebook to your Jovian (or Jovian Pro) account.
+- It saves and uploads the Jupyter notebook to your <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> (or Jovian Pro) account.
 - It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
 - It returns a link that you can use to view and share your notebook with friends or colleagues.
 
 <img src="https://i.imgur.com/1cFeiC7.gif" class="screenshot">
-
-<!-- TODO: Redo the GIF -->
 
 For more features of `jovian.commit` and API reference visit [Commit](../jvn/commit.md).
 

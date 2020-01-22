@@ -19,7 +19,7 @@ def reset(*record_types):
     Args:
         *record_types(strings, optional): By default, resets all type of records. 
             To reset specific type of records, pass arguments `metrics`, 
-            `hyperparams`, `dataset` or `git` 
+            `hyperparams`, `dataset`
     Example
         .. code-block::
 
