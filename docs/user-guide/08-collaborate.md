@@ -16,9 +16,12 @@ Users can comment on any code cells individually and maintain that thread to hav
 
 <img src="https://i.imgur.com/15vj2qv.png" class="screenshot">
 
-### Maintain secret notebooks
+### Maintain public, secret and private notebooks
 
-You may set a notebook as secret to hide it from being displayed on your public profile. Only collaborators and users having the link to the notebook will be able to view it.
-You can find the option to `Make Secret` in the settings for each notebook.
+You can find the option to `Public`, `Secret` and `Private` in the settings for each notebook.
+
+- **Public** : These notebooks are visible on your profile and accessible to all.
+- **Secret** : These notebooks are hidden from the profile but anyone with the link can access the notebook.
+- **Private** : These notebooks are only accessible to the owner and collaborators.
 
 <img src="https://i.imgur.com/sHJrtYM.gif" class="screenshot">
