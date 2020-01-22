@@ -128,6 +128,13 @@ def commit(message=None,
     if filename is None:
         log(FILENAME_MSG)
         return
+    
+    # Ensure that the file exists
+    if not os.path.exists(filename):
+        log('The detected/provided file "' + filename +
+            '" does not exist. Please provide the correct notebook filename ' +
+            'as the "filename" argument to "jovian.commit".')
+        return
 
     # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
@@ -231,7 +238,7 @@ def _attach_file(path, gist_slug, version, output=False):
             folder = os.path.dirname(path)
             api.upload_file(gist_slug, file_obj, folder, version, output)
     except Exception as e:
-        log(str(e), error=True)
+        log(str(e) + " (" + path + ")", error=True)
 
 
 def _attach_files(paths, gist_slug, version, output=False):
