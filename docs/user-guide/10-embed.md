@@ -15,6 +15,7 @@ We got you covered if you want to embed any of the following.
 Before seeing how to to embed, have a preview of the embed right here.Below we have embedded a Jupyter notebook in our docs page, using iframe. You can interact with the notebook like copy the source code of a cell, copy a image output, scroll each cells etc.
 
 <iframe src="https://jovian.ml/embed?url=https://jovian.ml/PrajwalPrashanth/whatsapp-chat-data-analysis/v/9" title="Jovian Viewer" height="800" width="800" frameborder="0" scrolling="auto"></iframe>
+<br />
 
 ### Open up Embed modal
 
@@ -23,6 +24,7 @@ Before seeing how to to embed, have a preview of the embed right here.Below we h
 #### Click on Embed button
 
 This is ideal if you need embed the whole notebook
+
 <img src="https://imgur.com/J2i35fm.png" class="screenshot">
 
 **OR**
@@ -30,11 +32,13 @@ This is ideal if you need embed the whole notebook
 #### Click on Embed icon on any cell
 
 This is ideal when you need to embed a specific cell
+
 <img src="https://imgur.com/vAxP4Qa.png" class="screenshot">
 
 ### Customize options and preview
 
 Go ahead if u need more customization like `only output cell` and preview the embed below.
+
 <img src="https://imgur.com/09Gvp4o.png" class="screenshot">
 
 ### Copy and Embed
