@@ -13,12 +13,14 @@ Jovian: The platform for all your Data Science projects
    :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
 
 jovian is an open-source Python package integrated with 
-`Jovian`_ to provide the tools necessary for Data Scientists
+|Jovian| to provide the tools necessary for Data Scientists
 and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
 where even Students and Enthusiasts can leverage the same and also use 
-`Jovian`_ to **Share** and **Showcase** their projects.
+|Jovian| to **Share** and **Showcase** their projects.
 
-.. _Jovian: https://jovian.ml/?utm_source=docs
+.. |Jovian| raw:: html
+  
+  <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
 
 .. toctree::
   Home <self>

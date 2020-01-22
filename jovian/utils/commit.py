@@ -26,11 +26,11 @@ def commit(message=None,
            git_commit=True,
            git_message='auto',
            **kwargs):
-    """Uploads the current file (Jupyter notebook or python script) to 
+    """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
     Saves the checkpoint of the notebook, captures the required dependencies from 
     the python environment and uploads the notebook, env file, additional files like scripts, csv etc.
-    to `Jovian.ml`_. Capturing the python environment ensures that the notebook can be reproduced.
+    to |Jovian|. Capturing the python environment ensures that the notebook can be reproduced.
 
     Args:
         message(string, optional): A short message to be used as the title for this version.
@@ -41,25 +41,30 @@ def commit(message=None,
         outputs(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, output images etc.
 
-        environment(string, optional): The type of Python environment to be captured. Allowed options are
+        environment(string, optional): The type of Python environment to be captured.  Allowed options are
             'conda' , 'pip', 'auto' (for automatic detection) and None (to skip environment capture).
 
-        privacy(bool, optional): Privacy level of the project (if a new one is being created). This argument
-            has no effect on existing project. Allowed options are 'auto' (use the account-level setting),
-            'public' (visible on profile and publicly accessible/searchable), 'secret' (only accessible via 
-            the direct link) or 'private' (only visible to collaborators).
+        privacy(bool, optional): Privacy level of the project (if a new one is being created).
+
+            * 'auto' - use account level settings. Defaults to 'public'
+            * 'public' - visible on profile and publicly accessible/searchable
+            * 'secret' - not on profile only accessible via the direct link
+            * 'private' - only for the accessible to owner and collaborators
+
+            This argument has no effect on existing project. Change the privacy settings of a existing notebook 
+            on the webapp.
 
         filename(string, optional): The filename of the current Jupyter notebook or Python script. This is 
-            detected automatically in most cases, but in certain environments like Jupyter Lab, the detection 
+            detected automatically in most cases, but in certain environments like Jupyter Lab or password protected notebooks, the detection 
             may fail and the filename needs to be provided using this argument.
 
 
-        project(string, optional): Name of the Jovian.ml project to which the current notebook/file should 
+        project(string, optional): Name of the |Jovian| project to which the current notebook/file should 
             be committed. Format: 'username/title' e.g. 'aakashns/jovian-example' or 'jovian-example' 
             (username of current user inferred automatically). If the project does not exist, a new one is 
             created. If it exists, the current notebook is added as a new version to the existing project, if 
-            you are a collaborator. If left empty, project name is picked up from the `.jovianrc` file in the 
-            current directory, or a new project is created using the filename as the projecct name. 
+            you are a owner/collaborator. If left empty, project name is picked up from the `.jovianrc` file in the 
+            current directory, or a new project is created using the filename as the project name. 
 
         new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option 
             are False (use the existing project, if a .jovianrc file exists, if available), True (create a new project)
@@ -72,7 +77,9 @@ def commit(message=None,
     .. attention::
         Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected 
         notebooks sometimes it may fail to detect notebook automatically.
-    .. _Jovian: https://jovian.ml?utm_source=docs
+    .. |Jovian| raw:: html
+
+        <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
     """
     global _current_slug
 
@@ -107,7 +114,7 @@ def commit(message=None,
         new_project = kwargs['create_new']
         log('"create_new" is deprecated. Use "new_project" instead.', error=True)
 
-    # Depreated argument (artifacts)
+    # Deprecated argument (artifacts)
     if 'artifacts' in kwargs:
         outputs = kwargs['artifacts']
         log('"artifacts" is deprecated. Use "outputs" instead', error=True)
@@ -292,7 +299,7 @@ def _perform_git_commit(filename, git_commit, git_message):
             'commit': git.get_current_commit(),
             'filename': filename,
             'path': git.get_relative_path(),
-            'brach': git.get_branch()
+            'branch': git.get_branch()
         }
         log_git(git_info, verbose=False)
 

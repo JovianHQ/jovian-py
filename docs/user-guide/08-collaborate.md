@@ -1,10 +1,10 @@
 ## Collaborating on Jovian projects
 
-Jovian allows you to add collaborators to work with you on a ML Project.
+<a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> allows you to add collaborators to work with you on a ML Project.
 
 ### How to add collaborators?
 
-Click on `Share` button of the notebook and add them by their username or email id registered with Jovian.
+Click on `Share` button of the notebook and add them by their username or email id registered with <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> (you can add a non jovian user email id as well to send an invite).
 
 <img src="https://i.imgur.com/a68xT5d.gif" class="screenshot">
 

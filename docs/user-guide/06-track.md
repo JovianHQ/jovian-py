@@ -2,13 +2,9 @@
 
 Spreadsheets is one of the ways to track information & results of multiple ML experiments. However, using spreadsheets can be tiresome and non-intuitive without the context of the code.
 
-Jovian makes its easy for anyone to track information about datasets, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.
+<a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> makes its easy for anyone to track information about datasets, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.
 
 These information of a notebook are all added to `Records` Tab where you can toggle and view each version's log.
-
-```
-import jovian
-```
 
 ### Dataset
 
@@ -44,17 +40,17 @@ jovian.log_metrics(metrics)
 
 <img src="https://i.imgur.com/57BxYjH.gif" class="screenshot">
 
+The input to any of these can be a <a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank"> python dict </a>. You can add custom parameters that are related to your experiment and have it record values manually, or automate it to record the values of a variable in a loop.
+Visit [this](../jvn/logger.md) page for these logging API reference.
+
+We have callbacks for [keras](../callbacks/keras.md) and [fastai](../callbacks/fastai.md) to automatically record hyperparams and metrics check it out.
+
 ### Reset
 
-If you're not satisfied with some experiment and want to discard the previously recorded parameters to start a fresh experiment. Use
+If you're not satisfied with some experiment and want to discard the current recorded logs before a commit. Use
 
 ```
 jovian.reset()
 ```
-
-The input to any of these can be a [python dict](https://docs.python.org/3/tutorial/datastructures.html#dictionaries). You can add custom parameters that are related to your experiment and have it record values manually, or automate it to record the values of a variable in a loop.
-Visit [this](../jvn/logger.md) page for these logging API reference.
-
-We have callbacks for [keras](../callbacks/keras.md) and [fastai](../callbacks/fastai.md) to automatically record hyperparams and metrics check it out.
 
 Click `Next` to look at how to compare all of these information of all the versions.

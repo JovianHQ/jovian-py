@@ -3,10 +3,10 @@
 As seen in the [previous section](04-version.md) by committing, source code and environment files are captured & uploaded.
 More files can be attached to the notebook such as files with helper code, output files/model checkpoints that the notebook is generating.
 
-### How to attach these files?
+### How to attach files?
 
 ```
-jovian.commit(files=[], artifacts=[])
+jovian.commit(files=[], outputs=[])
 ```
 
 <img src="https://i.imgur.com/giVFiKw.gif" class="screenshot">
