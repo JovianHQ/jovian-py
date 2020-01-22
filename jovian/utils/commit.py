@@ -234,8 +234,9 @@ def _attach_file(path, gist_slug, version, output=False):
             file_obj = os.path.basename(path), f
             folder = os.path.dirname(path)
             api.upload_file(gist_slug, file_obj, folder, version, output)
+
     except Exception as e:
-        log(str(e), error=True)
+        log(str(e)+" ("+path+")", error=True)
 
 
 def _attach_files(paths, gist_slug, version, output=False):
