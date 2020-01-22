@@ -37,7 +37,7 @@ Go ahead if u need more customization like `only output cell` and preview the em
 
 <a href="https://medium.com" target="_blank">Medium</a> and <a href="https://reddit.com" target="_blank">Reddit</a> support oEmbed so if you're writing a blog and want to add snippets with or without output charts or helping someone on reddit thread you can use this.
 
-Just copy and paste the embed link, here is a example. Click on the image to visit the medium blog e where snippets are added.
+Just copy and paste the embed link, here is a example. Click on the image to visit the medium blog where snippets are added.
 
 <a href="https://medium.com/@prajwal.prashanth22/whatsapp-chat-data-analysis-8944b91581f5" target="_blank"><img src="https://imgur.com/sB9nZdZ.png" class="screenshot"></a>
 
