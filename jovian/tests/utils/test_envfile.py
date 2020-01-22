@@ -1,9 +1,10 @@
 import os
-from unittest import TestCase
+import yaml
+from unittest import TestCase, mock
 from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
                                   extract_pip_packages, get_environment_dict, identify_env_file,
                                   dump_environment_to_yaml_file, write_env_name, remove_packages,
-                                  sanitize_envfile, serialize_packages)
+                                  sanitize_envfile, serialize_packages, request_env_name, check_pip_failed)
 
 
 class EnvFile(TestCase):
@@ -109,6 +110,15 @@ class TestCheckError(EnvFile):
         self.assertListEqual(pkgs2, ['sigmasix=1.91.0'])
         self.assertIsNone(error3)
         self.assertListEqual(pkgs3, [])
+
+    def test_check_error_no_packages(self):
+        error_str = '''ResolvePackageNotFound: 
+                        - mixpanel=1.11.0'''
+        packages = []
+        error, pkgs = check_error(error_str=error_str, packages=packages)
+
+        self.assertEqual(error, 'unresolved')
+        self.assertListEqual(pkgs, [])
 
 
 class TestExtractPackageFromLine(EnvFile):
@@ -242,4 +252,47 @@ class TestSerializePackages(EnvFile):
 
         self.assertEqual(serialize_packages(dependencies), expected_result)
 
-# class Test
+
+class TestRequestEnvName(EnvFile):
+    def tearDown(self):
+        write_env_name('test-env', 'environment-test.yml')
+        super().tearDown()
+
+    @mock.patch("jovian.utils.envfile.click.prompt", return_value="")
+    def test_request_env_name(self, mock_prompt):
+        expected_result = 'test-env'
+
+        self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
+
+    @mock.patch("jovian.utils.envfile.click.prompt", return_value="test-env-changed")
+    def test_request_env_name_changed(self, mock_prompt):
+        expected_result = 'test-env-changed'
+
+        self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
+
+    @mock.patch("jovian.utils.envfile.extract_env_name", return_value=None)
+    @mock.patch("jovian.utils.envfile.click.prompt", return_value="test-env-changed")
+    def test_request_env_name_no_env_name(self, mock_prompt, mock_extract_env_name):
+        expected_result = 'test-env-changed'
+
+        self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
+
+    @mock.patch("jovian.utils.envfile.extract_env_name", return_value=None)
+    @mock.patch("jovian.utils.envfile.click.prompt", return_value="")
+    def test_request_env_name_no_env_name_default_to_base(self, mock_prompt, mock_extract_env_name):
+        expected_result = 'base'
+
+        self.assertEqual(request_env_name(env_name=None, env_fname='environment-test.yml'), expected_result)
+
+
+class TestCheckPipFailed(TestCase):
+    def test_check_pip_failed_true(self):
+        error_str = '''Could not install
+                       Pip failed with error code 2'''
+
+        self.assertTrue(check_pip_failed(error_str))
+
+    def test_check_pip_failed_false(self):
+        error_str = '''Pip successfully installed package'''
+
+        self.assertFalse(check_pip_failed(error_str))

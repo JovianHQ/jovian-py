@@ -1,7 +1,6 @@
 from unittest import TestCase, mock
-from jovian.utils.records import get_records, reset, log_hyperparams, log_metrics, log_dataset, log_git
+from jovian.utils.records import get_records, reset, log_hyperparams, log_metrics, log_dataset, log_git, log_record
 import jovian.utils.records
-
 
 
 class FakeRecords(TestCase):
@@ -64,6 +63,19 @@ def mock_api_post_block(*args, **kwargs):
     }
 
     return data
+
+
+class TestLogRecord(FakeRecords):
+    @mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
+    def test_log_record_no_data(self, mock_api_post_block):
+        data = {}
+        expected_result = [('fake_slug_metrics_1', 'metrics', {}),
+                           ('fake_slug_metrics_2', 'metrics', {}),
+                           ('fake_slug_hyperparams_1', 'hyperparams', {}),
+                           ('fake_slug_hyperparams_2', 'hyperparams', {})]
+
+        log_record('fake_record_type', data)
+        self.assertEqual(jovian.utils.records._data_blocks, expected_result)
 
 
 class TestLogHyperparams(FakeRecords):
