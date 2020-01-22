@@ -135,7 +135,7 @@ def commit(message=None,
     if filename is None:
         log(FILENAME_MSG)
         return
-    
+
     # Ensure that the file exists
     if not os.path.exists(filename):
         log('The detected/provided file "' + filename +
@@ -215,7 +215,7 @@ def _parse_project(project, filename, new_project):
 
     # Skip if metadata could not be found
     if not metadata:
-        log('Failed to retrieve metadata for the project "' + project + '"')
+        log('Creating a new project "' + username + '/' + project + '"')
         return project_title, None
 
     # Extract information from metadata
