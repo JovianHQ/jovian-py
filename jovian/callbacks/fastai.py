@@ -34,7 +34,7 @@ class JovianFastaiCallback(Callback):
         self.arch_name = arch_name
         self.met_names = ['epoch', 'train_loss']
         # existence of validation dataset
-        self.valid_set = self.learn.data.valid_dl.items.any()
+        self.valid_set = self.learn.data.valid_dl.items.size > 0
         self.reset_tracking = reset_tracking
         if self.valid_set:
             self.met_names.append('valid_loss')
