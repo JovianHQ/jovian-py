@@ -4,14 +4,15 @@
 
 jovian is an open-source Python package integrated with [Jovian](https://jovian.ml/?utm_source=github) to provide the tools necessary for Data Scientists and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects where even Students and Enthusiasts can leverage the same and also use [Jovian](https://jovian.ml/?utm_source=github) **Share** and **Showcase** their projects.
 
-- [Upload and share Jupyter Notebooks](https://docs.jovian.ml/en/latest/user-guide/02-upload.html)
-- [Reproduce Notebooks from Jovian](https://docs.jovian.ml/en/latest/user-guide/03-reproduce.html)
-- [Notebooks as version, view Diffs between versions](https://docs.jovian.ml/en/latest/user-guide/04-version.html)
+- ![Upload and share Jupyter Notebooks](https://docs.jovian.ml/en/latest/user-guide/02-upload.html)
+- ![Reproduce Notebooks from Jovian](https://docs.jovian.ml/en/latest/user-guide/03-reproduce.html)
+- ![Notebooks as version, view Diffs between versions](https://docs.jovian.ml/en/latest/user-guide/04-version.html)
 - [Attaching utility files and model outputs with the Notebook](https://docs.jovian.ml/en/latest/user-guide/05-attach.html)
 - [Tracking Datasets, Hyperparameters and Metrics](https://docs.jovian.ml/en/latest/user-guide/06-track.html)
 - [Comparing and Analyzing all the experiments](https://docs.jovian.ml/en/latest/user-guide/07-compare.html)
 - [Collaborate with teammates/colleagues](https://docs.jovian.ml/en/latest/user-guide/08-collaborate.html)
-- [Stay connected with your model training, live updates with Slack Notifications](https://docs.jovian.ml/en/latest/jvn/notif.html)
+- [!Stay connected with your model training, live updates with Slack Notifications](https://docs.jovian.ml/en/latest/user-guide/09-integrations.html)
+- [Embed Jupyter Notebooks and Cell upload on Jovian.ml](https://docs.jovian.ml/en/latest/user-guide/10-embed.html)
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian-py.readthedocs.io/en/latest/?badge=latest)
 
