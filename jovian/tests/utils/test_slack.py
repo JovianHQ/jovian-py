@@ -89,7 +89,6 @@ def mock_requests_get(url, *args, **kwargs):
 
 def mock_requests_post(url, *args, **kwargs):
     if url == 'https://api-staging.jovian.ai/slack/notify':
-        # check for correct api key
         if kwargs['headers']['Authorization'] == 'Bearer fake_api_key':
             data = { 
                 "data": {
