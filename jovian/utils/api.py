@@ -58,7 +58,7 @@ def get_gist_access(slug):
     if res.status_code == 200:
         return res.json()['data']
     raise Exception('Failed to retrieve access permission for notebook "' +
-                    slug + '" (retry with create_new=True to create a new notebook): ' + pretty(res))
+                    slug + '" (retry with new_project=True to create a new notebook): ' + pretty(res))
 
 
 def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None):
@@ -120,7 +120,7 @@ def post_block(data, data_type, version=None):
     """Upload metrics, hyperparameters and other information to server"""
     blocks = [{"localTimestamp": timestamp_ms(),
                "data": data,
-               'recordType': data_type}]
+               "recordType": data_type}]
     return post_blocks(blocks, version)
 
 
