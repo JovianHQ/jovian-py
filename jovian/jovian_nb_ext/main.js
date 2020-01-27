@@ -737,7 +737,7 @@ define([
        */
       const jvn_params_modal = dialog.modal({
         show: false,
-        title: "Set Up Default Parameters",
+        title: "Set Default Parameters",
         body: formParamsUI,
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
