@@ -95,7 +95,7 @@ code .
 
 ## Contributing to Docs
 
-The documentation website of Jovian is hosted at [jovian-py.readthedocs.io](https://jovian-py.readthedocs.io/en/latest/)
+The documentation website of Jovian is hosted at [docs.jovain.ml](https://docs.jovian.ml/en/latest/)
 
 To run the docs server locally, run:
 
