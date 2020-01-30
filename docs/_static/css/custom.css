@@ -87,19 +87,18 @@ ul {
 
 .wy-menu-vertical li.current > a:hover,
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a:hover {
-  /* Background color of text upon hovering already expanded sub-list background: #1254d0;
-  */
-
-  background: rgba(221, 221, 221, 0.5);
+  /* Background color of text upon hovering already expanded sub-list
+  background: rgba(221, 221, 221, 0.5);  */
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.toctree-l2.current > a {
-  /* Background color of text selected on a already expanded sub-list background: yellow;*/
+  /* Background color of text selected on a already expanded sub-list */
   background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
-  /* Background color of text sub-list of a selected sub-list background-color: purple;*/
+  /* Background color of text sub-list of a selected sub-list */
   background-color: rgba(221, 221, 221, 0.5);
 }
 
