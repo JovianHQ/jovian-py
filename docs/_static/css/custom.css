@@ -56,12 +56,14 @@ ul {
 .wy-menu-vertical p.caption {
   color: #636363;
   font-weight: 500;
+  font-size: 16px;
+  padding-left: 24px;
 }
 .wy-side-nav-search > a img.logo {
   /* Side nav bar logo */
   background-color: #f4f7fd;
   border-radius: 5px;
-  max-width: 50%;
+  max-width: 75%;
 }
 
 .wy-side-nav-search {
@@ -88,26 +90,24 @@ ul {
 .wy-menu-vertical li.current > a:hover,
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a:hover {
   /* Background color of text upon hovering already expanded sub-list
-  background: rgba(221, 221, 221, 0.5);
-  */
-  background: #1254d0;
+  background: rgba(221, 221, 221, 0.5);  */
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.toctree-l2.current > a {
-  /* Background color of text selected on a already expanded sub-list 
-  background-color: rgba(221, 221, 221, 0.5);*/
-  background: yellow;
+  /* Background color of text selected on a already expanded sub-list */
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
   /* Background color of text sub-list of a selected sub-list */
-  background-color: purple;
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical li.toctree-l2.current li.toctree-l3.current > a {
   /* Background color of text selected sub-list of a selected sub-list 
-  background-color: rgba(221, 221, 221, 0.5);*/
-  background: orange;
+  */
+  background-color: rgba(221, 221, 221, 0.5);
 }
 
 .wy-menu-vertical a,
@@ -147,7 +147,8 @@ ul {
 }
 
 a,
-a:visited {
+a:visited,
+a:hover {
   color: #0d61ff;
 }
 
@@ -161,6 +162,9 @@ a:visited {
 .wy-menu-vertical ul {
   margin-left: 0px; /* Change to padding */
 }
+.wy-breadcrumbs {
+  margin-left: 0px;
+}
 
 @media (min-width: 1400px) {
   .rst-content {
@@ -170,4 +174,8 @@ a:visited {
   .wy-nav-content {
     max-width: 1100px;
   }
+}
+
+.wy-nav-top a:visited {
+  color: #ffffff !important;
 }
