@@ -56,12 +56,14 @@ ul {
 .wy-menu-vertical p.caption {
   color: #636363;
   font-weight: 500;
+  font-size: 16px;
+  padding-left: 24px;
 }
 .wy-side-nav-search > a img.logo {
   /* Side nav bar logo */
   background-color: #f4f7fd;
   border-radius: 5px;
-  max-width: 50%;
+  max-width: 75%;
 }
 
 .wy-side-nav-search {
@@ -145,7 +147,8 @@ ul {
 }
 
 a,
-a:visited {
+a:visited,
+a:hover {
   color: #0d61ff;
 }
 
@@ -159,6 +162,9 @@ a:visited {
 .wy-menu-vertical ul {
   margin-left: 0px; /* Change to padding */
 }
+.wy-breadcrumbs {
+  margin-left: 0px;
+}
 
 @media (min-width: 1400px) {
   .rst-content {
@@ -168,4 +174,8 @@ a:visited {
   .wy-nav-content {
     max-width: 1100px;
   }
+}
+
+.wy-nav-top a:visited {
+  color: #ffffff !important;
 }
