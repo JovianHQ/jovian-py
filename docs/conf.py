@@ -6,7 +6,7 @@ from recommonmark.transform import AutoStructify
 sys.path.insert(0, os.path.abspath('../'))  # source path to access the module
 
 project = 'Jovian'
-copyright = '2019, SwiftAce Inc'
+copyright = '2020, SwiftAce Inc'
 author = 'Aakash N S, Siddhant Ujjain'
 
 extensions = ['recommonmark',  # to use .md along with .rst

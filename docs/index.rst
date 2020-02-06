@@ -1,6 +1,6 @@
-###############################
+########################################################
 Jovian: The platform for all your Data Science projects
-###############################
+########################################################
 
 .. figure:: jvn_full_logo.png
     :align: center
@@ -42,26 +42,35 @@ where even Students and Enthusiasts can leverage the same and also use
   user-guide/11-pro
 
 .. toctree::
-  :caption: Jovian
+  :caption: API Reference
   :hidden:
 
   jvn/commit
   jvn/logger
   jvn/notif
   jvn/cli
+  callbacks/fastai
+  callbacks/keras
   jvn/oembed
 
 .. toctree::
-  :caption: Callbacks
+  :caption: Integrations
   :hidden:
 
-  callbacks/fastai
-  callbacks/keras
-
-.. toctree::
-  :caption: Jupyter Notebook Extension
-  :hidden:
-
-  nbext/commit
-  nbext/disable
-
+  integrations/nbext
+  integrations/slack
+  integrations/pycharm
+  integrations/vscode
+  integrations/github
+  integrations/telegram
+  integrations/keras
+  integrations/fastai
+  integrations/tensorflow
+  integrations/pytorch
+  integrations/sklearn
+  integrations/xgboost
+  integrations/scipy
+  integrations/opencv
+  integrations/spark
+  integrations/conda
+  
