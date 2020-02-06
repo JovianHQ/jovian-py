@@ -53,9 +53,15 @@ where even Students and Enthusiasts can leverage the same and also use
   callbacks/keras
   jvn/oembed
 
+########################################################
+Jovian: Libraries and Integrations
+########################################################
+
+Jovian integrates seamlessly with your favorite tools and libraries.
+Automate your workflow and boost your productivity.
+
 .. toctree::
   :caption: Integrations
-  :hidden:
 
   integrations/nbext
   integrations/slack
