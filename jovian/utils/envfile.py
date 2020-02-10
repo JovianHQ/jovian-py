@@ -132,11 +132,6 @@ def identify_env_file(env_fname, folder_prefix=""):
                 env_fname = expected_fname
                 break
 
-    if env_fname is None:
-        # Check for standard environment.yml file
-        expected_fname = os.path.join(folder_prefix, 'environment.yml')
-        if os.path.exists(expected_fname):
-            env_fname = expected_fname
     return env_fname
 
 

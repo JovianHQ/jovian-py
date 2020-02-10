@@ -9,7 +9,7 @@ setup-env:
 	@echo "Run:\n\tconda activate jovian-py-dev\n\tpip install -r requirements.txt"
 
 activate:
-	conda activate jovian-pro-dev
+	conda activate jovian-py-dev
 
 help:
 	@echo "Check the Makefile for supported commands"
@@ -32,12 +32,12 @@ clean:
 	trash ./build
 
 set-flavor:
-	@echo '__flavor__ = "jovian"' > ./jovian/_flavor.py
+	@echo '__flavor__ = "jovian"\n' > ./jovian/_flavor.py
 
 set-flavor-pro:
-	@echo '__flavor__ = "jovian-pro"' > ./jovian/_flavor.py
+	@echo '__flavor__ = "jovian-pro"\n' > ./jovian/_flavor.py
 
-build: set-flavor git-clean-check
+build: git-clean-check
 	PKG_NAME=jovian python setup.py sdist bdist_wheel
 
 build-pro: set-flavor-pro git-clean-check
@@ -61,9 +61,15 @@ run-docs:
 	cd docs && make html
 	sphinx-autobuild docs docs/_build/html
 
-run-tests:
-	python -m unittest discover
+test-watch:
+	python -m pytest -f --cov-config .coveragerc --cov jovian jovian/tests
 
+test:
+	python -m pytest --cov-config .coveragerc --cov jovian jovian/tests
+
+test-coverage:
+	coverage html -i
+	open "htmlcov/index.html"
 
 ## Version bumping
 .PHONY: show-version bump bump-dev bump-patch bump-release sanity-check-dev sanity-check-release

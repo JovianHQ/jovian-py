@@ -6,7 +6,7 @@ The `jovian` python library can be installed using the `pip` package manager. To
 pip install jovian --upgrade
 ```
 
-You can also install the `jovian` library directly within a [Jupyter Notebook](https://jupyter.org/), by running the following command in a code cell:
+You can also install the `jovian` library directly within a <a href="https://jupyter.org/" target=_blank> Jupyter Notebook</a>, by running the following command in a code cell:
 
 ```
 !pip install jovian --upgrade
@@ -58,4 +58,4 @@ The above command prompts for the following information:
 
 ```
 
-You can learn more about Jovian Pro [here](09-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
+You can learn more about Jovian Pro [here](11-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
