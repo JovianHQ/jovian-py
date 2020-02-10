@@ -46,7 +46,7 @@ function addButtons():HTMLElement{
     cancleBut.className = "jp-Dialog-button jp-mod-reject jp-mod-styled";
     okBut.className = "jp-Dialog-button jp-mod-accept jp-mod-styled";
     ok.innerText = "Summit";
-    cancle.innerText = "Cancle";
+    cancle.innerText = "testing";
     cancleBut.appendChild(icon1);
     cancleBut.appendChild(cancle);
     okBut.appendChild(icon2);

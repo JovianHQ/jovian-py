@@ -334,3 +334,8 @@ def get_guest_key():
         creds = read_creds()
     # Return final key
     return creds[GUEST_TOKEN_KEY]
+
+def got_it():
+    with open('.jovianrc') as f:
+        jovianrc = json.load(f)
+        return jovianrc
