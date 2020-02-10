@@ -74,60 +74,56 @@ class MockResponse:
         return self.json_data
 
 
-def mocked_requests_get(url, params=None, **kwargs):
+def mocked_requests(url, *args, **kwargs):
 
     if url == 'http://someurl.com/test.json':
-        return MockResponse({"key1": "value1"}, 200)
+        return MockResponse({'key': 'value'}, 200)
     elif url == 'http://someurl.com/noauth':
         return MockResponse({'message': 'invalid creds'}, 401)
-    return MockResponse(None, 404)
-
-
-def mocked_requests_post(url, data=None, json=None, **kwargs):
-
-    if url == 'http://someurl.com/create':
-        return MockResponse({"message": "created successfully"}, 201)
-
+    elif url == 'http://someurl.com/create':
+        return MockResponse({'message': 'created successfully'}, 201)
     return MockResponse(None, 404)
 
 
 class TestGet(TestCase):
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.get', side_effect=mocked_requests)
     def test_get(self, mock_get):
-        expected_result = {"key1": "value1"}
+        expected_result = {'key': 'value'}
 
-        self.assertEqual(get('http://someurl.com/test.json').json(), expected_result)
+        self.assertEqual(get('http://someurl.com/test.json', headers={'key': 'value'}).json(), expected_result)
+
+    @mock.patch('requests.get', side_effect=mocked_requests)
+    def test_get_called_once(self, mock_get):
+        get('http://someurl.com/test.json', headers={'key': 'value'})
+
+        assert mock_get.call_count == 1
+
+    @mock.patch('jovian.utils.request.get_api_key', mock.Mock(return_value="fake_api_key"))
+    @mock.patch('requests.get', side_effect=mocked_requests)
+    def test_get_called_twice(self, mock_get):
+        get('http://someurl.com/noauth', headers={'key': 'value'})
+
+        assert mock_get.call_count == 2
 
 
 class TestPost(TestCase):
 
-    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.post', side_effect=mocked_requests)
     def test_get(self, mock_post):
         expected_result = {"message": "created successfully"}
 
-        self.assertEqual(post('http://someurl.com/create').json(), expected_result)
+        self.assertEqual(post('http://someurl.com/create', headers={'key': 'value'}).json(), expected_result)
 
+    @mock.patch('requests.post', side_effect=mocked_requests)
+    def test_post_called_once(self, mock_post):
+        post('http://someurl.com/create', headers={'key': 'value'})
 
-class TestRetry(TestCase):
-    @mock.patch('jovian.utils.request.purge_api_key', mock.Mock(return_value=None))
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
-    def test_retry_get(self, mocked_requests_get):
-        get('http://someurl.com/noauth')
-
-    @mock.patch('jovian.utils.request.get_api_key', mock.Mock(return_value="fake_api_key"))
-    @mock.patch('jovian.utils.request.purge_api_key', mock.Mock(return_value=None))
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
-    def test_retry_get_with_headers(self, mocked_requests_get):
-        get('http://someurl.com/noauth', headers={'key': 'value'})
-
-    @mock.patch('jovian.utils.request.purge_api_key', mock.Mock(return_value=None))
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
-    def test_retry_post(self, mocked_requests_get):
-        get('http://someurl.com/noauth')
+        assert mock_post.call_count == 1
 
     @mock.patch('jovian.utils.request.get_api_key', mock.Mock(return_value="fake_api_key"))
-    @mock.patch('jovian.utils.request.purge_api_key', mock.Mock(return_value=None))
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
-    def test_retry_post_with_headers(self, mocked_requests_get):
-        get('http://someurl.com/noauth', headers={'key': 'value'})
+    @mock.patch('requests.post', side_effect=mocked_requests)
+    def test_post_called_twice(self, mock_post):
+        post('http://someurl.com/noauth', headers={'key': 'value'})
+
+        assert mock_post.call_count == 2

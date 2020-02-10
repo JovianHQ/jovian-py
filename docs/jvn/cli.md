@@ -59,11 +59,11 @@ $ jovian version
 By default, the jovian jupyter extension is enabled.
 
 ```
-$ jovian enable-ext
+$ jovian enable-extension
 ```
 
 ```
-$ jovian disable-ext
+$ jovian disable-extension
 ```
 
 ```eval_rst

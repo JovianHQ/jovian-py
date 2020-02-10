@@ -2,8 +2,9 @@ import sys
 from unittest import TestCase, mock
 
 from jovian.utils.misc import (is_uuid, get_platform, get_file_extension,
-                               urljoin, timestamp_ms, get_flavor, is_flavor_pro)
+                               urljoin, timestamp_ms, get_flavor, is_flavor_pro, version)
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
+from jovian._version import __version__
 
 
 class TestIsUUID(TestCase):
@@ -163,3 +164,8 @@ class TestIsFlavorPro(TestCase):
         import jovian._flavor
         jovian._flavor.__flavor__ = 'jovian-pro'
         self.assertEqual(is_flavor_pro(), True)
+
+class TestVersion(TestCase):
+    def test_version(self):
+        expected_result = __version__
+        self.assertEqual(version(), expected_result)

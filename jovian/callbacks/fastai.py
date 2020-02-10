@@ -2,7 +2,7 @@ from torch import Tensor
 from fastai.basic_train import Learner
 from fastai.callback import Callback
 
-from jovian.utils.records import log_hyperparams, log_metrics, reset_records
+from jovian.utils.records import log_hyperparams, log_metrics, reset
 from jovian.utils.logger import log
 
 
@@ -17,9 +17,9 @@ class JovianFastaiCallback(Callback):
     Example
         .. code-block::
 
-            from jovian.callbacks.fastai_callback import FastaiCallback
+            from jovian.callbacks.fastai import JovianFastaiCallback
 
-            jvn_cb = FastaiCallback(learn, 'res18')
+            jvn_cb = JovianFastaiCallback(learn, 'res18')
             learn.fit_one_cycle(5, callbacks = jvn_cb)
 
     .. admonition:: Tutorial
@@ -34,14 +34,14 @@ class JovianFastaiCallback(Callback):
         self.arch_name = arch_name
         self.met_names = ['epoch', 'train_loss']
         # existence of validation dataset
-        self.valid_set = self.learn.data.valid_dl.items.any()
+        self.valid_set = self.learn.data.valid_dl.items.size > 0
         self.reset_tracking = reset_tracking
         if self.valid_set:
             self.met_names.append('valid_loss')
 
     def on_train_begin(self, n_epochs: int, metrics_names: list, **ka):
         if self.reset_tracking:
-            reset_records('hyperparams', 'metrics')
+            reset('hyperparams', 'metrics')
         hyp_dict = {
             'epochs': n_epochs,
             'batch_size': self.learn.data.batch_size,

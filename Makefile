@@ -32,12 +32,12 @@ clean:
 	trash ./build
 
 set-flavor:
-	@echo '__flavor__ = "jovian"' > ./jovian/_flavor.py
+	@echo '__flavor__ = "jovian"\n' > ./jovian/_flavor.py
 
 set-flavor-pro:
-	@echo '__flavor__ = "jovian-pro"' > ./jovian/_flavor.py
+	@echo '__flavor__ = "jovian-pro"\n' > ./jovian/_flavor.py
 
-build: set-flavor git-clean-check
+build: git-clean-check
 	PKG_NAME=jovian python setup.py sdist bdist_wheel
 
 build-pro: set-flavor-pro git-clean-check

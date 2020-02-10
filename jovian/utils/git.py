@@ -1,11 +1,13 @@
 """Git related utilities"""
 import os
-from subprocess import call
+import subprocess
 
 
 def is_git():
     """Check whether we are in a git repository"""
-    return call(['git', 'rev-parse']) == 0
+    task = subprocess.Popen('git rev-parse', shell=True, stderr=subprocess.PIPE)
+    task.communicate()
+    return task.returncode == 0
 
 
 def get_branch():
