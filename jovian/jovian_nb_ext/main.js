@@ -577,8 +577,7 @@ define([
        *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable
        *
        */
-      const div = $("<div/>")
-        .attr("id", "input_div")
+      const div = $("<div/>").attr("id", "input_div");
 
       const label1 = $("<label/>").text("Set Default Commit Parameters");
 
@@ -586,7 +585,7 @@ define([
         .attr("id", "default_param_button")
         .addClass("btn btn-primary")
         .text("Set Default")
-        .attr("title","Open Parameter Window to set Default Parameters");
+        .attr("title", "Open Parameter Window to set Default Parameters");
 
       const label2 = $("<label/>").text("Clear API Key");
 
@@ -594,7 +593,7 @@ define([
         .attr("id", "clear_api_button")
         .addClass("btn btn-primary")
         .text("Clear")
-        .attr("title","Clear the Jovian API key");
+        .attr("title", "Clear the Jovian API key");
 
       const label3 = $("<label/>").text("Change API Key");
 
@@ -602,7 +601,7 @@ define([
         .attr("id", "change_api_button")
         .addClass("btn btn-primary")
         .text("Change")
-        .attr("title","Change the Jovian API key");
+        .attr("title", "Change the Jovian API key");
 
       const label4 = $("<label/>").text("Disable Jovian Extension");
 
@@ -610,7 +609,7 @@ define([
         .attr("id", "disable_button")
         .addClass("btn btn-primary")
         .text("Disable")
-        .attr("title","Disable the Jovian Extension");
+        .attr("title", "Disable the Jovian Extension");
 
       div
         .append(label1)
@@ -645,7 +644,7 @@ define([
           const option1 = $("#default_param_button");
           const option2 = $("#clear_api_button");
           const option3 = $("#change_api_button");
-          const option4 = $("#disable_button")
+          const option4 = $("#disable_button");
 
           option1.click(() => saveParams());
           option2.click(() => clearAPI());
