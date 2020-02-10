@@ -563,92 +563,69 @@ define([
        * Body of the Form
        *
        * Layout:
-       *  - form : class: form-horizontal
-       *    - div :
-       *      - label : text: Set Default Commit Parameters
-       *      - input : type: button | id: default_param_button | value: Set Default
+       *  - div :
+       *    - label : text: Set Default Commit Parameters
+       *    - input : type: button | id: default_param_button | class: btn btn-primary | text: Set Default
        *
-       *      - label : text: Change API Key
-       *      - input : type: button | id: change_api_button | class: api-btn | value: Change Key
-       * 
-       *      - label : text: Clear API Key
-       *      - input : type: button | id: clear_api_button | class: api-btn | value: Clear Key
+       *    - label : text: Change API Key
+       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key
        *
-       *      - label : text: Disable Jovian Extension
-       *      - input : type: button | id: disable_button | class: disable-btn | value: Disable
+       *    - label : text: Clear API Key
+       *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key
+       *
+       *    - label : text: Disable Jovian Extension
+       *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable
        *
        */
-      const form = $("<form/>").addClass("form-horizontal");
-
       const div = $("<div/>")
         .attr("id", "input_div")
-        .appendTo(form);
 
-      const setting_label = $("<label/>").text("Select an Option Below");
+      const label1 = $("<label/>").text("Set Default Commit Parameters");
 
-      const setting_options = $("<div/>")
-        .addClass("form-check")
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("Set Default Commit Parameters")
-        )
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "button")
-            .attr("name", "setting_opt")
-            .attr("value", "Set Default")
-            .attr("help", "Open Parameter Window to set Default Parameters")
-            //.attr("handler", saveParams())
-        )
-        .append($("<br>"))
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("Clear API Key")
-        )
-        .append(
-          $("<input/>")
-            .attr("type", "button")
-            .attr("name", "setting_opt")
-            .attr("value", "Clear")
-            .attr("help", "Clear the Jovian API key")
-            //.attr("handler", clearAPI())
-        )
-        .append($("<br>"))
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("Change API Key")
-        )
-        .append(
-          $("<input/>")
-            .attr("type", "button")
-            .attr("name", "setting_opt")
-            .attr("value", "Change")
-            .attr("help", "Change the Jovian API key")
-            //.attr("handler", changeAPI())
-        )
-        .append($("<br>"))
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("Disable Jovian Extension")
-        )
-        .append(
-          $("<input/>")
-            .attr("type", "button")
-            .attr("name", "setting_opt")
-            .attr("value", "Disable")
-            .attr("help", "Disable the Jovian Extension")
-            //.attr("handler", removeExtension())
-        )
-        ;
+      const option1 = $("<button/>")
+        .attr("id", "default_param_button")
+        .addClass("btn btn-primary")
+        .text("Set Default")
+        .attr("title","Open Parameter Window to set Default Parameters");
 
-      div.append(setting_label).append(setting_options);
+      const label2 = $("<label/>").text("Clear API Key");
 
-      return form;
+      const option2 = $("<button/>")
+        .attr("id", "clear_api_button")
+        .addClass("btn btn-primary")
+        .text("Clear")
+        .attr("title","Clear the Jovian API key");
+
+      const label3 = $("<label/>").text("Change API Key");
+
+      const option3 = $("<button/>")
+        .attr("id", "change_api_button")
+        .addClass("btn btn-primary")
+        .text("Change")
+        .attr("title","Change the Jovian API key");
+
+      const label4 = $("<label/>").text("Disable Jovian Extension");
+
+      const option4 = $("<button/>")
+        .attr("id", "disable_button")
+        .addClass("btn btn-primary")
+        .text("Disable")
+        .attr("title","Disable the Jovian Extension");
+
+      div
+        .append(label1)
+        .append(option1)
+        .append("</br>")
+        .append(label2)
+        .append(option2)
+        .append("</br>")
+        .append(label3)
+        .append(option3)
+        .append("</br>")
+        .append(label4)
+        .append(option4);
+
+      return div;
     };
 
     const settingsDialog = function() {
@@ -658,14 +635,25 @@ define([
        * Body: settingsUI()
        *
        */
-      const jvn_params_modal = dialog.modal({
+      const jvn_setting_modal = dialog.modal({
         show: false,
         title: "Jovian Settings",
         body: settingsUI,
         notebook: Jupyter.notebook,
-        keyboard_manager: Jupyter.notebook.keyboard_manager
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        open: function() {
+          const option1 = $("#default_param_button");
+          const option2 = $("#clear_api_button");
+          const option3 = $("#change_api_button");
+          const option4 = $("#disable_button")
+
+          option1.click(() => saveParams());
+          option2.click(() => clearAPI());
+          option3.click(() => changeAPI());
+          option4.click(() => removeExtension());
+        }
       });
-      jvn_params_modal.modal("show");
+      jvn_setting_modal.modal("show");
     };
 
     //to save parameters and commit with those parameters
@@ -735,7 +723,7 @@ define([
        * Body: formParamsUI()
        *
        */
-      const jvn_params_modal = dialog.modal({
+      const jvn_default_params_modal = dialog.modal({
         show: false,
         title: "Set Default Parameters",
         body: formParamsUI,
@@ -780,7 +768,7 @@ define([
           });
         }
       });
-      jvn_params_modal.modal("show");
+      jvn_default_params_modal.modal("show");
     };
 
     const formDropDownUI = function() {
@@ -861,7 +849,9 @@ define([
         "import os\n" +
         "os.system('jupyter nbextension disable jovian_nb_ext/main --sys-prefix')\n";
       console.log(remove_ext);
-      alert("You have disabled the Jovian Extension. Use -- !jovian enable -- below to renable Jovian");
+      alert(
+        "You have disabled the Jovian Extension. Run -- !jovian enable -- in the notebook to renable Jovian"
+      );
       Jupyter.notebook.kernel.execute(remove_ext);
       location.reload();
     }
