@@ -2,7 +2,7 @@
 Jovian: The platform for all your Data Science projects
 ########################################################
 
-.. figure:: jvn_full_logo.png
+.. figure:: jvn_full_logo.svg
     :align: center
     :alt: Jovian logo
     :width: 50%
