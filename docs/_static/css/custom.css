@@ -59,11 +59,14 @@ ul > li.toctree-l1 {
   font-size: 16px;
   padding-left: 24px;
 }
+.wy-side-nav-search > a {
+  display: flex;
+}
 .wy-side-nav-search > a img.logo {
   /* Side nav bar logo */
   background-color: #f4f7fd;
   border-radius: 5px;
-  max-width: 75%;
+  width: 75%;
 }
 
 .wy-side-nav-search {
