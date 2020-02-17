@@ -29,52 +29,44 @@ define([
           resolve(data.content.text.trim());
         };
 
-        const nb_filename = Jupyter.notebook.notebook_name.substr(
-          0,
-          Jupyter.notebook.notebook_name.length - 6
-        );
-        var commit = '\tcommit(filename="' + nb_filename + '")\n';
+        let nb_filename = Jupyter.notebook.notebook_name.split(".");
+        nb_filename.pop();
+        nb_filename.join();
+        let commit = "\tcommit(filename=" + getValInPython(nb_filename) + ")\n";
         // if we have a set of params already, then use it to call commit.
-        if (window.jvn_params != null) {
-          const secret = window.jvn_params.secret;
-          const capture_env = window.jvn_params.capture_env;
-          const new_project = window.jvn_params.create_new;
-          const env_type = window.jvn_params.env_type;
-          var files = getPythonArray(window.jvn_params.files);
-          var artifacts = getPythonArray(window.jvn_params.artifacts);
-          var project;
+        if ((params = getParams()) != null) {
+          const new_project = params.create_new;
+          const if_git = params.if_git;
+          const files = getArrayInPython(params.files);
+          const artifacts = getArrayInPython(params.artifacts);
+          const privacy = getValInPython(params.secret);
+          const env_type = getValInPython(params.env_type);
+          const project_id = getValInPython(params.project_id);
+          const message = getValInPython(params.message);
+          const git_msg = getValInPython(params.git_msg);
 
-          if (window.jvn_params.notebook_id === "") {
-            project = "None";
-          } else {
-            project = '"' + window.jvn_params.notebook_id + '"';
-          }
           commit =
             "commit(" +
-            'filename="' +
-            nb_filename +
-            '"' +
+            "filename=" +
+            getValInPython(nb_filename) +
+            ",message=" +
+            message +
+            ",git_commit=" +
+            if_git +
+            ",git_message=" +
+            git_msg +
             ",privacy=" +
-            secret +
-            "" +
-            ",capture_env=" +
-            capture_env +
-            "" +
+            privacy +
             ",new_project=" +
             new_project +
-            "" +
             ",files=" +
             files +
-            "" +
             ",project=" +
-            project +
-            "" +
+            project_id +
             ",outputs=" +
             artifacts +
-            "" +
-            ',environment="' +
+            ",environment=" +
             env_type +
-            '"' +
             ")\n";
         }
 
@@ -349,9 +341,8 @@ define([
             .select();
         }
       });
-      getParams()
-        .then(jvn_params => (window.jvn_params = jvn_params))
-        .then(() => updateForm(jvn_modal));
+
+      updateForm(jvn_modal);
     };
 
     const formParamsUI = function() {
@@ -361,36 +352,38 @@ define([
        * Layout:
        *  - form : class: form-horizontal
        *    - div :
-       *      - label : text: Create a secret notebook?
-       *      - div   : class: form-check
-       *        - input : class: form-check-input | type : raido | name : secret_opt | value : True
-       *        - label : class: form-check-label | text : True  | css : margin-right:1em
-       *        - input : class: form-check-input | type : raido | name : secret_opt | value : False
-       *        - label : class: form-check-label | text : False
+       *      - label : text: A short message to be used as the title for this version
+       *      - input : id: project_msg_box | class: form-control
        *      - label : text: The filename of the jupyter notebook
        *      - input : id: nb_filename_box | class: form-control | value: Jupyter.notebook.notebook_name
-       *      - label : text: Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - array
+       *      - label : text: Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`
        *      - input : id: files_box | class: form-control | value: []
-       *      - label : text: To capture and and upload Python environment along with the notebook?
-       *      - div   : class: form-check
-       *        - input : class: form-check-input | type : raido | name : cap_opt | value : True
-       *        - label : class: form-check-label | text : True  | css : margin-right:1em
-       *        - input : class: form-check-input | type : raido | name : cap_opt | value : False
-       *        - label : class: form-check-label | text : False
        *      - label : text: Which type of environment to be captured?
        *      - select  : id: env_opt
+       *        - option : text: auto
        *        - option : text: conda
-       *        - option : text: pip   | css : margin-left : 1em
-       *      - label : text: To provide the base64 ID(present in the URL) of an notebook hosted on Jovian? - String
-       *      - input : id: notebook_id_box | class: form-control | value: None
+       *        - option : text: pip
+       *        - option : text: None   | css : margin-left : 0em
+       *      - label : text: Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`
+       *      - input : id: project_id_box | class: form-control | value: None
        *      - label : text: To create a new notebook?
-       *      - div   : class: form-check
-       *        - input : class: form-check-input | type : raido | name : create_opt | value : True
-       *        - label : class: form-check-label | text : True  | css : margin-right:1em
-       *        - input : class: form-check-input | type : raido | name : create_opt | value : False
-       *        - label : class: form-check-label | text : False
-       *      - label : text: Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - array
+       *      - select   : id: if_new
+       *        - option : text: True
+       *        - option : text: False   | css : margin-left : 0em
+       *      - label : text: Choose the type of notebook when creating a new project
+       *      - select   : id: nb_opt
+       *        - option : text: auto
+       *        - option : text: public
+       *        - option : text: secret
+       *        - option : text: private   | css : margin-left : 0em
+       *      - label : text: Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`
        *      - input : id: artifacts_box | class: form-control | value: []
+       *      - label : text: To perform a Git commit? (only when the notebook is inside a Git repository)
+       *      - input : id: git_msg_box | class: form-control
+       *      - label : text: Commit message for git
+       *      - select   : id: git_msg_box
+       *        - option : text: True
+       *        - option : text: False   | css : margin-left : 0em
        *
        */
       const form = $("<form/>").addClass("form-horizontal");
@@ -399,34 +392,13 @@ define([
         .attr("id", "input_div")
         .appendTo(form);
 
-      const secret_label = $("<label/>").text("Create a secret notebook?");
-      const secret_box = $("<div/>")
-        .addClass("form-check")
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "secret_opt")
-            .attr("value", "True")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("True")
-            .css("margin-right", "1em")
-        )
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "secret_opt")
-            .attr("value", "False")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("False")
-        );
+      const message_label = $("<label/>").text(
+        "A short message to be used as the title for this version"
+      );
+      const message_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "project_msg_box")
+        .attr("placeholder", "The title for this version");
 
       const nb_filename_label = $("<label/>").text(
         "The filename of the jupyter notebook"
@@ -438,92 +410,55 @@ define([
         .prop("disabled", true);
 
       const files_label = $("<label/>").text(
-        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames) such as `utils.py, inputs.csv`"
+        "Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`"
       );
       const files_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "files_box")
-        .attr("placeholder", "utils.py, inputs.csv")
-        .val("");
-
-      const capture_env_label = $("<label/>").text(
-        "To capture and and upload Python environment along with the notebook?"
-      );
-      const capture_env_box = $("<div/>")
-        .addClass("form-check")
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "cap_opt")
-            .attr("value", "True")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("True")
-            .css("margin-right", "1em")
-        )
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "cap_opt")
-            .attr("value", "False")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("False")
-        );
+        .attr("placeholder", "utils.py, inputs.csv");
 
       const env_type_label = $("<label/>").text(
         "Which type of environment to be captured?"
       );
       const env_type_box = $("<select/>")
         .attr("id", "env_opt")
+        .addClass("form-control")
+        .append($("<option/>").text("auto"))
         .append($("<option/>").text("conda"))
         .append($("<option/>").text("pip"))
-        .css("margin-left", "1em");
+        .append($("<option/>").text("None"))
+        .css("margin-left", "0em");
 
-      const notebook_id_label = $("<label/>").text(
-        "Notebook-id(optional) This is picked up by the library automatically. Incase if you want to commit to a different notebook, enter the address of that notebook like `user_name_on_jovian/notebook_name`"
+      const project_id_label = $("<label/>").text(
+        "Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`"
       );
-      const notebook_id_box = $("<input/>")
+      const project_id_box = $("<input/>")
         .addClass("form-control")
-        .attr("id", "notebook_id_box")
+        .attr("id", "project_id_box")
         .attr("placeholder", "None");
 
-      const create_new_label = $("<label/>").text("To create a new notebook?");
-      const create_new_box = $("<div/>")
-        .addClass("form-check")
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "create_opt")
-            .attr("value", "True")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("True")
-            .css("margin-right", "1em")
-        )
-        .append(
-          $("<input/>")
-            .addClass("form-check-input")
-            .attr("type", "radio")
-            .attr("name", "create_opt")
-            .attr("value", "False")
-        )
-        .append(
-          $("<label/>")
-            .addClass("form-check-label")
-            .text("False")
-        );
+      const create_new_label = $("<label/>").text("To create a new project?");
+      const create_new_box = $("<select/>")
+        .attr("id", "if_new")
+        .addClass("form-control")
+        .append($("<option/>").text("True"))
+        .append($("<option/>").text("False"))
+        .css("margin-left", "0em");
+
+      const secret_label = $("<label/>").text(
+        "Choose the type of notebook when creating a new project"
+      );
+      const secret_box = $("<select/>")
+        .attr("id", "nb_opt")
+        .addClass("form-control")
+        .append($("<option/>").text("auto"))
+        .append($("<option/>").text("public"))
+        .append($("<option/>").text("secret"))
+        .append($("<option/>").text("private"))
+        .css("margin-left", "0em");
+
       const artifacts_label = $("<label/>").text(
-        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames) such as `submission.csv, weights.h5`"
+        "Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`"
       );
       const artifacts_box = $("<input/>")
         .addClass("form-control")
@@ -531,9 +466,25 @@ define([
         .attr("placeholder", "submission.csv, weights.h5")
         .val("");
 
+      const git_commit_label = $("<label/>").text(
+        "To perform a Git commit? (only when the notebook is inside a Git repository)"
+      );
+      const git_commit_box = $("<select/>")
+        .attr("id", "if_git")
+        .addClass("form-control")
+        .append($("<option/>").text("True"))
+        .append($("<option/>").text("False"))
+        .css("margin-left", "0em");
+
+      const git_message_label = $("<label/>").text("Commit message for git");
+      const git_message_box = $("<input/>")
+        .addClass("form-control")
+        .attr("id", "git_msg_box")
+        .attr("placeholder", "Any message");
+
       div
-        .append(secret_label)
-        .append(secret_box)
+        .append(message_label)
+        .append(message_box)
         .append("<br>")
         .append(nb_filename_label)
         .append(nb_filename_box)
@@ -541,20 +492,26 @@ define([
         .append(files_label)
         .append(files_box)
         .append("<br>")
-        .append(capture_env_label)
-        .append(capture_env_box)
-        .append("<br>")
         .append(env_type_label)
         .append(env_type_box)
         .append("<br>")
-        .append(notebook_id_label)
-        .append(notebook_id_box)
+        .append(project_id_label)
+        .append(project_id_box)
         .append("<br>")
         .append(create_new_label)
         .append(create_new_box)
         .append("<br>")
+        .append(secret_label)
+        .append(secret_box)
+        .append("<br>")
         .append(artifacts_label)
-        .append(artifacts_box);
+        .append(artifacts_box)
+        .append("<br>")
+        .append(git_commit_label)
+        .append(git_commit_box)
+        .append("<br>")
+        .append(git_message_label)
+        .append(git_message_box);
 
       return form;
     };
@@ -575,45 +532,82 @@ define([
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
         buttons: {
+          Cancle: {},
           Commit: {
-            id: "save_params_button",
             class: "btn-primary",
             click: function() {
-              storeParamsInPython();
-              dropdownOption(jvn_params_modal, modalInit); // use dropdownOption() to prevent keyboard loss when need to ask users API key
+              storeParams();
+              openModal(modalInit); // use openModal() to prevent keyboard loss when need to ask users API key
             }
           }
         },
         open: function() {
-          getParams().then(jvn_params => {
-            if (jvn_params == null) {
-              $("#nb_filename_box").val(
-                Jupyter.notebook.notebook_name.replace(".ipynb", "")
-              );
-              $($("input[name=secret_opt")[1]).prop("checked", true);
-              $($("input[name=cap_opt")[0]).prop("checked", true);
-              $($("input[name=create_opt")[1]).prop("checked", true);
-              $("#env_opt option:contains('conda')").prop("selected", true);
-            } else {
-              $("#artifacts_box").val(jvn_params.artifacts);
-              $("#files_box").val(jvn_params.files);
-              $("#notebook_id_box").val(jvn_params.notebook_id);
-              jvn_params.secret == "False"
-                ? $($("input[name=secret_opt")[1]).prop("checked", true)
-                : $($("input[name=secret_opt")[0]).prop("checked", true);
-              jvn_params.capture_env == "False"
-                ? $($("input[name=cap_opt")[1]).prop("checked", true)
-                : $($("input[name=cap_opt")[0]).prop("checked", true);
-              jvn_params.create_new == "False"
-                ? $($("input[name=create_opt")[1]).prop("checked", true)
-                : $($("input[name=create_opt")[0]).prop("checked", true);
-              jvn_params.env_type == "conda"
-                ? $("#env_opt option:contains('conda')").prop("selected", true)
-                : $("#env_opt option:contains('pip')").prop("selected", true);
-            }
-          });
+          let params = getParams();
+          if (params != null) {
+            $("#project_msg_box").val(params.message);
+            $("#nb_filename_box").val(params.nb_filename);
+            $("#files_box").val(params.files);
+            $("#env_opt option:contains(" + params.env_type + ")").prop(
+              "selected",
+              true
+            );
+            $("#project_id_box").val(params.project_id);
+            $("#if_new option:contains(" + params.create_new + ")").prop(
+              "selected",
+              true
+            );
+            $("#nb_opt option:contains(" + params.secret + ")").prop(
+              "selected",
+              true
+            );
+            $("#artifacts_box").val(params.artifacts);
+            $("#if_git option:contains(" + params.if_git + ")").prop(
+              "selected",
+              true
+            );
+            $("#git_msg_box").val(params.git_msg);
+          } else {
+            $("#nb_filename_box").val(
+              Jupyter.notebook.notebook_name.replace(".ipynb", "")
+            );
+            $("#env_opt option:contains('auto')").prop("selected", true);
+            $("#if_new option:contains('False')").prop("selected", true);
+            $("#if_git option:contains('False')").prop("selected", true);
+            $("#nb_opt option:contains('auto')").prop("selected", true);
+          }
+
+          let show = (target, list) => {
+            let keys = Object.keys(list);
+            keys.forEach(k => {
+              if ($(target + " option:selected").text() == "True") {
+                $(k).prop("disabled", !list[k]);
+              } else {
+                $(k).prop("disabled", list[k]);
+              }
+              if ($(k).prop("disabled") && $(k).is("input")) {
+                $(k).val("");
+              }
+            });
+          };
+          show("#if_new", { "#nb_opt": true, "#project_id_box": false });
+          show("#if_git", { "#git_msg_box": true });
+          $("#if_new").change(() =>
+            show("#if_new", { "#nb_opt": true, "#project_id_box": false })
+          );
+          $("#if_git").change(() => show("#if_git", { "#git_msg_box": true }));
+
+          $(jvn_params_modal)
+            .find(".modal-content")
+            .show("fast");
         }
       });
+      const modal = $(jvn_params_modal).find(".modal-content");
+      modal
+        .children()
+        .first()
+        .remove();
+      modal.parent().css("width", "500px");
+      modal.hide();
       jvn_params_modal.modal("show");
     };
 
@@ -670,9 +664,9 @@ define([
           const option1 = $("#jvn_module1_option1");
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
-          option1.click(() => dropdownOption(jvn_dropdown_modal, saveParams)); //saveParamsAndCommit
+          option1.click(() => openModal(saveParams));
           //option2.click(()=>sidebar());
-          //option3.click(()=>settingsDialog());
+          option3.click(() => openModal(clearParams));
         }
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
@@ -741,19 +735,27 @@ define([
     jvn_notif.element.attr("disabled", true);
   }
 
-  function dropdownOption(modal, option) {
+  function openModal(func, modal = null) {
+    // Helper function; which use to open a new window(modal)
+    // from an existing window(modal/dialog)
     return new Promise(res => {
-      modal.modal("hide");
+      let len = $(".modal-backdrop").length;
+      if (modal != null) {
+        modal.modal("hide");
+      }
       let it = setInterval(() => {
-        if ($(".modal-backdrop").length == 0) {
-          option();
+        if (len != $(".modal-backdrop").length) {
+          func();
           res(clearInterval(it));
         }
-      }, 10);
+      });
     });
   }
 
-  function getPythonArray(arrInString) {
+  function getArrayInPython(arrInString) {
+    // Helper function; which use to format a string
+    // that can be used in commit() array arguments
+    // such as outputs and files
     const arr =
       "[" +
       arrInString
@@ -767,101 +769,44 @@ define([
     return arr;
   }
 
-  function storeParamsInPython() {
-    // This function will be used to stored
-    // the set of parameters into Python
-    // and then we can call getParams()
-    // to get these data
-    const jvn_params = {
-      secret: $("input[name=secret_opt]")
-        .filter(":checked")
-        .val(),
-      nb_filename: $("#nb_filename_box").val() + ".ipynb",
-      files: $("#files_box").val(),
-      capture_env: $("input[name=cap_opt]")
-        .filter(":checked")
-        .val(),
-      env_type: $("#env_opt option:selected").text(),
-      notebook_id: $("#notebook_id_box").val(),
-      create_new: $("input[name=create_opt]")
-        .filter(":checked")
-        .val(),
-      artifacts: $("#artifacts_box").val()
-    };
+  function getValInPython(val) {
+    // Helper function; which use to format a string
+    // that can be used in commit() string arguments
+    if (val === "") {
+      return "None";
+    }
+    return '"' + val + '"';
+  }
 
-    const python_id = getStoredId();
-    const var_in_python = python_id + " = " + JSON.stringify(jvn_params);
-    const store_to_python = "%store " + python_id;
-    Jupyter.notebook.kernel.execute(var_in_python + "\n" + store_to_python);
+  function storeParams() {
+    // This function will be used to stored
+    // the settings of parameters
+    const jvn_params = {
+      message: $("#project_msg_box").val(),
+      nb_filename: $("#nb_filename_box").val(),
+      files: $("#files_box").val(),
+      env_type: $("#env_opt option:selected").text(),
+      project_id: $("#project_id_box").val(),
+      create_new: $("#if_new option:selected").text(),
+      secret: $("#nb_opt option:selected").text(),
+      artifacts: $("#artifacts_box").val(),
+      if_git: $("#if_git option:selected").text(),
+      git_msg: $("#git_msg_box").val()
+    };
+    localStorage.setItem(
+      Jupyter.notebook.notebook_name,
+      JSON.stringify(jvn_params)
+    );
   }
 
   function getParams() {
-    // This function we use to check if we
-    // have set parameters of jovian.commit()
-    // already.
-    // If so, we return these parameter,
-    // otherwise, just return null.
-    const python_id = getStoredId();
-    const check_params =
-      python_id +
-      ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n' +
-      "%store -r " +
-      python_id +
-      "\n" +
-      "print (" +
-      python_id +
-      ")";
-    return new Promise((resolve, reject) => {
-      Jupyter.notebook.kernel.execute(check_params, {
-        iopub: {
-          output: data => resolve(data.content.text.trim())
-        }
-      });
-    }).then(result => {
-      if (
-        !result.includes(
-          "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"
-        )
-      ) {
-        const raw_params = result
-          .replace(/"/g, "{_dc_}")
-          .replace(/\\'/g, "{_sc_}");
-        var jvn_params = JSON.parse(raw_params.replace(/'/g, '"'));
-        const nb_filename = jvn_params.nb_filename
-          .replace(/{_dc_}/g, '"')
-          .replace(/{_sc_}/g, "'");
-        const files = jvn_params.files
-          .replace(/{_dc_}/g, '"')
-          .replace(/{_sc_}/g, "'");
-        const artifacts = jvn_params.artifacts
-          .replace(/{_dc_}/g, '"')
-          .replace(/{_sc_}/g, "'");
-
-        const notebook_id = jvn_params.notebook_id
-          .replace(/{_dc_}/g, '"')
-          .replace(/{_sc_}/g, "'");
-
-        jvn_params.nb_filename = nb_filename;
-        jvn_params.files = files;
-        jvn_params.artifacts = artifacts;
-        jvn_params.notebook_id = notebook_id;
-
-        return jvn_params;
-      }
-      return null;
-    });
+    // get parameter settings from current notebook
+    return JSON.parse(localStorage.getItem(Jupyter.notebook.notebook_name));
   }
 
-  function getStoredId() {
-    // This function will be used to
-    // normalize the name of notebook
-    const notebookId = Jupyter.notebook.notebook_name.replace(".ipynb", "");
-    const nomalizedId = notebookId.replace(
-      /&|-|\[|\]|\.|,|=|\(|\)|\{|\}|\||`|~|\"|@|#|\$|\%|\^|\*|\+|\!|\<|\>|\;|\'|\?|\ /g,
-      "_"
-    );
-    const pythonId = "stored_params_for_" + nomalizedId + "_E4CBF73";
-    return pythonId;
+  function clearParams() {
+    // clear the settings of current notbbok
+    localStorage.removeItem(Jupyter.notebook.notebook_name);
   }
 
   return {
