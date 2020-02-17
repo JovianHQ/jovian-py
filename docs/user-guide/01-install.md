@@ -31,7 +31,7 @@ Once the installation is complete, you can start [uploading Jupyter notebooks to
 
 **Configuration (for Jovian Pro users only)**
 
-If you are a [Jovian Pro](09-pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
+If you are a [Jovian Pro](11-pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
 
 ```
 jovian configure

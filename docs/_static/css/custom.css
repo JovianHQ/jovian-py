@@ -44,9 +44,9 @@ h1 {
   font-size: 30px;
 }
 
-ul {
+ul > li.toctree-l1 {
   /* Indent the side nave bar list*/
-  margin-left: 2%;
+  margin-left: 3%;
 }
 
 .wy-menu-vertical a {

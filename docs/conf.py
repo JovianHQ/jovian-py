@@ -6,7 +6,7 @@ from recommonmark.transform import AutoStructify
 sys.path.insert(0, os.path.abspath('../'))  # source path to access the module
 
 project = 'Jovian'
-copyright = '2019, SwiftAce Inc'
+copyright = '2020, SwiftAce Inc'
 author = 'Aakash N S, Siddhant Ujjain'
 
 extensions = ['recommonmark',  # to use .md along with .rst
@@ -25,7 +25,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_style = 'css/custom.css'  # adding some custom styles on the theme
 
-html_logo = 'jvn_full_logo.png'
+html_logo = 'jvn_full_logo.svg'
 html_theme_options = {
     'logo_only': True  # to display only logo on the side nav bar
 }
