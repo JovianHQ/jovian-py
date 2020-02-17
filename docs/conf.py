@@ -25,7 +25,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_style = 'css/custom.css'  # adding some custom styles on the theme
 
-html_logo = 'jvn_full_logo.svg'
+html_logo = 'jovian_horizontal_logo.svg'
 html_theme_options = {
     'logo_only': True  # to display only logo on the side nav bar
 }
