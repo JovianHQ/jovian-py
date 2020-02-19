@@ -1,37 +1,8 @@
 import NBKernel from './NBKernel';
-//import { insertAfter } from './module2';
 
 
 /************************ Module_4: Share Dialog ***********************************/
 
-//let body:any;
-
-/*
-async function share():Promise<void>{
-  
-  //This fuction will display the window after
-  //the user selects Share Dialog from the 
-  //Drop Down menu.
-  
-  let header:HTMLElement = initialHeader();
-  (header as any).style["max-height"] = "1000px";
-  header.appendChild(createSD());
-  header.appendChild(breakN());
-  
-  await getUrl().then(
-    (rs)=>header.appendChild(shareWindow(rs))
-  );
-  header.appendChild(addButtons());
-  openWindow();
-}
-*/
-
-/*
-function breakN():HTMLElement {
-    let div:HTMLElement = document.createElement("BR");
-    return div;
-}
-*/
 
 async function getUrl():Promise<string> {
 /*
@@ -98,59 +69,5 @@ function shareWindow(text:string): HTMLIFrameElement{
       return iframe;
     }
 
-/*
-function createSD():HTMLElement {
-    let div:HTMLElement = document.createElement("div");
-    div.className = "jvn_params_secrete";
-    div.appendChild(addText("Share Dialog"));
-    div.style.alignSelf = 'center';
-    return div;
-}
-*/
-/*
-function addButtons():HTMLElement{
-    let footer:HTMLElement = document.createElement("div");
-    let icon1:HTMLElement = document.createElement("div");
-    let cancle:HTMLElement = document.createElement("div");
-    let cancleBut:HTMLElement = document.createElement("button");
-    footer.className = "p-Widget jp-Dialog-footer";
-    icon1.className = "jp-Dialog-buttonIcon";
-    cancle.className = "jp-Dialog-buttonLabel";
-    cancleBut.className = "jp-Dialog-button jp-mod-reject jp-mod-styled";
-    cancle.innerText = "Exit";
-    cancleBut.appendChild(icon1);
-    cancleBut.appendChild(cancle);
-    footer.appendChild(cancleBut);
-    (<any>cancleBut).onclick = ()=>{
-        body.parentNode.removeChild(body);
-    };
-    return footer;
-}
-*/
-/*
-function initialHeader():HTMLElement{
-    let header:HTMLElement = document.createElement("div");
-    let subHeader:HTMLElement = document.createElement("div");
-    header.className = "p-Widget jp-Dialog";
-    subHeader.className = "p-Widget p-Panel jp-Dialog-content";
-    header.appendChild(subHeader);
-    body = header;
-    return subHeader;
-}
-*/
-/*
-function addText(title:string):HTMLElement{
-    let text:HTMLSpanElement = document.createElement("span");
-    text.className = "p-Widget jp-Dialog-header";
-    text.innerText = title;
-    (<any>text.style)["margin-top"] = "0.5em";
-    return text;
-}
-*/
-/*
-function openWindow():void {
-  insertAfter(body, document.getElementById("main"));
-}
-*/
 
-export { getUrl, shareWindow };//share
+export { getUrl, shareWindow };
