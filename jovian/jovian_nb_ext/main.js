@@ -136,10 +136,10 @@ define([
   /*************************************** MODULE_4: Share Dialog ***********************************************/
 
   const getUrl = () => {
-  /*
+  /**
   This is a helper function to generate a project URL for later use.
   the URL will be read by the shareWindow function.
-  */
+  **/
     
     return new Promise(resolve => {
       
