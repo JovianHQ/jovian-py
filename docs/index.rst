@@ -10,9 +10,10 @@ Jovian: The platform for all your Data Science projects
     ..
 
 .. meta::
-   :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
+  :description lang=en:
+    Jovian.ml is a better place for your data science projects, Jupyter notebooks, machine learning models, experiment logs, results and more.
 
-jovian is an open-source Python package integrated with 
+Jovian is an open-source Python package integrated with 
 |Jovian| to provide the tools necessary for Data Scientists
 and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
 where even Students and Enthusiasts can leverage the same and also use 
