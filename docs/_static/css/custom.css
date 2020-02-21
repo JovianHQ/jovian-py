@@ -50,6 +50,10 @@ ul > li.toctree-l1 {
   margin-left: 3%;
 }
 
+.wy-menu-vertical {
+  margin-bottom: 64px;
+}
+
 .wy-menu-vertical a {
   line-height: 1.5;
 }

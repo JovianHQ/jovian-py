@@ -5,8 +5,8 @@
     <button class="navbar-toggler" type="button" data-toggle="wy-nav-top">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="/">
-      <img src="../_static/jovian_horizontal_logo.svg" height="36" class="d-inline-block align-top" alt="Jovian.ml">
+    <a class="navbar-brand"href="{{ pathto(master_doc) }}">
+      <img src="{{ pathto('_static/' + logo, 1) }}" height="36" class="d-inline-block align-top" alt="Jovian.ml docs"/>
     </a>
     <span/>
   </nav>
@@ -16,16 +16,5 @@
 {% block mobile_nav%} {% endblock %}
 
 {% block sidebartitle %}
-  {% if theme_display_version %}
-    {%- set nav_version = version %}
-    {% if READTHEDOCS and current_version %}
-      {%- set nav_version = current_version %}
-    {% endif %}
-    {% if nav_version %}
-      <div class="version">
-        {{ nav_version }}
-      </div>
-    {% endif %}
-  {% endif %}
   {% include "searchbox.html" %}
 {% endblock %}
