@@ -51,7 +51,7 @@ ul > li.toctree-l1 {
 }
 
 .wy-menu-vertical {
-  margin-bottom: 64px;
+  padding-bottom: 64px;
 }
 
 .wy-menu-vertical a {
