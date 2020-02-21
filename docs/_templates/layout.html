@@ -116,7 +116,7 @@
       <a class="navbar-brand" href="/">
         <img src="../_static/jovian_horizontal_logo.svg" height="36" class="d-inline-block align-top" alt="Jovian.ml">
       </a>
-      {% include "searchbox.html" %}
+      <span/>
     </nav>
     {# SIDE NAV, TOGGLES ON MOBILE #}
     <div class="">
@@ -136,6 +136,8 @@
                 </div>
               {% endif %}
             {% endif %}
+
+            {% include "searchbox.html" %}
 
             {% endblock %}
           </div>

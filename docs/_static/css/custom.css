@@ -73,8 +73,6 @@ ul > li.toctree-l1 {
 .wy-side-nav-search {
   /* Background color for the search bar along with the logo*/
   background-color: #f4f7fd;
-  padding: 0px;
-  margin: 0px;
 }
 
 .wy-nav-side {
@@ -204,6 +202,7 @@ a:hover {
   box-shadow: rgba(0, 21, 41, 0.08) 0px 1px 4px;
   padding-top: 5px !important;
   padding-bottom: 5px !important;
+  justify-content: space-between;
 }
 
 div.section::before {
@@ -213,7 +212,6 @@ div.section::before {
   margin: -70px 0 0;
 }
 
-input[type="text"],
 input[type="search"] {
   display: block;
   width: 100%;

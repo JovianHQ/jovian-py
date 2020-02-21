@@ -23,10 +23,6 @@ where even Students and Enthusiasts can leverage the same and also use
   <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
 
 .. toctree::
-  Home <self>
-  :hidden:
-
-.. toctree::
   :caption: Getting Started
 
   user-guide/01-install
