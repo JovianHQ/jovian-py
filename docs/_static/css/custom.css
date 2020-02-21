@@ -1,4 +1,5 @@
 @import "theme.css";
+@import "navbar.css";
 
 /* Load fonts */
 @import url("https://fonts.googleapis.com/css?family=Lato|Roboto+Mono|Roboto:400,500&display=swap");
@@ -72,11 +73,18 @@ ul > li.toctree-l1 {
 .wy-side-nav-search {
   /* Background color for the search bar along with the logo*/
   background-color: #f4f7fd;
+  padding: 0px;
+  margin: 0px;
 }
 
 .wy-nav-side {
   /* This relates to the entire color of the sidebar */
   background-color: #f6f9ff;
+}
+
+.wy-side-scroll {
+  top: 70px;
+  height: calc(100vh - 70px);
 }
 
 .wy-menu a:hover {
@@ -132,6 +140,10 @@ ul > li.toctree-l1 {
   max-width: 100%;
 }
 
+.wy-nav-content-wrap {
+  padding-top: 56px;
+}
+
 .rst-content {
   margin: 0 auto;
   max-width: 800px;
@@ -153,6 +165,10 @@ a,
 a:visited,
 a:hover {
   color: #0d61ff;
+}
+
+.btn {
+  border-radius: 2px !important;
 }
 
 .btn-neutral,
@@ -181,4 +197,44 @@ a:hover {
 
 .wy-nav-top a:visited {
   color: #ffffff !important;
+}
+
+.navbar-top {
+  background-color: #ffffff;
+  box-shadow: rgba(0, 21, 41, 0.08) 0px 1px 4px;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+div.section::before {
+  content: "";
+  display: block;
+  height: 70px;
+  margin: -70px 0 0;
+}
+
+input[type="text"],
+input[type="search"] {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  box-shadow: none;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
 }
