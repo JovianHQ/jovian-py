@@ -29,49 +29,50 @@ define([
           resolve(data.content.text.trim());
         };
 
-        const nb_filename = Jupyter.notebook.notebook_name;
-        var commit = '\tcommit(nb_filename="' + nb_filename + '")\n';
-
+        const nb_filename = Jupyter.notebook.notebook_name.substr(
+          0,
+          Jupyter.notebook.notebook_name.length - 6
+        );
+        var commit = '\tcommit(filename="' + nb_filename + '")\n';
         // if we have a set of params already, then use it to call commit.
         if (window.jvn_params != null) {
           const secret = window.jvn_params.secret;
           const capture_env = window.jvn_params.capture_env;
-          const create_new = window.jvn_params.create_new;
+          const new_project = window.jvn_params.create_new;
           const env_type = window.jvn_params.env_type;
-          const files = window.jvn_params.files;
-          var notebook_id;
-          const artifacts = window.jvn_params.artifacts;
+          var files = getPythonArray(window.jvn_params.files);
+          var artifacts = getPythonArray(window.jvn_params.artifacts);
+          var project;
 
           if (window.jvn_params.notebook_id === "") {
-            notebook_id = "None";
+            project = "None";
           } else {
-            notebook_id = '"' + window.jvn_params.notebook_id + '"';
+            project = '"' + window.jvn_params.notebook_id + '"';
           }
-
           commit =
             "commit(" +
-            'nb_filename="' +
-            window.jvn_params.nb_filename +
+            'filename="' +
+            nb_filename +
             '"' +
-            ",secret=" +
+            ",privacy=" +
             secret +
             "" +
             ",capture_env=" +
             capture_env +
             "" +
-            ",create_new=" +
-            create_new +
+            ",new_project=" +
+            new_project +
             "" +
             ",files=" +
             files +
             "" +
-            ",notebook_id=" +
-            notebook_id +
+            ",project=" +
+            project +
             "" +
-            ",artifacts=" +
+            ",outputs=" +
             artifacts +
             "" +
-            ',env_type="' +
+            ',environment="' +
             env_type +
             '"' +
             ")\n";
@@ -433,15 +434,17 @@ define([
       const nb_filename_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "nb_filename_box")
-        .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""));
+        .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""))
+        .prop("disabled", true);
 
       const files_label = $("<label/>").text(
-        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames)"
+        "Any additional scripts(.py files), CSVs that are required to run the notebook. These will be available in the files tab on Jovian. - Pass the list of strings(filenames) such as `utils.py, inputs.csv`"
       );
       const files_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "files_box")
-        .val("[]");
+        .attr("placeholder", "utils.py, inputs.csv")
+        .val("");
 
       const capture_env_label = $("<label/>").text(
         "To capture and and upload Python environment along with the notebook?"
@@ -520,12 +523,13 @@ define([
             .text("False")
         );
       const artifacts_label = $("<label/>").text(
-        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames)"
+        "Any outputs files or artifacts generated from the modeling processing. This can include model weights/checkpoints, generated CSVs, images etc. - Pass the list of strings(filenames) such as `submission.csv, weights.h5`"
       );
       const artifacts_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "artifacts_box")
-        .val("[]");
+        .attr("placeholder", "submission.csv, weights.h5")
+        .val("");
 
       div
         .append(secret_label)
@@ -576,7 +580,7 @@ define([
             class: "btn-primary",
             click: function() {
               storeParamsInPython();
-              modalInit();
+              dropdownOption(jvn_params_modal, modalInit); // use dropdownOption() to prevent keyboard loss when need to ask users API key
             }
           }
         },
@@ -591,9 +595,9 @@ define([
               $($("input[name=create_opt")[1]).prop("checked", true);
               $("#env_opt option:contains('conda')").prop("selected", true);
             } else {
-              $("#nb_filename_box").val(
-                jvn_params.nb_filename.replace(".ipynb", "")
-              );
+              $("#artifacts_box").val(jvn_params.artifacts);
+              $("#files_box").val(jvn_params.files);
+              $("#notebook_id_box").val(jvn_params.notebook_id);
               jvn_params.secret == "False"
                 ? $($("input[name=secret_opt")[1]).prop("checked", true)
                 : $($("input[name=secret_opt")[0]).prop("checked", true);
@@ -611,6 +615,75 @@ define([
         }
       });
       jvn_params_modal.modal("show");
+    };
+
+    const formDropDownUI = function() {
+      /**
+       * module 1:
+       * Draw the dropdown menu
+       **/
+      const div = $("<div/>")
+        .attr("id", "jvn_options")
+        .addClass("btn-group-vertical");
+
+      const option1 = $("<button/>")
+        .attr("id", "jvn_module1_option1")
+        .addClass("btn btn-primary")
+        .text("Commit w/ options");
+
+      const option2 = $("<button/>")
+        .attr("id", "jvn_module1_option2")
+        .addClass("btn btn-primary")
+        .text("Open sidebar");
+
+      const option3 = $("<button/>")
+        .attr("id", "jvn_module1_option3")
+        .addClass("btn btn-primary")
+        .text("Settings");
+
+      div
+        .append(option1)
+        .append(option2)
+        .append(option3);
+
+      return div;
+    };
+
+    const showDropDown = function() {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: formDropDownUI()
+       *
+       * Button:
+       *  - 1: Commit w/ options
+       *  - 2: Open sidebar
+       *  - 3: Settings
+       */
+      const jvn_dropdown_modal = dialog.modal({
+        show: false,
+        body: formDropDownUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        open: function() {
+          $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
+          const option1 = $("#jvn_module1_option1");
+          const option2 = $("#jvn_module1_option2");
+          const option3 = $("#jvn_module1_option3");
+          option1.click(() => dropdownOption(jvn_dropdown_modal, saveParams)); //saveParamsAndCommit
+          //option2.click(()=>sidebar());
+          //option3.click(()=>settingsDialog());
+        }
+      });
+      const modal = $(jvn_dropdown_modal).find(".modal-content");
+      const body = modal.find(".modal-body");
+      const jvn_pos = $(jvn_btn_grp.find("button")[0]).offset();
+      jvn_dropdown_modal
+        .html(body.html())
+        .width("140px")
+        .height("100px")
+        .offset({ left: jvn_pos.left, top: jvn_pos.top + 25 })
+        .modal("show");
     };
 
     /* 
@@ -631,9 +704,9 @@ define([
 
     //toolbar button to remove the jovian extension
     const set_params_ext_action = {
-      icon: "fa-angle-double-down",
+      icon: "fa-caret-down",
       help: "Show a list of parameters for user to set up",
-      handler: saveParams
+      handler: showDropDown //saveParams
     };
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
@@ -666,6 +739,32 @@ define([
     const jvn_notif = Jupyter.notification_area.widget("jvn");
     jvn_notif.inner.text("Committing to Jovian....");
     jvn_notif.element.attr("disabled", true);
+  }
+
+  function dropdownOption(modal, option) {
+    return new Promise(res => {
+      modal.modal("hide");
+      let it = setInterval(() => {
+        if ($(".modal-backdrop").length == 0) {
+          option();
+          res(clearInterval(it));
+        }
+      }, 10);
+    });
+  }
+
+  function getPythonArray(arrInString) {
+    const arr =
+      "[" +
+      arrInString
+        .split(",")
+        .map(e => "'" + e.trim() + "'")
+        .join(",") +
+      "]";
+    if (arr == "['']") {
+      return "None";
+    }
+    return arr;
   }
 
   function storeParamsInPython() {
