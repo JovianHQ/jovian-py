@@ -18,21 +18,18 @@ master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
 autodoc_mock_imports = ["torch", "fastai", "keras", "click"]
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'TermsOfService.md', 'PrivacyPolicy.md']
 
 html_theme = 'sphinx_rtd_theme'
 
+templates_path = ['_templates']
 html_static_path = ['_static']
-html_style = 'css/custom.css'  # adding some custom styles on the theme
+html_style = 'css/override.css'  # adding some custom styles on the theme
 
 html_logo = 'jovian_horizontal_logo.svg'
-html_theme_options = {
-    'logo_only': True,  # to display only logo on the side nav bar
-    'display_version': False
-}
+html_show_sphinx = False
 
 html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
-
 
 def setup(app):
     """Enables to embed reStructuredText(rst) in a markdown(.md)

@@ -57,8 +57,11 @@ publish-dev: clean build upload-dev
 publish-pro: clean sanity-check-release build-pro upload
 	sh ./deployAlert.sh PRO $(VERSION)
 
+copy-docs-css:
+	cp -r docs/_static/css/*.css docs/_build/html/_static/css
+
 run-docs:
-	cd docs && make html
+	cd docs && make clean html
 	sphinx-autobuild docs docs/_build/html
 
 test-watch:
