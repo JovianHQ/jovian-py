@@ -50,10 +50,6 @@ ul > li.toctree-l1 {
   margin-left: 3%;
 }
 
-.wy-menu-vertical {
-  padding-bottom: 64px;
-}
-
 .wy-menu-vertical a {
   line-height: 1.5;
 }
@@ -87,6 +83,7 @@ ul > li.toctree-l1 {
 .wy-side-scroll {
   top: 70px;
   height: calc(100vh - 70px);
+  padding-bottom: 64px;
 }
 
 .wy-menu a:hover {
