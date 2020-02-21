@@ -148,8 +148,8 @@ ul > li.toctree-l1 {
 }
 
 .wy-nav-top {
-  /* Color of nav at top when the window is narrow (769px)*/
-  background: #0d61ff;
+  padding: 0;
+  margin: 0;
 }
 
 .sig-param {
