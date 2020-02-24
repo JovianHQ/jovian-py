@@ -22,7 +22,6 @@
     "autofunction",
     "chdir",
     "chmod",
-    "conda",
     "contextlib",
     "csvs",
     "dataset",
@@ -86,9 +85,6 @@
     "webapp"
   ],
   "cSpell.ignoreWords": ["jvn", "mycompany", "notif", "seealso"],
-  "python.pythonPath": "/Users/rohitsanjay/miniconda3/envs/jovian-py-dev/bin/python",
-  "editor.formatOnSave": true,
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": false,
-  "python.linting.pylintEnabled": true
+  "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
+  "editor.formatOnSave": true
 }
