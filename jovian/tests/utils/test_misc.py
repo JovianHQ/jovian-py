@@ -165,6 +165,7 @@ class TestIsFlavorPro(TestCase):
         jovian._flavor.__flavor__ = 'jovian-pro'
         self.assertEqual(is_flavor_pro(), True)
 
+
 class TestVersion(TestCase):
     def test_version(self):
         expected_result = __version__

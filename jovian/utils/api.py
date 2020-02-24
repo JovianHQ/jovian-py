@@ -4,12 +4,7 @@ from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.misc import timestamp_ms
 from jovian.utils.request import get, post, pretty
-from jovian.utils.misc import urljoin
-
-
-def _u(path):
-    """Make a URL from the path"""
-    return urljoin(read_api_url(), path)
+from jovian.utils.shared import _u, _v
 
 
 def _h():
@@ -19,13 +14,6 @@ def _h():
             "x-jovian-library-version": __version__,
             "x-jovian-guest": get_guest_key(),
             "x-jovian-org": read_org_id()}
-
-
-def _v(version):
-    """Create version query parameter string"""
-    if version is not None:
-        return "?gist_version=" + str(version)
-    return ""
 
 
 def get_current_user():

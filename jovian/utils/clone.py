@@ -9,12 +9,7 @@ from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_u
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
 from jovian.utils.request import pretty
-from jovian.utils.misc import urljoin
-
-
-def _u(path):
-    """Make a URL from the path"""
-    return urljoin(read_api_url(), path)
+from jovian.utils.shared import _u, _v
 
 
 def _h(fresh):
@@ -31,13 +26,6 @@ def _h(fresh):
         headers["Authorization"] = "Bearer " + api_key
 
     return headers
-
-
-def _v(version):
-    """Create version query parameter string"""
-    if version is not None:
-        return "?gist_version=" + str(version)
-    return ""
 
 
 def get_gist(slug, version, fresh):
