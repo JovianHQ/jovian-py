@@ -3,187 +3,199 @@ import NBKernel from './NBKernel';
 let body:any;
 let lock:boolean = false;
 
-function askParameters():void{
+async function askParameters():Promise<void>{
   let header:HTMLElement = initialHeader();
   (header as any).style["max-height"] = "1000px";
-  let isSecret:HTMLElement = createSecretNB();
-  let name:HTMLElement = fileName();
-  let moreScripts:HTMLElement = additionalScripts();
-  let ifCaptrue:HTMLElement = toCaptrue();
-  let env:HTMLElement = whichEnv();
-  let baseId:HTMLElement = base64Id();
-  let ifNew:HTMLElement = newNB();
-  let arti:HTMLElement = artifacts();
-  header.appendChild(isSecret);
-  header.appendChild(name);
-  header.appendChild(moreScripts);
-  header.appendChild(ifCaptrue);
-  header.appendChild(env);
-  header.appendChild(baseId);
-  header.appendChild(ifNew);
-  header.appendChild(arti);
-  header.appendChild(addButtons("Commit",()=>commitWithParams(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti)));
-  setParameters(isSecret,name,moreScripts,ifCaptrue,env,baseId,ifNew,arti);
+  (header as any).style["font-size"] = "11px";
+  (header as any).style["top"] = "-43px";
+  let params = {
+    message: message(),
+    filename: filename(),
+    files: files(),
+    environment: environment(),
+    new_project: new_project(),
+    project_id: project_id(),
+    privacy: privacy(),
+    outputs: outputs(),
+    git_commit: git_commit(),
+    git_message: git_message()
+  }
+  header.appendChild(params.message);
+  header.appendChild(params.filename);
+  header.appendChild(params.files);
+  header.appendChild(params.environment);
+  header.appendChild(params.new_project);
+  header.appendChild(params.project_id);
+  header.appendChild(params.privacy);
+  header.appendChild(params.outputs);
+  header.appendChild(params.git_commit);
+  header.appendChild(params.git_message);
+  header.appendChild(addButtons("Commit",()=>commitWithParams(params)));
+  await setParameters(params);
   openWindow();
 }
 
-function setParameters(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void{
-  getParams().then(
-    (params:any)=>{
-      if (params == undefined) {
-        setEnvs(whatEnv,"conda");
-        setTrueOrFalse(isSecret,false);
-        setTrueOrFalse(ifCaptrue,true);
-        setTrueOrFalse(isNew,false);
-        setInputText(NBName,NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
-        setInputText(base_Id,"");
-        setInputText(moreScripts,"");
-        setInputText(arti,"");
-      } else {
-        let env_type:string = params.env_type == "conda" ? "conda":"pip";
-        let secret:boolean = params.env_type == "True" ? true:false;
-        let capture_env:boolean = params.capture_env == "True" ? true:false;
-        let create_new:boolean = params.create_new == "True" ? true:false;
-        let notebook_id:string = params.notebook_id;
-        let files:string = params.files;
-        let artifacts:string = params.artifacts;
-        setEnvs(whatEnv, env_type);
-        setTrueOrFalse(isSecret, secret);
-        setTrueOrFalse(ifCaptrue, capture_env);
-        setTrueOrFalse(isNew, create_new);
-        setInputText(NBName, NBKernel.currentNotebookName().trim().replace(".ipynb", ""));
-        setInputText(base_Id, notebook_id);
-        setInputText(moreScripts, files);
-        setInputText(arti, artifacts);
-      }
+async function setParameters(htmlParams:any):Promise<void> {
+  let project_id_helper = async ()=> {
+    let params = getParams();
+    if (params != null && params.project_id.length != 0) {
+      setInputText(htmlParams.project_id, params.project_id);
+      return;
     }
-  );
-}
-
-//same as askParameters but set parameters to defaults values
-function setDefault():void{
-  const python_id = getStoredId();
-  const clearPythonId = "%store -d " + python_id;
-  NBKernel.execute(clearPythonId).then(
-    ()=>askParameters()
-  );
-}
-
-function commitWithParams(isSecret:HTMLElement,NBName:HTMLElement,moreScripts:HTMLElement,ifCaptrue:HTMLElement,whatEnv:HTMLElement,base_Id:HTMLElement,isNew:HTMLElement,arti:HTMLElement):void {
-  let secret:string = getTrueOrFalse(isSecret);
-  let name:string = getInputText(NBName);
-  let scripts:string = getInputText(moreScripts); // array
-  let ifCap:string = getTrueOrFalse(ifCaptrue);
-  let env:string = getEnvs(whatEnv);
-  let baseId:string = getInputText(base_Id);
-  let ifNew:string = getTrueOrFalse(isNew);
-  let artis:string = getInputText(arti); // array
-  closeWindow();
-  commit(getFinalCommit(secret,name,scripts,ifCap,env,baseId,ifNew,artis));
-  storeParamsInPython(secret,name,scripts,ifCap,env,baseId,ifNew,artis);
-}
-
-function getFinalCommit(secret:string,name:string,scripts:string,ifCap:string,env:string,baseId:string,ifNew:string,artis:string):string{
-  let myCommit:string = "commit(" +
-    "secret=" + secret + "" +
-    ",capture_env=" + ifCap + "" +
-    ",create_new=" + ifNew + "" +
-    ',env_type="' + env + '"';
-  baseId = baseId == "" ? baseId: ',notebook_id="' + baseId + '"';
-  name = name == "" ? name: ',nb_filename="' + name + '.ipynb"';
-  let filesArr = scripts == "" ? scripts: ',files=' + getPythonArray(scripts) + '';
-  let artisArr = artis == "" ? artis: ',artifacts=' + getPythonArray(artis) + '';
-  myCommit += name + baseId + filesArr + artisArr + ")";
-  return myCommit;
-}
-
-function storeParamsInPython(secret:string,name:string,files:string,ifCap:string,env:string,baseId:string,ifNew:string,artis:string):void {
-  // This function will be used to stored
-  // the set of parameters into Python
-  // and then we can call getParams()
-  // to get these data
-  const jvn_params = {
-    secret: secret,
-    nb_filename: name + ".ipynb",
-    files: files,
-    capture_env: ifCap,
-    env_type: env,
-    notebook_id: baseId,
-    create_new: ifNew,
-    artifacts: artis
+    await getProjectTitle().then(t => {
+      if(t != undefined){
+        setInputText(htmlParams.project_id, t);
+      }
+    });
   };
-  const python_id = getStoredId();
-  const var_in_python = python_id + " = " + JSON.stringify(jvn_params);
-  const store_to_python = "%store " + python_id;
-  NBKernel.execute(var_in_python + "\n" + store_to_python);
+  let params = getParams();
+  if (params != null) {
+    setInputText(htmlParams.message, params.message);
+    setInputText(htmlParams.filename, params.filename);
+    setInputText(htmlParams.files, params.files);
+    setEnvs(htmlParams.environment, params.environment);
+    await project_id_helper();
+    setTrueOrFalse(htmlParams.new_project, params.new_project == "True" ? true : false);
+    setPrivacy(htmlParams.privacy, params.privacy);
+    setInputText(htmlParams.outputs, params.outputs);
+    setTrueOrFalse(htmlParams.git_commit, params.git_commit == "True" ? true : false);
+    setInputText(htmlParams.git_message, params.git_message);
+  } else {
+    setInputText(htmlParams.filename, NBKernel.currentNotebookName().replace(".ipynb", ""));
+    setTrueOrFalse(htmlParams.new_project, false);
+    setTrueOrFalse(htmlParams.git_commit, true);
+    setEnvs(htmlParams.environment, "auto");
+    setPrivacy(htmlParams.privacy, "auto");
+  }
+  let show = (target:HTMLElement, list:[{element:HTMLElement, show:boolean}]) => {
+    list.forEach(e => {
+      if (getTrueOrFalse(target) == "True") {
+        if (e.show) {
+          disable(e.element, false);
+        } else {
+          disable(e.element);
+        }
+      } else {
+        if (e.show) {
+          disable(e.element);
+        } else {
+          disable(e.element, false);
+        }
+      }
+    });
+  };
+  show(htmlParams.new_project, [{element:htmlParams.project_id, show:false}]);
+  htmlParams.new_project.onchange = async ()=> {
+    await project_id_helper();
+    show(htmlParams.new_project, [{element:htmlParams.project_id, show:false}]);
+  };
 }
 
-async function getParams():Promise<any> {
-  // This function we use to check if we
-  // have set parameters of jovian.commit()
-  // already.
-  // If so, we return these parameter,
-  // otherwise, just return null.
-  const python_id = getStoredId();
-  const check_params =
-    python_id +
-    ' = "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"\n' +
-    "%store -r " +
-    python_id +
-    "\n" +
-    "print (" +
-    python_id +
-    ")";
-  return new Promise((resolve, reject) => {
-    NBKernel.execute(check_params).then(
-      (data:string) => {
-        let result:string = data.trim();
-        if (
-          !result.includes(
-            "F8612598845FB14364EC59A2528862E18664728B4FC319C6F4BB817CB16F6D23AB752E247FF806C6D5730567025A886E765E19F764802E87F871CAB4C72B540E"
-          )
-        ) {
-          const raw_params = result
-          .replace(/"/g, "{_dc_}")
-          .replace(/\\'/g, "{_sc_}");
-          let jvn_params = JSON.parse(raw_params.replace(/'/g, '"'));
-          const nb_filename = jvn_params.nb_filename
-            .replace(/{_dc_}/g, '"')
-            .replace(/{_sc_}/g, "'");
-          const files = jvn_params.files
-            .replace(/{_dc_}/g, '"')
-            .replace(/{_sc_}/g, "'");
-          const artifacts = jvn_params.artifacts
-            .replace(/{_dc_}/g, '"')
-            .replace(/{_sc_}/g, "'");
+function setDefault():void{
+  //same as askParameters but set parameters to defaults values
+  clearParams();
+  askParameters();
+}
 
-          const notebook_id = jvn_params.notebook_id
-            .replace(/{_dc_}/g, '"')
-            .replace(/{_sc_}/g, "'");
+function commitWithParams(params:any):void {
+  closeWindow();
+  let filename:string[] = NBKernel.currentNotebookName().split(".");
+  filename.pop();
+  filename.join();
+  let jvn_params = {
+    message: getInputText(params.message),
+    filename: filename,
+    files: getInputText(params.files),
+    environment: getEnvs(params.environment),
+    new_project: getTrueOrFalse(params.new_project),
+    project_id: getInputText(params.project_id),
+    privacy: getPrivacy(params.privacy),
+    outputs: getInputText(params.outputs),
+    git_commit: getTrueOrFalse(params.git_commit),
+    git_message: getInputText(params.git_message)
+  }
+  storeParams(jvn_params);
+  commit(getFinalCommit(jvn_params));
+}
 
-          jvn_params.nb_filename = nb_filename;
-          jvn_params.files = files;
-          jvn_params.artifacts = artifacts;
-          jvn_params.notebook_id = notebook_id;
-          resolve (jvn_params);
-        } else {
-          resolve (undefined);
+function getFinalCommit(params:any = null):string {
+  if (params == null){
+    params = getParams();
+  }
+  const filename:string = getValInPython(params.filename);
+  const new_project = params.new_project;
+  const git_commit = params.git_commit;
+  const files = getArrayInPython(params.files);
+  const outputs = getArrayInPython(params.outputs);
+  const privacy = getValInPython(params.privacy);
+  const environment = getValInPython(params.environment);
+  const project_id = getValInPython(params.project_id);
+  const message = getValInPython(params.message);
+  const git_message = getValInPython(params.git_message);
+  const commit =
+    "commit(" +
+    "filename=" +
+    filename +
+    ",message=" +
+    message +
+    ",git_commit=" +
+    git_commit +
+    ",git_message=" +
+    git_message +
+    ",privacy=" +
+    privacy +
+    ",new_project=" +
+    new_project +
+    ",files=" +
+    files +
+    ",project=" +
+    project_id +
+    ",outputs=" +
+    outputs +
+    ",environment=" +
+    environment +
+    ")\n";
+  return commit;
+}
+
+function getProjectTitle():Promise<string> {
+  return new Promise(resolve => {
+    const code =
+      "from jovian.utils.commit import _parse_project as p\n" +
+      "a = p(project=None, new_project=None, filename=None)\n" +
+      "print(a[0])";
+    NBKernel.execute(code).then(
+      data => {
+        let ms = data
+          .trim()
+          .replace(/.*?\"/, "")
+          .split('"')
+          .shift();
+        if (ms.toLowerCase() == "none") {
+          resolve(undefined);
         }
+        resolve(ms);
       }
     );
   });
 }
 
-function getStoredId():string {
-  // This function will be used to
-  // normalize the name of notebook
-  const notebookId = NBKernel.currentNotebookName().trim().replace(".ipynb", "");
-  const nomalizedId = notebookId.replace(
-    /&|-|\[|\]|\.|,|=|\(|\)|\{|\}|\||`|~|\"|@|#|\$|\%|\^|\*|\+|\!|\<|\>|\;|\'|\?|\ /g,
-    "_"
+function storeParams(params:any):void {
+  // This function will be used to stored
+  // the settings of parameters
+  localStorage.setItem(
+    NBKernel.currentNotebookName(),
+    JSON.stringify(params)
   );
-  const pythonId = "stored_params_for_" + nomalizedId + "_E4CBF73";
-  return pythonId;
+}
+
+function getParams():any {
+  // get parameter settings from current notebook
+  return JSON.parse(localStorage.getItem(NBKernel.currentNotebookName()));
+}
+
+function clearParams():void {
+  localStorage.removeItem(NBKernel.currentNotebookName());
 }
 
 async function commit(commitWithParams:string|null = null):Promise<void> {
@@ -194,15 +206,7 @@ async function commit(commitWithParams:string|null = null):Promise<void> {
   if (commitWithParams != null){
     commit = "\t" + commitWithParams.trim() + "\n";
   } else {
-    await getParams().then(
-      (params:any)=> {
-        if (params != undefined){
-          console.log(params);
-          commit = (getFinalCommit(params.secret,NBKernel.currentNotebookName().trim().replace(".ipynb", ""),params.files,params.capture_env,params.env_type,params.notebook_id,params.create_new,params.artifacts));
-          commit = "\t" + commit.trim() + "\n";
-        }
-      }
-    )
+    commit = "\t" + getFinalCommit().trim() + "\n";
   }
   lock = true;
   getAPIKeys().then(
@@ -240,7 +244,6 @@ function askAPIKeys():void {
   let a:HTMLElement = addLink("Jovian", "https://jovian.ml");
   let input:HTMLElement = addInput();
   span.appendChild(a);
-  div.className = "jvn_API_Keys";
   div.appendChild(span);
   div.appendChild(input);
   header.appendChild(div);
@@ -309,69 +312,75 @@ async function getAPIKeys() {
   });
 }
 
-function createSecretNB():HTMLElement {
+function message():HTMLElement {
   let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_secrete";
-  div.appendChild(addText("Create a secret notebook?"));
-  div.appendChild(addTrueOrFalse());
+  div.appendChild(addText("A short message to be used as the title for this version"));
+  div.appendChild(addInput());
   return div;
 }
 
-function fileName():HTMLElement {
+function filename():HTMLElement {
   let div:HTMLElement = document.createElement("div");
   let inp:HTMLElement = addInput();
-  inp.getElementsByTagName("input")[0].disabled = true;
-  div.className = "jvn_params_nbName";
+  disable(inp);
   div.appendChild(addText("The filename of the jupyter notebook"));
   div.appendChild(inp);
   return div;
 }
 
-function additionalScripts():HTMLElement {
+function files():HTMLElement {
   let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_additions";
-  div.appendChild(addText("Any additional scripts(.py files), CSVs that are required to run the notebook. such as `utils.py, inputs.csv`"));
+  div.appendChild(addText("Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`"));
   div.appendChild(addInput("utils.py, inputs.csv"));
   return div;
 }
 
-function toCaptrue():HTMLElement {
+function environment():HTMLElement {
   let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_caps";
-  div.appendChild(addText("To capture and and upload Python environment along with the notebook?"));
-  div.appendChild(addTrueOrFalse());
-  return div;
-}
-
-function whichEnv():HTMLElement {
-  let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_env";
   div.appendChild(addText("Which type of environment to be captured?"));
   div.appendChild(addEnvs());
   return div;
 }
 
-function base64Id():HTMLElement {
+function new_project():HTMLElement {
   let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_base64Id";
-  div.appendChild(addText("To provide the base64 ID(present in the URL) of an notebook hosted on Jovian?"));
-  div.appendChild(addInput());
-  return div;
-}
-
-function newNB():HTMLElement {
-  let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_new";
-  div.appendChild(addText("To create a new notebook?"));
+  div.appendChild(addText("To create a new project?"));
   div.appendChild(addTrueOrFalse());
   return div;
 }
 
-function artifacts():HTMLElement {
+function project_id():HTMLElement {
   let div:HTMLElement = document.createElement("div");
-  div.className = "jvn_params_base64Id";
-  div.appendChild(addText("Any outputs files or artifacts generated from the modeling processing? such as `submission.csv, weights.h5`"));
+  div.appendChild(addText("Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`"));
+  div.appendChild(addInput());
+  return div;
+}
+
+function privacy():HTMLElement {
+  let div:HTMLElement = document.createElement("div");
+  div.appendChild(addText("Notebook privacy settings (applicable while creating a new notebook project)"));
+  div.appendChild(addPrivacy());
+  return div;
+}
+
+function outputs():HTMLElement {
+  let div:HTMLElement = document.createElement("div");
+  div.appendChild(addText("Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`"));
   div.appendChild(addInput("submission.csv, weights.h5"));
+  return div;
+}
+
+function git_commit():HTMLElement {
+  let div:HTMLElement = document.createElement("div");
+  div.appendChild(addText("To perform a Git commit? (only when the notebook is inside a Git repository)"));
+  div.appendChild(addTrueOrFalse());
+  return div;
+}
+
+function git_message():HTMLElement {
+  let div:HTMLElement = document.createElement("div");
+  div.appendChild(addText("Commit message for git"));
+  div.appendChild(addInput());
   return div;
 }
 
@@ -380,6 +389,26 @@ function artifacts():HTMLElement {
  * Start here will all be helper functions:
  *
  * ******************************************************/
+
+function disable(inp:HTMLElement, dis:boolean = true):void {
+  let element:any = null;
+  if (inp.getElementsByTagName("input").length != 0) {
+    element = inp.getElementsByTagName("input")[0];
+  } else if (inp.getElementsByTagName("select").length != 0){
+    element = inp.getElementsByTagName("select")[0];
+  }
+  if (element != null){
+    element.disabled = dis;
+    if (dis){
+      element.style["color"] = "grey";
+    } else {
+      element.style["color"] = "";
+    }
+  }
+  if (dis && inp.getElementsByTagName("input").length != 0){
+    setInputText(inp,"");
+  }
+}
 
 function addText(title:string):HTMLElement{
   let text:HTMLSpanElement = document.createElement("span");
@@ -412,7 +441,7 @@ function setInputText(input:HTMLElement, value:string):void{
   input.getElementsByTagName("input")[0].value = value;
 }
 
-function addTrueOrFalse(dValue:string = ""):HTMLElement{
+function addTrueOrFalse():HTMLElement{
   let div:HTMLElement = document.createElement("div");
   let div1:HTMLElement = document.createElement("div");
   let selection:any = document.createElement("select");
@@ -470,19 +499,27 @@ function addEnvs():HTMLElement{
   let div:HTMLElement = document.createElement("div");
   let div1:HTMLElement = document.createElement("div");
   let selection:any = document.createElement("select");
-  let isTrue:any = document.createElement("option");
-  let isFalse:any = document.createElement("option");
+  let isConda:any = document.createElement("option");
+  let isPip:any = document.createElement("option");
+  let isAuto:any = document.createElement("option");
+  let isNone:any = document.createElement("option");
   div.className = "p-Widget jp-Input-Dialog jp-Dialog-body";
   div1.className = "jp-select-wrapper";
   selection.className = "jp-mod-styled";
-  isTrue.value = "isConda";
-  isFalse.value = "isPip";
-  isTrue.innerText = "conda";
-  isFalse.innerText = "pip";
+  isConda.value = "isConda";
+  isPip.value = "isPip";
+  isAuto.value = "isAuto";
+  isNone.value = "isNone";
+  isConda.innerText = "conda";
+  isPip.innerText = "pip";
+  isAuto.innerText = "auto";
+  isNone.innerText = "None";
   div.appendChild(div1);
   div1.appendChild(selection);
-  selection.appendChild(isTrue);
-  selection.appendChild(isFalse);
+  selection.appendChild(isAuto);
+  selection.appendChild(isConda);
+  selection.appendChild(isPip);
+  selection.appendChild(isNone);
   return div;
 }
 
@@ -492,8 +529,10 @@ function getEnvs(input:HTMLElement):string{
     return "conda";
   } else if (text == "isPip"){
     return "pip";
-  }  
-  return "unknow";
+  } else if (text == "isNone"){
+    return "None";
+  }
+  return "auto";
 }
 
 function setEnvs(input:HTMLElement, value:string):void{
@@ -501,6 +540,62 @@ function setEnvs(input:HTMLElement, value:string):void{
     setSelection(input,"isConda");
   } else if (value.toLowerCase() == "pip"){
     setSelection(input,"isPip");
+  } else if (value.toLowerCase() == "none"){
+    setSelection(input,"isNone");
+  } else {
+    setSelection(input,"isAuto");
+  }
+}
+
+function addPrivacy():HTMLElement{
+  let div:HTMLElement = document.createElement("div");
+  let div1:HTMLElement = document.createElement("div");
+  let selection:any = document.createElement("select");
+  let isSecret:any = document.createElement("option");
+  let isPublic:any = document.createElement("option");
+  let isPrivate:any = document.createElement("option");
+  let isAuto:any = document.createElement("option");
+  div.className = "p-Widget jp-Input-Dialog jp-Dialog-body";
+  div1.className = "jp-select-wrapper";
+  selection.className = "jp-mod-styled";
+  isSecret.value = "isSecret";
+  isPublic.value = "isPublic";
+  isAuto.value = "isAuto";
+  isPrivate.value = "isPrivate";
+  isSecret.innerText = "secret";
+  isPublic.innerText = "public";
+  isAuto.innerText = "auto";
+  isPrivate.innerText = "private";
+  div.appendChild(div1);
+  div1.appendChild(selection);
+  selection.appendChild(isAuto);
+  selection.appendChild(isPublic);
+  selection.appendChild(isSecret);
+  selection.appendChild(isPrivate);
+  return div;
+}
+
+function getPrivacy(input:HTMLElement):string{
+  let text:string = getSelection(input);
+  if (text == "isPublic"){
+    return "public";
+  } else if (text == "isSecret"){
+    return "secret";
+  } else if (text == "isPrivate"){
+    return "private";
+  }
+  return "auto";
+}
+
+function setPrivacy(input:HTMLElement, value:string):void{
+  if (value.toLowerCase() == "public"){
+    setSelection(input,"isPublic");
+  } else if (value.toLowerCase() == "secret"){
+    setSelection(input,"isSecret");
+  } else if (value.toLowerCase() == "private"){
+    setSelection(input,"isPrivate");
+  } else {
+    setSelection(input,"isAuto");
   }
 }
 
@@ -508,26 +603,26 @@ function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
   let footer:HTMLElement = document.createElement("div");
   let icon1:HTMLElement = document.createElement("div");
   let icon2:HTMLElement = document.createElement("div");
-  let cancle:HTMLElement = document.createElement("div");
+  let cancel:HTMLElement = document.createElement("div");
   let ok:HTMLElement = document.createElement("div");
-  let cancleBut:HTMLElement = document.createElement("button");
+  let cancelBut:HTMLElement = document.createElement("button");
   let okBut:HTMLElement = document.createElement("button");
   footer.className = "p-Widget jp-Dialog-footer";
   icon1.className = "jp-Dialog-buttonIcon";
   icon2.className = "jp-Dialog-buttonIcon";
-  cancle.className = "jp-Dialog-buttonLabel";
+  cancel.className = "jp-Dialog-buttonLabel";
   ok.className = "jp-Dialog-buttonLabel";
-  cancleBut.className = "jp-Dialog-button jp-mod-reject jp-mod-styled";
+  cancelBut.className = "jp-Dialog-button jp-mod-reject jp-mod-styled";
   okBut.className = "jp-Dialog-button jp-mod-accept jp-mod-styled";
-  cancle.innerText = "Close";
-  cancleBut.appendChild(icon1);
-  cancleBut.appendChild(cancle);
-  footer.appendChild(cancleBut);
-  (<any>cancleBut).onclick = ()=>{
+  cancel.innerText = "Close";
+  cancelBut.appendChild(icon1);
+  cancelBut.appendChild(cancel);
+  footer.appendChild(cancelBut);
+  (<any>cancelBut).onclick = ()=>{
     closeWindow();
   };
   if (name!=null){
-    cancle.innerText = "Cancle";
+    cancel.innerText = "Cancel";
     ok.innerText = name;
     okBut.appendChild(icon2);
     okBut.appendChild(ok);
@@ -547,15 +642,30 @@ function initialHeader():HTMLElement{
   return subHeader;
 }
 
-function getPythonArray(arrInString:string) {
-  let arrForPython:string =
+function getArrayInPython(arrInString:string):string {
+  // Helper function; which use to format a string
+  // that can be used in commit() array arguments
+  // such as outputs and files
+  const arr =
     "[" +
     arrInString
       .split(",")
       .map(e => "'" + e.trim() + "'")
       .join(",") +
     "]";
-  return arrForPython;
+  if (arr == "['']") {
+    return "None";
+  }
+  return arr;
+}
+
+function getValInPython(val:string):string {
+  // Helper function; which use to format a string
+  // that can be used in commit() string arguments
+  if (val === "") {
+    return "None";
+  }
+  return '"' + val + '"';
 }
 
 function openWindow():void {

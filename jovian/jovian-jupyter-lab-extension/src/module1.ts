@@ -8,7 +8,7 @@ function getDropdown():void{
   initialHeader();
   let header:HTMLElement = initialHeader();
   header.appendChild(addButton("Commit w/ options",askParameters)); // call commit with parameters
-  header.appendChild(addButton("Open sidebar",()=>{alert("Open sidebar");})); // call sidebar
+  header.appendChild(addButton("Open sidebar",()=>{alert("feature coming soon");})); // call sidebar
   header.appendChild(addButton("Settings",setting)); // call setting
   addRemoveEvent(body);
   correctPosition(header);
