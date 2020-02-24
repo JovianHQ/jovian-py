@@ -7,13 +7,6 @@ from jovian.utils.slack import _u, _h, _v, add_slack, notify
 from jovian.utils.error import ApiError
 
 
-def test_u():
-    with fake_creds('.jovian', 'credentials.json'):
-        path = 'user/profile'
-
-        assert _u(path) == 'https://api-staging.jovian.ai/user/profile'
-
-
 def test_h():
     with fake_creds('.jovian', 'credentials.json'):
         expected_result = {"Authorization": "Bearer fake_api_key",
@@ -24,11 +17,6 @@ def test_h():
                            "x-jovian-org": "staging"}
 
         assert _h() == expected_result
-
-
-def test_v():
-    assert _v(3) == "?gist_version=3"
-    assert _v(None) == ""
 
 
 class MockResponse:

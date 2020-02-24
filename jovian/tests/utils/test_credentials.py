@@ -395,13 +395,6 @@ def test_write_api_key():
         assert read_cred(API_TOKEN_KEY) == "fake_api_key"
 
 
-def test_u():
-    with fake_creds('.jovian', 'credentials.json'):
-        path = 'user/profile'
-
-        assert _u(path) == 'https://api-staging.jovian.ai/user/profile'
-
-
 @mock.patch("requests.get", side_effect=mock_requests_get)
 def test_validate_api_key(mock_requests_get):
     with fake_creds('.jovian', 'credentials.json'):

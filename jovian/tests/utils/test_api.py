@@ -3,7 +3,7 @@ from jovian.tests.resources import fake_creds
 from unittest.mock import ANY
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
-from jovian.utils.api import (_v, _h, _u, get_current_user, get_gist, get_gist_access, create_gist_simple, upload_file,
+from jovian.utils.api import (_h, get_current_user, get_gist, get_gist_access, create_gist_simple, upload_file,
                               post_blocks, post_block, post_records, post_slack_message)
 
 
@@ -202,14 +202,6 @@ def mock_requests_get(url, *args, **kwargs):
     return response_dict[url]
 
 
-class TestV(TestCase):
-    def test_v_none(self):
-        self.assertEqual(_v(None), '')
-
-    def test_v_number(self):
-        self.assertEqual(_v(21), "?gist_version=21")
-
-
 def test_h():
     with fake_creds('.jovian', 'credentials.json'):
         expected_result = {"Authorization": "Bearer fake_api_key",
@@ -219,13 +211,6 @@ def test_h():
                            "x-jovian-org": "staging"}
 
         assert _h() == expected_result
-
-
-def test_u():
-    with fake_creds('.jovian', 'credentials.json'):
-        path = 'user/profile'
-
-        assert _u(path) == 'https://api-staging.jovian.ai/user/profile'
 
 
 class TestGetCurrentUser(TestCase):
