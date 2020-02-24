@@ -1,17 +1,17 @@
 import os
 from unittest import TestCase, mock
+from uuid import UUID
+
 from jovian.tests.resources import fake_creds
 from jovian.utils import credentials
-from uuid import UUID
+from jovian.utils.credentials import (API_TOKEN_KEY, GUEST_TOKEN_KEY, _generate_guest_key, _read_or_generate_guest_key,
+                                      _u, _validate_guest_key, config_exists, creds_exist, ensure_org, get_api_key,
+                                      get_creds_path, get_guest_key, init_config, purge_api_key, purge_config,
+                                      purge_cred_key, purge_creds, read_api_key_opt, read_api_url, read_cred,
+                                      read_creds, read_or_request_api_key, read_org_id, read_webapp_url,
+                                      request_api_key, request_org_id, validate_api_key, write_api_key, write_api_url,
+                                      write_cred, write_creds, write_guest_key, write_org_id, write_webapp_url)
 from jovian.utils.error import ApiError, ConfigError
-from jovian.utils.credentials import (get_creds_path, config_exists, purge_config, init_config, purge_creds, read_creds,
-                                      creds_exist, read_cred, write_creds, purge_cred_key, write_cred, write_api_url,
-                                      request_org_id, write_org_id, read_api_url, read_org_id, write_webapp_url,
-                                      read_webapp_url, ensure_org, write_api_key, _u, validate_api_key, write_guest_key,
-                                      request_api_key, read_api_key_opt, read_or_request_api_key,
-                                      read_or_request_api_key, _generate_guest_key, _read_or_generate_guest_key,
-                                      _validate_guest_key, get_guest_key, get_api_key, purge_api_key, GUEST_TOKEN_KEY,
-                                      API_TOKEN_KEY)
 
 try:
     # Python 3

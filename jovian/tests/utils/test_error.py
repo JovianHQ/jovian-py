@@ -1,4 +1,4 @@
-from jovian.utils.error import CondaError, ApiError, ConfigError
+from jovian.utils.error import ApiError, CondaError, ConfigError
 
 
 def test_conda_error():

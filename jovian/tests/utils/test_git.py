@@ -2,7 +2,8 @@ import os
 import shutil
 from unittest import TestCase, mock
 
-from jovian.utils.git import is_git, get_branch, get_remote, get_repository_root, get_current_commit, commit, git_push, git_commit_push, get_relative_path
+from jovian.utils.git import (commit, get_branch, get_current_commit, get_relative_path, get_remote,
+                              get_repository_root, git_commit_push, git_push, is_git)
 
 path = 'mock_git_repo'
 

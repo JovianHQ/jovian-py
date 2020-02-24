@@ -1,10 +1,10 @@
 import sys
 from unittest import TestCase, mock
 
-from jovian.utils.misc import (is_uuid, get_platform, get_file_extension,
-                               urljoin, timestamp_ms, get_flavor, is_flavor_pro, version)
-from jovian.utils.constants import LINUX, WINDOWS, MACOS
 from jovian._version import __version__
+from jovian.utils.constants import LINUX, MACOS, WINDOWS
+from jovian.utils.misc import (get_file_extension, get_flavor, get_platform, is_flavor_pro, is_uuid, timestamp_ms,
+                               urljoin, version)
 
 
 class TestIsUUID(TestCase):

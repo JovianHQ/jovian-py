@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
-from jovian.utils.jupyter import has_ipynb_shell, in_notebook, get_notebook_server_path
+
+from jovian.utils.jupyter import get_notebook_server_path, has_ipynb_shell, in_notebook
 
 
 @mock.patch("IPython.get_ipython")

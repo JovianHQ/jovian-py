@@ -1,10 +1,11 @@
 import os
 from unittest import TestCase, mock
+
 from jovian.tests.resources import fake_creds
 from jovian.utils import slack
 from jovian.utils.credentials import write_creds
-from jovian.utils.slack import _u, _h, _v, add_slack, notify
 from jovian.utils.error import ApiError
+from jovian.utils.slack import _h, add_slack, notify
 
 
 def test_h():
