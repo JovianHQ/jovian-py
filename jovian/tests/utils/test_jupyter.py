@@ -2,29 +2,6 @@ from unittest import TestCase, mock
 from jovian.utils.jupyter import has_ipynb_shell, in_notebook, get_notebook_server_path
 
 
-class MockResponse:
-    def __init__(self, json_data, status_code, text=""):
-        self.json_data = json_data
-        self.status_code = status_code
-        self.text = text
-
-    def json(self):
-        return self.json_data
-
-
-def mock_requests_get(url, *args, **kwargs):
-    if url == 'http://localhost:8888/api/sessions?token=70d4914ffeb1a2cd0d0943a4255568b3a3dd053e9c28516d':
-        data = [
-            {'name': '', 'notebook': {'name': '', 'path': 'Untitled.ipynb'},
-             'path': 'Untitled.ipynb', 'id': '02c8f6cd-6476-4661-8cdf-21d4b275328e',
-             'kernel':
-             {'connections': 1, 'name': 'python3', 'execution_state': 'idle',
-              'id': '3df6eb89-39d3-4636-a831-b2b9db28eb4e', 'last_activity': '2020-01-23T19:08:12.933167Z'},
-             'type': 'notebook'}]
-        text = '[{"name": "", "notebook": {"name": "", "path": "Untitled.ipynb"}, "path": "Untitled.ipynb", "id": "02c8f6cd-6476-4661-8cdf-21d4b275328e", "kernel": {"connections": 1, "name": "python3", "execution_state": "idle", "id": "3df6eb89-39d3-4636-a831-b2b9db28eb4e", "last_activity": "2020-01-23T19:08:12.933167Z"}, "type": "notebook"}]'
-        return MockResponse(data, 200, )
-
-
 @mock.patch("IPython.get_ipython")
 def test_has_ipynb_shell_true(mock_get_ipython):
     mock_get_ipython().__class__.__name__ = 'ZMQInteractiveShell'
