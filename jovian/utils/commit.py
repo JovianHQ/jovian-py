@@ -178,7 +178,7 @@ def _parse_filename(filename):
             filename = get_notebook_name()
 
     # Add the right extension to the filename
-    elif get_file_extension(filename) not in ['.py', '.ipynb']:
+    elif get_file_extension(filename) not in ['py', 'ipynb']:
         filename += '.py' if in_script() else '.ipynb'
     return filename
 
