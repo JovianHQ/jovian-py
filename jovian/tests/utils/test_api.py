@@ -153,6 +153,7 @@ def mock_requests_get(url, *args, **kwargs):
                 "success": False
             }
             return MockResponse(data, status_code=401)
+
     elif url == 'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook' or \
             url == 'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook?gist_version=3' or \
             url == 'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2':
@@ -173,8 +174,9 @@ def mock_requests_get(url, *args, **kwargs):
 
         return MockResponse(data, status_code=200)
 
-    elif url == 'https://api-staging.jovian.ai/gist/fake_nonexistent_gist':
-        data = {
+    # Dictionary containing mock responses
+    response_dict = {
+        'https://api-staging.jovian.ai/gist/fake_nonexistent_gist': MockResponse({
             "errors": [
                 {
                     "code": 404,
@@ -182,14 +184,11 @@ def mock_requests_get(url, *args, **kwargs):
                 }
             ],
             "success": False
-        }
-        return MockResponse(data, status_code=404)
+        }, status_code=404),
 
-    elif url == 'https://api-staging.jovian.ai/gist/fake_gist_too_large':
-        return MockResponse({'message': 'Internal Server Error'}, status_code=500)
+        'https://api-staging.jovian.ai/gist/fake_gist_too_large': MockResponse({'message': 'Internal Server Error'}, status_code=500),
 
-    elif url == 'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access':
-        data = {
+        'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access': MockResponse({
             "data": {
                 "currentUser": {
                     "id": 47,
@@ -200,11 +199,9 @@ def mock_requests_get(url, *args, **kwargs):
                 "write": True
             },
             "success": True
-        }
-        return MockResponse(data, status_code=200)
+        }, status_code=200),
 
-    elif url == 'https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access':
-        data = {
+        'https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access': MockResponse({
             "errors": [
                 {
                     "code": 404,
@@ -212,8 +209,10 @@ def mock_requests_get(url, *args, **kwargs):
                 }
             ],
             "success": False
-        }
-        return MockResponse(data, status_code=404)
+        }, status_code=404)
+    }
+
+    return response_dict[url]
 
 
 class TestV(TestCase):
