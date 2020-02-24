@@ -6,7 +6,7 @@ oEmbed is an open standard to easily embed content from oEmbed providers into yo
 
 You can use our API endpoint to request the embed code for public Notebooks, all responses are in json format. Replace {notebook-url} by your Jovian Notebook URL, or Jovian Viewer URL, or any raw `.ipynb` file URL:
 
-- [GET][https://api.jovian.ai/oembed.json/?url={notebook-url}&cellid={cell-id}&maxwidth={max-width}](https://api.jovian.ai/oembed.json/)
+- [GET][https://jovian.ml/api/oembed.json/?url={notebook-url}&maxwidth={max-width}](https://jovian.ml/api/oembed.json/?url=https://jvn.storage.googleapis.com/gists/aakashns/5bc23520933b4cc187cfe18e5dd7e2ed/raw/901a9d2508bd441dbf06954c5f46bf58/movielens-fastai.ipynb)
 
 Parameters:
 

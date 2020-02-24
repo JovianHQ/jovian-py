@@ -31,6 +31,10 @@ html_show_sphinx = False
 
 html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
 
+html_theme_options = {
+    'sticky_navigation': False
+}
+
 def setup(app):
     """Enables to embed reStructuredText(rst) in a markdown(.md)
 
