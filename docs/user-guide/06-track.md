@@ -38,7 +38,7 @@ metrics = {
 jovian.log_metrics(metrics)
 ```
 
-<img src="https://i.imgur.com/57BxYjH.gif" class="screenshot">
+<img src="https://i.imgur.com/57BxYjH.gif" class="screenshot" alt="jovian track datasets, hyperparameters and metrics" >
 
 The input to any of these can be a <a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank"> python dict </a>. You can add custom parameters that are related to your experiment and have it record values manually, or automate it to record the values of a variable in a loop.
 Visit [this](../jvn/logger.md) page for these logging API reference.

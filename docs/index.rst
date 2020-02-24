@@ -36,7 +36,8 @@ where even Students and Enthusiasts can leverage the same and also use
   user-guide/08-collaborate
   user-guide/09-integrations
   user-guide/10-embed
-  user-guide/11-pro
+  user-guide/11-github
+  user-guide/12-pro
 
 .. toctree::
   :caption: API Reference
@@ -62,14 +63,14 @@ Automate your workflow and boost your productivity.
 
   integrations/nbext
   integrations/slack
-  integrations/pycharm
-  integrations/vscode
   integrations/github
-  integrations/telegram
   integrations/keras
   integrations/fastai
+  integrations/vscode
+  integrations/pycharm
   integrations/tensorflow
   integrations/pytorch
+  integrations/telegram
   integrations/sklearn
   integrations/xgboost
   integrations/scipy

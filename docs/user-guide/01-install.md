@@ -31,7 +31,7 @@ Once the installation is complete, you can start [uploading Jupyter notebooks to
 
 **Configuration (for Jovian Pro users only)**
 
-If you are a [Jovian Pro](11-pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
+If you are a [Jovian Pro](12-pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
 
 ```
 jovian configure
@@ -50,7 +50,7 @@ The above command prompts for the following information:
 
 2.  **API key**: You'll get the API key when you're logged in to your organization's Jovian Pro site. By clicking on the _API key_ button, the key will be copied to clipboard.
 
-<img src="https://i.imgur.com/taLLUVd.png" class="screenshot">
+<img src="https://i.imgur.com/taLLUVd.png" class="screenshot" alt="jovian api key button" >
 
 ```eval_rst
 .. note::
@@ -58,4 +58,4 @@ The above command prompts for the following information:
 
 ```
 
-You can learn more about Jovian Pro [here](11-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
+You can learn more about Jovian Pro [here](12-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.

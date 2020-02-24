@@ -1,4 +1,4 @@
-# Github Integration
+## Git Integration
 
 [jovian.commit](../jvn/commit) automatically performs [git commit](https://git-scm.com/docs/git-commit) if the current notebook/script is in a git repository, as `git_commit` is `True` by default and works only inside a git repository.
 

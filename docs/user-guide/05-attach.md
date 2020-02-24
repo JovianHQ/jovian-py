@@ -9,7 +9,7 @@ More files can be attached to the notebook such as files with helper code, outpu
 jovian.commit(files=[], outputs=[])
 ```
 
-<img src="https://i.imgur.com/giVFiKw.gif" class="screenshot">
+<img src="https://i.imgur.com/giVFiKw.gif" class="screenshot" alt="attach csv, images to notebook versions" >
 
 ### What to include in the `files` argument?
 
