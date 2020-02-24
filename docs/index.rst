@@ -64,4 +64,5 @@ where even Students and Enthusiasts can leverage the same and also use
 
   nbext/commit
   nbext/disable
+  nbext/settings
 
