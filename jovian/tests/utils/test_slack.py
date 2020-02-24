@@ -1,32 +1,10 @@
 import os
-from contextlib import contextmanager
 from unittest import TestCase, mock
+from jovian.tests.resources import fake_creds
 from jovian.utils import slack
-from jovian.utils import credentials
-from jovian.utils.credentials import write_creds, purge_config
+from jovian.utils.credentials import write_creds
 from jovian.utils.slack import _u, _h, _v, add_slack, notify
 from jovian.utils.error import ApiError
-
-
-@contextmanager
-def fake_creds(config_dir, creds_filename, purge=False):
-    _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
-    credentials.CONFIG_DIR = 'jovian/tests/resources/creds/' + config_dir
-    credentials.CREDS_FNAME = creds_filename
-    creds = {
-        "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-        "API_URL": "https://api-staging.jovian.ai",
-        "WEBAPP_URL": "https://staging.jovian.ml/",
-        "ORG_ID": "staging",
-        "API_KEY": "fake_api_key"
-    }
-    write_creds(creds)
-    try:
-        yield
-    finally:
-        purge_config()
-    credentials.CONFIG_DIR = _d
-    credentials.CREDS_FNAME = _f
 
 
 def test_u():
@@ -141,7 +119,7 @@ def mock_requests_post(url, *args, **kwargs):
 
 @mock.patch("jovian.utils.slack.get", side_effect=mock_requests_get)
 def test_add_slack(mock_get, capsys):
-    with fake_creds('.jovian-add-slack', 'credentials.json', purge=True):
+    with fake_creds('.jovian-add-slack', 'credentials.json'):
         # setUp
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -160,7 +138,7 @@ def test_add_slack(mock_get, capsys):
 
 @mock.patch("jovian.utils.slack.get", side_effect=mock_requests_get)
 def test_add_slack_errors(mock_get, capsys):
-    with fake_creds('.jovian-add-slack', 'credentials.json', purge=True):
+    with fake_creds('.jovian-add-slack', 'credentials.json'):
         # setUp
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -179,7 +157,7 @@ def test_add_slack_errors(mock_get, capsys):
 class TestAddSlack(TestCase):
     @mock.patch("jovian.utils.slack.get", side_effect=mock_requests_get)
     def test_add_slack_api_error(self, mock_get):
-        with fake_creds('.jovian-add-slack', 'credentials.json', purge=True):
+        with fake_creds('.jovian-add-slack', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -194,7 +172,7 @@ class TestAddSlack(TestCase):
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_notify(mock_requests_post, capsys):
-    with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+    with fake_creds('.jovian-notify', 'credentials.json'):
         # setUp
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -214,7 +192,7 @@ def test_notify(mock_requests_post, capsys):
 @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_notify_safe_true(mock_requests_post, mock_get_api_key, capsys):
-    with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+    with fake_creds('.jovian-notify', 'credentials.json'):
         # setUp
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -233,7 +211,7 @@ def test_notify_safe_true(mock_requests_post, mock_get_api_key, capsys):
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_notify_log_error(mock_requests_post, capsys):
-    with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+    with fake_creds('.jovian-notify', 'credentials.json'):
         # setUp
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -254,7 +232,7 @@ class TestNotify(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_notify_safe_false_raises_api_error(self, mock_requests_post, mock_get_api_key):
-        with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+        with fake_creds('.jovian-notify', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
