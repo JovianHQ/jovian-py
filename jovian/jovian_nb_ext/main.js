@@ -29,49 +29,50 @@ define([
           resolve(data.content.text.trim());
         };
 
-        const nb_filename = Jupyter.notebook.notebook_name;
-        var commit = '\tcommit(nb_filename="' + nb_filename + '")\n';
-
+        const nb_filename = Jupyter.notebook.notebook_name.substr(
+          0,
+          Jupyter.notebook.notebook_name.length - 6
+        );
+        var commit = '\tcommit(filename="' + nb_filename + '")\n';
         // if we have a set of params already, then use it to call commit.
         if (window.jvn_params != null) {
           const secret = window.jvn_params.secret;
           const capture_env = window.jvn_params.capture_env;
-          const create_new = window.jvn_params.create_new;
+          const new_project = window.jvn_params.create_new;
           const env_type = window.jvn_params.env_type;
-          const files = getPythonArray(window.jvn_params.files);
-          const artifacts = getPythonArray(window.jvn_params.artifacts);
-          var notebook_id;
+          var files = getPythonArray(window.jvn_params.files);
+          var artifacts = getPythonArray(window.jvn_params.artifacts);
+          var project;
 
           if (window.jvn_params.notebook_id === "") {
-            notebook_id = "None";
+            project = "None";
           } else {
-            notebook_id = '"' + window.jvn_params.notebook_id + '"';
+            project = '"' + window.jvn_params.notebook_id + '"';
           }
-
           commit =
             "commit(" +
-            'nb_filename="' +
-            window.jvn_params.nb_filename +
+            'filename="' +
+            nb_filename +
             '"' +
-            ",secret=" +
+            ",privacy=" +
             secret +
             "" +
             ",capture_env=" +
             capture_env +
             "" +
-            ",create_new=" +
-            create_new +
+            ",new_project=" +
+            new_project +
             "" +
             ",files=" +
             files +
             "" +
-            ",notebook_id=" +
-            notebook_id +
+            ",project=" +
+            project +
             "" +
-            ",artifacts=" +
+            ",outputs=" +
             artifacts +
             "" +
-            ',env_type="' +
+            ',environment="' +
             env_type +
             '"' +
             ")\n";
@@ -958,6 +959,9 @@ define([
         .map(e => "'" + e.trim() + "'")
         .join(",") +
       "]";
+    if (arr == "['']") {
+      return "None";
+    }
     return arr;
   }
 

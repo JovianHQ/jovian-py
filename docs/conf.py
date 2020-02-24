@@ -6,7 +6,7 @@ from recommonmark.transform import AutoStructify
 sys.path.insert(0, os.path.abspath('../'))  # source path to access the module
 
 project = 'Jovian'
-copyright = '2019, SwiftAce Inc'
+copyright = '2020, SwiftAce Inc'
 author = 'Aakash N S, Siddhant Ujjain'
 
 extensions = ['recommonmark',  # to use .md along with .rst
@@ -18,20 +18,22 @@ master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
 autodoc_mock_imports = ["torch", "fastai", "keras", "click"]
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'TermsOfService.md', 'PrivacyPolicy.md']
 
 html_theme = 'sphinx_rtd_theme'
 
+templates_path = ['_templates']
 html_static_path = ['_static']
-html_style = 'css/custom.css'  # adding some custom styles on the theme
+html_style = 'css/override.css'  # adding some custom styles on the theme
 
-html_logo = 'jvn_full_logo.png'
-html_theme_options = {
-    'logo_only': True  # to display only logo on the side nav bar
-}
+html_logo = 'jovian_horizontal_logo.svg'
+html_show_sphinx = False
 
 html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
 
+html_theme_options = {
+    'sticky_navigation': False
+}
 
 def setup(app):
     """Enables to embed reStructuredText(rst) in a markdown(.md)

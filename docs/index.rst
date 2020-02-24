@@ -1,8 +1,8 @@
-###############################
+########################################################
 Jovian: The platform for all your Data Science projects
-###############################
+########################################################
 
-.. figure:: jvn_full_logo.png
+.. figure:: jovian_horizontal_logo.svg
     :align: center
     :alt: Jovian logo
     :width: 50%
@@ -10,9 +10,10 @@ Jovian: The platform for all your Data Science projects
     ..
 
 .. meta::
-   :description lang=en: Automate building, versioning, and hosting of your technical documentation continuously on Read the Docs.
+  :description lang=en:
+    Jovian.ml is a better place for your data science projects, Jupyter notebooks, machine learning models, experiment logs, results and more.
 
-jovian is an open-source Python package integrated with 
+Jovian is an open-source Python package integrated with 
 |Jovian| to provide the tools necessary for Data Scientists
 and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
 where even Students and Enthusiasts can leverage the same and also use 
@@ -21,10 +22,6 @@ where even Students and Enthusiasts can leverage the same and also use
 .. |Jovian| raw:: html
   
   <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
-
-.. toctree::
-  Home <self>
-  :hidden:
 
 .. toctree::
   :caption: Getting Started
@@ -42,27 +39,41 @@ where even Students and Enthusiasts can leverage the same and also use
   user-guide/11-pro
 
 .. toctree::
-  :caption: Jovian
+  :caption: API Reference
   :hidden:
 
   jvn/commit
   jvn/logger
   jvn/notif
   jvn/cli
-  jvn/oembed
-
-.. toctree::
-  :caption: Callbacks
-  :hidden:
-
   callbacks/fastai
   callbacks/keras
+  jvn/oembed
+
+########################################################
+Jovian: Libraries and Integrations
+########################################################
+
+Jovian integrates seamlessly with your favorite tools and libraries.
+Automate your workflow and boost your productivity.
 
 .. toctree::
-  :caption: Jupyter Notebook Extension
-  :hidden:
+  :caption: Integrations
 
-  nbext/commit
-  nbext/disable
-  nbext/settings
-
+  integrations/nbext
+  integrations/slack
+  integrations/pycharm
+  integrations/vscode
+  integrations/github
+  integrations/telegram
+  integrations/keras
+  integrations/fastai
+  integrations/tensorflow
+  integrations/pytorch
+  integrations/sklearn
+  integrations/xgboost
+  integrations/scipy
+  integrations/opencv
+  integrations/spark
+  integrations/conda
+  
