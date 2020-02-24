@@ -166,7 +166,7 @@ class TestAddSlack(TestCase):
                      "ORG_ID": "staging"}
             write_creds(creds)
 
-            with self.assertRaises(ApiError) as context:
+            with self.assertRaises(ApiError):
                 add_slack()
 
 
@@ -242,5 +242,5 @@ class TestNotify(TestCase):
             write_creds(creds)
 
             data = {'key': 'value'}
-            with self.assertRaises(ApiError) as context:
+            with self.assertRaises(ApiError):
                 notify(data)

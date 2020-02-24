@@ -506,7 +506,7 @@ class TestGetApiKey(TestCase):
                      "API_URL": "https://api-staging.jovian.ai"}
             write_creds(creds)
 
-            with self.assertRaises(ApiError) as context:
+            with self.assertRaises(ApiError):
                 get_api_key()
 
     @mock.patch("click.prompt", return_value="fake_api_key")
