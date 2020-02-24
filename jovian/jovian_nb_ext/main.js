@@ -446,7 +446,7 @@ define([
       const privacy = $("<div/>")
         .append(
           $("<label/>").text(
-            "Choose the type of notebook when creating a new project"
+            "Notebook privacy settings (applicable while creating a new notebook project)"
           )
         )
         .append(
@@ -562,13 +562,12 @@ define([
               }
             });
           };
-
           let git_message_helper = () => {
             if (!$("#git_msg_box").prop("disabled")) {
               $("#git_msg_box").val($("#project_msg_box").val());
             }
           };
-
+          
           let params = getParams();
           if (params != null) {
             $("#project_msg_box").val(params.message);
@@ -600,7 +599,7 @@ define([
             );
             $("#env_opt option:contains('auto')").prop("selected", true);
             $("#if_new option:contains('False')").prop("selected", true);
-            $("#if_git option:contains('False')").prop("selected", true);
+            $("#if_git option:contains('True')").prop("selected", true);
             $("#nb_opt option:contains('auto')").prop("selected", true);
           }
 
@@ -617,15 +616,10 @@ define([
               }
             });
           };
-          show("#if_new", { "#nb_opt": true, "#project_id_box": false });
-          show("#if_git", { "#git_msg_box": true });
+          show("#if_new", { "#project_id_box": false });
           $("#if_new").change(() => {
-            show("#if_new", { "#nb_opt": true, "#project_id_box": false });
+            show("#if_new", { "#project_id_box": false });
             project_id_helper();
-          });
-          $("#if_git").change(() => {
-            show("#if_git", { "#git_msg_box": true });
-            git_message_helper();
           });
 
           $(jvn_params_modal)
