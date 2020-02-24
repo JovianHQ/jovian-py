@@ -186,8 +186,9 @@ def mock_requests_get(url, *args, **kwargs):
             "success": False
         }, status_code=404),
 
-        'https://api-staging.jovian.ai/gist/fake_gist_too_large': MockResponse(
-            {'message': 'Internal Server Error'}, status_code=500),
+        'https://api-staging.jovian.ai/gist/fake_gist_too_large': MockResponse({
+            "message": "Internal Server Error"
+        }, status_code=500),
 
         'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access': MockResponse({
             "data": {
