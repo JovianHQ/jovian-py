@@ -13,11 +13,19 @@ def fake_creds(config_dir, creds_filename, purge=False):
     _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
     credentials.CONFIG_DIR = 'jovian/tests/resources/creds/' + config_dir
     credentials.CREDS_FNAME = creds_filename
+    creds = {
+        "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+        "API_URL": "https://api-staging.jovian.ai",
+        "WEBAPP_URL": "https://staging.jovian.ml/",
+        "ORG_ID": "staging",
+        "API_KEY": "fake_api_key"
+    }
+    write_creds(creds)
+
     try:
         yield
     finally:
-        if purge:
-            purge_config()
+        purge_config()
     credentials.CONFIG_DIR = _d
     credentials.CREDS_FNAME = _f
 
@@ -259,7 +267,7 @@ class TestGetCurrentUser(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.get", side_effect=mock_requests_get)
     def test_get_current_user_raises_exception(self, mock_requests_get, mock_request_get_api_key, mock_api_get_api_key):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian-invalid-key', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -379,7 +387,7 @@ class TestCreateGistSimple(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_create_gist_simple_raises_api_error(self, mock_requests_post, mock_get_api_key):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -425,7 +433,7 @@ class TestUploadFile(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_upload_file_raises_api_error(self, mock_requests_post, mock_get_api_key):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -470,7 +478,7 @@ class TestPostBlocks(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_blocks_raises_api_error(self, mock_requests_post, mock_get_api_key):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian-invalid-key', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -510,7 +518,7 @@ class TestPostBlock(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_block_raises_api_error(self, mock_requests_post, mock_get_api_key, mock_timestamp):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian-invalid-key', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -545,7 +553,7 @@ class TestPostRecords(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_records_raises_api_error(self, mock_requests_post, mock_get_api_key):
-        with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
+        with fake_creds('.jovian-invalid-key', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -570,7 +578,7 @@ class TestPostSlackMessage(TestCase):
     @mock.patch("jovian.utils.api.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_slack_message(self, mock_requests_post, mock_api_get_api_key):
-        with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+        with fake_creds('.jovian-notify', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -592,7 +600,7 @@ class TestPostSlackMessage(TestCase):
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_slack_message_raises_api_error(
             self, mock_requests_post, mock_request_get_api_key, mock_api_get_api_key):
-        with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+        with fake_creds('.jovian-notify', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -616,7 +624,7 @@ class TestPostSlackMessage(TestCase):
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_slack_message_safe(self, mock_requests_post, mock_request_get_api_key, mock_api_get_api_key):
-        with fake_creds('.jovian-notify', 'credentials.json', purge=True):
+        with fake_creds('.jovian-notify', 'credentials.json'):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
