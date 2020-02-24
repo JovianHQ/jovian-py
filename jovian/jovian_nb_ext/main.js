@@ -566,16 +566,16 @@ define([
        * Layout:
        *  - div :
        *    - label : text: Set Default Commit Parameters
-       *    - input : type: button | id: default_param_button | class: btn btn-primary | text: Set Default
+       *    - input : type: button | id: default_param_button | class: btn btn-primary | text: Set Default | title: Open Parameter Window to set Default Parameters
+       * 
+       *    - label : text: Clear API Key
+       *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key | title: Clear the Jovian API key
        *
        *    - label : text: Change API Key
-       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key
-       *
-       *    - label : text: Clear API Key
-       *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key
+       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key | title: Change the Jovian API key
        *
        *    - label : text: Disable Jovian Extension
-       *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable
+       *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable | title: Disable the Jovian Extension
        *
        */
       const div = $("<div/>").attr("id", "input_div");
@@ -856,7 +856,7 @@ define([
       location.reload();
     }
 
-    //Clear the API key
+    //Clears the API key
     function clearAPI() {
       new Promise(resolve => {
         const purge_api =
@@ -869,7 +869,7 @@ define([
       });
     }
 
-    // changes the API key
+    //Changes the API key
     function changeAPI() {
       new Promise(resolve => {
         const purge_api =
@@ -879,7 +879,7 @@ define([
         Jupyter.notebook.kernel.execute(purge_api);
         resolve();
       });
-      setTimeout(() => {
+      setTimeout(() => { //to allow purge_api to complete
         modalInit();
       }, 400);
     }
