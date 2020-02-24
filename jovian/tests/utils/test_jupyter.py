@@ -52,9 +52,3 @@ def test_in_notebook_false(mock_get_ipython, mock_IPKernelApp):
 
     mock_IPKernelApp.initialized.return_value = True
     assert in_notebook() == True
-
-
-@mock.patch("ipykernel.connect.get_connection_file")
-def test_get_notebook_server_path(mock_get_connection_file):
-    mock_get_connection_file.return_value = '/Users/rohitsanjay/Library/Jupyter/runtime' + \
-                                            '/kernel-3df6eb89-39d3-4636-a831-b2b9db28eb4e.json'

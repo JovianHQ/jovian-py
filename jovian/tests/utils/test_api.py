@@ -1,10 +1,11 @@
 from unittest import TestCase, mock
+from unittest.mock import ANY
 from contextlib import contextmanager
 from jovian.utils import credentials
 from jovian.utils.credentials import write_creds, purge_config
 from jovian.utils.error import ApiError
 from jovian.utils.api import (_v, _h, _u, get_current_user, get_gist, get_gist_access, create_gist_simple, upload_file,
-                             post_blocks, post_block, post_records, post_slack_message)
+                              post_blocks, post_block, post_records, post_slack_message)
 
 
 @contextmanager
@@ -71,7 +72,7 @@ def mock_requests_post(url, *args, **kwargs):
                 "success": False
             }
             return MockResponse(data, status_code=500)
-    
+
     elif url == 'https://api-staging.jovian.ai/data/fake_gist_slug/commit':
         if kwargs['headers']['Authorization'] == 'Bearer fake_api_key':
             data = {
@@ -91,15 +92,15 @@ def mock_requests_post(url, *args, **kwargs):
                 "success": False
             }
             return MockResponse(data, status_code=404)
-    
+
     elif url == 'https://api-staging.jovian.ai/slack/notify':
         if kwargs['headers']['Authorization'] == 'Bearer fake_api_key':
-            data = { 
+            data = {
                 "data": {
-                            "messageId": "60023f08f3b54801bd58cf6b37067ed6",
-                            "messageSent": True
-                        },
-                "success": True 
+                    "messageId": "60023f08f3b54801bd58cf6b37067ed6",
+                    "messageSent": True
+                },
+                "success": True
             }
             return MockResponse(data, 200)
         elif kwargs['headers']['Authorization'] == 'Bearer fake_invalid_api_key':
@@ -201,7 +202,7 @@ def mock_requests_get(url, *args, **kwargs):
             "success": True
         }
         return MockResponse(data, status_code=200)
-    
+
     elif url == 'https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access':
         data = {
             "errors": [
@@ -242,19 +243,21 @@ def test_u():
 
 
 class TestGetCurrentUser(TestCase):
+
     @mock.patch("requests.get", side_effect=mock_requests_get)
     def test_get_current_user(self, mock_requests_get):
         with fake_creds('.jovian', 'credentials.json'):
-            expected_result = {
-                "id": 47,
-                "username": "rohit"
-            }
+            get_current_user()
 
-            assert get_current_user() == expected_result
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/user/profile',
+                headers=_h(),
+                params=None)
 
+    @mock.patch("jovian.utils.api.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.get", side_effect=mock_requests_get)
-    def test_get_current_user_raises_exception(self, mock_requests_get, mock_get_api_key):
+    def test_get_current_user_raises_exception(self, mock_requests_get, mock_request_get_api_key, mock_api_get_api_key):
         with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
@@ -267,41 +270,35 @@ class TestGetCurrentUser(TestCase):
             with self.assertRaises(Exception) as context:
                 get_current_user()
 
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/user/profile',
+                headers=_h(),
+                params=None)
+
             assert context.exception.args[0] == 'Failed to fetch current user profile. (HTTP 401) Signature verification failed'
 
 
 class TestGetGist(TestCase):
     @mock.patch("jovian.utils.api.get_api_key", return_value="fake_api_key")
+    @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.get", side_effect=mock_requests_get)
-    def test_get_gist(self, mock_requests_get, mock_get_api_key):
+    def test_get_gist(self, mock_requests_get, mock_request_get_api_key, mock_api_get_api_key):
         with fake_creds('.jovian', 'credentials.json'):
-            expected_result = {
-                "archived": False,
-                "clonesCount": 0,
-                "createdAt": 1578718557994,
-                "currentUser": {
-                    "id": 47,
-                    "username": "rohit"
-                },
-                "deleted": False,
-                "description": None
-            }
+            get_gist('rohit/demo-notebook')
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook', headers=_h(), params=None)
 
-            assert get_gist('rohit/demo-notebook') == expected_result
+            get_gist('rohit/demo-notebook', version=3)
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook?gist_version=3', headers=_h(), params=None)
 
-            assert get_gist('rohit/demo-notebook', version=3) == expected_result
-
-            assert get_gist('f67108fc906341d8b15209ce88ebc3d2') == expected_result
+            get_gist('f67108fc906341d8b15209ce88ebc3d2')
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2', headers=_h(), params=None)
 
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.get", side_effect=mock_requests_get)
     def test_get_gist_not_found(self, mock_requests_get, mock_get_api_key):
-        with fake_creds('.jovian', 'credentials.json'):
-            assert get_gist('fake_nonexistent_gist') == False
-
-    @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
-    @mock.patch("requests.get", side_effect=mock_requests_get)
-    def test_get_gist_raises_exception(self, mock_requests_get, mock_get_api_key):
         with fake_creds('.jovian', 'credentials.json'):
             assert get_gist('fake_nonexistent_gist') == False
 
@@ -322,16 +319,11 @@ class TestGetGistAccess(TestCase):
     @mock.patch("requests.get", side_effect=mock_requests_get)
     def test_get_gist_access(self, mock_requests_get, mock_get_api_key):
         with fake_creds('.jovian', 'credentials.json'):
-            expected_result = {
-                "currentUser": {
-                    "id": 47,
-                    "username": "rohit"
-                },
-                "read": True,
-                "slug": "f67108fc906341d8b15209ce88ebc3d2",
-                "write": True
-            }
-            assert get_gist_access('f67108fc906341d8b15209ce88ebc3d2') == expected_result
+            get_gist_access('f67108fc906341d8b15209ce88ebc3d2')
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access',
+                headers=_h(),
+                params=None)
 
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.get", side_effect=mock_requests_get)
@@ -339,6 +331,11 @@ class TestGetGistAccess(TestCase):
         with fake_creds('.jovian', 'credentials.json'):
             with self.assertRaises(Exception) as context:
                 get_gist_access('fake_nonexistent_gist')
+
+            mock_requests_get.assert_called_with(
+                'https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access',
+                headers=_h(),
+                params=None)
 
             assert context.exception.args[0] == 'Failed to retrieve access permission for notebook' + \
                 ' "fake_nonexistent_gist" (retry with new_project=True to create a new notebook):' +\
@@ -350,18 +347,33 @@ class TestCreateGistSimple(TestCase):
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_create_gist_simple_no_gist_slug(self, mock_requests_post):
         with fake_creds('.jovian', 'credentials.json'):
-            assert create_gist_simple(filename='jovian/tests/resources/creds/.jovian/credentials.json',
-                                      title='Credentials',
-                                      privacy='private',
-                                      version_title='first version') == {'message': 'Gist created successfully'}
+            create_gist_simple(filename='jovian/tests/resources/creds/.jovian/credentials.json',
+                               title='Credentials',
+                               privacy='private',
+                               version_title='first version')
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/gist/create',
+                data={'visibility': 'private', 'public': False, 'title': 'Credentials',
+                      'version_title': 'first version'},
+                files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
+                headers=_h(),
+                json=None)
 
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_create_gist_simple_with_gist_slug(self, mock_requests_post):
         with fake_creds('.jovian', 'credentials.json'):
-            assert create_gist_simple(filename='jovian/tests/resources/creds/.jovian/credentials.json',
-                                      gist_slug='fake_gist_slug',
-                                      title='Credentials',
-                                      version_title='first version') == {'message': 'Gist created successfully'}
+            create_gist_simple(filename='jovian/tests/resources/creds/.jovian/credentials.json',
+                               gist_slug='fake_gist_slug',
+                               title='Credentials',
+                               version_title='first version')
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/gist/fake_gist_slug/upload',
+                data={'version_title': 'first version'},
+                files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
+                headers=_h(),
+                json=None)
 
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
@@ -380,20 +392,35 @@ class TestCreateGistSimple(TestCase):
                                    title='Credentials',
                                    version_title='first version')
 
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/gist/create',
+                data={'visibility': 'auto', 'public': True, 'title': 'Credentials', 'version_title': 'first version'},
+                files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
+                headers=_h(),
+                json=None)
+
             assert context.exception.args[0] == 'File upload failed: (HTTP 404) Gist not found'
 
+
 class TestUploadFile(TestCase):
-    
+
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_upload_file(self, mock_requests_post):
         with fake_creds('.jovian', 'credentials.json'):
             with open('jovian/tests/resources/creds/.jovian/credentials.json', 'rb') as f:
-                assert upload_file(gist_slug='fake_gist_slug', 
+                upload_file(gist_slug='fake_gist_slug',
                             file=('credentials.json', f),
                             folder='.jovian',
                             artifact=True,
-                            version_title='fake_version_title') == {'message': 'Gist created successfully'}
-    
+                            version_title='fake_version_title')
+
+                mock_requests_post.assert_called_with(
+                    'https://api-staging.jovian.ai/gist/fake_gist_slug/upload',
+                    data={'artifact': 'true', 'folder': '.jovian', 'version_title': 'fake_version_title'},
+                    files={'files': ('credentials.json', ANY)},
+                    headers=_h(),
+                    json=None)
+
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_upload_file_raises_api_error(self, mock_requests_post, mock_get_api_key):
@@ -408,28 +435,37 @@ class TestUploadFile(TestCase):
 
             with self.assertRaises(ApiError) as context:
                 with open('jovian/tests/resources/creds/.jovian/credentials.json', 'rb') as f:
-                    upload_file(gist_slug='fake_gist_slug', 
+                    upload_file(gist_slug='fake_gist_slug',
                                 file=('credentials.json', f),
                                 folder='.jovian',
                                 artifact=True,
                                 version_title='fake_version_title')
 
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/gist/fake_gist_slug/upload',
+                data={'artifact': 'true', 'folder': '.jovian', 'version_title': 'fake_version_title'},
+                files={'files': ('credentials.json', ANY)},
+                headers=_h(),
+                json=None)
+
             assert context.exception.args[0] == 'File upload failed: (HTTP 404) Gist not found'
 
+
 class TestPostBlocks(TestCase):
-    
+
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_blocks(self, mock_requests_post):
-        
-        with fake_creds('.jovian', 'credentials.json'):
-            blocks = [{'data' : {'key' : 'value'}, 'record_type' : 'metrics'}]
-            
-            expected_result = {
-                'message': 'Data logged successfully'
-            }
 
-            assert post_blocks(blocks) == expected_result
-    
+        with fake_creds('.jovian', 'credentials.json'):
+            blocks = [{'data': {'key': 'value'}, 'record_type': 'metrics'}]
+            post_blocks(blocks)
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/record',
+                data=None,
+                headers=_h(),
+                json=[{'data': {'key': 'value'}, 'record_type': 'metrics'}])
+
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_blocks_raises_api_error(self, mock_requests_post, mock_get_api_key):
@@ -442,26 +478,37 @@ class TestPostBlocks(TestCase):
                      "ORG_ID": "staging"}
             write_creds(creds)
 
-            blocks = [{'data' : {'key' : 'value'}, 'record_type' : 'metrics'}]
+            blocks = [{'data': {'key': 'value'}, 'record_type': 'metrics'}]
 
             with self.assertRaises(ApiError) as context:
                 post_blocks(blocks)
 
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/record',
+                data=None,
+                headers=_h(),
+                json=[{'data': {'key': 'value'}, 'record_type': 'metrics'}])
+
             assert context.exception.args[0] == 'Data logging failed: (HTTP 500) Internal Server Error'
 
-class TestPostBlock(TestCase):
-    @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_post_block(self, mock_requests_post):
-        expected_result = {
-            'message': 'Data logged successfully'
-        }
 
+class TestPostBlock(TestCase):
+    @mock.patch("jovian.utils.api.timestamp_ms", return_value=1582550133094)
+    @mock.patch("requests.post", side_effect=mock_requests_post)
+    def test_post_block(self, mock_requests_post, mock_timestamp):
         with fake_creds('.jovian', 'credentials.json'):
-            assert post_block('metrics', {'key' : 'value'}) == expected_result
-    
+            post_block('metrics', {'key': 'value'})
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/record',
+                data=None,
+                headers=_h(),
+                json=[{'localTimestamp': 1582550133094, 'data': 'metrics', 'recordType': {'key': 'value'}}])
+
+    @mock.patch("jovian.utils.api.timestamp_ms", return_value=1582550133094)
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_post_block_raises_api_error(self, mock_requests_post, mock_get_api_key):
+    def test_post_block_raises_api_error(self, mock_requests_post, mock_get_api_key, mock_timestamp):
         with fake_creds('.jovian-invalid-key', 'credentials.json', purge=True):
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
@@ -472,20 +519,28 @@ class TestPostBlock(TestCase):
             write_creds(creds)
 
             with self.assertRaises(ApiError) as context:
-                post_block('metrics', {'key' : 'value'})
+                post_block('metrics', {'key': 'value'})
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/record',
+                data=None,
+                headers=_h(),
+                json=[{'localTimestamp': 1582550133094, 'data': 'metrics', 'recordType': {'key': 'value'}}])
 
             assert context.exception.args[0] == 'Data logging failed: (HTTP 500) Internal Server Error'
+
 
 class TestPostRecords(TestCase):
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_records(self, mock_requests_post):
-        expected_result = {
-            'message': 'Data logged successfully'
-        }
-
         with fake_creds('.jovian', 'credentials.json'):
-            assert post_records('fake_gist_slug', {'key' : 'value'}) == expected_result
-    
+            post_records('fake_gist_slug', {'key': 'value'})
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/fake_gist_slug/commit',
+                data=None,
+                headers=_h(),
+                json={'key': 'value'})
+
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
     def test_post_records_raises_api_error(self, mock_requests_post, mock_get_api_key):
@@ -499,62 +554,82 @@ class TestPostRecords(TestCase):
             write_creds(creds)
 
             with self.assertRaises(ApiError) as context:
-                post_records('fake_gist_slug', {'key' : 'value'})
+                post_records('fake_gist_slug', {'key': 'value'})
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/data/fake_gist_slug/commit',
+                data=None,
+                headers=_h(),
+                json={'key': 'value'})
 
             assert context.exception.args[0] == 'Data logging failed: (HTTP 404) Gist not found'
 
+
 class TestPostSlackMessage(TestCase):
-    
+    @mock.patch("jovian.utils.api.get_api_key", return_value="fake_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_post_slack_message(self, mock_requests_post):
+    def test_post_slack_message(self, mock_requests_post, mock_api_get_api_key):
         with fake_creds('.jovian-notify', 'credentials.json', purge=True):
             # setUp
-            creds = { "WEBAPP_URL": "https://staging.jovian.ml/",
-                    "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-                    "API_URL": "https://api-staging.jovian.ai",
-                    "API_KEY": "fake_api_key",
-                    "ORG_ID": "staging" }
+            creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                     "API_URL": "https://api-staging.jovian.ai",
+                     "API_KEY": "fake_api_key",
+                     "ORG_ID": "staging"}
             write_creds(creds)
- 
-            expected_result = { 
-                "data": {
-                            "messageId": "60023f08f3b54801bd58cf6b37067ed6",
-                            "messageSent": True
-                        },
-                "success": True 
-            }
-            assert post_slack_message({ 'key' : 'value' }) == expected_result
 
+            post_slack_message({'key': 'value'})
 
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/slack/notify',
+                data=None,
+                headers=_h(),
+                json={'key': 'value'})
+
+    @mock.patch("jovian.utils.api.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_post_slack_message_raises_api_error(self, mock_requests_post, mock_get_api_key):
+    def test_post_slack_message_raises_api_error(
+            self, mock_requests_post, mock_request_get_api_key, mock_api_get_api_key):
         with fake_creds('.jovian-notify', 'credentials.json', purge=True):
             # setUp
-            creds = { "WEBAPP_URL": "https://staging.jovian.ml/",
-                    "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-                    "API_URL": "https://api-staging.jovian.ai",
-                    "API_KEY": "fake_invalid_api_key",
-                    "ORG_ID": "staging" }
+            creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                     "API_URL": "https://api-staging.jovian.ai",
+                     "API_KEY": "fake_invalid_api_key",
+                     "ORG_ID": "staging"}
             write_creds(creds)
 
-            data = { 'key' : 'value' }
-            with self.assertRaises(ApiError) as context:
+            data = {'key': 'value'}
+
+            with self.assertRaises(ApiError):
                 post_slack_message(data)
-    
-        
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/slack/notify',
+                data=None,
+                headers=_h(),
+                json={'key': 'value'})
+
+    @mock.patch("jovian.utils.api.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
     @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_post_slack_message_safe(self, mock_requests_post, mock_get_api_key):
+    def test_post_slack_message_safe(self, mock_requests_post, mock_request_get_api_key, mock_api_get_api_key):
         with fake_creds('.jovian-notify', 'credentials.json', purge=True):
             # setUp
-            creds = { "WEBAPP_URL": "https://staging.jovian.ml/",
-                    "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-                    "API_URL": "https://api-staging.jovian.ai",
-                    "API_KEY": "fake_invalid_api_key",
-                    "ORG_ID": "staging" }
+            creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+                     "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+                     "API_URL": "https://api-staging.jovian.ai",
+                     "API_KEY": "fake_invalid_api_key",
+                     "ORG_ID": "staging"}
             write_creds(creds)
 
-            data = { 'key' : 'value' }
-            assert post_slack_message(data, safe=True) == {'data': {'messageSent': False}} 
-    
+            data = {'key': 'value'}
+
+            assert post_slack_message(data, safe=True) == {'data': {'messageSent': False}}
+
+            mock_requests_post.assert_called_with(
+                'https://api-staging.jovian.ai/slack/notify',
+                data=None,
+                headers=_h(),
+                json={'key': 'value'})
