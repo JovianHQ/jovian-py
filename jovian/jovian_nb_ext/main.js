@@ -29,32 +29,32 @@ define([
           resolve(data.content.text.trim());
         };
 
-        let nb_filename = Jupyter.notebook.notebook_name.split(".");
-        nb_filename.pop();
-        nb_filename.join();
-        let commit = "\tcommit(filename=" + getValInPython(nb_filename) + ")\n";
+        let filename = Jupyter.notebook.notebook_name.split(".");
+        filename.pop();
+        filename.join();
+        let commit = "\tcommit(filename=" + getValInPython(filename) + ")\n";
         // if we have a set of params already, then use it to call commit.
         if ((params = getParams()) != null) {
-          const new_project = params.create_new;
-          const if_git = params.if_git;
+          const new_project = params.new_project;
+          const git_commit = params.git_commit;
           const files = getArrayInPython(params.files);
-          const artifacts = getArrayInPython(params.artifacts);
-          const privacy = getValInPython(params.secret);
-          const env_type = getValInPython(params.env_type);
+          const outputs = getArrayInPython(params.outputs);
+          const privacy = getValInPython(params.privacy);
+          const environment = getValInPython(params.environment);
           const project_id = getValInPython(params.project_id);
           const message = getValInPython(params.message);
-          const git_msg = getValInPython(params.git_msg);
+          const git_message = getValInPython(params.git_message);
 
           commit =
             "commit(" +
             "filename=" +
-            getValInPython(nb_filename) +
+            getValInPython(filename) +
             ",message=" +
             message +
             ",git_commit=" +
-            if_git +
+            git_commit +
             ",git_message=" +
-            git_msg +
+            git_message +
             ",privacy=" +
             privacy +
             ",new_project=" +
@@ -64,9 +64,9 @@ define([
             ",project=" +
             project_id +
             ",outputs=" +
-            artifacts +
+            outputs +
             ",environment=" +
-            env_type +
+            environment +
             ")\n";
         }
 
@@ -352,38 +352,11 @@ define([
        * Layout:
        *  - form : class: form-horizontal
        *    - div :
-       *      - label : text: A short message to be used as the title for this version
-       *      - input : id: project_msg_box | class: form-control
-       *      - label : text: The filename of the jupyter notebook
-       *      - input : id: nb_filename_box | class: form-control | value: Jupyter.notebook.notebook_name
-       *      - label : text: Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`
-       *      - input : id: files_box | class: form-control | value: []
-       *      - label : text: Which type of environment to be captured?
-       *      - select  : id: env_opt
-       *        - option : text: auto
-       *        - option : text: conda
-       *        - option : text: pip
-       *        - option : text: None   | css : margin-left : 0em
-       *      - label : text: Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`
-       *      - input : id: project_id_box | class: form-control | value: None
-       *      - label : text: To create a new notebook?
-       *      - select   : id: if_new
-       *        - option : text: True
-       *        - option : text: False   | css : margin-left : 0em
-       *      - label : text: Choose the type of notebook when creating a new project
-       *      - select   : id: nb_opt
-       *        - option : text: auto
-       *        - option : text: public
-       *        - option : text: secret
-       *        - option : text: private   | css : margin-left : 0em
-       *      - label : text: Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`
-       *      - input : id: artifacts_box | class: form-control | value: []
-       *      - label : text: To perform a Git commit? (only when the notebook is inside a Git repository)
-       *      - input : id: git_msg_box | class: form-control
-       *      - label : text: Commit message for git
-       *      - select   : id: git_msg_box
-       *        - option : text: True
-       *        - option : text: False   | css : margin-left : 0em
+       *      - 10 x div :
+       *        - label : text: the description of each parameter
+       *        - input or selection
+       *          | input : the text box for collecting parameters' value
+       *          | selection: a list of values for users to pick for parameters
        *
        */
       const form = $("<form/>").addClass("form-horizontal");
@@ -392,126 +365,153 @@ define([
         .attr("id", "input_div")
         .appendTo(form);
 
-      const message_label = $("<label/>").text(
-        "A short message to be used as the title for this version"
-      );
-      const message_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "project_msg_box")
-        .attr("placeholder", "The title for this version");
+      const message = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "A short message to be used as the title for this version"
+          )
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "project_msg_box")
+            .attr("placeholder", "The title for this version")
+        )
+        .append("<br>");
 
-      const nb_filename_label = $("<label/>").text(
-        "The filename of the jupyter notebook"
-      );
-      const nb_filename_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "nb_filename_box")
-        .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""))
-        .prop("disabled", true);
+      const filename = $("<div/>")
+        .append($("<label/>").text("The filename of the jupyter notebook"))
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "nb_filename_box")
+            .val(Jupyter.notebook.notebook_name.replace(".ipynb", ""))
+            .prop("disabled", true)
+        )
+        .append("<br>");
 
-      const files_label = $("<label/>").text(
-        "Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`"
-      );
-      const files_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "files_box")
-        .attr("placeholder", "utils.py, inputs.csv");
+      const files = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`"
+          )
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "files_box")
+            .attr("placeholder", "utils.py, inputs.csv")
+        )
+        .append("<br>");
 
-      const env_type_label = $("<label/>").text(
-        "Which type of environment to be captured?"
-      );
-      const env_type_box = $("<select/>")
-        .attr("id", "env_opt")
-        .addClass("form-control")
-        .append($("<option/>").text("auto"))
-        .append($("<option/>").text("conda"))
-        .append($("<option/>").text("pip"))
-        .append($("<option/>").text("None"))
-        .css("margin-left", "0em");
+      const environment = $("<div/>")
+        .append($("<label/>").text("Which type of environment to be captured?"))
+        .append(
+          $("<select/>")
+            .attr("id", "env_opt")
+            .addClass("form-control")
+            .append($("<option/>").text("auto"))
+            .append($("<option/>").text("conda"))
+            .append($("<option/>").text("pip"))
+            .append($("<option/>").text("None"))
+            .css("margin-left", "0em")
+        )
+        .append("<br>");
 
-      const project_id_label = $("<label/>").text(
-        "Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`"
-      );
-      const project_id_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "project_id_box")
-        .attr("placeholder", "None");
+      const project_id = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`"
+          )
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "project_id_box")
+        )
+        .append("<br>");
 
-      const create_new_label = $("<label/>").text("To create a new project?");
-      const create_new_box = $("<select/>")
-        .attr("id", "if_new")
-        .addClass("form-control")
-        .append($("<option/>").text("True"))
-        .append($("<option/>").text("False"))
-        .css("margin-left", "0em");
+      const new_project = $("<div/>")
+        .append($("<label/>").text("To create a new project?"))
+        .append(
+          $("<select/>")
+            .attr("id", "if_new")
+            .addClass("form-control")
+            .append($("<option/>").text("True"))
+            .append($("<option/>").text("False"))
+            .css("margin-left", "0em")
+        )
+        .append("<br>");
 
-      const secret_label = $("<label/>").text(
-        "Choose the type of notebook when creating a new project"
-      );
-      const secret_box = $("<select/>")
-        .attr("id", "nb_opt")
-        .addClass("form-control")
-        .append($("<option/>").text("auto"))
-        .append($("<option/>").text("public"))
-        .append($("<option/>").text("secret"))
-        .append($("<option/>").text("private"))
-        .css("margin-left", "0em");
+      const privacy = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "Choose the type of notebook when creating a new project"
+          )
+        )
+        .append(
+          $("<select/>")
+            .attr("id", "nb_opt")
+            .addClass("form-control")
+            .append($("<option/>").text("auto"))
+            .append($("<option/>").text("public"))
+            .append($("<option/>").text("secret"))
+            .append($("<option/>").text("private"))
+            .css("margin-left", "0em")
+        )
+        .append("<br>");
 
-      const artifacts_label = $("<label/>").text(
-        "Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`"
-      );
-      const artifacts_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "artifacts_box")
-        .attr("placeholder", "submission.csv, weights.h5")
-        .val("");
+      const outputs = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`"
+          )
+        )
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "artifacts_box")
+            .attr("placeholder", "submission.csv, weights.h5")
+            .val("")
+        )
+        .append("<br>");
 
-      const git_commit_label = $("<label/>").text(
-        "To perform a Git commit? (only when the notebook is inside a Git repository)"
-      );
-      const git_commit_box = $("<select/>")
-        .attr("id", "if_git")
-        .addClass("form-control")
-        .append($("<option/>").text("True"))
-        .append($("<option/>").text("False"))
-        .css("margin-left", "0em");
+      const git_commit = $("<div/>")
+        .append(
+          $("<label/>").text(
+            "To perform a Git commit? (only when the notebook is inside a Git repository)"
+          )
+        )
+        .append(
+          $("<select/>")
+            .attr("id", "if_git")
+            .addClass("form-control")
+            .append($("<option/>").text("True"))
+            .append($("<option/>").text("False"))
+            .css("margin-left", "0em")
+        )
+        .append("<br>");
 
-      const git_message_label = $("<label/>").text("Commit message for git");
-      const git_message_box = $("<input/>")
-        .addClass("form-control")
-        .attr("id", "git_msg_box")
-        .attr("placeholder", "Any message");
+      const git_message = $("<div/>")
+        .append($("<label/>").text("Commit message for git"))
+        .append(
+          $("<input/>")
+            .addClass("form-control")
+            .attr("id", "git_msg_box")
+            .attr("placeholder", "Message for git commit")
+        );
 
       div
-        .append(message_label)
-        .append(message_box)
-        .append("<br>")
-        .append(nb_filename_label)
-        .append(nb_filename_box)
-        .append("<br>")
-        .append(files_label)
-        .append(files_box)
-        .append("<br>")
-        .append(env_type_label)
-        .append(env_type_box)
-        .append("<br>")
-        .append(project_id_label)
-        .append(project_id_box)
-        .append("<br>")
-        .append(create_new_label)
-        .append(create_new_box)
-        .append("<br>")
-        .append(secret_label)
-        .append(secret_box)
-        .append("<br>")
-        .append(artifacts_label)
-        .append(artifacts_box)
-        .append("<br>")
-        .append(git_commit_label)
-        .append(git_commit_box)
-        .append("<br>")
-        .append(git_message_label)
-        .append(git_message_box);
+        .append(message)
+        .append(filename)
+        .append(files)
+        .append(environment)
+        .append(new_project)
+        .append(project_id)
+        .append(privacy)
+        .append(outputs)
+        .append(git_commit)
+        .append(git_message);
 
       return form;
     };
@@ -532,7 +532,7 @@ define([
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
         buttons: {
-          Cancle: {},
+          Cancel: {},
           Commit: {
             class: "btn-primary",
             click: function() {
@@ -541,31 +541,59 @@ define([
             }
           }
         },
-        open: function() {
+        open: async function() {
+          let project_id_helper = async () => {
+            if (getParams() == null) {
+              return;
+            }
+            let project_id = getParams().project_id;
+            let j_id = "#project_id_box";
+            if (project_id.length != 0 && !$(j_id).prop("disabled")) {
+              $(j_id).val(project_id);
+              return;
+            }
+            let project_title = "";
+            await getProjectTitle().then(title => {
+              if (title != undefined) {
+                project_title = title;
+              }
+              if (!$(j_id).prop("disabled")) {
+                $(j_id).val(project_title);
+              }
+            });
+          };
+
+          let git_message_helper = () => {
+            if (!$("#git_msg_box").prop("disabled")) {
+              $("#git_msg_box").val($("#project_msg_box").val());
+            }
+          };
+
           let params = getParams();
           if (params != null) {
             $("#project_msg_box").val(params.message);
-            $("#nb_filename_box").val(params.nb_filename);
+            $("#nb_filename_box").val(params.filename);
             $("#files_box").val(params.files);
-            $("#env_opt option:contains(" + params.env_type + ")").prop(
+            $("#env_opt option:contains(" + params.environment + ")").prop(
               "selected",
               true
             );
-            $("#project_id_box").val(params.project_id);
-            $("#if_new option:contains(" + params.create_new + ")").prop(
+            await project_id_helper();
+            $("#if_new option:contains(" + params.new_project + ")").prop(
               "selected",
               true
             );
-            $("#nb_opt option:contains(" + params.secret + ")").prop(
+            $("#nb_opt option:contains(" + params.privacy + ")").prop(
               "selected",
               true
             );
-            $("#artifacts_box").val(params.artifacts);
-            $("#if_git option:contains(" + params.if_git + ")").prop(
+            $("#artifacts_box").val(params.outputs);
+            $("#if_git option:contains(" + params.git_commit + ")").prop(
               "selected",
               true
             );
-            $("#git_msg_box").val(params.git_msg);
+            // $("#git_msg_box").val(params.git_message);
+            git_message_helper();
           } else {
             $("#nb_filename_box").val(
               Jupyter.notebook.notebook_name.replace(".ipynb", "")
@@ -591,16 +619,21 @@ define([
           };
           show("#if_new", { "#nb_opt": true, "#project_id_box": false });
           show("#if_git", { "#git_msg_box": true });
-          $("#if_new").change(() =>
-            show("#if_new", { "#nb_opt": true, "#project_id_box": false })
-          );
-          $("#if_git").change(() => show("#if_git", { "#git_msg_box": true }));
+          $("#if_new").change(() => {
+            show("#if_new", { "#nb_opt": true, "#project_id_box": false });
+            project_id_helper();
+          });
+          $("#if_git").change(() => {
+            show("#if_git", { "#git_msg_box": true });
+            git_message_helper();
+          });
 
           $(jvn_params_modal)
             .find(".modal-content")
             .show("fast");
         }
       });
+
       const modal = $(jvn_params_modal).find(".modal-content");
       modal
         .children()
@@ -623,7 +656,7 @@ define([
       const option1 = $("<button/>")
         .attr("id", "jvn_module1_option1")
         .addClass("btn btn-primary")
-        .text("Commit w/ options");
+        .text("Commit with options");
 
       const option2 = $("<button/>")
         .attr("id", "jvn_module1_option2")
@@ -650,7 +683,7 @@ define([
        * Body: formDropDownUI()
        *
        * Button:
-       *  - 1: Commit w/ options
+       *  - 1: Commit with options
        *  - 2: Open sidebar
        *  - 3: Settings
        */
@@ -665,7 +698,7 @@ define([
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
           option1.click(() => openModal(saveParams));
-          //option2.click(()=>sidebar());
+          option2.click(() => alert("feature coming soon"));
           option3.click(() => openModal(clearParams));
         }
       });
@@ -735,14 +768,11 @@ define([
     jvn_notif.element.attr("disabled", true);
   }
 
-  function openModal(func, modal = null) {
+  function openModal(func) {
     // Helper function; which use to open a new window(modal)
     // from an existing window(modal/dialog)
     return new Promise(res => {
       let len = $(".modal-backdrop").length;
-      if (modal != null) {
-        modal.modal("hide");
-      }
       let it = setInterval(() => {
         if (len != $(".modal-backdrop").length) {
           func();
@@ -778,21 +808,45 @@ define([
     return '"' + val + '"';
   }
 
+  function getProjectTitle() {
+    return new Promise(resolve => {
+      const jvnLog = data => {
+        let ms = data.content.text
+          .trim()
+          .replace(/.*?\"/, "")
+          .split('"')
+          .shift();
+        if (ms.toLowerCase() == "none") {
+          resolve(undefined);
+        }
+        resolve(ms);
+      };
+      const code =
+        "from jovian.utils.commit import _parse_project as p\n" +
+        "a = p(project=None, new_project=None, filename=None)\n" +
+        "print(a[0])";
+      Jupyter.notebook.kernel.execute(code, {
+        iopub: { output: jvnLog }
+      });
+    });
+  }
+
   function storeParams() {
     // This function will be used to stored
     // the settings of parameters
     const jvn_params = {
       message: $("#project_msg_box").val(),
-      nb_filename: $("#nb_filename_box").val(),
+      filename: $("#nb_filename_box").val(),
       files: $("#files_box").val(),
-      env_type: $("#env_opt option:selected").text(),
+      environment: $("#env_opt option:selected").text(),
       project_id: $("#project_id_box").val(),
-      create_new: $("#if_new option:selected").text(),
-      secret: $("#nb_opt option:selected").text(),
-      artifacts: $("#artifacts_box").val(),
-      if_git: $("#if_git option:selected").text(),
-      git_msg: $("#git_msg_box").val()
+      new_project: $("#if_new option:selected").text(),
+      privacy: $("#nb_opt option:selected").text(),
+      outputs: $("#artifacts_box").val(),
+      git_commit: $("#if_git option:selected").text(),
+      git_message: $("#git_msg_box").val()
     };
+
     localStorage.setItem(
       Jupyter.notebook.notebook_name,
       JSON.stringify(jvn_params)
