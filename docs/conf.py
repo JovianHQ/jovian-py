@@ -35,6 +35,15 @@ html_theme_options = {
     'sticky_navigation': False
 }
 
+html_context = {
+    'display_github': True,
+    'github_user': 'JovianML',
+    'github_repo': 'jovian-py',
+    'github_version': 'master',
+    'conf_py_path': '/docs/'
+}
+
+
 def setup(app):
     """Enables to embed reStructuredText(rst) in a markdown(.md)
 
