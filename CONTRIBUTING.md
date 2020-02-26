@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 To ensure that [VSCode](https://code.visualstudio.com/) and other code editors use the correct conda environment, run the following command to add the path of the `jovian-py-dev` env to your `.bashrc` file:
 
-_Ensure that you have activated `jovian-py-dev` the environment before running the following command_
+_Ensure that you have activated `jovian-py-dev` environment before running the following command_
 
 ```
 echo -e "\n\nexport JOVIAN_PY_DEV_PYTHONPATH=$CONDA_PREFIX/bin/python" >> ~/.bashrc
@@ -95,7 +95,7 @@ code .
 
 ## Contributing to Docs
 
-The documentation website of Jovian is hosted at [jovian.ml/docs](https://jovian.ml/docs)
+The documentation website of Jovian is hosted at [jovian.ml/docs](https://jovian.ml/docs/)
 
 To run the docs server locally, run:
 
@@ -119,12 +119,12 @@ The documentation is present in the `docs` folder.
 - **Autodoc**: We are using [Sphinx's autodoc](http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) extension to import documentation to the docs website directly from the docstrings.
 - **Adding Autodoc**:Visit the Markdown file where you want to import the docstring and add [`rst` autodoc directives](http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html).
 - **Embedding `rst` directives in `.md`**:
-  Embed the directives with three backticks (`) followed by `eval_rst` below that please add all the directives that you'd like and close with three backticks in a new line.
-      ````
-      ```eval_rst
-      .. autofunction:: jovian.commit
-      ```
-      ````
+  Embed the directives with three backticks (`) followed by`eval_rst` below that please add all the directives that you'd like and close with three backticks in a new line.
+  ````
+  ```eval_rst
+  .. autofunction:: jovian.commit
+  ```
+  ````
 - **Embedding rst directives in Docstring**: You'd want to add [rst admonition](https://runawayhorse001.github.io/SphinxGithub/rtxt.html?highlight=admonition#admonitions) for attention, caution, note. reminder, etc.
 
   ```
