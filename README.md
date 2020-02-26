@@ -36,7 +36,7 @@ pip install jovian --upgrade
 > pip install jovian --upgrade --user
 > ```
 
-Visit [Docs](https://jovian.ml/docs) for more.
+Visit [Docs](https://jovian.ml/docs/) for more.
 
 ## Contribution Guidelines
 
