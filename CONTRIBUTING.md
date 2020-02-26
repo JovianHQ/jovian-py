@@ -40,12 +40,7 @@ pip install -r requirements.txt
 
 To ensure that [VSCode](https://code.visualstudio.com/) and other code editors use the correct conda environment, run the following command to add the path of the `jovian-py-dev` env to your `.bashrc` file:
 
-<<<<<<< HEAD
 _Ensure that you have activated `jovian-py-dev` environment before running the following command_
-=======
-_Ensure that you have activated `jovian-py-dev` the environment before running the following command_
-
-> > > > > > > 5d754309428885d11bf1375395fd2bd0ebad3755
 
 ```
 echo -e "\n\nexport JOVIAN_PY_DEV_PYTHONPATH=$CONDA_PREFIX/bin/python" >> ~/.bashrc
