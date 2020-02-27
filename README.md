@@ -11,7 +11,7 @@ jovian is an open-source Python package integrated with [Jovian](https://jovian.
 - [Tracking Datasets, Hyperparameters and Metrics](https://jovian.ml/docs/user-guide/06-track.html)
 - [Comparing and Analyzing all the experiments](https://jovian.ml/docs/user-guide/07-compare.html)
 - [Collaborate with teammates/colleagues](https://jovian.ml/docs/user-guide/08-collaborate.html)
-- [!Stay connected with your model training, live updates with Slack Notifications](https://jovian.ml/docs/user-guide/09-integrations.html)
+- [Stay connected with your model training, live updates with Slack Notifications](https://jovian.ml/docs/user-guide/09-integrations.html)
 - [Embed Jupyter Notebooks and Cell upload on Jovian.ml](https://jovian.ml/docs/user-guide/10-embed.html)
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian-py.readthedocs.io/en/latest/?badge=latest)
