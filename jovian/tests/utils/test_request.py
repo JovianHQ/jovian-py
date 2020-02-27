@@ -1,6 +1,7 @@
-from unittest import TestCase, mock
-from jovian.utils.request import _msg, pretty, get, post, retry
 import json
+from unittest import TestCase, mock
+
+from jovian.utils.request import _msg, get, post, pretty, retry
 
 
 class TestMsg(TestCase):

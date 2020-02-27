@@ -3,13 +3,8 @@ from jovian.utils.credentials import get_api_key, get_guest_key, read_api_url, r
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import get, pretty
-from jovian.utils.misc import urljoin
+from jovian.utils.shared import _u, _v
 from jovian.utils.api import post_slack_message
-
-
-def _u(path):
-    """Make a URL from the path"""
-    return urljoin(read_api_url(), path)
 
 
 def _h():
@@ -20,13 +15,6 @@ def _h():
             "x-jovian-command": "add-slack",
             "x-jovian-guest": get_guest_key(),
             "x-jovian-org": read_org_id()}
-
-
-def _v(version):
-    """Create version query parameter string"""
-    if version is not None:
-        return "?gist_version=" + str(version)
-    return ""
 
 
 def add_slack():
