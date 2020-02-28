@@ -18,6 +18,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Test with pytest
+      env:
+        GITHUB_NAME: name
+        GITHUB_EMAIL: name@email.com
       run: |
+        git config --global user.email ${GITHUB_EMAIL}
+        git config --global user.name ${GITHUB_NAME}
         pip install pytest
         pytest

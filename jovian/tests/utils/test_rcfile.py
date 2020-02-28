@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 from unittest import TestCase, mock
 
 from jovian.utils.constants import RC_FILENAME
@@ -16,11 +17,15 @@ data = {
 
 
 class RCFile(TestCase):
+    path = 'rcfile-testing-folder'
+
     def setUp(self):
-        os.chdir('jovian/tests/resources/rcfile')
+        os.mkdir(self.path)
+        os.chdir(self.path)
 
     def tearDown(self):
-        os.chdir('../' * 4)
+        os.chdir('..')
+        shutil.rmtree(self.path)
 
 
 class CreateNewRCFile(RCFile):
