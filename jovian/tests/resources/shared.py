@@ -22,3 +22,13 @@ def fake_creds(config_dir, creds_filename):
         purge_config()
     credentials.CONFIG_DIR = _d
     credentials.CREDS_FNAME = _f
+
+
+class MockResponse:
+    def __init__(self, json_data, status_code, text=""):
+        self.json_data = json_data
+        self.status_code = status_code
+        self.text = text
+
+    def json(self):
+        return self.json_data

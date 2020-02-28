@@ -1,6 +1,7 @@
 import json
 from unittest import TestCase, mock
 
+from jovian.tests.resources import MockResponse, fake_creds
 from jovian.utils.request import _msg, get, post, pretty, retry
 
 
@@ -64,15 +65,6 @@ class TestPretty(TestCase):
 
         expected_result = '(HTTP 200) this is a fake response message'
         self.assertEqual(pretty(mock_res), expected_result)
-
-
-class MockResponse:
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-    def json(self):
-        return self.json_data
 
 
 def mocked_requests(url, *args, **kwargs):

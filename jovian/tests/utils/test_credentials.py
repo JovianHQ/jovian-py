@@ -2,7 +2,7 @@ import os
 from unittest import TestCase, mock
 from uuid import UUID
 
-from jovian.tests.resources import fake_creds
+from jovian.tests.resources import MockResponse, fake_creds
 from jovian.utils import credentials
 from jovian.utils.credentials import (API_TOKEN_KEY, GUEST_TOKEN_KEY, _generate_guest_key, _read_or_generate_guest_key,
                                       _u, _validate_guest_key, config_exists, creds_exist, ensure_org, get_api_key,
@@ -225,16 +225,6 @@ def test_read_webapp_url():
 @mock.patch("click.prompt", return_value="fake_org_id")
 def test_request_org_id(mock_prompt):
     assert request_org_id() == "fake_org_id"
-
-
-class MockResponse:
-    def __init__(self, json_data, status_code, text=""):
-        self.json_data = json_data
-        self.status_code = status_code
-        self.text = text
-
-    def json(self):
-        return self.json_data
 
 
 def mock_requests_get(url, *args, **kwargs):

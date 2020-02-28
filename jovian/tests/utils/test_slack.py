@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase, mock
 
-from jovian.tests.resources import fake_creds
+from jovian.tests.resources import MockResponse, fake_creds
 from jovian.utils import slack
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
@@ -18,16 +18,6 @@ def test_h():
                            "x-jovian-org": "staging"}
 
         assert _h() == expected_result
-
-
-class MockResponse:
-    def __init__(self, json_data, status_code, text=""):
-        self.json_data = json_data
-        self.status_code = status_code
-        self.text = text
-
-    def json(self):
-        return self.json_data
 
 
 def mock_requests_get(url, *args, **kwargs):

@@ -1,21 +1,11 @@
 from unittest import TestCase, mock
 from unittest.mock import ANY
 
-from jovian.tests.resources import fake_creds
+from jovian.tests.resources import MockResponse, fake_creds
 from jovian.utils.api import (_h, create_gist_simple, get_current_user, get_gist, get_gist_access, post_block,
                               post_blocks, post_records, post_slack_message, upload_file)
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
-
-
-class MockResponse:
-    def __init__(self, json_data, status_code, text=""):
-        self.json_data = json_data
-        self.status_code = status_code
-        self.text = text
-
-    def json(self):
-        return self.json_data
 
 
 def mock_requests_post(url, *args, **kwargs):
