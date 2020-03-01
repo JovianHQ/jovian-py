@@ -5,6 +5,23 @@ import pytest
 from jovian.tests.resources import fake_creds
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.credentials import creds_exist, purge_creds, read_creds
+from jovian.tests.resources import MockResponse
+
+
+def mock_request_get(*args, **kwargs):
+    return MockResponse({
+        "CONFIG_NAME": "staging",
+        "APP_NAME": "Jovian (Staging)",
+        "APP_DESCRIPTION": "Share Jupyter notebooks instantly",
+        "IS_PRODUCTION": True,
+        "IS_FLAVOR_PRO": False,
+        "COMPANY_LOGO_URL": "https://i.imgur.com/iOPEHyK.png",
+        "API_URL": "https://api-staging.jovian.ai",
+        "API_URL_ALT": "https://staging.jovian.ml/api",
+        "AUTH_ENV": "staging",
+        "LOGIN_REDIRECT_PATH": "/login",
+        "SEGMENT_KEY": "uMgCwYBVCuaCMGPCMWSaWLpkjgFhkyg5"
+    }, 200)
 
 
 @mock.patch("click.confirm", return_value=True)
@@ -49,10 +66,11 @@ def test_reset_config_no_creds(capsys):
         assert captured.out.strip() == expected_result
 
 
+@mock.patch("requests.get", side_effect=mock_request_get)
 @mock.patch("jovian.utils.credentials.validate_api_key", return_value=True)
 @mock.patch("click.prompt", side_effect=["staging", "fake_api_key"])
 @mock.patch("click.confirm", return_value=True)
-def test_configure_confirm_yes(mock_confirm, mock_prompt, mock_validate_api_key, capsys):
+def test_configure_confirm_yes(mock_confirm, mock_prompt, mock_validate_api_key, mock_get, capsys):
     with fake_creds('.jovian', 'credentials.json'):
         configure()
 
