@@ -1,5 +1,6 @@
 from jovian.utils import api
 from jovian.utils.logger import log
+from jovian.utils.slack import notify
 
 _data_blocks = []
 
@@ -46,7 +47,7 @@ def _parse_data(data, data_args):
     return data if len(data.keys()) > 0 else None
 
 
-def log_record(record_type, data=None, verbose=True, **data_args):
+def log_record(record_type, data=None, verbose=True, notify=False, **data_args):
     """Create records with the given data & type"""
     global _data_blocks
     # Create the combined data dictionary
@@ -59,11 +60,14 @@ def log_record(record_type, data=None, verbose=True, **data_args):
     tracking_slug = res['tracking']['trackingSlug']
     # Save to data block
     _data_blocks.append((tracking_slug, record_type, data))
+
+    if notify:
+        notify(data, verbose=verbose)
     if verbose:
         log(record_type.capitalize() + ' logged.')
 
 
-def log_hyperparams(data_dict=None, verbose=True, **data_args):
+def log_hyperparams(data_dict=None, verbose=True, notify=False, **data_args):
     """Record hyperparameters for the current experiment
 
     Args:
@@ -83,10 +87,10 @@ def log_hyperparams(data_dict=None, verbose=True, **data_args):
             # or
             jovian.log_hyperparams({ 'arch': 'cnn', 'lr': 0.001 })
     """
-    log_record('hyperparams', data_dict, verbose, **data_args)
+    log_record('hyperparams', data_dict, verbose, notify, **data_args)
 
 
-def log_metrics(data_dict=None, verbose=True, **data_args):
+def log_metrics(data_dict=None, verbose=True, notify=False, **data_args):
     """Record metrics for the current experiment
 
     Args:
@@ -107,10 +111,10 @@ def log_metrics(data_dict=None, verbose=True, **data_args):
             # or
             jovian.log_metrics({ 'epochs': 1, 'train_loss': 0.5 })
     """
-    log_record('metrics', data_dict, verbose, **data_args)
+    log_record('metrics', data_dict, verbose, notify, **data_args)
 
 
-def log_dataset(data_dict=None, verbose=True, **data_args):
+def log_dataset(data_dict=None, verbose=True, notify=False, **data_args):
     """Record dataset details for the current experiment
 
     Args:
@@ -134,7 +138,7 @@ def log_dataset(data_dict=None, verbose=True, **data_args):
             # or 
             jovian.log_dataset({ 'path': path, 'description': description })
     """
-    log_record('dataset', data_dict, verbose, **data_args)
+    log_record('dataset', data_dict, verbose, notify, **data_args)
 
 
 def log_git(data_dict=None, verbose=True, **data_args):
