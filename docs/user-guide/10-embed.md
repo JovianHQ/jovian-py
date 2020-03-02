@@ -25,7 +25,7 @@ Before seeing how to to embed, have a preview of the embed right here.Below we h
 
 This is ideal if you need embed the whole notebook
 
-<img src="https://imgur.com/J2i35fm.png" class="screenshot">
+<img src="https://imgur.com/J2i35fm.png" class="screenshot" alt="Embed Jovian Notebook" >
 
 **OR**
 
@@ -33,13 +33,13 @@ This is ideal if you need embed the whole notebook
 
 This is ideal when you need to embed a specific cell
 
-<img src="https://imgur.com/vAxP4Qa.png" class="screenshot">
+<img src="https://imgur.com/vAxP4Qa.png" class="screenshot" alt="Embed jovian notebook cell" >
 
 ### Customize options and preview
 
 Go ahead if u need more customization like `only output cell` and preview the embed below.
 
-<img src="https://imgur.com/09Gvp4o.png" class="screenshot">
+<img src="https://imgur.com/09Gvp4o.png" class="screenshot" alt="Embed notebooks topions and preview" >
 
 ### Copy and Embed
 
@@ -49,7 +49,7 @@ Go ahead if u need more customization like `only output cell` and preview the em
 
 Just copy and paste the embed link, here is a example. Click on the image to visit the medium blog where snippets are added.
 
-<a href="https://medium.com/@prajwal.prashanth22/whatsapp-chat-data-analysis-8944b91581f5" target="_blank"><img src="https://imgur.com/sB9nZdZ.png" class="screenshot"></a>
+<a href="https://medium.com/@prajwal.prashanth22/whatsapp-chat-data-analysis-8944b91581f5" target="_blank"><img src="https://imgur.com/sB9nZdZ.png" class="screenshot" alt="Medium blog embed notebook example" ></a>
 
 #### Copy iframe code and add it to a website
 
@@ -57,4 +57,4 @@ If you're building a profile website to showcase your projects or academic insti
 
 Just copy and paste the iframe code in the website's code, here is a example. Click on the image to visit the a example Github Page where the whole notebook is embedded.
 
-<a href="https://prajwalprashanth.github.io/whatsapp-data-analysis" target="_blank"><img src="https://imgur.com/S5tpDuJ.png" class="screenshot"></a>
+<a href="https://prajwalprashanth.github.io/whatsapp-data-analysis" target="_blank"><img src="https://imgur.com/S5tpDuJ.png" class="screenshot" alt="notebook embed website example" ></a>
