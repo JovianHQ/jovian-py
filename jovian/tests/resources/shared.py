@@ -4,7 +4,7 @@ from jovian.utils.credentials import write_creds, purge_config
 
 
 @contextmanager
-def fake_creds(config_dir, creds_filename):
+def fake_creds(config_dir='.jovian', creds_filename='credentials.json'):
     _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
     credentials.CONFIG_DIR = 'jovian/tests/resources/creds/' + config_dir
     credentials.CREDS_FNAME = creds_filename
