@@ -38,7 +38,7 @@ def dump_environment_to_yaml_file(env_fname, environment):
             yaml.safe_dump(data=environment, stream=stream, default_style=None,
                            default_flow_style=False)
 
-    except yaml.YAMLError as e:
+    except yaml.YAMLError as e:  # pragma: no cover
         print("Exception: {} while accessing file {}".format(e, env_fname))
 
 

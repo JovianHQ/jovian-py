@@ -2,7 +2,9 @@ import json
 from unittest import TestCase, mock
 
 from jovian.tests.resources import MockResponse
-from jovian.utils.jupyter import (get_notebook_server_path, has_ipynb_shell, in_notebook, get_notebook_path_py)
+from jovian.utils.jupyter import (
+    get_notebook_server_path, has_ipynb_shell, in_notebook, get_notebook_path_py, get_notebook_path, set_notebook_name,
+    get_notebook_name_saved, get_notebook_name, get_notebook_history, save_notebook)
 
 
 @mock.patch("IPython.get_ipython")
@@ -83,3 +85,55 @@ def test_get_notebook_server_path(mock_get, mock_servers, mock_re, mock_get_conn
 @mock.patch("requests.get", side_effect=mock_request_get)
 def test_get_notebook_path_py(mock_get, mock_servers, mock_re, mock_get_connection_file):
     assert get_notebook_path_py() == '/Users/rohitsanjay/Fake-Notebook.ipynb'
+
+
+@mock.patch("ipykernel.connect.get_connection_file", return_value='')
+@mock.patch("re.search", side_effect=mock_re())
+@mock.patch("notebook.notebookapp.list_running_servers", return_value=mock_list_running_servers())
+@mock.patch("requests.get", side_effect=mock_request_get)
+def test_get_notebook_path_ipython_api(mock_get, mock_servers, mock_re, mock_get_connection_file):
+    assert get_notebook_path() == '/Users/rohitsanjay/Fake-Notebook.ipynb'
+
+
+@mock.patch("jovian.utils.jupyter.get_notebook_name_saved", return_value="Fake-Notebook.ipynb")
+@mock.patch("os.getcwd", return_value="/Users/rohitsanjay")
+def test_get_notebook_path_javascript(mock_getcwd, mock_get_notebook_name_saved):
+    assert get_notebook_path() == '/Users/rohitsanjay/Fake-Notebook.ipynb'
+
+
+@mock.patch('IPython.get_ipython')
+@mock.patch("jovian.utils.jupyter.in_notebook", return_value=True)
+def test_set_notebook_name(mock_in_notebook, mock_get_ipython):
+    set_notebook_name()
+
+    mock_get_ipython().run_cell_magic.assert_called_with('javascript', '',
+                                                         "if (window.IPython && IPython.notebook.kernel) IPython.notebook.kernel.execute('jovian.utils.jupyter.get_notebook_name_saved = lambda: \"' + IPython.notebook.notebook_name + '\"')")
+
+
+def test_get_notebook_name_saved():
+    assert get_notebook_name_saved() == None
+
+
+@mock.patch("jovian.utils.jupyter.get_notebook_path", side_effect=['/Users/rohitsanjay/Fake-Notebook.ipynb', None])
+def test_get_notebook(mock_get_notebook_path):
+    assert get_notebook_name() == 'Fake-Notebook.ipynb'
+
+    assert get_notebook_name() == None
+
+
+@mock.patch('IPython.get_ipython')
+def test_get_notebook_history(mock_get_ipython):
+    get_notebook_history()
+
+    mock_get_ipython().magic.assert_called_with('%history')
+
+
+@mock.patch('IPython.get_ipython')
+@mock.patch("jovian.utils.jupyter.in_notebook", return_value=True)
+def test_save_notebook(mock_in_notebook, mock_get_ipython):
+    save_notebook()
+
+    mock_get_ipython().run_cell_magic.assert_called_with(
+        'javascript',
+        '',
+        'window.require && require(["base/js/namespace"],function(Jupyter){Jupyter.notebook.save_checkpoint()})')
