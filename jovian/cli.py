@@ -32,7 +32,7 @@ def main(ctx, log_level="info"):
 
 @main.command("help")
 @click.pass_context
-def help(ctx):
+def help(ctx):  # no-cover
     """Print this help message."""
 
     # Pretend user typed 'jovian --help' instead of 'jovian help'.
@@ -42,7 +42,7 @@ def help(ctx):
 
 @main.command('version')
 @click.pass_context
-def main_version(ctx):
+def main_version(ctx):  # no-cover
     """Print Jovian’s version number."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
@@ -80,12 +80,8 @@ def install_env(ctx, name=None):
 
     if not name:
         install()
-    elif name:
-        install(env_name=name)
     else:
-        # Show help
-        sys.argv[1] = "--help"
-        install_env()
+        install(env_name=name)
 
 
 @main.command("activate")
@@ -99,7 +95,7 @@ def activate_env(ctx):
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
-@click.option('--no-outputs', 'no_outputs')
+@click.option('--no-outputs', 'no_outputs', is_flag=True, default=False)
 @click.pass_context
 def exec_clone(ctx, notebook, version, no_outputs):
     """Clone a notebook hosted on Jovian:
@@ -111,7 +107,7 @@ def exec_clone(ctx, notebook, version, no_outputs):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version, not no_outputs)
+    clone(slug=notebook, version=version, include_outputs=not no_outputs)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
@@ -129,7 +125,7 @@ def exec_pull(ctx, notebook, version):
         $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
 
-    pull(notebook, version)
+    pull(slug=notebook, version=version)
 
 
 @main.command("add-slack")

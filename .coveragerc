@@ -3,3 +3,7 @@ omit = jovian/tests/*
 
 [report]
 sort = Cover
+exclude_lines = 
+    no-cover
+    if __name__ == .__main__.:
+

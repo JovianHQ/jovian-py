@@ -41,7 +41,7 @@ def _parse_data(data, data_args):
     if type(data) == dict:
         for k in data_args:
             data[k] = data_args[k]
-    elif type(data) == list and len(data_args.keys()) > 0:  # pragma: no cover
+    elif type(data) == list and len(data_args.keys()) > 0:  # no-cover
         data.append(data_args)
     return data if len(data.keys()) > 0 else None
 
