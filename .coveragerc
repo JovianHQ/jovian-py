@@ -1,5 +1,7 @@
 [run]
-omit = jovian/tests/*
+omit = 
+    jovian/tests/*
+    *__init__*
 
 [report]
 sort = Cover
