@@ -3,10 +3,27 @@ import shutil
 import pytest
 from unittest import mock
 from unittest.mock import ANY, call
+from contextlib import contextmanager
 
-from jovian.utils.commit import (_parse_filename, _parse_project, _attach_file, _attach_files, _capture_environment)
+from jovian.utils.commit import (_parse_filename, _parse_project, _attach_file,
+                                 _attach_files, _capture_environment, _perform_git_commit, _attach_records, commit)
 from jovian.tests.resources import fake_creds
 from jovian.utils.error import CondaError
+
+
+@contextmanager
+def mock_git_repo():
+    os.mkdir('mock_git_repo')
+    os.chdir('mock_git_repo')
+    os.system("""git init
+    mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb""")
+    os.chdir('nested/folder/deep')
+    os.system('git add . && git commit -m "initial commit"')
+    try:
+        yield
+    finally:
+        os.chdir('../../../../')
+        shutil.rmtree('mock_git_repo')
 
 
 def mock_get_gist(project):
@@ -255,3 +272,60 @@ def test_capture_environment_conda_error_and_pip_exception(mock_upload_conda_env
     expected_result = "[jovian] Error: fake error\n[jovian] Error: fake exception"
     captured = capsys.readouterr()
     assert captured.err.strip() == expected_result
+
+
+def mock_api_post_block(*args, **kwargs):
+    data = {
+        'count': 1,
+        'tracking': {
+            'createdAt': 1577270059593,
+            'updatedAt': None, 'gistSlug': None,
+            'trackingSlug': 'fake_slug_3',
+            'gistVersion': None
+        }
+    }
+
+    return data
+
+
+@mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
+def test_perform_git_commit(mock_api_post_block, capsys):
+    with mock_git_repo():
+        os.system("echo \"hello world\" >> file.txt")
+        _perform_git_commit(filename='file.txt', git_commit=True, git_message='added file.txt')
+
+        assert os.popen('git show -s --format=%s HEAD').read().strip() == 'added file.txt'
+
+        expected_result = "[jovian] Git repository identified. Performing git commit..."
+        captured = capsys.readouterr()
+        assert captured.out.strip() == expected_result
+
+
+@contextmanager
+def fake_records():
+    import jovian.utils.records
+    _d = jovian.utils.records._data_blocks
+    jovian.utils.records._data_blocks = [('fake_slug_metrics_1', 'metrics', {}),
+                                         ('fake_slug_metrics_2', 'metrics', {}),
+                                         ('fake_slug_hyperparams_1', 'hyperparams', {}),
+                                         ('fake_slug_hyperparams_2', 'hyperparams', {})]
+
+    try:
+        yield
+    finally:
+        jovian.utils.records._data_blocks = _d
+
+
+@mock.patch("jovian.utils.commit.api.post_records")
+def test_attach_records(mock_api_post_records, capsys):
+    with fake_records():
+        _attach_records('fake_gist_slug', 2)
+
+        mock_api_post_records.assert_called_with(
+            'fake_gist_slug',
+            ['fake_slug_metrics_1', 'fake_slug_metrics_2', 'fake_slug_hyperparams_1', 'fake_slug_hyperparams_2'],
+            2)
+
+        expected_result = "[jovian] Attaching records (metrics, hyperparameters, dataset etc.)"
+        captured = capsys.readouterr()
+        assert captured.out.strip() == expected_result
