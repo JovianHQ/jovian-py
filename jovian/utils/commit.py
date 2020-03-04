@@ -96,7 +96,7 @@ def commit(message=None,
 
     # Deprecated argument (env_type)
     if 'env_type' in kwargs:
-        environment = kwargs['environment']
+        environment = kwargs['env_type']
         log('"env_type" is deprecated. Use "environment" instead', error=True)
 
     # Deprecated argument (capture_env)
