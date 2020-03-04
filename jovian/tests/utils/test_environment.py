@@ -18,7 +18,7 @@ autopep8==1.5
 Babel==2.7.0"""
 
 
-def mock_os_popen(num=0):
+def mock_os_popen(num):
     ret1, ret2 = mock.Mock(), mock.Mock()
     if num == 0:
         ret1.read().strip.return_value = 'usage: conda [-h] [-V] command ...'
@@ -79,7 +79,7 @@ prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev"""
         return [ret1]
 
 
-@mock.patch("os.popen", side_effect=mock_os_popen())
+@mock.patch("os.popen", side_effect=mock_os_popen(0))
 def test_get_conda_bin(mock_popen):
     assert get_conda_bin() == 'conda'
 

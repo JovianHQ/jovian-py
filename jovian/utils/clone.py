@@ -69,7 +69,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True):
     log(ISSUES_MSG)
 
     # Download gist metadata
-    ver_str = '(version ' + version + ')' if version else ''
+    ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
     title = gist['title']
@@ -120,6 +120,7 @@ def pull(slug=None, version=None):
 
     # Get list of notebooks
     nbs = get_rcdata()['notebooks']
+    print(nbs)
     for fname in nbs:
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)
