@@ -47,9 +47,9 @@ def post_clone_msg(title):
     log("Cloned successfully to '{}'".format(title), color='green')
     log(click.style('\nNext steps:', fg='yellow', underline=True) +
         click.style("""
-  $ cd {}                     
-  $ jovian install            
-  $ conda activate <env_name> 
+  $ cd {}
+  $ jovian install
+  $ conda activate <env_name>
   $ jupyter notebook
 """.format(title), bold=True), pre=False)
 
