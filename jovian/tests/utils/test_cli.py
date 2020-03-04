@@ -14,28 +14,28 @@ def runner():
 @mock.patch("jovian.cli.configure")
 def test_configure(mock_configure, runner):
     result = runner.invoke(main, ['configure'])
-    mock_configure.assert_called()
+    mock_configure.assert_called_with()
     assert result.exit_code == 0
 
 
 @mock.patch("jovian.cli.reset_config")
 def test_reset(mock_reset, runner):
     result = runner.invoke(main, ['reset'])
-    mock_reset.assert_called()
+    mock_reset.assert_called_with()
     assert result.exit_code == 0
 
 
 @mock.patch("jovian.cli.activate")
 def test_activate(mock_activate, runner):
     result = runner.invoke(main, ['activate'])
-    mock_activate.assert_called()
+    mock_activate.assert_called_with()
     assert result.exit_code == 0
 
 
 @mock.patch("jovian.cli.add_slack")
 def test_add_slack(mock_add_slack, runner):
     result = runner.invoke(main, ['add-slack'])
-    mock_add_slack.assert_called()
+    mock_add_slack.assert_called_with()
     assert result.exit_code == 0
 
 
@@ -56,7 +56,7 @@ def test_disable_extension(mock_setup_extension, runner):
 @mock.patch("jovian.cli.install")
 def test_install(mock_install, runner):
     result = runner.invoke(main, ['install'])
-    mock_install.assert_called()
+    mock_install.assert_called_with()
     assert result.exit_code == 0
 
 
@@ -86,6 +86,7 @@ def test_pull(mock_pull, runner):
     result = runner.invoke(main, ['pull', '-n', 'aakashns/jovian-tutorial', '-v', 3])
     mock_pull.assert_called_with(slug='aakashns/jovian-tutorial', version=3)
     assert result.exit_code == 0
+
 
 @mock.patch("jovian.cli.pull")
 def test_pull(mock_pull, runner):
