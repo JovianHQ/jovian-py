@@ -1,6 +1,7 @@
 import os
 import shutil
 import pytest
+import functools
 from unittest import mock
 from unittest.mock import ANY, call
 from contextlib import contextmanager
@@ -329,3 +330,133 @@ def test_attach_records(mock_api_post_records, capsys):
         expected_result = "[jovian] Attaching records (metrics, hyperparameters, dataset etc.)"
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
+
+
+@mock.patch("jovian.utils.commit.in_notebook", return_value=False)
+@mock.patch("jovian.utils.commit.in_script", return_value=False)
+def test_commit_deprecated_args_unsupported_environment(mock_in_script, mock_in_notebook, capsys):
+
+    commit(
+        message="this is the first commit",
+        secret=True,
+        nb_filename='file',
+        env_type="conda",
+        capture_env=False,
+        notebook_id='fake_notebook_id',
+        create_new=True,
+        artifacts=['file1', 'file2'])
+
+    expected_result = """
+[jovian] Error: "secret" is deprecated. Use "privacy" instead (allowed options: "public", "private", "secret", "auto")
+[jovian] Error: "nb_filename" is deprecated. Use "filename" instead
+[jovian] Error: "env_type" is deprecated. Use "environment" instead
+[jovian] Error: "catpure_env" is deprecated. Use "environment=None" instead
+[jovian] Error: "notebook_id" is deprecated. Use "project" instead.
+[jovian] Error: "create_new" is deprecated. Use "new_project" instead.
+[jovian] Error: "artifacts" is deprecated. Use "outputs" instead
+[jovian] Error: Failed to detect Jupyter notebook or Python script. Skipping.."""
+
+    captured = capsys.readouterr()
+    assert captured.err.strip() == expected_result.strip()
+
+
+@mock.patch("jovian.utils.commit.save_notebook", return_value=None)
+@mock.patch("jovian.utils.commit._parse_filename", return_value=None)
+@mock.patch("jovian.utils.commit.in_notebook", return_value=True)
+@mock.patch("jovian.utils.commit.in_script", return_value=False)
+def test_commit_in_notebook_filename_none(
+        mock_in_script, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
+
+    commit('initial commit')
+
+    expected_result = """
+[jovian] Attempting to save notebook..
+[jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result.strip()
+
+
+@mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
+@mock.patch("jovian.utils.commit._parse_filename", return_value='file')
+@mock.patch("jovian.utils.commit.in_notebook", return_value=False)
+@mock.patch("jovian.utils.commit.in_script", return_value=True)
+def test_commit_file_does_not_exist(
+        mock_in_script, mock_in_notebook, mock_parse_filename, mock_os_path_exists, capsys):
+
+    commit('initial commit')
+
+    expected_result = """[jovian] The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result.strip()
+
+
+def mock_create_gist_simple(*args, **kwargs):
+    data = {
+        "slug": "fake_gist_slug",
+        "title": "demo-notebook",
+        "owner": {
+                "avatar": "https://api-staging.jovian.ai/api/user/rohit/avatar",
+                "id": 47,
+                "name": "Rohit Sanjay",
+                "username": "rohit"
+        },
+        "version": 2
+    }
+    return data
+
+
+def patch_all(f):
+    @mock.patch("jovian.utils.commit._attach_records")
+    @mock.patch("jovian.utils.commit._perform_git_commit")
+    @mock.patch("jovian.utils.commit._attach_files")
+    @mock.patch("jovian.utils.commit._capture_environment")
+    @mock.patch("jovian.utils.commit.set_notebook_slug")
+    @mock.patch("jovian.utils.commit.read_webapp_url", return_value='https://staging.jovian.ml/')
+    @mock.patch("jovian.utils.commit.api.create_gist_simple", side_effect=mock_create_gist_simple)
+    @mock.patch("jovian.utils.commit._parse_project", return_value=('fake_project_title', 'fake_project_id'))
+    @mock.patch("jovian.utils.commit.os.path.exists", return_value=True)
+    @mock.patch("jovian.utils.commit._parse_filename", return_value='file')
+    @mock.patch("jovian.utils.commit.in_notebook", return_value=False)
+    @mock.patch("jovian.utils.commit.in_script", return_value=True)
+    @functools.wraps(f)
+    def functor(*args, **kwargs):
+        return f(*args, **kwargs)
+    return functor
+
+
+@patch_all
+def test_commit(mock_in_script,
+                mock_in_notebook,
+                mock_parse_filename,
+                mock_os_path_exists,
+                mock_parse_project,
+                mock_create_gist_simple,
+                mock_read_webapp_url,
+                mock_set_notebook_slug,
+                mock_capture_environment,
+                mock_attach_files,
+                mock_perform_git_commit,
+                mock_attach_records,
+                capsys):
+
+    commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
+           environment='conda', outputs=['model.h5', 'gen.csv'])
+
+    mock_create_gist_simple.assert_called_with(
+        'file', 'fake_project_id', 'secret', 'fake_project_title', 'initial commit')
+
+    mock_set_notebook_slug.assert_called_with('file', 'fake_gist_slug')
+
+    mock_capture_environment.assert_called_with('conda', 'fake_gist_slug', 2)
+
+    _attach_files_calls = [call(['file1', 'file2', 'file3'], 'fake_gist_slug', 2),
+                           call(['model.h5', 'gen.csv'], 'fake_gist_slug', 2, output=True)]
+    mock_attach_files.assert_has_calls(_attach_files_calls)
+
+    mock_perform_git_commit.assert_called_with('file', True, 'initial commit')
+
+    mock_attach_records.assert_called_with('fake_gist_slug', 2)
+
+    expected_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result.strip()
