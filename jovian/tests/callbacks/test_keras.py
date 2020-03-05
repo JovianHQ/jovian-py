@@ -1,15 +1,20 @@
 from unittest import mock
 from unittest.mock import ANY
-
-import numpy as np
-from unittest import mock
-from keras.layers import Dense, Dropout
 import pytest
-from keras.models import Sequential
+import sys
 
-from jovian.callbacks.keras import JovianKerasCallback
+try:
+    import numpy as np
+    from unittest import mock
+    from keras.layers import Dense, Dropout
+    from keras.models import Sequential
+    from jovian.callbacks.keras import JovianKerasCallback
+except:
+    print('Tensorflow needs Python 3.7 or lower')
+    pass
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
 @pytest.fixture
 def model():
     model = Sequential()

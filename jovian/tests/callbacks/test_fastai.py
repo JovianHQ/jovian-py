@@ -8,7 +8,7 @@ try:
     from fastai.vision import *
     from jovian.callbacks.fastai import JovianFastaiCallback
 except ImportError:
-    print('fastai needs Python 3.6 and above')
+    print('fastai needs Python 3.6 or higher')
     pass
 
 
