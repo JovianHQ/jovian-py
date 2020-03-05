@@ -274,4 +274,4 @@ def test_pull_get_latest_notebooks(mock_clone):
             call('aakashns/metrics-example', None, fresh=False),
             call('aakashns/jovian-tutorial', None, fresh=False),
         ]
-        mock_clone.assert_has_calls(calls)
+        mock_clone.assert_has_calls(calls, any_order=True)
