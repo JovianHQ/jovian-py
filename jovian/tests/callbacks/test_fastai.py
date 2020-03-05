@@ -24,19 +24,15 @@ def learn():
             .databunch()
             .normalize(imagenet_stats))
 
-    data.show_batch()
-
     learn = cnn_learner(data, models.resnet18, metrics=accuracy)
     return learn
 
 
 @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
-@mock.patch("jovian.callbacks.fastai.JovianFastaiCallback")
 @mock.patch("jovian.callbacks.fastai.log_hyperparams")
 @mock.patch("jovian.callbacks.fastai.log_metrics")
-def test_on_train_begin_and_on_epoch_end(mock_log_metrics, mock_log_hyperparams, mock_JovianFastaiCallback, learn):
+def test_on_train_begin_and_on_epoch_end(mock_log_metrics, mock_log_hyperparams, learn):
     jvn_cb = JovianFastaiCallback(learn, 'res18')
-    mock_JovianFastaiCallback.valid_set = False
     learn.fit_one_cycle(1, callbacks=jvn_cb)
 
     mock_log_hyperparams.assert_called_with({
