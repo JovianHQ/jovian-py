@@ -268,7 +268,6 @@ def mock_requests_get(url, *args, **kwargs):
 
     elif url == 'https://api-staging.jovian.ai/user/profile':
         key = kwargs['headers']['Authorization']
-        print(key)
         if key == 'Bearer fake_correct_auth_key':
             return MockResponse({'key': 'value'}, 200)
 

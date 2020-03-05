@@ -120,7 +120,7 @@ def pull(slug=None, version=None):
 
     # Get list of notebooks
     nbs = get_rcdata()['notebooks']
-    print(nbs)
+
     for fname in nbs:
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)
