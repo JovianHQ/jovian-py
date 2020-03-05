@@ -21,6 +21,7 @@ jobs:
           pip install Cython --install-option="--no-cython-compile"
           pip install -r requirements.txt
           pip install torch fastai
+          pip install tensorflow keras
       - name: Test with pytest
         env:
           GITHUB_NAME: name
