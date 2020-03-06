@@ -5,11 +5,11 @@ Make sure you’ve completed the [Installation](../user-guide/01-install.md) bef
 
 ## Using Jovian Jupyter Extension
 
-<img src="https://i.imgur.com/6ZcKly7.png" class="screenshot" alt="jupyter extension toolbar button">
+<img src="https://i.imgur.com/uezsdYX.png" class="screenshot" alt="jupyter extension toolbar button">
 
 Once you have successfully installed jovian, a new button `Commit` will appear on the tool bar. When using `Commit` button for first time you'll be asked to provide an API key.
 
-<img src="https://i.imgur.com/oNSowtY.png" class="screenshot" alt="jovian api key prompt">
+<img src="https://i.imgur.com/jTvA0De.png" class="screenshot" alt="jovian api key prompt">
 
 You can get the API key at [Jovian](https://jovian.ml?utm_source=docs). Once you log in, just click on `API key` button, and the key will be copied to the clipboard.
 
@@ -19,19 +19,19 @@ You can get the API key at [Jovian](https://jovian.ml?utm_source=docs). Once you
 
 If the key is valid you will be notified with the following alert.
 
-<img src="https://i.imgur.com/UHvSihx.png" class="screenshot" alt="valid api key prompt">
+<img src="https://i.imgur.com/VYIvAk2.png" class="screenshot" alt="valid api key prompt">
 
 #### Error with API key
 
 If the entered API key is invalid you will get following error.
 
-<img src="https://i.imgur.com/9WaVkTR.png" class="screenshot" alt="api key error prompt">
+<img src="https://i.imgur.com/Ot75GEP.png" class="screenshot" alt="api key error prompt">
 
 #### Successful Commit
 
 Once the API key has been validated, you can start committing to [Jovian](https://jovian.ml?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can use the copy button to get the link to the share the notebook.
 
-<img src="https://i.imgur.com/4GoqzER.png" class="screenshot" alt="jovian commit success prompt">
+<img src="https://i.imgur.com/zxDHMA0.png" class="screenshot" alt="jovian commit success prompt">
 
 ## Commit with more options
 
@@ -39,15 +39,15 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 **Step 1:** click the dropdown menu
 
-<img src="https://i.imgur.com/svBbgsT.png" class="screenshot" alt="jovian dropdown menu">
+<img src="https://i.imgur.com/GUgZGcS.png" class="screenshot" alt="jovian dropdown menu">
 
 **Step 2:** choose `commit with options`
 
-<img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
+<img src="https://i.imgur.com/NzRMRH8.png" class="screenshot" alt="jovian commit options jupyter extension">
 
 **Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
 
-<img src="https://i.imgur.com/Fgkvk5b.png" class="screenshot" alt="jupyter extension commit options prompt">
+<img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
