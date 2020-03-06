@@ -29,7 +29,7 @@ If the entered API key is invalid you will get following error.
 
 #### Successful Commit
 
-Once the API key has been validated, you can start committing to [Jovian](https://jovian.ml?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can use the copy button to get the link to the share the notebook.
+Once the API key has been validated, you can start committing to [Jovian](https://jovian.ml?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can click the link to your Notebook in Jovian.
 
 <img src="https://i.imgur.com/zxDHMA0.png" class="screenshot" alt="jovian commit success prompt">
 
