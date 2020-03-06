@@ -53,7 +53,7 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 ## Enable or Disable the extension
 
-By default, the Jovian Jupyter Notebook Extension is enabled to the environment where jovian is installed.
+By default, the Jovian Jupyter Lab Extension is enabled to the environment where jovian is installed.
 
 You can also disable the extension by running the following command.
 
