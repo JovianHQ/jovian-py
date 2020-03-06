@@ -1,11 +1,11 @@
 # Jupyter Notebook Extension
 
-Now you can commit your Jupyter Notebook with to [Jovian](https://jovian.ml?utm_source=docs) just **One Click**.
-Make sure you’ve completed the [Installation](https://jovian-py.readthedocs.io/en/latest/user-guide/01-install.html) before reading further.
+Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
+Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
 
 ## Using Jovian Jupyter Extension
 
-<img src="https://i.imgur.com/44QTHP6.png" class="screenshot" alt="jupyter extension toolbar button">
+<img src="https://i.imgur.com/6ZcKly7.png" class="screenshot" alt="jupyter extension toolbar button">
 
 Once you have successfully installed jovian, a new button `Commit` will appear on the tool bar. When using `Commit` button for first time you'll be asked to provide an API key.
 
@@ -35,21 +35,21 @@ Once the API key has been validated, you can start committing to [Jovian](https:
 
 ## Commit with more options
 
-This makes use of [jovian.commit's](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
+This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
 
-Firstly, click the dropdown menu
+**Step 1:** click the dropdown menu
 
-<img src="https://i.imgur.com/C4trCHn.png" class="screenshot" alt="jovian dropdown menu">
+<img src="https://i.imgur.com/svBbgsT.png" class="screenshot" alt="jovian dropdown menu">
 
-Then, choose **commit with options**
+**Step 2:** choose **commit with options**
 
-<img src="https://i.imgur.com/MAbD0aB.png" class="screenshot" alt="jovian commit options jupyter extension">
+<img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), once the user changes a certain parameter they are retained.
+**Step 3:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
 
-<img src="https://i.imgur.com/3C7dokb.png" class="screenshot" alt="jupyter extension commit options prompt">
+<img src="https://i.imgur.com/HNJiRJq.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-Once the parameters are set to the need click `Commit` to the commit the notebook with these parameters set.
+**Step 4:** Click on `Commit` to commit the notebook with following options.
 
 ## Enable or Disable the extension
 
