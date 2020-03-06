@@ -45,11 +45,11 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 <img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Step 3:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
 
-<img src="https://i.imgur.com/HNJiRJq.png" class="screenshot" alt="jupyter extension commit options prompt">
+<img src="https://i.imgur.com/Fgkvk5b.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-**Step 4:** Click on `Commit` to commit the notebook with following options.
+**Step 3:** Click on `Commit` to commit the notebook with following options.
 
 ## Enable or Disable the extension
 
