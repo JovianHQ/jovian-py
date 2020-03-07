@@ -19,19 +19,19 @@ You can get the API key at [Jovian](https://jovian.ml?utm_source=docs). Once you
 
 If the key is valid you will be notified with the following alert.
 
-<img src="https://i.imgur.com/VYIvAk2.png" class="screenshot" alt="valid api key prompt">
+<img src="https://i.imgur.com/lNKQO3G.png" class="screenshot" alt="valid api key prompt">
 
 #### Error with API key
 
 If the entered API key is invalid you will get following error.
 
-<img src="https://i.imgur.com/Ot75GEP.png" class="screenshot" alt="api key error prompt">
+<img src="https://i.imgur.com/PsMgrGI.png" class="screenshot" alt="api key error prompt">
 
 #### Successful Commit
 
 Once the API key has been validated, you can start committing to [Jovian](https://jovian.ml?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can click the link to your Notebook in Jovian.
 
-<img src="https://i.imgur.com/zxDHMA0.png" class="screenshot" alt="jovian commit success prompt">
+<img src="https://i.imgur.com/BBesRzu.png" class="screenshot" alt="jovian commit success prompt">
 
 ## Commit with more options
 
@@ -47,13 +47,19 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 **Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
 
-<img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
-
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
-## Enable or Disable the extension
+<img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-By default, the Jovian Jupyter Lab Extension is enabled to the environment where jovian is installed.
+## Install Jovian Juputer Lab Extension
+
+You can use NPM to install the extension by running the following command.
+
+```
+$ Coming soon
+```
+
+## Enable or Disable the extension
 
 You can also disable the extension by running the following command.
 
