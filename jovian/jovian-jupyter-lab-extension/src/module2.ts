@@ -205,8 +205,10 @@ async function commit(commitWithParams:string|null = null):Promise<void> {
   }
   if (commitWithParams != null){
     commit = "\t" + commitWithParams.trim() + "\n";
-  } else {
+  } else if (getParams() != null) {
     commit = "\t" + getFinalCommit().trim() + "\n";
+  } else {
+    commit = "\tcommit()\n";
   }
   lock = true;
   getAPIKeys().then(
@@ -242,18 +244,35 @@ function askAPIKeys():void {
   let div:HTMLElement = document.createElement("div");
   let span:HTMLElement = addText("Please enter your API key from ");
   let a:HTMLElement = addLink("Jovian", "https://jovian.ml");
+  let err:HTMLElement = addErrorMsg("Invalid API key");
   let input:HTMLElement = addInput();
+  let inError = (isError:boolean) => {
+    let inp = input.getElementsByTagName("input")[0];
+    if (isError){
+      err.hidden = false;
+      (<any>inp.style)["border-color"] = "red";
+      inp.onkeydown = ()=> {
+        inError(false);
+        inp.onkeydown = null;
+      };
+    } else {
+      err.hidden = true;
+      (<any>inp.style) = "";
+    }
+  }
   span.appendChild(a);
   div.appendChild(span);
   div.appendChild(input);
   header.appendChild(div);
+  header.appendChild(err);
   header.appendChild(addButtons("Save", ()=>{
-    setAPIKeys(getInputText(input));
+    setAPIKeys(getInputText(input), inError);
   }));
+  inError(false);
   openWindow();
 }
 
-function setAPIKeys(value:string):void {
+function setAPIKeys(value:string, inError:any):void {
   const api_key = value;
   const write_api =
     "from jovian.utils.credentials import write_api_key\n" +
@@ -262,8 +281,16 @@ function setAPIKeys(value:string):void {
     "')\n";
   NBKernel.execute(write_api).then(
     ()=>{
-      alert("Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button");
-      closeWindow();
+      getAPIKeys().then(
+        (result)=>{
+          if (result == true){
+            alert("Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button");
+            closeWindow();
+          } else {
+            inError(true);
+          }
+        }
+      )
     }
   );
 }
@@ -416,6 +443,15 @@ function addText(title:string):HTMLElement{
   text.innerText = title;
   (<any>text.style)["margin-top"] = "0.5em";
   return text;
+}
+
+function addErrorMsg(msg:string):HTMLElement{
+  let err:HTMLSpanElement = document.createElement("p");
+  err.className = "p-Widget";
+  err.innerText = msg;
+  (<any>err.style)["margin-top"] = "-0.8em";
+  (<any>err.style)["color"] = "red";
+  return err;
 }
 
 function addInput(placeHolder:string = ""):HTMLElement{
