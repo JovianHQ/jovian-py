@@ -2,7 +2,7 @@
 @import "navbar.css";
 
 /* Load fonts */
-@import url("https://fonts.googleapis.com/css?family=Lato|Roboto+Mono|Roboto:400,500&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,500&display=fallback");
 
 body,
 html,

@@ -1,6 +1,7 @@
 from unittest import TestCase, mock
-from jovian.utils.records import get_records, reset, log_hyperparams, log_metrics, log_dataset, log_git, log_record
+
 import jovian.utils.records
+from jovian.utils.records import get_records, log_dataset, log_git, log_hyperparams, log_metrics, log_record, reset
 
 
 class FakeRecords(TestCase):

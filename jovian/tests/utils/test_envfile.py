@@ -1,10 +1,12 @@
 import os
-import yaml
 from unittest import TestCase, mock
-from jovian.utils.envfile import (check_error, extract_env_name, extract_env_packages, extract_package_from_line,
-                                  extract_pip_packages, get_environment_dict, identify_env_file,
-                                  dump_environment_to_yaml_file, write_env_name, remove_packages,
-                                  sanitize_envfile, serialize_packages, request_env_name, check_pip_failed)
+
+import yaml
+
+from jovian.utils.envfile import (check_error, check_pip_failed, dump_environment_to_yaml_file, extract_env_name,
+                                  extract_env_packages, extract_package_from_line, extract_pip_packages,
+                                  get_environment_dict, identify_env_file, remove_packages, request_env_name,
+                                  sanitize_envfile, serialize_packages, write_env_name)
 
 
 class EnvFile(TestCase):
