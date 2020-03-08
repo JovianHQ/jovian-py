@@ -845,11 +845,9 @@ define([
           const option1 = $("#jvn_module1_option1");
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
-          option1.click(() =>
-            dropdownOption(jvn_dropdown_modal, saveParamsAndCommit)
-          );
+          option1.click(() => openModal(saveParamsAndCommit));
           option2.click(() => alert("feature coming soon"));
-          option3.click(() => settingsDialog());
+          option3.click(() => openModal(settingsDialog));
         }
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
