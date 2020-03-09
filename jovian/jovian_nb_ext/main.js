@@ -528,8 +528,8 @@ define([
        *    - label : text: Clear API Key
        *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key | title: Clear the Jovian API key
        *
-       *    - label : text: Change API Key
-       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key | title: Change the Jovian API key
+       *    - label : text: Add/Change API Key
+       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key | title: Add/Change the Jovian API key
        *
        *    - label : text: Disable Jovian Extension
        *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable | title: Disable the Jovian Extension
@@ -537,50 +537,46 @@ define([
        */
       const div = $("<div/>").attr("id", "input_div");
 
-      const label1 = $("<label/>").text("Set Default Commit Parameters");
-
-      const option1 = $("<button/>")
+      const option_Set_Default = 
+      $("<label/>").text("Set default parameters for jovian commit")
+      $("<button/>")
         .attr("id", "default_param_button")
         .addClass("btn btn-primary")
-        .text("Set Default")
-        .attr("title", "Open Parameter Window to set Default Parameters");
+        .text("Set Default Parameters")
+        .attr("title", "Set default parameters for jovian commit");
 
-      const label2 = $("<label/>").text("Clear API Key");
-
-      const option2 = $("<button/>")
+      const option_Clear_API = 
+      $("<label/>").text("Clear API Key");
+      $("<button/>")
         .attr("id", "clear_api_button")
         .addClass("btn btn-primary")
         .text("Clear")
         .attr("title", "Clear the Jovian API key");
 
-      const label3 = $("<label/>").text("Change API Key");
-
-      const option3 = $("<button/>")
+      const option_Change_API = 
+      $("<label/>").text("Add/Change Jovian API Key")
+      $("<button/>")
         .attr("id", "change_api_button")
         .addClass("btn btn-primary")
         .text("Change")
-        .attr("title", "Change the Jovian API key");
+        .attr("title", "Add/Change Jovian API key");
 
-      const label4 = $("<label/>").text("Disable Jovian Extension");
-
-      const option4 = $("<button/>")
+      const option_Disable_Ext = 
+      $("<label/>").text("Disable Jovian Extension")
+      $("<button/>")
         .attr("id", "disable_button")
         .addClass("btn btn-primary")
         .text("Disable")
         .attr("title", "Disable the Jovian Extension");
 
       div
-        .append(label1)
-        .append(option1)
+        .append(option_Set_Default)
         .append("</br>")
-        .append(label2)
-        .append(option2)
+        .append(option_Clear_API)
         .append("</br>")
-        .append(label3)
-        .append(option3)
+        .append(option_Change_API)
         .append("</br>")
-        .append(label4)
-        .append(option4);
+        .append(option_Disable_Ext);
 
       return div;
     };
@@ -604,7 +600,7 @@ define([
           const option3 = $("#change_api_button");
           const option4 = $("#disable_button");
 
-          option1.click(() => saveParams());
+          option1.click(() => openModal(saveParams));
           option2.click(() => clearAPI());
           option3.click(() => changeAPI());
           option4.click(() => removeExtension());
@@ -866,10 +862,10 @@ define([
       Jupyter.notebook.save_checkpoint();
       remove_ext =
         "import os\n" +
-        "os.system('jupyter nbextension disable jovian_nb_ext/main --sys-prefix')\n";
+        "os.system('jupyter nbextension disable jovian_nb_ext/main sys-prefix')\n";
       console.log(remove_ext);
       alert(
-        "You have disabled the Jovian Extension. Run -- !jovian enable -- in the notebook to renable Jovian"
+        "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable Jovian extension"
       );
       Jupyter.notebook.kernel.execute(remove_ext);
       location.reload();

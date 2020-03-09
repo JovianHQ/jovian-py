@@ -81,10 +81,3 @@ Clears the API key.
 
 Allows the API key to be changed.
 <img src="https://i.imgur.com/kfAtxFE.png" class="screenshot">
-
-### Disable Jovian Extension
-
-Disables the jovian Extension
-<img src="https://i.imgur.com/n98LRMW.png" class="screenshot">
-
-Can be reversed by running `!jovian enable` in the notebook
