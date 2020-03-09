@@ -692,7 +692,7 @@ define([
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
           option1.click(() => openModal(saveParams));
-          option2.click(() => alert("feature coming soon"));
+          option2.click(()=>sidebar());
           option3.click(() => openModal(clearParams));
         }
       });
@@ -760,6 +760,65 @@ define([
     const jvn_notif = Jupyter.notification_area.widget("jvn");
     jvn_notif.inner.text("Committing to Jovian....");
     jvn_notif.element.attr("disabled", true);
+  }
+
+// function for sidebar, activates when option 2 is selected from dropdown menu
+  function sidebar(modal, option) {
+
+    // made the notebook float left
+  var original = document.getElementById("notebook-container");
+  original.style.width = "79%";
+  original.style.cssFloat = "right";
+
+// ADD div element to the page
+var div = document.createElement("div");
+     
+  div.style.width = "20%";
+  div.style.height = "450px";
+  div.style.marginTop = "-100px";
+ div.style.background = "red";
+  div.style.color = "white";
+  div.style.cssFloat = "left";
+  div.style.boxShadow = "10px 20px 30px grey";
+  div.style.border = "thick solid black";
+  div.innerHTML += "SIDEBAR";
+
+  // Add a button to close the sidebar
+  var button = document.createElement("BUTTON");
+  button.innerHTML = "X";
+  button.style.color = "black";
+  button.style.cssFloat = "right";
+  div.appendChild(button);
+
+  button.addEventListener ("click", function() {
+    original.style.cssFloat = "none";
+    div.remove();
+  });
+  
+
+
+div.style.top= "20px";
+document.getElementById("notebook").appendChild(div); 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
   function openModal(func) {
