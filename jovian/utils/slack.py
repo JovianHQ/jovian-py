@@ -3,12 +3,8 @@ from jovian.utils.credentials import get_api_key, get_guest_key, read_api_url, r
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import get, pretty
-from jovian.utils.url import urljoin
-
-
-def _u(path):
-    """Make a URL from the path"""
-    return urljoin(read_api_url(), path)
+from jovian.utils.shared import _u, _v
+from jovian.utils.api import post_slack_message
 
 
 def _h():
@@ -19,13 +15,6 @@ def _h():
             "x-jovian-command": "add-slack",
             "x-jovian-guest": get_guest_key(),
             "x-jovian-org": read_org_id()}
-
-
-def _v(version):
-    """Create version query parameter string"""
-    if version is not None:
-        return "?gist_version=" + str(version)
-    return ""
 
 
 def add_slack():
@@ -43,3 +32,35 @@ def add_slack():
             log(str(res.get('errors')[0].get('message')))
     else:
         raise ApiError('Slack trigger failed: ' + pretty(res))
+
+
+def notify(data, verbose=True, safe=False):
+    """Sends the data to the `Slack`_ workspace connected with your `Jovian`_ account.
+
+    Args:
+        data(dict|string): A dict or string to be pushed to Slack
+
+        verbose(bool, optional): By default it prints the acknowledgement, you can remove this by setting the argument to False.
+
+        safe(bool, optional): To avoid raising ApiError exception. Defaults to False.
+
+    Example
+        .. code-block::
+
+            import jovian
+
+            data = "Hello from the Integration!"
+            jovian.notify(data)
+
+    .. important::
+        This feature requires for your Jovian account to be connected to a Slack workspace, visit `Jovian Integrations`_ to integrate them and to control the type of notifications.
+    .. _Slack: https://slack.com
+    .. _Jovian: https://jovian.ml?utm_source=docs
+    .. _Jovian Integrations: https://jovian.ml/settings/integrations?utm_source=docs
+    """
+    res = post_slack_message(data=data, safe=safe)
+    if verbose:
+        if not res.get('errors'):
+            log('message_sent:' + str(res.get('data').get('messageSent')))
+        else:
+            log(str(res.get('errors')[0].get('message')), error=True)

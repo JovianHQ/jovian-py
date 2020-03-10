@@ -1,0 +1,239 @@
+@import "theme.css";
+@import "navbar.css";
+
+/* Load fonts */
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,500&display=fallback");
+
+body,
+html,
+p {
+  font-family: "Roboto", sans-serif !important;
+}
+body {
+  line-height: 1.5;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", sans-serif;
+}
+h2 {
+  font-size: 24px;
+}
+.rst-content pre.literal-block,
+.rst-content div[class^="highlight"] pre,
+.rst-content .linenodiv pre {
+  font-family: "Roboto Mono", monospace;
+  font-size: 14px;
+}
+.rst-content tt,
+.rst-content tt,
+.rst-content code {
+  font-family: "Roboto Mono", monospace;
+}
+img.screenshot {
+  /* Add border radius and shadow for screenshots */
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: rgba(52, 64, 77, 0.2) 0px 1px 5px;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+ul > li.toctree-l1 {
+  /* Indent the side nave bar list*/
+  margin-left: 3%;
+}
+
+.wy-menu-vertical a {
+  line-height: 1.5;
+}
+.wy-menu-vertical header,
+.wy-menu-vertical p.caption {
+  color: #636363;
+  font-weight: 500;
+  font-size: 16px;
+  padding-left: 24px;
+}
+.wy-side-nav-search > a {
+  display: flex;
+}
+.wy-side-nav-search > a img.logo {
+  /* Side nav bar logo */
+  background-color: #f4f7fd;
+  border-radius: 5px;
+  width: 75%;
+}
+
+.wy-side-nav-search {
+  /* Background color for the search bar along with the logo*/
+  background-color: #f4f7fd;
+}
+
+.wy-nav-side {
+  /* This relates to the entire color of the sidebar */
+  background-color: #f6f9ff;
+}
+
+.wy-side-scroll {
+  top: 70px;
+  height: calc(100vh - 70px);
+  padding-bottom: 64px;
+}
+
+.wy-menu a:hover {
+  /* Background color of text upon hovering on the nav bar list*/
+  background: #f4f7fd;
+  color: #0d61ff !important;
+}
+
+.wy-menu-vertical li.current {
+  /* Background color of selected sub-list */
+  background: white;
+}
+
+.wy-menu-vertical li.current > a:hover,
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a:hover {
+  /* Background color of text upon hovering already expanded sub-list
+  background: rgba(221, 221, 221, 0.5);  */
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.toctree-l2.current > a {
+  /* Background color of text selected on a already expanded sub-list */
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a {
+  /* Background color of text sub-list of a selected sub-list */
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3.current > a {
+  /* Background color of text selected sub-list of a selected sub-list 
+  */
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
+.wy-menu-vertical a,
+.wy-menu-vertical li.toctree-l1.current > a {
+  /* Text color of toc 
+     List on nav bar when not selected */
+  color: #636363 !important;
+}
+
+.wy-menu-vertical li.toctree-l1.current > a {
+  color: #ffffff !important;
+  background: #0d61ff;
+}
+
+.wy-nav-content,
+.wy-nav-content-wrap {
+  /* Background color of wrap around main content */
+  background-color: white;
+  max-width: 100%;
+}
+
+.wy-nav-content-wrap {
+  padding-top: 56px;
+}
+
+.rst-content {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.wy-nav-top {
+  padding: 0;
+  margin: 0;
+}
+
+.sig-param {
+  /*  All the arguments of a function
+      By default all the arguments are too close */
+  padding-left: 4px;
+  padding-right: 2px;
+}
+
+a,
+a:visited,
+a:hover {
+  color: #0d61ff;
+}
+
+.btn {
+  border-radius: 2px !important;
+}
+
+.btn-neutral,
+.btn-neutral:visited {
+  background: #0d61ff !important;
+  color: #ffffff !important;
+  box-shadow: none;
+}
+
+.wy-menu-vertical ul {
+  margin-left: 0px; /* Change to padding */
+}
+.wy-breadcrumbs {
+  margin-left: 0px;
+}
+
+@media (min-width: 1400px) {
+  .rst-content {
+    margin: 0;
+    max-width: 900px;
+  }
+  .wy-nav-content {
+    max-width: 1100px;
+  }
+}
+
+.wy-nav-top a:visited {
+  color: #ffffff !important;
+}
+
+.navbar-top {
+  background-color: #ffffff;
+  box-shadow: rgba(0, 21, 41, 0.08) 0px 1px 4px;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  justify-content: space-between;
+}
+
+div.section::before {
+  content: "";
+  display: block;
+  height: 70px;
+  margin: -70px 0 0;
+}
+
+input[type="search"] {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  box-shadow: none;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}

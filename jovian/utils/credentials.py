@@ -12,8 +12,7 @@ import requests
 from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_ORG_ID, DEFAULT_WEBAPP_URL
 from jovian.utils.error import ApiError, ConfigError
 from jovian.utils.logger import log
-from jovian.utils.misc import is_flavor_pro
-from jovian.utils.url import urljoin
+from jovian.utils.misc import is_flavor_pro, urljoin
 
 try:
     # Python 3
@@ -34,12 +33,14 @@ WEBAPP_URL_KEY = "WEBAPP_URL"
 HOME = os.path.expanduser('~')
 CONFIG_DIR = HOME + '/.jovian'
 CREDS_FNAME = 'credentials.json'
-CREDS_PATH = CONFIG_DIR + '/' + CREDS_FNAME
-
 CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jovian.ml'
 
-
 # Config directory management
+
+
+def get_creds_path():
+    return os.path.join(CONFIG_DIR, CREDS_FNAME)
+
 
 def config_exists():
     """Check if config directory exists"""
@@ -61,15 +62,17 @@ def init_config():
 
 def purge_creds():
     """Remove the credentials file"""
-    if os.path.isfile(CREDS_PATH):
-        os.remove(CREDS_PATH)
+    creds_path = get_creds_path()
+    if os.path.isfile(creds_path):
+        os.remove(creds_path)
 
 
 def read_creds():
     """Read the credentials file"""
-    if not os.path.exists(CREDS_PATH):
+    creds_path = get_creds_path()
+    if not os.path.exists(creds_path):
         return {}
-    with open(CREDS_PATH, 'r') as f:
+    with open(creds_path, 'r') as f:
         try:
             return json.load(f)
         except ValueError:
@@ -94,9 +97,10 @@ def read_cred(key, default=None):
 def write_creds(creds, update_cache=True):
     """Write the given credentials to file"""
     init_config()
-    with open(CREDS_PATH, 'w') as f:
+    creds_path = get_creds_path()
+    with open(creds_path, 'w') as f:
         json.dump(creds, f)
-    os.chmod(CREDS_PATH, stat.S_IREAD | stat.S_IWRITE)
+    os.chmod(creds_path, stat.S_IREAD | stat.S_IWRITE)
 
 
 def write_cred(key, value):
@@ -202,7 +206,7 @@ def ensure_org(check_pro=True):
     # Check for a successful response
     if config_res.status_code != 200:
         msg = 'Request to retrieve configuration file ' + config_url + \
-            ' failed with status_code ' + config_res.status_code + ' . ' + CONTACT_MSG
+            ' failed with status_code ' + str(config_res.status_code) + ' . ' + CONTACT_MSG
         log(msg, error=True)
         raise ConfigError(msg + ' Response (truncated):\n' +
                           config_res.text[:100])
@@ -220,7 +224,7 @@ def ensure_org(check_pro=True):
     # Extract API URL
     try:
         api_url = config_json[API_URL_KEY]
-    except KeyError:
+    except KeyError as e:
         msg = 'Failed to extract API_URL from JSON configuration file ' + \
             config_url + ' . ' + CONTACT_MSG
         log(msg, error=True)

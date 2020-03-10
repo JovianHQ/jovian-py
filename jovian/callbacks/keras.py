@@ -2,7 +2,8 @@ from keras.backend import get_value
 from keras.callbacks import Callback
 import json
 
-from jovian import log_hyperparams, log_metrics, reset, notify
+from jovian.utils.records import log_metrics, log_hyperparams, reset
+from jovian.utils.slack import notify
 
 
 class JovianKerasCallback(Callback):
@@ -40,7 +41,7 @@ class JovianKerasCallback(Callback):
     def on_train_begin(self, logs=None):
         # Reset state if required
         if self.reset_tracking:
-            reset()
+            reset('hyperparams', 'metrics')
 
         hyp_dict = {
             'epochs': self.params['epochs'],

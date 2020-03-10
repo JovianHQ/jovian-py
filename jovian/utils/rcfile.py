@@ -1,4 +1,4 @@
-"""Utilies the manage the .jovianrc file"""
+"""Utilies to manage the .jovianrc file"""
 import os
 import json
 from jovian.utils.constants import RC_FILENAME
@@ -41,7 +41,7 @@ def set_notebook_slug(filename, slug):
 
 
 def make_rcdata(filename, slug):
-    """Make an JSON string for an individual file"""
+    """Make a JSON string for an individual file"""
     data = {
         "notebooks": {
             filename: {

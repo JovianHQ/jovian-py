@@ -3,7 +3,7 @@ from __future__ import print_function
 import subprocess
 from time import sleep
 from sys import stderr
-from jovian.utils.anaconda import get_conda_bin, CONDA_NOT_FOUND, print_conda_message
+from jovian.utils.environment import get_conda_bin, CONDA_NOT_FOUND, print_conda_message
 from jovian.utils.constants import ISSUES_MSG
 from jovian.utils.logger import log
 from jovian.utils.envfile import (check_error, check_pip_failed, extract_env_name,
@@ -77,6 +77,8 @@ def install(env_fname=None, env_name=None):
 
 def activate(env_fname=None):
     """Read the conda environment file and activate the environment"""
+    log(ISSUES_MSG)
+
     # Check for conda and get the binary path
     try:
         conda_bin = get_conda_bin()
@@ -100,16 +102,5 @@ def activate(env_fname=None):
 
     # Activate the environment
     command = conda_bin + " activate " + env_name
-    log('Executing:\n' + command + "\n")
-    task = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE)
-
-    # Extract the error (if any)
-    _, error_str = task.communicate()
-    error_str = error_str.decode('utf8', errors='ignore')
-    print(error_str)
-
-    # TODO: Try again with `source` for older versions of conda
-    # Need to check it across platforms
-
-    # Print beta warning and github link
-    log(ISSUES_MSG)
+    log('Copy and execte the following command (try "source activate" if "conda activate doesn\'t work" )')
+    print("    " + command + " \n")
