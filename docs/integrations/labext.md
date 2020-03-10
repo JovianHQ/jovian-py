@@ -3,6 +3,19 @@
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
 Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
 
+## Installing Jovian Jupyter Lab Extension
+
+Jovian Jupyter Lab Extension is currently in the testing phase and could also be directly searched and installed through Jupyter Lab Extension Manager.
+
+### **Note: Make sure Jupyter lab Extension Manager is ENABLED under Jupyter Lab settings.**
+
+<img src ="https://media.giphy.com/media/QBYnFbQWuVOfBRXyjd/source.gif" class="screenshot" alt="Jupyter lab enable ext manager">
+
+### Now to install the Jovian Extension, It's Easy just search it under the Extensions
+
+
+
+
 ## Using Jovian Jupyter Lab Extension
 
 <img src="https://i.imgur.com/uezsdYX.png" class="screenshot" alt="jupyter extension toolbar button">
