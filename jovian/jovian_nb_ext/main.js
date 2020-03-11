@@ -739,6 +739,8 @@ define([
        *
        * Body: formParamsUI()
        *
+       * Button:
+       *  - Set: store all params to window.jvn_params
        */
       const jvn_default_params_modal = dialog.modal({
         show: false,
@@ -747,44 +749,108 @@ define([
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
         buttons: {
+          Cancel: {},
           Set: {
-            id: "save_params_button",
             class: "btn-primary",
             click: function() {
-              storeParamsInPython();
-            }
+              storeParams();
+              }
           }
         },
-        open: function() {
-          getParams().then(jvn_params => {
-            if (jvn_params == null) {
-              $("#nb_filename_box").val(
-                Jupyter.notebook.notebook_name.replace(".ipynb", "")
-              );
-              $($("input[name=secret_opt")[1]).prop("checked", true);
-              $($("input[name=cap_opt")[0]).prop("checked", true);
-              $($("input[name=create_opt")[1]).prop("checked", true);
-              $("#env_opt option:contains('conda')").prop("selected", true);
-            } else {
-              $("#artifacts_box").val(jvn_params.artifacts);
-              $("#files_box").val(jvn_params.files);
-              $("#notebook_id_box").val(jvn_params.notebook_id);
-              jvn_params.secret == "False"
-                ? $($("input[name=secret_opt")[1]).prop("checked", true)
-                : $($("input[name=secret_opt")[0]).prop("checked", true);
-              jvn_params.capture_env == "False"
-                ? $($("input[name=cap_opt")[1]).prop("checked", true)
-                : $($("input[name=cap_opt")[0]).prop("checked", true);
-              jvn_params.create_new == "False"
-                ? $($("input[name=create_opt")[1]).prop("checked", true)
-                : $($("input[name=create_opt")[0]).prop("checked", true);
-              jvn_params.env_type == "conda"
-                ? $("#env_opt option:contains('conda')").prop("selected", true)
-                : $("#env_opt option:contains('pip')").prop("selected", true);
+        open: async function() {
+          let project_id_helper = async () => {
+            if (getParams() == null) {
+              return;
             }
+            let project_id = getParams().project_id;
+            let j_id = "#project_id_box";
+            if (project_id.length != 0 && !$(j_id).prop("disabled")) {
+              $(j_id).val(project_id);
+              return;
+            }
+            let project_title = "";
+            await getProjectTitle().then(title => {
+              if (title != undefined) {
+                project_title = title;
+              }
+              if (!$(j_id).prop("disabled")) {
+                $(j_id).val(project_title);
+              }
+            });
+          };
+          let git_message_helper = () => {
+            if (!$("#git_msg_box").prop("disabled")) {
+              $("#git_msg_box").val($("#project_msg_box").val());
+            }
+          };
+          
+          let params = getParams();
+          if (params != null) {
+            $("#project_msg_box").val(params.message);
+            $("#nb_filename_box").val(params.filename);
+            $("#files_box").val(params.files);
+            $("#env_opt option:contains(" + params.environment + ")").prop(
+              "selected",
+              true
+            );
+            await project_id_helper();
+            $("#if_new option:contains(" + params.new_project + ")").prop(
+              "selected",
+              true
+            );
+            $("#nb_opt option:contains(" + params.privacy + ")").prop(
+              "selected",
+              true
+            );
+            $("#artifacts_box").val(params.outputs);
+            $("#if_git option:contains(" + params.git_commit + ")").prop(
+              "selected",
+              true
+            );
+            // $("#git_msg_box").val(params.git_message);
+            git_message_helper();
+          } else {
+            $("#nb_filename_box").val(
+              Jupyter.notebook.notebook_name.replace(".ipynb", "")
+            );
+            $("#env_opt option:contains('auto')").prop("selected", true);
+            $("#if_new option:contains('False')").prop("selected", true);
+            $("#if_git option:contains('True')").prop("selected", true);
+            $("#nb_opt option:contains('auto')").prop("selected", true);
+          }
+
+          let show = (target, list) => {
+            let keys = Object.keys(list);
+            keys.forEach(k => {
+              if ($(target + " option:selected").text() == "True") {
+                $(k).prop("disabled", !list[k]);
+              } else {
+                $(k).prop("disabled", list[k]);
+              }
+              if ($(k).prop("disabled") && $(k).is("input")) {
+                $(k).val("");
+              }
+            });
+          };
+          show("#if_new", { "#project_id_box": false });
+          $("#if_new").change(() => {
+            show("#if_new", { "#project_id_box": false });
+            project_id_helper();
           });
+
+          $(jvn_default_params_modal)
+            .find(".modal-content")
+            .show("fast");
         }
       });
+
+      const modal = $(jvn_default_params_modal).find(".modal-content");
+      modal
+        .children()
+        .first()
+        .remove();
+      modal.parent().css("width", "500px");
+      modal.hide();
       jvn_default_params_modal.modal("show");
     };
 
