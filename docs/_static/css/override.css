@@ -237,3 +237,27 @@ input[type="search"] {
   left: 0;
   z-index: 1030;
 }
+
+.nav-links-wrapper {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-links-wrapper {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    max-width: 1108px;
+  }
+}
+.nav-link {
+  color: #8b8b8b;
+}
+
+.nav-link:visited {
+  color: #8b8b8b;
+}
+
+.nav-link:hover {
+  color: #0d61ff;
+}
