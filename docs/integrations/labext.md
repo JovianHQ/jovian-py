@@ -68,14 +68,12 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 You can also disable the extension by running the following command.
 
 ```
-$ jupyter labextension disable Jovian
 $ jupyter labextension disable jovian-lab-ext-test
 ```
 
 To Enable the Notebook Extension, when you have manually disabled it.
 
 ```
-$ jupyter labextension enable Jovian
 $ jupyter labextension enable jovian-lab-ext-test
 ```
 
