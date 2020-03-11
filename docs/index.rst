@@ -62,6 +62,7 @@ Automate your workflow and boost your productivity.
   :caption: Integrations
 
   integrations/nbext
+  integrations/labext
   integrations/slack
   integrations/github
   integrations/keras
