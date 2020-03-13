@@ -1,4 +1,5 @@
 import NBKernel from './NBKernel';
+import {getUrl, shareWindow} from './module4';
 
 let body:any;
 let lock:boolean = false;
@@ -304,7 +305,11 @@ function committedWindow(url:string):void {
     div.appendChild(label);
     div.appendChild(document.createElement("br"));
     div.appendChild(document.createElement("br"));
+    div.appendChild(document.createElement("br"));
     div.appendChild(nb_link);
+    getUrl().then(
+      (rs)=>div.appendChild(shareWindow(rs))
+    );
   } else {
     let label = addText("Commit failed! " + url);
     div.appendChild(label);
