@@ -5,71 +5,56 @@ let body:any;
 function setting():void{
   initialHeader();
   let header:HTMLElement = initialHeader();
-  let setDefaultparams:HTMLElement = addCheckBox("Set Default options for commit");
-  let clearAPI:HTMLElement = addCheckBox("Clear the API key");
-  let changeAPI:HTMLElement = addCheckBox("Change the API key");
-  let disabled:HTMLElement = addCheckBox("Disable the extension");
-  setCheckBox(clearAPI,true);
+  let setDefaultparams:HTMLElement = addButton("Set Default options for commit");
+  let clearAPI:HTMLElement = addButton("Clear the API key");
+  let changeAPI:HTMLElement = addButton("Change the API key");
+  let disabled:HTMLElement = addButton("Disable the extension");
   header.appendChild(setDefaultparams);
   header.appendChild(clearAPI);
   header.appendChild(changeAPI);
   header.appendChild(disabled);
-  header.appendChild(addButtons("Submit",()=>{
-    if (getCheckBox(setDefaultparams)){
-      setDefault();
-      closeWindow();
-    };
-    if (getCheckBox(clearAPI)){
-      NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
-        ()=>closeWindow()
-      );
-    };
-    if (getCheckBox(changeAPI)){
-      NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
-        ()=>askAPIKeys()
-      );
-      closeWindow();
-    };
-    if (getCheckBox(disabled)){
-      NBKernel.execute("import os\nos.system('jupyter labextension disable Jovian')").then(
-        ()=>{
-          alert("You have disabled the Jovian extension, please refresh your browser.");
-          closeWindow();
-        }
-      );
-    };
-    if (!getCheckBox(clearAPI) && !getCheckBox(setDefaultparams) && !getCheckBox(disabled) && !getCheckBox(changeAPI)){
-      alert("Settings unchanged!");
-      closeWindow();
-    }
-  }));
-  openWindow();
 }
 
-function addCheckBox(value:string):HTMLElement{
+function addButton(value:string):HTMLElement{
   let div:HTMLElement = document.createElement("div");
-  let checkBox:any = document.createElement("input");
+  let button:any = document.createElement("input");
   let label:any = document.createElement("h2");
   label.innerText = value;
   label.className = "p-Widget jp-Dialog-header";
-  checkBox.setAttribute('type', "checkbox");
-  checkBox.className = "form-check-input";
-  checkBox.style["margin-top"] = "20px";
+  button.setAttribute('type', "button");
+  button.className = "form-check-input";
+  button.style["margin-top"] = "20px";
   div.className = "p-Widget jp-Input-Dialog jp-Dialog-body form-check";
-  div.appendChild(checkBox);
+  div.appendChild(button);
   div.appendChild(label);
+  button.onclick(getsetting(value));
   return div;
 }
 
-function getCheckBox(inp:HTMLElement):boolean{
-  if ((inp.getElementsByTagName("input")[0] as any).checked == true){
-    return true;
-  }
-  return false;
-}
-
-function setCheckBox(inp:HTMLElement, value:boolean):void{
-  (inp.getElementsByTagName("input")[0] as any).checked = value;
+function getsetting(value:string){
+  if (value == "Set Default options for commit"){
+    setDefault();
+    closeWindow();
+  };
+  if (value == "Clear the API key"){
+    NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
+      ()=>closeWindow()
+    );
+  };
+  if (value == "Change the API key"){
+    NBKernel.execute("import jovian as jvn\njvn.utils.credentials.purge_creds()").then(
+      ()=>askAPIKeys()
+    );
+    closeWindow();
+  };
+  if (value == "Disable the extension"){
+    NBKernel.execute("import os\nos.system('jupyter labextension disable Jovian')").then(
+      ()=>{
+        alert("You have disabled the Jovian extension, please refresh your browser.");
+        closeWindow();
+      }
+    );
+  };
 }
 
 function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
