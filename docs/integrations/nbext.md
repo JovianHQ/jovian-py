@@ -66,3 +66,28 @@ To Enable the Notebook Extension, when you have manually disabled it.
 ```
 $ jovian enable-extension
 ```
+## Commit with Share Dialog
+
+After you have succesfully commited your notebook to [Jovian](https://jovian.ml?utm_source=docs), you can share your notebook to social media. 
+
+The following window will appear, providing the user with the options to share the notebook to facebook, twitter, or linkedin.
+
+<img src="https://i.imgur.com/FUUk82w.png" class="screenshot" alt="Share Dialog Window" >
+
+Once the facebook button is click. A share post will appear, providing the choice to add a description to the share notebook. 
+
+<img src="https://i.imgur.com/4EfyHbn.png" class="screenshot" alt="Facebook post" >
+
+If the Linkedin buttton is click. A share post will appear, providing the choice to add a description to the share notebook.
+
+<img src="https://i.imgur.com/uwZxy1Y.png" class="screenshot" alt="Linked post" >
+
+If the twitter button is click. A share post will appear, also providing the choice to add description text to the tweet.
+
+<img src="https://i.imgur.com/HVP6t4M.png" class="screenshot" alt="Twitter post" >
+
+Finally you will see your tweet display. 
+
+<img src="https://i.imgur.com/Qg0TUU3.png" class="screenshot" alt="Twitter post" >
+
+
