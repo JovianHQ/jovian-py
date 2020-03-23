@@ -4,7 +4,7 @@
 
 The Platform (defined below) is owned and operated by SwiftAce Inc., a Delaware corporation headquartered at 291 S Milpitas Blvd, Suite 217, FalconX, Milpitas, CA 95035. SwiftAce Inc. has a fully-owned subsidiary in India, SwiftAce AI Private Limited, a company incorporated under the provisions of Companies Act, 2013, with its registered office at 58-14-94/1/4, FF-202, Merripalem Vuda Layout, Visakhapatnam-530009, Andhra Pradesh, India. SwiftAce Inc and SwiftAce AI Private Limited are collectively referred to as “**Company** ” "**we**," "**us**,", "**our**", “**Jovian**”.
 
-The Company requests You (_as defined below_) to carefully go through these terms & conditions (“**Terms of Service**” or “**Agreement**” or “**ToS**”) prior to using or accessing the Platform. If You continue to use this Platform, You irrevocably and unconditionally agree to comply with, abide by and be bound by all the obligations stipulated in this ToS, which together read with our Privacy Policy available at ****\*\*****\_\_****\*\***** (“**Privacy Policy**”) and any other applicable policies referred to herein or made available on the Platform, shall govern the Company’s relationship with You in relation to the Platform and shall be considered as a part of these ToS. This ToS only applies to the Platform. If there is any third-party platform, website or services undertaken or linked to this Platform, please note that the terms of use of such third parties shall apply, unless expressly and specifically stated. The User alone shall be responsible for the use of the Services of such third parties. These ToS supersede all previous oral and written terms and conditions (if any) communicated to You and shall act as a binding Agreement between Company and the Users (as defined hereunder). If you do not agree to be bound by all terms and conditions captured in this TOS, please do not use the Platform or Services.
+The Company requests You (_as defined below_) to carefully go through these terms & conditions (“**Terms of Service**” or “**Agreement**” or “**ToS**”) prior to using or accessing the Platform. If You continue to use this Platform, You irrevocably and unconditionally agree to comply with, abide by and be bound by all the obligations stipulated in this ToS, which together read with our Privacy Policy available at [https://jovian.ml/privacy-policy.html](https://jovian.ml/privacy-policy.html). (“**Privacy Policy**”) and any other applicable policies referred to herein or made available on the Platform, shall govern the Company’s relationship with You in relation to the Platform and shall be considered as a part of these ToS. This ToS only applies to the Platform. If there is any third-party platform, website or services undertaken or linked to this Platform, please note that the terms of use of such third parties shall apply, unless expressly and specifically stated. The User alone shall be responsible for the use of the Services of such third parties. These ToS supersede all previous oral and written terms and conditions (if any) communicated to You and shall act as a binding Agreement between Company and the Users (as defined hereunder). If you do not agree to be bound by all terms and conditions captured in this TOS, please do not use the Platform or Services.
 
 **Definitions**
 
@@ -46,13 +46,13 @@ Subject to the terms herein, the Company hereby grants to the User a non-sub lic
 
 The User hereby represents and warrants that it shall:
 
-Ø not use the Platform and/or Services in a manner that is prohibited by any law or regulation; and
+- not use the Platform and/or Services in a manner that is prohibited by any law or regulation; and
 
-Ø be responsible for any acts or omissions on the part of the end User who uses the Platform and/or Services and any Content posted by such User.
+- be responsible for any acts or omissions on the part of the end User who uses the Platform and/or Services and any Content posted by such User.
 
 **Payment and Taxes**
 
-In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at **\*\***\_\_**\*\***.
+In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://www.jovian.ml/pricing](https://www.jovian.ml/pricing).
 
 The User must pay the charges by bank transfer or using such payment details as are notified by the Company to the User from time to time. Except as specifically prescribed in this TOS, each Party is separately responsible for their own taxes payable in connection with this Agreement. All sums payable (if any) shall be paid in full, free of all deductions and withholdings of any kind except where any deduction or withholding is required by law. The charges exclude GST , or other applicable taxes. Where GST or other tax is payable, User agrees that the Charges will be increased by an amount equivalent to the GST, or other taxes as applicable.
 
@@ -82,9 +82,9 @@ As a condition of use, You promise not to use the Platform or the Service for an
 
 To ensure the discussions on the Platform help our Users to be more productive Jovian has put in place a set of guidelines outlining the activities that are acceptable on the Platform, and what is inappropriate. These guidelines are intended to provide guidance and restrictions governing the use of, and participation in, our Services.
 
-Ø Be Nice. The Platform should not be used to harm others or to air personal grievances and disputes.
+- Be Nice. The Platform should not be used to harm others or to air personal grievances and disputes.
 
-Ø Respect Jovian’s Rights. Don't violate the rights of Jovian. The Users shall not suggest that they are affiliated with or endorsed by Jovian when they are not.
+- Respect Jovian’s Rights. Don't violate the rights of Jovian. The Users shall not suggest that they are affiliated with or endorsed by Jovian when they are not.
 
 In addition to the guidelines mentioned above, You shall not display, download, modify, publish, transmit, update or share any information that You receive as a part of Services being offered to You and You shall not (and shall not permit any third party to) take any action that: (i) would constitute a violation of any applicable law, rule or regulation; (ii) infringes any Intellectual Property or other right of any other person or entity; (iii) is grossly harmful, harassing, blasphemous defamatory, obscene, pornographic, paedophilic, libellous, invasive of another's privacy, hateful, or racially, ethnically objectionable, disparaging, relating or encouraging money laundering or gambling, or otherwise unlawful in any manner whatever; (iv) impersonates any person or entity, (v) harm minors in any way, (vi) deceives or misleads the addressee about the origin of such messages or communicates any information which is grossly offensive or menacing in nature, (vii) threatens the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, or public order or causes incitement to the commission of any cognisable offence or prevents investigation of any offence or is insulting any other nation, or (viii) contains software viruses or any other computer code, files or programs designed to interrupt, destroy or limit the functionality of any computer resource.
 
@@ -94,15 +94,15 @@ Jovian reserves the right to remove any Content (including your profile) from th
 
 Jovian hereby grants You permission to access and use the Service as set forth in these ToS provided You shall not (directly or indirectly):
 
-Ø interfere or attempt to interfere with the proper working of the Service or any activities conducted on the Service;
+- interfere or attempt to interfere with the proper working of the Service or any activities conducted on the Service;
 
-Ø bypass any measures we may use to prevent or restrict access to the Service (or parts thereof);
+- bypass any measures we may use to prevent or restrict access to the Service (or parts thereof);
 
-Ø decipher, decompile, disassemble, reverse engineer or otherwise attempt to derive any source code or underlying ideas or algorithms of any part of the Service, except to the limited extent applicable laws specifically prohibit such restriction;
+- decipher, decompile, disassemble, reverse engineer or otherwise attempt to derive any source code or underlying ideas or algorithms of any part of the Service, except to the limited extent applicable laws specifically prohibit such restriction;
 
-Ø modify, translate, or otherwise create derivative works of any part of the Platform or Service; and
+- modify, translate, or otherwise create derivative works of any part of the Platform or Service; and
 
-Ø copy, rent, lease, distribute, or otherwise transfer any or all of the rights that You receive hereunder.
+- copy, rent, lease, distribute, or otherwise transfer any or all of the rights that You receive hereunder.
 
 You shall not use any “deep-link”, “page-scrape”, “robot”, “spider” or other automatic device, program, algorithm or methodology, or any similar or equivalent manual process, to access, acquire, copy or monitor any portion of the Platform or any Content, or in any way reproduce or circumvent the navigational structure or presentation of the Platform or any Content, to obtain or attempt to obtain any materials, documents or information through any means not purposely made available through the Platform. We reserve our right to prohibit any such activity.
 
@@ -118,17 +118,17 @@ In case of non-compliance with any applicable laws, rules or regulations, or the
 
 You understand and acknowledge that:
 
-Ø The Content is provided to You in an ‘as is’ manner and Jovian is not responsible for the Content uploaded by You and the other Users on the Platform. You shall not copy, reproduce, make available online or electronically transmit, publish, adapt, distribute, transmit, broadcast, display, sell, license, or otherwise exploit any Content for any other purposes without the prior written consent of Jovian or the respective licensors of Jovian. Jovian and its licensors reserve all rights not expressly granted in and to the Service and the Content.
+- The Content is provided to You in an ‘as is’ manner and Jovian is not responsible for the Content uploaded by You and the other Users on the Platform. You shall not copy, reproduce, make available online or electronically transmit, publish, adapt, distribute, transmit, broadcast, display, sell, license, or otherwise exploit any Content for any other purposes without the prior written consent of Jovian or the respective licensors of Jovian. Jovian and its licensors reserve all rights not expressly granted in and to the Service and the Content.
 
-Ø While accessing the Platform, Service and the Content provided by Jovian, You understand that the Content made available on the Platform is based on indicative fields and Jovian is not responsible for the accuracy, usefulness, safety, or Intellectual Property rights of or relating to such Content or Services. You further understand and acknowledge that You may be exposed to Content that is inaccurate and You agree to waive, and hereby do waive, any legal or equitable rights or remedies You have or may have against Jovian with respect to the Content and the Services provided.
+- While accessing the Platform, Service and the Content provided by Jovian, You understand that the Content made available on the Platform is based on indicative fields and Jovian is not responsible for the accuracy, usefulness, safety, or Intellectual Property rights of or relating to such Content or Services. You further understand and acknowledge that You may be exposed to Content that is inaccurate and You agree to waive, and hereby do waive, any legal or equitable rights or remedies You have or may have against Jovian with respect to the Content and the Services provided.
 
-Ø You understand that your Content may be republished and if You do not have the right to submit Content for such use, it may subject You to liability, and that Jovian will not be responsible or liable for any use of your Content by Jovian in accordance with this ToS.
+- You understand that your Content may be republished and if You do not have the right to submit Content for such use, it may subject You to liability, and that Jovian will not be responsible or liable for any use of your Content by Jovian in accordance with this ToS.
 
-Ø You understand that any other Content You find on or through the Platform is the sole responsibility of the User who originated such Content.
+- You understand that any other Content You find on or through the Platform is the sole responsibility of the User who originated such Content.
 
-Ø You are not relying on Jovian to, and that You understand that we do not, endorse, support, represent or guarantee the completeness, truthfulness, accuracy or reliability of any Content or communications posted via the Platform or endorse any opinions expressed via the Platform.
+- You are not relying on Jovian to, and that You understand that we do not, endorse, support, represent or guarantee the completeness, truthfulness, accuracy or reliability of any Content or communications posted via the Platform or endorse any opinions expressed via the Platform.
 
-Ø You understand that by using the Platform, You may be exposed to Content that might be offensive, harmful, inaccurate or otherwise inappropriate, and that You have no claim against Jovian for any such material.
+- You understand that by using the Platform, You may be exposed to Content that might be offensive, harmful, inaccurate or otherwise inappropriate, and that You have no claim against Jovian for any such material.
 
 **Use of Your Information and Content**
 
@@ -152,13 +152,13 @@ The Platform provides You with multiple automatic alerts and notifications. You 
 
 Further, in the process You agree that we may contact You through telephone, email, SMS, or any other means of communication for the purpose of:
 
-Ø Obtaining feedback in relation to Platform or our Services;
+- Obtaining feedback in relation to Platform or our Services;
 
-Ø Obtaining feedback in relation to any other User of the Platform;
+- Obtaining feedback in relation to any other User of the Platform;
 
-Ø Resolving any complaints, information, or queries by other Users regarding your Critical Content; or
+- Resolving any complaints, information, or queries by other Users regarding your Critical Content; or
 
-Ø For sending promotional and marketing messages.
+- For sending promotional and marketing messages.
 
 By submitting suggestions or other feedback regarding our Services or Platform to Jovian, You agree that Jovian can use and share such feedback for any purpose without compensation to You and Jovian is under no obligation to keep such feedback confidential.
 
@@ -172,19 +172,19 @@ We ensure easy access to the Users by providing a tool to update your profile in
 
 **Support**
 
-Jovian offers email-based and online support tools. You may access support resources or contact our support by emailing at**\*\***\_\_\_**\*\***. The Company does not make any promises regarding how quickly we will respond to your request for support, or that we will be able to fix any problems You may be having. Any suggestions by Company regarding use of the Services shall not be construed as a warranty.
+Jovian offers email-based and online support tools. You may access support resources or contact our support by emailing at [hello@jovian.ml](mailto:hello@jovian.ml). The Company does not make any promises regarding how quickly we will respond to your request for support, or that we will be able to fix any problems You may be having. Any suggestions by Company regarding use of the Services shall not be construed as a warranty.
 
 **Termination**
 
 The Company reserves the right to suspend or terminate your access to the Platform and the Services with or without notice and to exercise any other remedy available under law including but not limited to in cases where:
 
-Ø You are in breach of any of the terms and conditions contained herein,
+- You are in breach of any of the terms and conditions contained herein,
 
-Ø The Company is unable to verify or authenticate any information provided to Company by You,
+- The Company is unable to verify or authenticate any information provided to Company by You,
 
-Ø The Company has reasonable grounds for suspecting any illegal, fraudulent or abusive activity on part of such User, or
+- The Company has reasonable grounds for suspecting any illegal, fraudulent or abusive activity on part of such User, or
 
-Ø The Company believes in its sole discretion that User’s actions may cause legal liability for such User, other Users or for Company, or are contrary to the interests of the Platform.
+- The Company believes in its sole discretion that User’s actions may cause legal liability for such User, other Users or for Company, or are contrary to the interests of the Platform.
 
 Once temporarily suspended, indefinitely suspended or terminated, the User may not continue to use the Platform under the same Account, a different Account, or re-register under a new Account. On termination of an Account due to the reasons mentioned herein, such User shall no longer have access to data, messages and other material kept on the Platform by such User. All provisions of the ToS, which by their nature should survive termination, shall survive termination, including, without limitation, warranty disclaimers, indemnity and limitations of liability.
 
@@ -212,11 +212,11 @@ The User warrants to the Company that it has the legal right to disclose all Con
 
 Each Party hereby represents, warrants and covenants that:
 
-Ø The party has the legal right and authority to enter into this Agreement and to perform its obligations under this Agreement;
+- The party has the legal right and authority to enter into this Agreement and to perform its obligations under this Agreement;
 
-Ø The party will comply with all applicable legal and regulatory requirements applying to the exercise of the party's rights and the fulfilment of the party's obligations under this Agreement; and
+- The party will comply with all applicable legal and regulatory requirements applying to the exercise of the party's rights and the fulfilment of the party's obligations under this Agreement; and
 
-Ø The party has access to all necessary know-how, expertise and experience to perform its obligations under this Agreement.
+- The party has access to all necessary know-how, expertise and experience to perform its obligations under this Agreement.
 
 **Disclaimer**
 
