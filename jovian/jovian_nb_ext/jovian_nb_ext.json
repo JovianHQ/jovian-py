@@ -1,5 +1,0 @@
-{
-  "load_extensions": {
-    "jovian_nb_ext/main": true
-  }
-}

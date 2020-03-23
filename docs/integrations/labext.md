@@ -63,6 +63,40 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 <img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
+## Settings for Jovian Jupyter Lab Extension
+
+Settings are accessed in the dropdown menu
+
+<img src="https://i.imgur.com/q7qakXQ.png" class="screenshot" alt="jovian settings entry">
+
+After clicking `Settings`, the settings window will be displayed
+
+<img src="https://i.imgur.com/ykjaaV0.png" class="screenshot" alt="jovian settings">
+
+#### Set Default Commit Parameters
+
+Sets the Parameters for Commit without Commiting to Jovian.
+
+<img src="https://i.imgur.com/6RoD0x8.png" class="screenshot" alt="set default commit parameters">
+
+#### Clear API Key
+
+Clears the current API key.
+
+<img src="https://i.imgur.com/hmunSvk.png" class="screenshot" alt="clear API key">
+
+#### Change API Key
+
+Allows the API key to be changed.
+
+<img src="https://i.imgur.com/I5uKjQw.png" class="screenshot" alt="change api key">
+
+#### Disable Jovian Extension
+
+Disable the Jovian extension from Jupyter Lab System.
+
+<img src="https://i.imgur.com/7vf7IOd.png" class="screenshot" alt="disable Jovian extension">
+
 ## Enable or Disable the extension from CLI
 
 You can also disable the extension by running the following command.
