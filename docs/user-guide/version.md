@@ -18,7 +18,7 @@ All the versions are comparable, you can view additions, deletions made among an
 
 **How to view the differences?**
 
-1. [Commit](../jvn/commit) different versions and visit <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a>.
+1. [Commit](../api-reference/commit) different versions and visit <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a>.
 2. Click on `Version` drop down on the right top corner.
 3. Click on `Compare Versions`
 4. Select any 2 versions with the use of check boxes and click on `View Diff` button.
