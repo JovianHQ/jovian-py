@@ -6,6 +6,6 @@
 jovian.commit(message="example commit", filename="lesson1-pets")
 ```
 
-Visit [commit api reference](../jvn/commit) for more commit options
+Visit [commit api reference](../api-reference/commit) for more commit options
 
 <img src="https://imgur.com/Wg3wPx3.png" class="screenshot" alt="vs code jupyter notebook" />

@@ -28,7 +28,7 @@ Here's what `jovian.commit` does:
 
 <img src="https://i.imgur.com/1cFeiC7.gif" class="screenshot" alt="jovian commit" >
 
-For more features of `jovian.commit` and API reference visit [Commit](../jvn/commit.md).
+For more features of `jovian.commit` and API reference visit [Commit](../api-reference/commit.md).
 
 ```eval_rst
 .. attention::

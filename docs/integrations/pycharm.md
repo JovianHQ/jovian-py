@@ -6,7 +6,7 @@
 jovian.commit(message="pycharm commit")
 ```
 
-Visit [commit api reference](../jvn/commit) for more commit options
+Visit [commit api reference](../api-reference/commit) for more commit options
 
 <img src="https://imgur.com/Ceoc4I1.png" class="screenshot" alt="PyCharm jupyter notebook" />
 
