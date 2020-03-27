@@ -24,7 +24,7 @@ html_theme = 'sphinx_rtd_theme'
 
 templates_path = ['_templates']
 html_static_path = ['_static']
-html_style = 'css/override.css'  # adding some custom styles on the theme
+html_css_files = ['css/navbar.css', 'css/override.css']
 
 html_logo = 'jovian_horizontal_logo.svg'
 html_show_sphinx = False
