@@ -1,6 +1,6 @@
 ## Uploading Jupyter Notebooks to Jovian
 
-Jovian allows you to upload and share <a href="https://jupyter.org/" target=_blank> Jupyter Notebook</a> instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](01-install.md) before reading further.
+Jovian allows you to upload and share <a href="https://jupyter.org/" target=_blank> Jupyter Notebook</a> instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](install.md) before reading further.
 
 #### Uploading Notebooks
 
@@ -37,7 +37,7 @@ For more features of `jovian.commit` and API reference visit [Commit](../api-ref
 
 #### Benefits of Jovian
 
-**Easy sharing and collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](08-collaborate.md)).
+**Easy sharing and collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](collaborate.md)).
 
 <img src="https://i.imgur.com/D6JU35G.gif" class="screenshot" alt="share jupyter notebook online" >
 

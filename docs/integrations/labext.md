@@ -1,7 +1,7 @@
 # Jupyter Lab Extension
 
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
-Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
+Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
 ## Using Jovian Jupyter Lab Extension
 

@@ -19,7 +19,7 @@ Before seeing how to to embed, have a preview of the embed right here.Below we h
 
 ### Open up Embed modal
 
-[Commit](02-upload.md) a notebook or visit a uploaded notebook on <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
+[Commit](upload.md) a notebook or visit a uploaded notebook on <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
 
 #### Click on Embed button
 

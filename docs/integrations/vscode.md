@@ -1,6 +1,6 @@
 # VS Code Integration
 
-[jovian.commit](../user-guide/02-upload) works for [VS Code Notebooks](https://code.visualstudio.com/docs/python/jupyter-support) too.
+[jovian.commit](../user-guide/upload) works for [VS Code Notebooks](https://code.visualstudio.com/docs/python/jupyter-support) too.
 
 ```
 jovian.commit(message="example commit", filename="lesson1-pets")
