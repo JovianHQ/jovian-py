@@ -1,6 +1,6 @@
 # PRIVACY POLICY
 
-SWIFTACE AI PRIVATE LIMITED ("Us" or "We" or "Our" or "Jovian.ml" ) operates the website available at www.jovian.ml or any other Platform which will be made available to render the Services (“Platform”).
+SWIFTACE AI PRIVATE LIMITED ("Us" or "We" or "Our" or "Jovian.ml" ) operates the website available at [www.jovian.ml](https://www.jovian.ml) or any other Platform which will be made available to render the Services (“Platform”).
 
 This page informs You of Our policies regarding the collection, use, and disclosure of personal data when You use Our Platform and the choices You have associated with that data (hereinafter referred to as “Privacy Policy”).
 
@@ -191,17 +191,20 @@ SWIFTACE AI PRIVATE LIMITED is the controller of Your personal data. In addition
 
 We have appointed a grievance officer who shall address any discrepancies and grievances of the provider of the data with respect to processing of information in a time-bound manner.
 
-Name: \***\*\_\_\_\*\***
+Name: Aakash N S
 
-Email address: \***\*\_\*\***
+Email address: [support@jovian.ml](mailto:support@jovian.ml)
 
-Contact details: **\*\***\_**\*\***
+Contact details: 
+FalconX, Suite 217, 
+291 South Milpitas Blvd, 
+Milpitas, CA, USA 95035
 
 **17. CONTACT US**
 
 If you have any questions about this Privacy Policy, please contact Us:
 
-- By email: \***\*\_\_\_\*\***
+- By email: [hello@jovian.ml](mailto:hello@jovian.ml)
 
 **YOUR ACCEPTANCE OF THESE TERMS**
 

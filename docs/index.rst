@@ -26,30 +26,30 @@ where even Students and Enthusiasts can leverage the same and also use
 .. toctree::
   :caption: Getting Started
 
-  user-guide/01-install
-  user-guide/02-upload
-  user-guide/03-reproduce
-  user-guide/04-version
-  user-guide/05-attach
-  user-guide/06-track
-  user-guide/07-compare
-  user-guide/08-collaborate
-  user-guide/09-integrations
-  user-guide/10-embed
-  user-guide/11-github
-  user-guide/12-pro
+  user-guide/install
+  user-guide/upload
+  user-guide/reproduce
+  user-guide/version
+  user-guide/attach
+  user-guide/track
+  user-guide/compare
+  user-guide/collaborate
+  user-guide/integrations
+  user-guide/embed
+  user-guide/github
+  user-guide/pro
 
 .. toctree::
   :caption: API Reference
   :hidden:
 
-  jvn/commit
-  jvn/logger
-  jvn/notif
-  jvn/cli
+  api-reference/commit
+  api-reference/logger
+  api-reference/notif
+  api-reference/cli
   callbacks/fastai
   callbacks/keras
-  jvn/oembed
+  api-reference/oembed
 
 ########################################################
 Jovian: Libraries and Integrations
@@ -62,6 +62,7 @@ Automate your workflow and boost your productivity.
   :caption: Integrations
 
   integrations/nbext
+  integrations/labext
   integrations/slack
   integrations/github
   integrations/keras
