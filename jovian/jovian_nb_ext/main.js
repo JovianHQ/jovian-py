@@ -315,7 +315,7 @@ define([
                 if (x == "saved_valid_key") {
                   jvn_modal.find(".close").click();
                   alert(
-                    "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
+                    "API key verified and saved. Please press the 'Commit' button again."
                   );
                 }
               });
