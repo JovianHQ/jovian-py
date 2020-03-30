@@ -23,7 +23,7 @@ def commit(message=None,
            filename=None,
            project=None,
            new_project=None,
-           git_commit=True,
+           git_commit=False,
            git_message='auto',
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
