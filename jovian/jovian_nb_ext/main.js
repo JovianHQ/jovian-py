@@ -765,49 +765,164 @@ define([
 // function for sidebar, activates when option 2 is selected from dropdown menu
   function sidebar(modal, option) {
 
+ 
+  
+   
     // made the notebook float left
-  var original = document.getElementById("notebook-container");
-  original.style.width = "79%";
-  original.style.cssFloat = "right";
-
-// ADD div element to the page
-var div = document.createElement("div");
-     
-  div.style.width = "20%";
-  div.style.height = "450px";
-  div.style.marginTop = "-100px";
- div.style.background = "red";
-  div.style.color = "white";
-  div.style.cssFloat = "left";
-  div.style.boxShadow = "10px 20px 30px grey";
-  div.style.border = "thick solid black";
-  div.innerHTML += "SIDEBAR";
-
-  // Add a button to close the sidebar
-  var button = document.createElement("BUTTON");
-  button.innerHTML = "X";
-  button.style.color = "black";
-  button.style.cssFloat = "right";
-  div.appendChild(button);
-
-  button.addEventListener ("click", function() {
-    original.style.cssFloat = "none";
+    var original = document.getElementById("notebook-container");
+    original.style.width = "79%";
+    original.style.cssFloat = "right";
+  
+  
+  
+  
+  
+  // ADD div element to the page
+  var div = document.createElement("div");
+       
+    div.style.width = "20%";
+    div.style.height = "650px";
+    div.style.marginTop = "-100px";
+   div.style.background = "white";
+    div.style.color = "black";
+    div.style.cssFloat = "left";
+    div.style.boxShadow = "10px 20px 30px grey";
+    div.style.border = "thick solid black";
+  
+    
+    var button = document.createElement("BUTTON");
+    button.innerHTML = "X";
+    button.style.color = "black";
+    button.style.cssFloat = "right";
+    button.style.cssFloat = "top";
+    
+    //div.appendChild(button);
+  
+    
+    div.innerHTML += "<a align='center'><font size='6'>Jovian</font></a>"
+  
+    var closeButton = document.createElement("BUTTON");
+    closeButton.innerHTML += "X";
+    closeButton.style.cssFloat = "right";
+    closeButton.style.cssFloat = "top";
+    div.appendChild(closeButton);
+  
+    var button1 = document.createElement("BUTTON");
+    button1.innerHTML = "commit w/ option";
+    button1.style.color = "black";
+    button1.style.flex = "center";
+    div.appendChild(button1);
+  
+  
+    var button2 = document.createElement("BUTTON");
+    button2.innerHTML = "Share";
+    button2.style.color = "black";
+    button2.style.cssFloat = "center";
+    div.appendChild(button2);
+  
+    var version_controll = document.createElement("div");
+       
+    version_controll.style.width = "100%";
+    version_controll.style.height = "200px";
+    version_controll.style.background = "grey";
+    version_controll.style.color = "white";
+    version_controll.style.border = "solid black";
+    version_controll.style.borderLeft = "0";
+    version_controll.style.borderRight = "0";
+    version_controll.innerHTML = "<h3 align='center'>Version Controll</h3>";
+    div.appendChild(version_controll);
+  
+  
+    var commit = document.createElement("div");
+       
+    commit.style.width = "100%";
+    commit.style.height = "100px";
+    commit.style.background = "grey";
+    commit.style.color = "white";
+    commit.style.border = "solid black";    
+    //commit.style.borderTop = "0";
+    commit.style.borderLeft = "0";
+    commit.style.borderRight = "0";
+    commit.innerHTML = "<h3 align='center'>Version Controll</h3>";
+    commit.appendChild(button1);
+    div.appendChild(commit);
+  
+  
+  
+  
+    var share = document.createElement("div");
+       
+    share.style.width = "100%";
+    share.style.height = "100px";
+    share.style.background = "grey";
+    share.style.color = "white";
+    share.style.border = "solid black";    
+    share.style.borderLeft = "0";
+    share.style.borderRight = "0";
+    share.innerHTML = "<h3 align='center'>Share</h3>";
+    share.appendChild(button2);
+    div.appendChild(share);
+  
+  
+    var collaborator = document.createElement("div");
+       
+    collaborator.style.width = "100%";
+    collaborator.style.height = "215px";
+    collaborator.style.background = "grey";
+    collaborator.style.color = "white";
+    collaborator.style.border = "solid black";    
+    collaborator.style.borderLeft = "0";
+    collaborator.style.borderRight = "0";
+    collaborator.innerHTML = "<h3 align='center'>collaborator</h3>";
+    div.appendChild(collaborator);
+  
+  
+  
+  
+  
+    button.addEventListener ("click", function() {
+      
+      original.style.cssFloat = "none";
+      div.remove();
+      
+    });
+  
+    button1.addEventListener ("click", function() {
+      
+      dropdownOption(jvn_dropdown_modal, saveParams);
+    
+    });
+    
+    button2.addEventListener ("click", function() {
+      
+    
+    
+    });
+  
+  
+  
+  
+    
+  
+    closeButton.addEventListener ("click", function() {
+      original.style.cssFloat = "none";
     div.remove();
-  });
+    
+    });
   
-
-
-div.style.top= "20px";
-document.getElementById("notebook").appendChild(div); 
-
-
   
-
-
-
-
-
-
+  
+  // line 827, makes is go all the way up
+  
+  
+  //div.style.position = "absolute"; 
+   //div.style.position = "fixed";
+   div.style.position = "relative"; 
+  div.style.position = "-webkit-sticky";
+  div.style.top= "-4px";
+  document.getElementById("notebook").appendChild(div); 
+  
+  
 
 
 
