@@ -524,7 +524,7 @@ define([
        *  - div :
        *    - label : text: Set Default Commit Parameters
        *    - input : type: button | id: default_param_button | class: btn btn-primary | text: Set Default | title: Open Parameter Window to set Default Parameters
-       * 
+       *
        *    - label : text: Clear API Key
        *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key | title: Clear the Jovian API key
        *
@@ -537,37 +537,45 @@ define([
        */
       const div = $("<div/>").attr("id", "input_div");
 
-      const option_Set_Default = 
-      $("<label/>").text("Set default parameters for jovian commit")
-      .append($("<button/>")
-        .attr("id", "default_param_button")
-        .addClass("btn btn-primary")
-        .text("Set Default Parameters")
-        .attr("title", "Set default parameters for jovian commit"));
+      const option_Set_Default = $("<label/>")
+        .text("Set default parameters for jovian commit")
+        .append(
+          $("<button/>")
+            .attr("id", "default_param_button")
+            .addClass("btn btn-primary")
+            .text("Set Default Parameters")
+            .attr("title", "Set default parameters for jovian commit")
+        );
 
-      const option_Clear_API = 
-      $("<label/>").text("Clear API Key")
-      .append($("<button/>")
-        .attr("id", "clear_api_button")
-        .addClass("btn btn-primary")
-        .text("Clear")
-        .attr("title", "Clear the Jovian API key"));
+      const option_Clear_API = $("<label/>")
+        .text("Clear API Key")
+        .append(
+          $("<button/>")
+            .attr("id", "clear_api_button")
+            .addClass("btn btn-primary")
+            .text("Clear")
+            .attr("title", "Clear the Jovian API key")
+        );
 
-      const option_Change_API = 
-      $("<label/>").text("Add/Change Jovian API Key")
-      .append($("<button/>")
-        .attr("id", "change_api_button")
-        .addClass("btn btn-primary")
-        .text("Change")
-        .attr("title", "Add/Change Jovian API key"));
+      const option_Change_API = $("<label/>")
+        .text("Add/Change Jovian API Key")
+        .append(
+          $("<button/>")
+            .attr("id", "change_api_button")
+            .addClass("btn btn-primary")
+            .text("Change")
+            .attr("title", "Add/Change Jovian API key")
+        );
 
-      const option_Disable_Ext = 
-      $("<label/>").text("Disable Jovian Extension")
-      .append($("<button/>")
-        .attr("id", "disable_button")
-        .addClass("btn btn-primary")
-        .text("Disable")
-        .attr("title", "Disable the Jovian Extension"));
+      const option_Disable_Ext = $("<label/>")
+        .text("Disable Jovian Extension")
+        .append(
+          $("<button/>")
+            .attr("id", "disable_button")
+            .addClass("btn btn-primary")
+            .text("Disable")
+            .attr("title", "Disable the Jovian Extension")
+        );
 
       div
         .append(option_Set_Default)
@@ -661,7 +669,7 @@ define([
               $("#git_msg_box").val($("#project_msg_box").val());
             }
           };
-          
+
           let params = getParams();
           if (params != null) {
             $("#project_msg_box").val(params.message);
@@ -754,7 +762,7 @@ define([
             class: "btn-primary",
             click: function() {
               storeParams();
-              }
+            }
           }
         },
         open: async function() {
@@ -783,7 +791,7 @@ define([
               $("#git_msg_box").val($("#project_msg_box").val());
             }
           };
-          
+
           let params = getParams();
           if (params != null) {
             $("#project_msg_box").val(params.message);
@@ -960,7 +968,8 @@ define([
         Jupyter.notebook.kernel.execute(purge_api);
         resolve();
       });
-      setTimeout(() => { //to allow purge_api to complete
+      setTimeout(() => {
+        //to allow purge_api to complete
         modalInit();
       }, 400);
     }
