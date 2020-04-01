@@ -1,0 +1,6 @@
+Type: Jupyter Notebook Extension
+Compatibility: 5.x
+Name: JovianNbExtension
+Main: main.js
+Link: README.md
+Description: Jupyter notebook extension to interact with Jovian(https://www.jovian.ml) platform. Store your API Key and Commit your notebook with a click.
