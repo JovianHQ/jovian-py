@@ -1,9 +1,12 @@
 import {
-  IDisposable,  DisposableDelegate
-} from '@phosphor/disposable';
+  IDisposable,  
+  DisposableDelegate
+} from '@lumino/disposable';
 
 import {
-  JupyterFrontEndPlugin, JupyterFrontEnd
+  JupyterFrontEndPlugin, 
+  JupyterFrontEnd,
+  ILabShell
 } from '@jupyterlab/application';
 
 import {
@@ -15,12 +18,26 @@ import {
 } from '@jupyterlab/docregistry';
 
 import {
-  NotebookPanel, INotebookModel
+  NotebookPanel, 
+  INotebookModel
 } from '@jupyterlab/notebook';
 
-import '../style/index.css';
+import {
+  downloadIcon, 
+  caretDownIcon
+} from '@jupyterlab/ui-components';
+
 import getDropdown from './module1';
-import {commit} from './module2';
+import { 
+  setApp,
+  hasJovian 
+} from './commands'
+
+import {
+  commit
+} from './module2';
+
+import NK from './NBKernel'
 
 let positionIndex:number = 9; // The position will be used to add Jovian Icon
 
@@ -33,18 +50,19 @@ class JovainButtonExtension implements DocumentRegistry.IWidgetExtension<Noteboo
 
   constructor(app: JupyterFrontEnd) {
     this.app = app;
+    (<any>window).nb = NK;
   }
 
   createNew(panel: NotebookPanel, context: DocumentRegistry.IContext<INotebookModel>): IDisposable {
     // Create the on-click callback for the toolbar button.
     let callback:any = () => {
-      commit();
+      hasJovian(commit);
     };
 
     // Create the toolbar button
     let button = new ToolbarButton({
       className: 'jovian-lab-ext',
-      iconClassName: 'fa fa-bookmark-o',
+      icon: downloadIcon,
       onClick: callback,
       tooltip: 'commit to jovian'
     });
@@ -52,9 +70,9 @@ class JovainButtonExtension implements DocumentRegistry.IWidgetExtension<Noteboo
     // Add the toolbar button to the notebook
     panel.toolbar.insertItem(positionIndex, 'jovian', button);
     
-    button.node.className += " jovian-lab-ext-box jovian-lab-ext-commit";
     button.node.addEventListener ("DOMNodeInserted", ()=>{
       let jovian_button:any = button.node.firstChild;
+      jovian_button.style['border-radius'] = 0;
       jovian_button.style.background = setIcon("white");
       jovian_button.firstChild.innerText = "Commit";
       jovian_button.firstChild.style.color = "black";
@@ -88,21 +106,21 @@ class dropdown implements DocumentRegistry.IWidgetExtension<NotebookPanel, INote
     
     let callback = () => {
       // display the dropdown menu 
-      getDropdown();
+      hasJovian(getDropdown);
     };
 
     let button = new ToolbarButton({
       className: 'jovian-lab-dropdown',
-      iconClassName: 'fa fa-caret-down',
+      icon: caretDownIcon,
       onClick: callback,
       tooltip: 'Jovian Options'
     });
 
     panel.toolbar.insertItem(positionIndex+1, 'jovian dropdown', button);
 
-    button.node.className += " jovian-lab-ext-box jovian-lab-ext-dropdown";
     button.node.addEventListener ("DOMNodeInserted", ()=>{
       let jovian_dropdown:any = button.node.firstChild;
+      jovian_dropdown.style['border-radius'] = 0;
       jovian_dropdown.style.background = "white";
       (button.node as any).style["margin-left"] = "-2px";
     },{
@@ -135,7 +153,7 @@ function setIcon(color:string):string {
   return icon;
 }
   
-async function activate (app: JupyterFrontEnd) {
+async function activate (app: JupyterFrontEnd, labShell: ILabShell) {
   /**
    * Registers two buttons into JupyterLab toolbar
    *  - button1: Jovian button
@@ -143,14 +161,18 @@ async function activate (app: JupyterFrontEnd) {
    */
   app.docRegistry.addWidgetExtension('Notebook', new JovainButtonExtension(app));
   app.docRegistry.addWidgetExtension('Notebook', new dropdown());
+  setApp(app, labShell);
 }
 
 const extension: JupyterFrontEndPlugin<void> = {
   /**
    * settings of this plugin
    */
-  id: 'jovian-extension',
+  id: 'jovian_lab_extension',
   autoStart: true,
+  requires: [
+    ILabShell
+  ],
   activate
 };
 

@@ -1,16 +1,18 @@
-# Jovian
+# jovian_lab_ext
 
-Add a run-all button on the notebook toolbar
+![Github Actions Status](https://github.com/my_name/myextension/workflows/Build/badge.svg)
+
+none
 
 
 ## Requirements
 
-* JupyterLab >= 0.30.0 
+* JupyterLab >= 1.0
 
 ## Install
 
 ```bash
-jupyter labextension install sampleButtonExt
+jupyter labextension install jovian_lab_ext
 ```
 
 ## Contributing
@@ -23,7 +25,7 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Move to sampleButtonExt directory
+# Move to jovian_lab_ext directory
 # Install dependencies
 jlpm
 # Build Typescript source
@@ -48,6 +50,6 @@ jupyter lab --watch
 ### Uninstall
 
 ```bash
-jupyter labextension uninstall sampleButtonExt
+jupyter labextension uninstall jovian_lab_ext
 ```
 

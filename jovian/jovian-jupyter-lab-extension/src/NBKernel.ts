@@ -1,6 +1,7 @@
 import {
   Kernel,
-  Session,
+  SessionAPI,
+  KernelManager,
   KernelMessage
 } from '@jupyterlab/services';
 
@@ -18,7 +19,7 @@ class NBKernel {
     return new Promise((resolve, reject = (msg)=>{console.log(msg)}) => {
       this.currentKernel().then(
         (kernel) => {
-          let result = (kernel as Kernel.IKernel).requestExecute({code:pythonCode, allow_stdin:true});
+          let result = (kernel as Kernel.IKernelConnection).requestExecute({code:pythonCode, allow_stdin:true});
           let text:string = "";
           result.onIOPub = (msg) => {
             if (KernelMessage.isErrorMsg(msg)){
@@ -41,14 +42,15 @@ class NBKernel {
      * Retrieve the current Kernel and return in a promise
      */
     return new Promise(resolve => {
-      Session.listRunning().then(
+      SessionAPI.listRunning().then(
         (allSessions)=>{
           for (let i = 0; i < allSessions.length; i++){
             let session = allSessions[i];
             if (session.type.toLowerCase() == "notebook"){
               let NBnameFromSession = session.name;
               if (NBnameFromSession.toLowerCase() == this.currentNotebookName().toLowerCase()){
-                resolve(Kernel.connectTo(session.kernel) as Kernel.IKernel);
+                let km = new KernelManager();
+                resolve(km.connectTo({model:session.kernel}));
               }
             }
           }
@@ -60,6 +62,9 @@ class NBKernel {
   currentNotebookName():string{
     /**
      * Return the name of current Notebook
+     * note:
+     *   (document.getElementsByClassName("jp-mod-current")
+     *   might have zero length, which means JupyterLab did not activate yet
      */
     return (document.getElementsByClassName("jp-mod-current")[0].childNodes[1] as any).innerText;
   }

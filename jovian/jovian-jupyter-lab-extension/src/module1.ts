@@ -1,18 +1,24 @@
 import '../style/bootstrap.min.css';
 import { askParameters } from './module2';
 import setting from './module3';
+import showSidebar from './module5';
 
 let body:any;
+let lock:boolean = false;
 
 function getDropdown():void{
   /**
    * This is the function we use to construct a dropdown menu
    * and insert into a correct position of the main window
    */
+  if (lock == true) {
+    return;
+  }
+  lock = true;
   initialHeader();
   let header:HTMLElement = initialHeader();
-  header.appendChild(addButton("Commit with options",askParameters)); // call commit with parameters
-  header.appendChild(addButton("Open sidebar",()=>{alert("feature coming soon");})); // call sidebar
+  header.appendChild(addButton("Commit with options",()=>askParameters())); // call commit with parameters
+  header.appendChild(addButton("Open sidebar",()=>showSidebar())); // call sidebar
   header.appendChild(addButton("Settings",setting)); // call setting
   addRemoveEvent(body); // when clicks outside of the dropdown menu, it disappear the dropdown menu
   correctPosition(header);
@@ -48,7 +54,10 @@ function addRemoveEvent(body:HTMLElement):void{
    * Use to add a click event on the whole modal,
    * When we click this modal, it will disappear itself
    */
-  body.onclick = ()=>body.parentNode.removeChild(body);
+  body.onclick = () => {
+    body.parentNode.removeChild(body);
+    lock = false;
+  };
 }
 
 function correctPosition(butGroup:HTMLElement):void {

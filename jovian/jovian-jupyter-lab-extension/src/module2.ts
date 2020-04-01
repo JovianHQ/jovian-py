@@ -1,4 +1,8 @@
 import NBKernel from './NBKernel';
+import { 
+  saveNotebook,
+  getProjectId 
+} from './commands';
 
 let body:any;
 let lock:boolean = false;
@@ -59,7 +63,7 @@ async function setParameters(htmlParams:any):Promise<void> {
       setInputText(htmlParams.project_id, params.project_id);
       return;
     }
-    await getProjectTitle().then(t => {
+    await getProjectId().then(t => {
       if(t != undefined){
         setInputText(htmlParams.project_id, t);
       }
@@ -108,7 +112,7 @@ async function setParameters(htmlParams:any):Promise<void> {
   };
 }
 
-function setDefault():void{
+function setDefault():void {
   /**
    * Firstly clears the parameter settings of the
    * current notebook, and then display a commit
@@ -191,31 +195,6 @@ function getFinalCommit(params:any = null):string {
   return commit;
 }
 
-function getProjectTitle():Promise<string> {
-  /**
-   * Get the current Project's Id from Jovian
-   */
-  return new Promise(resolve => {
-    const code =
-      "from jovian.utils.commit import _parse_project as p\n" +
-      "a = p(project=None, new_project=None, filename=None)\n" +
-      "print(a[0])";
-    NBKernel.execute(code).then(
-      data => {
-        let ms = data
-          .trim()
-          .replace(/.*?\"/, "")
-          .split('"')
-          .shift();
-        if (ms.toLowerCase() == "none") {
-          resolve(undefined);
-        }
-        resolve(ms);
-      }
-    );
-  });
-}
-
 function storeParams(params:any):void {
   /**
    * Uses to store the parameters settings of the
@@ -261,6 +240,7 @@ async function commit(commitWithParams:string|null = null):Promise<void> {
     commit = "\tcommit()\n";
   }
   lock = true;
+  await saveNotebook();
   getAPIKeys().then(
     async (result) => {
       if (result == true){
@@ -289,7 +269,7 @@ async function commit(commitWithParams:string|null = null):Promise<void> {
   );
 }
 
-function askAPIKeys():void {
+export function askAPIKeys():void {
   /**
    * Uses to display a window with a input box, so
    * users can enter their API key to enable the
@@ -378,7 +358,7 @@ function committedWindow(url:string):void {
   openWindow();
 }
 
-async function getAPIKeys() {
+export async function getAPIKeys() {
   /**
    * Gets a boolean value which can be used to see whether
    * the extension has a valid API key from Jovian
@@ -915,4 +895,4 @@ function insertAfter (newNode:any, referenceNode:any):void {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-export { askParameters, commit, setDefault, askAPIKeys };
+export { askParameters, commit, setDefault };
