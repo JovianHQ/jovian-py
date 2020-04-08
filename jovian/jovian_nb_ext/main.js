@@ -935,7 +935,7 @@ define([
       new Promise(resolve => {
         remove_ext =
         "import os\n" +
-        "os.system('jupyter nbextension disable jovian_nb_ext/main sys-prefix')\n";
+        "os.system('jovian disable-extension')\n";
         console.log(remove_ext);
         alert(
           "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable Jovian extension"
