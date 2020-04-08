@@ -605,6 +605,7 @@ define([
           const option3 = $("#change_api_button");
           const option4 = $("#disable_button");
 
+          option1.click(() => jvn_setting_modal.find(".close").click());
           option1.click(() => openModal(saveParams));
           option2.click(() => clearAPI());
           option3.click(() => changeAPI());
@@ -931,14 +932,17 @@ define([
     // disables the extension
     function removeExtension() {
       Jupyter.notebook.save_checkpoint();
-      remove_ext =
+      new Promise(resolve => {
+        remove_ext =
         "import os\n" +
         "os.system('jupyter nbextension disable jovian_nb_ext/main sys-prefix')\n";
-      console.log(remove_ext);
-      alert(
-        "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable Jovian extension"
-      );
-      Jupyter.notebook.kernel.execute(remove_ext);
+        console.log(remove_ext);
+        alert(
+          "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable Jovian extension"
+        );
+        Jupyter.notebook.kernel.execute(remove_ext);
+        resolve();
+      });
       location.reload();
     }
 
