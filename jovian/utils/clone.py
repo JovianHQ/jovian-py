@@ -63,7 +63,7 @@ so please make sure you have it installed and added to path.
 """, pre=False)
 
 
-def clone(slug, version=None, fresh=True, include_outputs=True):
+def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False):
     """Download the files for a gist"""
     # Print issues link
     log(ISSUES_MSG)
@@ -77,10 +77,11 @@ def clone(slug, version=None, fresh=True, include_outputs=True):
     # If fresh clone, create directory
     if fresh:
         if os.path.exists(title):
-            i = 1
-            while os.path.exists(title + '-' + str(i)):
-                i += 1
-            title = title + '-' + str(i)
+            if not overwrite:
+                i = 1
+                while os.path.exists(title + '-' + str(i)):
+                    i += 1
+                title = title + '-' + str(i)
         if not os.path.exists(title):
             os.makedirs(title)
         os.chdir(title)
@@ -97,8 +98,10 @@ def clone(slug, version=None, fresh=True, include_outputs=True):
             set_notebook_slug(f['filename'], slug)
 
     # Print success message and instructions
-    if fresh:
+    if fresh and not overwrite:
         post_clone_msg(title)
+    elif overwrite:
+        log(f'Downloaded files into {title}')
     else:
         log('Files dowloaded successfully in current directory')
 

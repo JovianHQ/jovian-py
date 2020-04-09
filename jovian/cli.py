@@ -101,8 +101,9 @@ def activate_env(ctx):
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
 @click.option('--no-outputs', 'no_outputs')
+@click.option('--overwrite', 'overwrite', is_flag=True)
 @click.pass_context
-def exec_clone(ctx, notebook, version, no_outputs):
+def exec_clone(ctx, notebook, version, no_outputs, overwrite):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -112,7 +113,7 @@ def exec_clone(ctx, notebook, version, no_outputs):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version, not no_outputs)
+    clone(notebook, version, not no_outputs, overwrite=overwrite)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
