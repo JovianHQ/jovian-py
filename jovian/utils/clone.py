@@ -87,8 +87,8 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
         while os.path.exists(title + '-' + str(i)):
             i += 1
         title = title + '-' + str(i)
-        if not os.path.exists(title):
-            os.makedirs(title)
+
+        os.makedirs(title)
         os.chdir(title)
 
     # Download the files
