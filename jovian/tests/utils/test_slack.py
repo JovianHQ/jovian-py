@@ -12,7 +12,7 @@ def test_h():
     with fake_creds('.jovian', 'credentials.json'):
         expected_result = {"Authorization": "Bearer fake_api_key",
                            "x-jovian-source": "library",
-                           "x-jovian-library-version": "0.2.3",
+                           "x-jovian-library-version": "0.2.5",
                            "x-jovian-command": "add-slack",
                            "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                            "x-jovian-org": "staging"}
