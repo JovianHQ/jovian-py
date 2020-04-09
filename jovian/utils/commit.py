@@ -5,7 +5,7 @@ from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
 from jovian.utils.misc import get_file_extension, is_uuid
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
-from jovian.utils.credentials import read_webapp_url
+from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
 from jovian.utils.constants import FILENAME_MSG
@@ -275,6 +275,16 @@ def _attach_files(paths, gist_slug, version, output=False):
 def _capture_environment(environment, gist_slug, version):
     """Capture the python environment and attach it to the commit"""
     if environment is not None:
+        # Check credentials if environment config exists
+        creds = read_creds()
+        if 'DEFAULT_CONFIG' in creds and 'environment' in creds['DEFAULT_CONFIG']:
+            environment_config = creds['DEFAULT_CONFIG']['environment']
+            if not environment_config:
+                # Disable environment capture
+                return
+            if environment == 'auto' and (environment_config == 'conda' or environment_config == 'pip'):
+                environment = environment_config
+
         log('Capturing environment..')
         captured = False
 
