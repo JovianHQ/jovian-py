@@ -239,13 +239,7 @@ class MockResponse:
 
 def mock_requests_get(url, *args, **kwargs):
     if url == 'https://jovian.ml/config.json':
-        data = {"CONFIG_NAME": "production",
-                "APP_NAME": "Jovian",
-                "APP_DESCRIPTION": "Share Jupyter notebooks instantly",
-                "API_URL": "https://api.jovian.ai",
-                "AUTH_ENV": "production",
-                "LOGIN_REDIRECT_PATH": "https://www.jovian.ml",
-                "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od"}
+        data = {"API_URL": "https://api.jovian.ai"}
 
         return MockResponse(data, status_code=200)
 
@@ -254,25 +248,14 @@ def mock_requests_get(url, *args, **kwargs):
         return MockResponse({"msg": "Request failed"}, status_code=500, text="Fake internal server error")
 
     elif url == 'https://jsonerror.jovian.ml/config.json':
-        data = {"CONFIG_NAME": "production",
-                "APP_NAME": "Jovian",
-                "APP_DESCRIPTION": "Share Jupyter notebooks instantly",
-                "API_URL": "https://api.jovian.ai",
-                "AUTH_ENV": "production",
-                "LOGIN_REDIRECT_PATH": "https://www.jovian.ml",
-                "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od"}
+        data = {"API_URL": "https://api.jovian.ai"}
         res = MockResponse(data, status_code=200, text="response of fake json decode error")
         res.json = json_decode_error_raiser
 
         return res
 
     elif url == 'https://no-api-key.jovian.ml/config.json':
-        data = {"CONFIG_NAME": "production",
-                "APP_NAME": "Jovian",
-                "APP_DESCRIPTION": "Share Jupyter notebooks instantly",
-                "AUTH_ENV": "production",
-                "LOGIN_REDIRECT_PATH": "https://www.jovian.ml",
-                "SEGMENT_KEY": "pNcDQKVDg7pSDETToacDzSfxRCO4i8Od"}
+        data = {}
 
         return MockResponse(data, status_code=200, text="response with no api key")
 
