@@ -1,6 +1,7 @@
 from unittest import TestCase, mock
 from unittest.mock import ANY
 
+from jovian._version import __version__
 from jovian.tests.resources import fake_creds
 from jovian.utils.api import (_h, create_gist_simple, get_current_user, get_gist, get_gist_access, post_block,
                               post_blocks, post_records, post_slack_message, upload_file)
@@ -207,7 +208,7 @@ def test_h():
     with fake_creds('.jovian', 'credentials.json'):
         expected_result = {"Authorization": "Bearer fake_api_key",
                            "x-jovian-source": "library",
-                           "x-jovian-library-version": "0.2.5",
+                           "x-jovian-library-version": __version__,
                            "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                            "x-jovian-org": "staging"}
 
@@ -225,7 +226,7 @@ class TestGetCurrentUser(TestCase):
                 'https://api-staging.jovian.ai/user/profile',
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
@@ -249,7 +250,7 @@ class TestGetCurrentUser(TestCase):
                 'https://api-staging.jovian.ai/user/profile',
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
@@ -267,7 +268,7 @@ class TestGetGist(TestCase):
             mock_requests_get.assert_called_with(
                 'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook',
                 headers={"Authorization": "Bearer fake_api_key", "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5", "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
+                         "x-jovian-library-version": __version__, "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
 
@@ -276,7 +277,7 @@ class TestGetGist(TestCase):
                 'https://api-staging.jovian.ai/user/rohit/gist/demo-notebook?gist_version=3',
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
@@ -285,7 +286,7 @@ class TestGetGist(TestCase):
             mock_requests_get.assert_called_with(
                 'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2',
                 headers={"Authorization": "Bearer fake_api_key", "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5", "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
+                         "x-jovian-library-version": __version__, "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
 
@@ -317,7 +318,7 @@ class TestGetGistAccess(TestCase):
                 'https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access',
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
@@ -333,7 +334,7 @@ class TestGetGistAccess(TestCase):
                 'https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access',
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 params=None)
@@ -360,7 +361,7 @@ class TestCreateGistSimple(TestCase):
                 files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=None)
@@ -379,7 +380,7 @@ class TestCreateGistSimple(TestCase):
                 files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=None)
@@ -406,7 +407,7 @@ class TestCreateGistSimple(TestCase):
                 files={'files': ('jovian/tests/resources/creds/.jovian/credentials.json', ANY)},
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=None)
@@ -432,7 +433,7 @@ class TestUploadFile(TestCase):
                     files={'files': ('credentials.json', ANY)},
                     headers={"Authorization": "Bearer fake_api_key",
                              "x-jovian-source": "library",
-                             "x-jovian-library-version": "0.2.5",
+                             "x-jovian-library-version": __version__,
                              "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                              "x-jovian-org": "staging"},
                     json=None)
@@ -463,7 +464,7 @@ class TestUploadFile(TestCase):
                 files={'files': ('credentials.json', ANY)},
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=None)
@@ -485,7 +486,7 @@ class TestPostBlocks(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=[{'data': {'key': 'value'}, 'record_type': 'metrics'}])
@@ -512,7 +513,7 @@ class TestPostBlocks(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=[{'data': {'key': 'value'}, 'record_type': 'metrics'}])
@@ -532,7 +533,7 @@ class TestPostBlock(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=[{'localTimestamp': 1582550133094, 'data': 'metrics', 'recordType': {'key': 'value'}}])
@@ -558,7 +559,7 @@ class TestPostBlock(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json=[{'localTimestamp': 1582550133094, 'data': 'metrics', 'recordType': {'key': 'value'}}])
@@ -576,7 +577,7 @@ class TestPostRecords(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json={'key': 'value'})
@@ -601,7 +602,7 @@ class TestPostRecords(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json={'key': 'value'})
@@ -629,7 +630,7 @@ class TestPostSlackMessage(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json={'key': 'value'})
@@ -657,7 +658,7 @@ class TestPostSlackMessage(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json={'key': 'value'})
@@ -683,7 +684,7 @@ class TestPostSlackMessage(TestCase):
                 data=None,
                 headers={"Authorization": "Bearer fake_invalid_api_key",
                          "x-jovian-source": "library",
-                         "x-jovian-library-version": "0.2.5",
+                         "x-jovian-library-version": __version__,
                          "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                          "x-jovian-org": "staging"},
                 json={'key': 'value'})
