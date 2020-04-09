@@ -3,7 +3,7 @@ define([
   "base/js/namespace",
   "base/js/dialog",
   "base/js/keyboard"
-], function($, Jupyter, dialog, keyboard) {
+], function ($, Jupyter, dialog, keyboard) {
   function loadJovianExtension() {
     /**
      *  Jupyter extension to commit the notebook to Jovian.
@@ -86,7 +86,7 @@ define([
 
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
-        Jupyter.notebook.events.one("notebook_saved.Notebook", function() {
+        Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
           Jupyter.notebook.kernel.execute(jvn_commit, {
             iopub: { output: jvnLog }
           });
@@ -226,7 +226,7 @@ define([
       return val;
     }
 
-    const formUI = function() {
+    const formUI = function () {
       /**
        * Body of the Form
        *
@@ -240,19 +240,18 @@ define([
        */
       const form = $("<form/>").addClass("form-horizontal");
 
-      const div = $("<div/>")
-        .attr("id", "input_div")
-        .appendTo(form);
+      const div = $("<div/>").attr("id", "input_div").appendTo(form);
 
       const help_label = $("<label/>")
         .attr("id", "i_label")
-        .text("Please enter your API key from ")
-        .append(
-          $("<a/>")
-            .attr("href", "https://jovian.ml?utm_source=nb-ext")
-            .attr("target", "_blank")
-            .text("Jovian")
-        );
+        .text("Please enter your API key from Jovian");
+      // TODO: Configure correct WEBAPP_URL
+      // .append(
+      //   $("<a/>")
+      //     .attr("href", "https://jovian.ml?utm_source=nb-ext")
+      //     .attr("target", "_blank")
+      //     .text("Jovian")
+      // );
 
       const input_box = $("<input/>")
         .addClass("form-control")
@@ -265,12 +264,9 @@ define([
         .text("Invalid API key")
         .hide();
 
-      div
-        .append(help_label)
-        .append(input_box)
-        .append(error_msg);
+      div.append(help_label).append(input_box).append(error_msg);
 
-      input_box.bind("keyup paste", function() {
+      input_box.bind("keyup paste", function () {
         error_msg.hide();
         div.removeClass("has-error");
       });
@@ -278,7 +274,7 @@ define([
       return form;
     };
 
-    const modalInit = function() {
+    const modalInit = function () {
       /**
        * Initializes a dialog modal triggered by the button on the toolbar
        *
@@ -298,7 +294,7 @@ define([
           Save: {
             id: "save_button",
             class: "btn-primary",
-            click: function() {
+            click: function () {
               const api_key = $("#text_box").val();
               const write_api =
                 "from jovian.utils.credentials import write_api_key\n" +
@@ -322,30 +318,24 @@ define([
             }
           }
         },
-        open: function() {
+        open: function () {
           // bind enter key for #save_button when the modal is open
-          jvn_modal.find("#text_box").keydown(function(event) {
+          jvn_modal.find("#text_box").keydown(function (event) {
             if (event.which === keyboard.keycodes.enter) {
-              jvn_modal
-                .find("#save_button")
-                .first()
-                .click();
+              jvn_modal.find("#save_button").first().click();
               return false;
             }
           });
 
           // Select the input when modal is open, easy to paste the key without the need for user to click first
-          jvn_modal
-            .find("#text_box")
-            .focus()
-            .select();
+          jvn_modal.find("#text_box").focus().select();
         }
       });
 
       updateForm(jvn_modal);
     };
 
-    const formParamsUI = function() {
+    const formParamsUI = function () {
       /**
        * Body of the Form
        *
@@ -361,9 +351,7 @@ define([
        */
       const form = $("<form/>").addClass("form-horizontal");
 
-      const div = $("<div/>")
-        .attr("id", "input_div")
-        .appendTo(form);
+      const div = $("<div/>").attr("id", "input_div").appendTo(form);
 
       const message = $("<div/>")
         .append($("<label/>").text("Version Title"))
@@ -421,9 +409,7 @@ define([
           )
         )
         .append(
-          $("<input/>")
-            .addClass("form-control")
-            .attr("id", "project_id_box")
+          $("<input/>").addClass("form-control").attr("id", "project_id_box")
         )
         .append("<br>");
 
@@ -514,7 +500,7 @@ define([
       return form;
     };
 
-    const saveParams = function() {
+    const saveParams = function () {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -533,13 +519,13 @@ define([
           Cancel: {},
           Commit: {
             class: "btn-primary",
-            click: function() {
+            click: function () {
               storeParams();
               openModal(modalInit); // use openModal() to prevent keyboard loss when need to ask users API key
             }
           }
         },
-        open: async function() {
+        open: async function () {
           let project_id_helper = async () => {
             if (getParams() == null) {
               return;
@@ -620,23 +606,18 @@ define([
             project_id_helper();
           });
 
-          $(jvn_params_modal)
-            .find(".modal-content")
-            .show("fast");
+          $(jvn_params_modal).find(".modal-content").show("fast");
         }
       });
 
       const modal = $(jvn_params_modal).find(".modal-content");
-      modal
-        .children()
-        .first()
-        .remove();
+      modal.children().first().remove();
       modal.parent().css("width", "500px");
       modal.hide();
       jvn_params_modal.modal("show");
     };
 
-    const formDropDownUI = function() {
+    const formDropDownUI = function () {
       /**
        * module 1:
        * Draw the dropdown menu
@@ -667,7 +648,7 @@ define([
       return div;
     };
 
-    const showDropDown = function() {
+    const showDropDown = function () {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -683,7 +664,7 @@ define([
         body: formDropDownUI,
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
-        open: function() {
+        open: function () {
           $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
           const option1 = $("#jvn_module1_option1");
           const option2 = $("#jvn_module1_option2");
