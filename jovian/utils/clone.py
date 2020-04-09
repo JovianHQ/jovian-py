@@ -75,13 +75,18 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     title = gist['title']
 
     # If fresh clone, create directory
-    if fresh:
-        if os.path.exists(title):
-            if not overwrite:
-                i = 1
-                while os.path.exists(title + '-' + str(i)):
-                    i += 1
-                title = title + '-' + str(i)
+    if fresh and not os.path.exists(title):
+        os.makedirs(title)
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and overwrite:
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and not overwrite:
+        i = 1
+        while os.path.exists(title + '-' + str(i)):
+            i += 1
+        title = title + '-' + str(i)
         if not os.path.exists(title):
             os.makedirs(title)
         os.chdir(title)
@@ -98,10 +103,8 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
             set_notebook_slug(f['filename'], slug)
 
     # Print success message and instructions
-    if fresh and not overwrite:
+    if fresh:
         post_clone_msg(title)
-    elif overwrite:
-        log(f'Downloaded files into {title}')
     else:
         log('Files dowloaded successfully in current directory')
 
