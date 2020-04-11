@@ -132,6 +132,55 @@ define([
         });
       });
 
+      const getUrl = () => {
+  
+        return new Promise(resolve => {
+       
+        const valStatus = data => {
+          resolve(data.content.text.trim());
+        }
+      
+        const rc =
+       
+       "from jovian.utils.jupyter import get_notebook_name\n"+
+       "i = get_notebook_name()\n"+
+       "import json\n"+
+       "with open('.jovianrc') as f:\n"+
+       "\tjovianrc = json.load(f)\n"+
+       "lib = jovianrc['notebooks']\n"+
+       "x = lib[i]\n"+
+       "x2 = x['slug']\n"+
+       "i2 = i[:-6]\n"+
+       "URL = 'https://jovian.ml/'+i2+'/'+x2\n"+
+       "print(URL)\n";
+      
+        Jupyter.notebook.kernel.execute(rc, {
+         iopub: { output: valStatus }
+       });
+      
+      })
+      }
+
+      async function shareWindow(){
+  
+        let url ="";
+        await getUrl().then((theUrl)=>{url = theUrl;});
+        
+        var facebook = '<div id="fb-root"></div><script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0"></script><div class="fb-share-button" data-href='+url+' data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>';
+        var twitter = '<div><a class="twitter-share-button" href="https://twitter.com/intent/tweet" data-size="large" data-text="custom text" data-url='+url+' data-hashtags="" data-via="" data-related="twitterapi,twitter">Tweet</a><script>window.twttr = (function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {}; if (d.getElementById(id)) return t; js = d.createElement(s); js.id = id; js.src = "https://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); t._e = []; t.ready = function(f) { t._e.push(f);}; return t;} (document, "script", "twitter-wjs"));</script></div>';
+        var linkedin = '<div><script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script><script type="IN/Share" data-url='+url+'></script></div>';
+      
+        var html = '<html><body><h>'+facebook+'</h><br><br><h>'+twitter+'</h><br><h>'+linkedin+'</h></body></html>';
+        
+            let iframe = document.createElement("IFRAME");
+            iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+            iframe.height = '140px';
+            document.body.appendChild(iframe);
+            
+            return iframe;
+      }
+
+
     function updateForm(jvn_modal, shown = false) {
       /**
        * Updates the form layout.
@@ -190,12 +239,22 @@ define([
                   .text("Copy")
                   .addClass("btn-primary");
 
+                getUrl().then(
+                  (rc)=> shareWindow(rc).then(
+                  (obj)=> {
                 jvn_modal
                   .find("#i_label")
                   .text("Committed Successfully! ")
                   .append($("<br/>"))
                   .append(nb_link)
-                  .append(copy_btn);
+                  .append(copy_btn)
+                  .append($("<br/>"))
+                  .append($("<br/>"))
+                  .append(obj);
+                    }
+                  )
+                );
+
               } else {
                 jvn_modal.find("#i_label").text("Commit failed! " + log_data);
               }
