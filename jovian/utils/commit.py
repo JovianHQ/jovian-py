@@ -158,7 +158,7 @@ def commit(message=None,
 
     # Attach environment, files and outputs
     _capture_environment(environment, slug, version)
-    _attach_files(files, slug, version, exclude=filename)
+    _attach_files(files, slug, version, exclude_files=filename)
     _attach_files(outputs, slug, version, output=True)
 
     if not git_message or git_message == 'auto':
@@ -249,7 +249,7 @@ def _attach_file(path, gist_slug, version, output=False):
         log(str(e) + " (" + path + ")", error=True)
 
 
-def _attach_files(paths, gist_slug, version, output=False, exclude=None):
+def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
     # Look for config if empty
     if not paths or len(paths) == 0:
@@ -263,8 +263,12 @@ def _attach_files(paths, gist_slug, version, output=False, exclude=None):
             return
 
         paths = glob.glob('**/*', recursive=True)
-        if exclude:
-            paths.remove(exclude)
+        if exclude_files:
+            if not isinstance(exclude_files, list):
+                exclude = [exclude]
+
+            for filename in exclude:
+                paths.remove(exclude)
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
