@@ -738,6 +738,8 @@ define([
     const jvn_notif = Jupyter.notification_area.widget("jvn");
     jvn_notif.inner.text("Committing to Jovian....");
     jvn_notif.element.attr("disabled", true);
+    jvn_notif.element.css("background-color", "green");
+    jvn_notif.inner.css("color", "white");
   }
 
   function openModal(func) {
