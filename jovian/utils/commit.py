@@ -256,10 +256,11 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
         creds = read_creds()        
         try:
             upload_wd = creds['DEFAULT_CONFIG']['UPLOAD_WORKING_DIRECTORY']
-            if not upload_wd or output:
-                return
         except KeyError:
             # config not set
+            return
+
+        if not upload_wd or output:
             return
 
         paths = glob.glob('**/*', recursive=True)
