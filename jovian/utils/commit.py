@@ -265,10 +265,10 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
         paths = glob.glob('**/*', recursive=True)
         if exclude_files:
             if not isinstance(exclude_files, list):
-                exclude = [exclude]
+                exclude_files = [exclude_files]
 
-            for filename in exclude:
-                paths.remove(exclude)
+            for filename in exclude_files:
+                paths.remove(filename)
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
@@ -278,10 +278,13 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
 
     for path in paths:
         if os.path.isdir(path):
-            for folder, _, files in os.walk(path):
-                for fname in files:
-                    fpath = os.path.join(folder, fname)
-                    _attach_file(fpath, gist_slug, version, output)
+            files = [
+                f 
+                for f in glob.glob(os.path.join(path, '**/*'), recursive=True) 
+                if not os.path.isdir(f)
+            ]
+            for file in files:
+                _attach_file(file, gist_slug, version, output)
         elif os.path.exists(path):
             _attach_file(path, gist_slug, version, output)
         else:
