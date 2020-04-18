@@ -264,7 +264,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
         paths = [
             f
             for f in glob.glob('**/*', recursive=True)
-            if os.path.isdir(f) or get_file_extension(f) in EXTENSION_WHITELIST
+            if os.path.isdir(f) or os.path.splitext(f)[1] in EXTENSION_WHITELIST
         ]
 
         if exclude_files:
@@ -272,7 +272,10 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
                 exclude_files = [exclude_files]
 
             for filename in exclude_files:
-                paths.remove(filename)
+                try:
+                    paths.remove(filename)
+                except ValueError:
+                    pass
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
