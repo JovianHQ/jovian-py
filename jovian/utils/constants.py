@@ -20,4 +20,4 @@ DEFAULT_ORG_ID = "public"
 CONDA_NOT_FOUND = 'Anaconda binary not found. Please make sure the "conda" command is in your ' \
                   'system PATH or the environment variable $CONDA_EXE points to the anaconda binary'
 
-EXTENSION_WHITELIST = [".ipynb", ".yml", ".yaml", ".py", ".txt", ". csv", ".tsv"]
+DEFAULT_EXTENSION_WHITELIST = [".ipynb", ".yml", ".yaml", ".py", ".txt", ". csv", ".tsv"]

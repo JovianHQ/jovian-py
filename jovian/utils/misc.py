@@ -2,6 +2,7 @@ import time
 import platform
 
 from uuid import UUID
+from jovian.utils.credentials import read_creds
 from jovian.utils.constants import LINUX, WINDOWS, MACOS
 from jovian._version import __version__
 
@@ -65,3 +66,7 @@ def urljoin(*args):
 
 def version():
     return __version__
+
+def get_config():
+    creds = read_creds()
+    return creds.get("DEFAULT_CONFIG", {})

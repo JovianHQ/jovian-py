@@ -4,12 +4,12 @@ from time import sleep
 
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid
+from jovian.utils.misc import get_file_extension, is_uuid, get_config
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG, EXTENSION_WHITELIST
+from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
 from jovian.utils import api, git
 
@@ -251,30 +251,20 @@ def _attach_file(path, gist_slug, version, output=False):
 
 def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
-    # Look for config if empty
-    global EXTENSION_WHITELIST
+    config = get_config()
 
-    creds = read_creds()
+    EXTENSION_WHITELIST = config.get("EXTENSION_WHITELIST", DEFAULT_EXTENSION_WHITELIST)
+    UPLOAD_WD = config.get("UPLOAD_WORKING_DIRECTORY", False)
 
-    # Look for file extension whitelist in config
-    if "EXTENSION_WHITELIST" in creds.get("DEFAULT_CONFIG", {}):
-        EXTENSION_WHITELIST = creds["DEFAULT_CONFIG"]["EXTENSION_WHITELIST"]
+    no_path = not paths or len(paths) == 0
 
-    if not paths or len(paths) == 0:
-        try:
-            upload_wd = creds['DEFAULT_CONFIG']['UPLOAD_WORKING_DIRECTORY']
-        except KeyError:
-            # config not set
-            return
-
-        if not upload_wd or output:
-            return
-
+    if no_path and output:
+        return
+    elif no_path and UPLOAD_WD and EXTENSION_WHITELIST:
         paths = [
-            f 
+            f
             for f in glob.glob('**/*', recursive=True)
-            if not output and 
-            (os.path.isdir(f) or os.path.splitext(f)[1] in EXTENSION_WHITELIST)
+            if os.path.isdir(f) or get_file_extension(f) in EXTENSION_WHITELIST
         ]
 
         if exclude_files:
