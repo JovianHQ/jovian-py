@@ -66,7 +66,3 @@ def urljoin(*args):
 
 def version():
     return __version__
-
-def get_config():
-    creds = read_creds()
-    return creds.get("DEFAULT_CONFIG", {})

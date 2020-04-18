@@ -251,7 +251,7 @@ def _attach_file(path, gist_slug, version, output=False):
 
 def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
-    config = get_config()
+    config = read_creds().get("DEFAULT_CONFIG", {})
 
     EXTENSION_WHITELIST = config.get("EXTENSION_WHITELIST", DEFAULT_EXTENSION_WHITELIST)
     UPLOAD_WD = config.get("UPLOAD_WORKING_DIRECTORY", False)
