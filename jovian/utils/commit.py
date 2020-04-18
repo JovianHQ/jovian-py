@@ -267,15 +267,15 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
             if os.path.isdir(f) or os.path.splitext(f)[1] in EXTENSION_WHITELIST
         ]
 
-        if exclude_files:
-            if not isinstance(exclude_files, list):
-                exclude_files = [exclude_files]
+    if exclude_files:
+        if not isinstance(exclude_files, list):
+            exclude_files = [exclude_files]
 
-            for filename in exclude_files:
-                try:
-                    paths.remove(filename)
-                except ValueError:
-                    pass
+        for filename in exclude_files:
+            try:
+                paths.remove(filename)
+            except ValueError:
+                pass
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
