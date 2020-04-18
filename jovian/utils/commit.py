@@ -4,7 +4,7 @@ from time import sleep
 
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid, get_config
+from jovian.utils.misc import get_file_extension, is_uuid
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
