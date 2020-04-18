@@ -9,7 +9,7 @@ from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG
+from jovian.utils.constants import FILENAME_MSG, EXTENSION_WHITELIST
 from jovian.utils.logger import log
 from jovian.utils import api, git
 
@@ -252,8 +252,15 @@ def _attach_file(path, gist_slug, version, output=False):
 def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
     # Look for config if empty
+    global EXTENSION_WHITELIST
+
+    creds = read_creds()
+
+    # Look for file extension whitelist in config
+    if "EXTENSION_WHITELIST" in creds.get("DEFAULT_CONFIG", {}):
+        EXTENSION_WHITELIST = creds["DEFAULT_CONFIG"]["EXTENSION_WHITELIST"]
+
     if not paths or len(paths) == 0:
-        creds = read_creds()        
         try:
             upload_wd = creds['DEFAULT_CONFIG']['UPLOAD_WORKING_DIRECTORY']
         except KeyError:
@@ -263,7 +270,13 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
         if not upload_wd or output:
             return
 
-        paths = glob.glob('**/*', recursive=True)
+        paths = [
+            f 
+            for f in glob.glob('**/*', recursive=True)
+            if not output and 
+            (os.path.isdir(f) or os.path.splitext(f)[1] in EXTENSION_WHITELIST)
+        ]
+
         if exclude_files:
             if not isinstance(exclude_files, list):
                 exclude_files = [exclude_files]
