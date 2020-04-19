@@ -9,7 +9,7 @@ from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG
+from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
 from jovian.utils import api, git
 
@@ -251,25 +251,34 @@ def _attach_file(path, gist_slug, version, output=False):
 
 def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
-    # Look for config if empty
-    if not paths or len(paths) == 0:
-        creds = read_creds()        
-        try:
-            upload_wd = creds['DEFAULT_CONFIG']['UPLOAD_WORKING_DIRECTORY']
-        except KeyError:
-            # config not set
-            return
+    config = read_creds().get("DEFAULT_CONFIG", {})
 
-        if not upload_wd or output:
-            return
+    whitelist = config.get("EXTENSION_WHITELIST")
+    upload_wd = config.get("UPLOAD_WORKING_DIRECTORY", False)
 
-        paths = glob.glob('**/*', recursive=True)
-        if exclude_files:
-            if not isinstance(exclude_files, list):
-                exclude_files = [exclude_files]
+    if not isinstance(whitelist, list):
+        whitelist = DEFAULT_EXTENSION_WHITELIST
 
-            for filename in exclude_files:
+    if not paths and output:
+        return
+    elif not paths and not upload_wd:
+        return
+    elif not paths and upload_wd:
+        paths = [
+            f
+            for f in glob.glob('**/*', recursive=True)
+            if os.path.splitext(f)[1] in whitelist
+        ]
+
+    if exclude_files:
+        if not isinstance(exclude_files, list):
+            exclude_files = [exclude_files]
+
+        for filename in exclude_files:
+            try:
                 paths.remove(filename)
+            except ValueError:
+                pass
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
@@ -280,9 +289,9 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     for path in paths:
         if os.path.isdir(path):
             files = [
-                f 
-                for f in glob.glob(os.path.join(path, '**/*'), recursive=True) 
-                if not os.path.isdir(f)
+                f
+                for f in glob.glob(os.path.join(path, '**/*'), recursive=True)
+                if os.path.splitext(f)[1] in whitelist
             ]
             for file in files:
                 _attach_file(file, gist_slug, version, output)
