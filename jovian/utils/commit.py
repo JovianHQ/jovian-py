@@ -253,18 +253,21 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
     config = read_creds().get("DEFAULT_CONFIG", {})
 
-    EXTENSION_WHITELIST = config.get("EXTENSION_WHITELIST", DEFAULT_EXTENSION_WHITELIST)
-    UPLOAD_WD = config.get("UPLOAD_WORKING_DIRECTORY", False)
+    whitelist = config.get("EXTENSION_WHITELIST")
+    upload_wd = config.get("UPLOAD_WORKING_DIRECTORY", False)
 
-    no_path = not paths or len(paths) == 0
+    if not isinstance(whitelist, list):
+        whitelist = DEFAULT_EXTENSION_WHITELIST
 
-    if no_path and output:
+    if not paths and output:
         return
-    elif no_path and UPLOAD_WD and EXTENSION_WHITELIST:
+    elif not paths and not upload_wd:
+        return
+    elif not paths and upload_wd:
         paths = [
             f
             for f in glob.glob('**/*', recursive=True)
-            if os.path.isdir(f) or os.path.splitext(f)[1] in EXTENSION_WHITELIST
+            if os.path.splitext(f)[1] in whitelist
         ]
 
     if exclude_files:
@@ -286,9 +289,9 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     for path in paths:
         if os.path.isdir(path):
             files = [
-                f 
-                for f in glob.glob(os.path.join(path, '**/*'), recursive=True) 
-                if not os.path.isdir(f)
+                f
+                for f in glob.glob(os.path.join(path, '**/*'), recursive=True)
+                if os.path.splitext(f)[1] in whitelist
             ]
             for file in files:
                 _attach_file(file, gist_slug, version, output)
