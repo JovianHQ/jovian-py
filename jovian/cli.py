@@ -8,6 +8,7 @@ from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
 from jovian.utils.slack import add_slack
+from jovian.utils.rcfile import set_notebook_slug
 
 
 @click.group()
@@ -100,8 +101,9 @@ def activate_env(ctx):
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
 @click.option('--no-outputs', 'no_outputs')
+@click.option('--overwrite', 'overwrite', is_flag=True)
 @click.pass_context
-def exec_clone(ctx, notebook, version, no_outputs):
+def exec_clone(ctx, notebook, version, no_outputs, overwrite):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -111,7 +113,7 @@ def exec_clone(ctx, notebook, version, no_outputs):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version, not no_outputs)
+    clone(notebook, version, include_outputs=not no_outputs, overwrite=overwrite)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
@@ -130,6 +132,21 @@ def exec_pull(ctx, notebook, version):
     """
 
     pull(notebook, version)
+
+
+@main.command("set-project", short_help="Associate a notebook (filename.ipynb) to a Jovian project (username.title)")
+@click.argument('notebook')
+@click.argument('project')
+@click.pass_context
+def set_project(ctx,  notebook, project):
+    """Associate notebook (filename.ipynb) to Jovian project (username.title)
+
+        $ jovian set-project my_notebook.ipynb danb/keras-example
+
+    This will create or update the .jovianrc file in the current directory to ensure that commits
+    inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
+    """
+    set_notebook_slug(notebook, project)
 
 
 @main.command("add-slack")

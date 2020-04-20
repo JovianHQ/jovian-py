@@ -27,7 +27,7 @@ This will be helpful to get updates on while training a model. You can send any 
 
 We have this integrated to our callbacks to get automated notifications about the metrics, check out [Callbacks Section](../callbacks/keras).
 
-For API documentation check out [Jovian Slack Notify](../jvn/notif)
+For API documentation check out [Jovian Slack Notify](../api-reference/notif)
 
 ### Integration Preferences
 

@@ -1,7 +1,7 @@
 # Jupyter Notebook Extension
 
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
-Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
+Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
 ## Using Jovian Jupyter Extension
 
@@ -35,7 +35,7 @@ Once the API key has been validated, you can start committing to [Jovian](https:
 
 ## Commit with more options
 
-This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
+This makes use of [jovian.commit's](../api-reference/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
 
 **Step 1:** click the dropdown menu
 
@@ -45,7 +45,7 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 <img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](../api-reference/commit), changes to any parameter persists after commit.
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 

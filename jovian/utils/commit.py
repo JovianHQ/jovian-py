@@ -1,14 +1,15 @@
 import os
+import glob
 from time import sleep
 
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
 from jovian.utils.misc import get_file_extension, is_uuid
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
-from jovian.utils.credentials import read_webapp_url
+from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG
+from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
 from jovian.utils import api, git
 
@@ -23,7 +24,7 @@ def commit(message=None,
            filename=None,
            project=None,
            new_project=None,
-           git_commit=True,
+           git_commit=False,
            git_message='auto',
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
@@ -157,7 +158,7 @@ def commit(message=None,
 
     # Attach environment, files and outputs
     _capture_environment(environment, slug, version)
-    _attach_files(files, slug, version)
+    _attach_files(files, slug, version, exclude_files=filename)
     _attach_files(outputs, slug, version, output=True)
 
     if not git_message or git_message == 'auto':
@@ -248,11 +249,36 @@ def _attach_file(path, gist_slug, version, output=False):
         log(str(e) + " (" + path + ")", error=True)
 
 
-def _attach_files(paths, gist_slug, version, output=False):
+def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
-    # Skip if empty
-    if not paths or len(paths) == 0:
+    config = read_creds().get("DEFAULT_CONFIG", {})
+
+    whitelist = config.get("EXTENSION_WHITELIST")
+    upload_wd = config.get("UPLOAD_WORKING_DIRECTORY", False)
+
+    if not isinstance(whitelist, list):
+        whitelist = DEFAULT_EXTENSION_WHITELIST
+
+    if not paths and output:
         return
+    elif not paths and not upload_wd:
+        return
+    elif not paths and upload_wd:
+        paths = [
+            f
+            for f in glob.glob('**/*', recursive=True)
+            if os.path.splitext(f)[1] in whitelist
+        ]
+
+    if exclude_files:
+        if not isinstance(exclude_files, list):
+            exclude_files = [exclude_files]
+
+        for filename in exclude_files:
+            try:
+                paths.remove(filename)
+            except ValueError:
+                pass
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
@@ -262,10 +288,13 @@ def _attach_files(paths, gist_slug, version, output=False):
 
     for path in paths:
         if os.path.isdir(path):
-            for folder, _, files in os.walk(path):
-                for fname in files:
-                    fpath = os.path.join(folder, fname)
-                    _attach_file(fpath, gist_slug, version, output)
+            files = [
+                f
+                for f in glob.glob(os.path.join(path, '**/*'), recursive=True)
+                if os.path.splitext(f)[1] in whitelist
+            ]
+            for file in files:
+                _attach_file(file, gist_slug, version, output)
         elif os.path.exists(path):
             _attach_file(path, gist_slug, version, output)
         else:
@@ -275,6 +304,16 @@ def _attach_files(paths, gist_slug, version, output=False):
 def _capture_environment(environment, gist_slug, version):
     """Capture the python environment and attach it to the commit"""
     if environment is not None:
+        # Check credentials if environment config exists
+        creds = read_creds()
+        if 'DEFAULT_CONFIG' in creds and 'environment' in creds['DEFAULT_CONFIG']:
+            environment_config = creds['DEFAULT_CONFIG']['environment']
+            if not environment_config:
+                # Disable environment capture
+                return
+            if environment == 'auto' and (environment_config == 'conda' or environment_config == 'pip'):
+                environment = environment_config
+
         log('Capturing environment..')
         captured = False
 
