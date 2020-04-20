@@ -1,3 +1,4 @@
+import os
 import time
 import platform
 
@@ -50,7 +51,7 @@ def is_flavor_pro():
 
 def get_file_extension(filename):
     """Get the extension of a file"""
-    return filename.split('.')[-1] if type(filename) == str else ''
+    return os.path.splitext(filename)[1]
 
 
 def urljoin(*args):

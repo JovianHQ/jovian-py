@@ -179,7 +179,7 @@ def _parse_filename(filename):
             filename = get_notebook_name()
 
     # Add the right extension to the filename
-    elif get_file_extension(filename) not in ['py', 'ipynb']:
+    elif get_file_extension(filename) not in ['.py', '.ipynb']:
         filename += '.py' if in_script() else '.ipynb'
     return filename
 
@@ -267,7 +267,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
         paths = [
             f
             for f in glob.glob('**/*', recursive=True)
-            if os.path.splitext(f)[1] in whitelist
+            if get_file_extension(f) in whitelist
         ]
 
     if exclude_files:
@@ -291,7 +291,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
             files = [
                 f
                 for f in glob.glob(os.path.join(path, '**/*'), recursive=True)
-                if os.path.splitext(f)[1] in whitelist
+                if get_file_extension(f) in whitelist
             ]
             for file in files:
                 _attach_file(file, gist_slug, version, output)
