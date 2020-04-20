@@ -19,8 +19,10 @@ def get_conda_bin():
         if conda_exe != '' and conda_exe != '$CONDA_EXE':
             # Update binary and execute again
             conda_bin = conda_exe
-            if os.popen(conda_bin).read().strip() == '':
-                raise CondaError(CONDA_NOT_FOUND)
+
+    if os.popen(conda_bin).read().strip() == '':
+        raise CondaError(CONDA_NOT_FOUND)
+
     logging.info('Anaconda binary: ' + conda_bin)
     return conda_bin
 
@@ -88,7 +90,7 @@ def read_pip_env():
     command = "pip --disable-pip-version-check freeze"
     deps_str = os.popen(command).read()
     if deps_str == '':
-        error = 'Failed to read Anaconda environment using command: "' + command + '"'
+        error = 'Failed to read pip environment using command: "' + command + '"'
         raise Exception(error)
     return deps_str
 
