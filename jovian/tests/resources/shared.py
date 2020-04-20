@@ -32,11 +32,12 @@ def fake_creds(config_dir='.jovian', creds_filename='credentials.json'):
 @contextmanager
 def temp_directory():
     orig_path = os.getcwd()
-    with TemporaryDirectory() as dir:
-        os.chdir(dir)
-        yield dir
-
-    os.chdir(orig_path)
+    try:
+        with TemporaryDirectory() as dir:
+            os.chdir(dir)
+            yield dir
+    finally:
+        os.chdir(orig_path)
 
 
 @contextmanager

@@ -1,32 +1,31 @@
 import os
+from textwrap import dedent
 from unittest import TestCase, mock
 from unittest.mock import ANY, call
 from contextlib import contextmanager
 from jovian.utils.install import run_command, install, activate
+from jovian.tests.resources.shared import temp_directory
 
 
 @contextmanager
 def fake_envfile(fname='environment-test.yml'):
-    with open(fname, 'w') as f:
-        data = """channels:
-- defaults
-dependencies:
-- mixpanel=1.11.0
-- sigmasix=1.91.0
-- sqlite
-- pip:
-  - six==1.11.0
-  - sqlite==2.0.0
-name: test-env
-prefix: /home/admin/anaconda3/envs/test-env
-"""
-        f.write(data)
-
-    try:
+    with temp_directory():
+        with open(fname, 'w') as f:
+            data = dedent("""
+            channels:
+                - defaults
+            dependencies:
+                - mixpanel=1.11.0
+                - sigmasix=1.91.0
+                - sqlite
+                - pip:
+                - six==1.11.0
+                - sqlite==2.0.0
+            name: test-env
+            prefix: /home/admin/anaconda3/envs/test-env
+            """)
+            f.write(data)
         yield
-    finally:
-        # tearDown
-        os.remove(fname)
 
 
 @mock.patch("subprocess.Popen")
