@@ -63,7 +63,7 @@ so please make sure you have it installed and added to path.
 """, pre=False)
 
 
-def clone(slug, version=None, fresh=True, include_outputs=True):
+def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False):
     """Download the files for a gist"""
     # Print issues link
     log(ISSUES_MSG)
@@ -75,14 +75,20 @@ def clone(slug, version=None, fresh=True, include_outputs=True):
     title = gist['title']
 
     # If fresh clone, create directory
-    if fresh:
-        if os.path.exists(title):
-            i = 1
-            while os.path.exists(title + '-' + str(i)):
-                i += 1
-            title = title + '-' + str(i)
-        if not os.path.exists(title):
-            os.makedirs(title)
+    if fresh and not os.path.exists(title):
+        os.makedirs(title)
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and overwrite:
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and not overwrite:
+        i = 1
+        while os.path.exists(title + '-' + str(i)):
+            i += 1
+        title = title + '-' + str(i)
+
+        os.makedirs(title)
         os.chdir(title)
 
     # Download the files

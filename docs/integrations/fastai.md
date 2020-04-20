@@ -29,6 +29,6 @@ View all the log of a certain version is the `Records Tab`
 
 <img src="https://imgur.com/FJenNc1.png" class="screenshot" alt="keras records tab">
 
-Compare the results of many expriments that you have performed.For more usage of compare details visit [Compare](../user-guide/07-compare)
+Compare the results of many expriments that you have performed.For more usage of compare details visit [Compare](../user-guide/compare)
 
 <img src="https://i.imgur.com/m9zlfTJ.gif" class="screenshot" alt="compare records">

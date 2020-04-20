@@ -4,17 +4,17 @@
 
 jovian is an open-source Python package integrated with [Jovian](https://jovian.ml/?utm_source=github) to provide the tools necessary for Data Scientists and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects where even Students and Enthusiasts can leverage the same and also use [Jovian](https://jovian.ml/?utm_source=github) **Share** and **Showcase** their projects.
 
-- [Upload and share Jupyter Notebooks](https://jovian.ml/docs/user-guide/02-upload.html)
-- [Reproduce Notebooks from Jovian](https://jovian.ml/docs/user-guide/03-reproduce.html)
-- [Notebooks as version, view Diffs between versions](https://jovian.ml/docs/user-guide/04-version.html)
-- [Attaching utility files and model outputs with the Notebook](https://jovian.ml/docs/user-guide/05-attach.html)
-- [Tracking Datasets, Hyperparameters and Metrics](https://jovian.ml/docs/user-guide/06-track.html)
-- [Comparing and Analyzing all the experiments](https://jovian.ml/docs/user-guide/07-compare.html)
-- [Collaborate with teammates/colleagues](https://jovian.ml/docs/user-guide/08-collaborate.html)
-- [Stay connected with your model training, live updates with Slack Notifications](https://jovian.ml/docs/user-guide/09-integrations.html)
-- [Embed Jupyter Notebooks and Cell upload on Jovian.ml](https://jovian.ml/docs/user-guide/10-embed.html)
+- [Upload and share Jupyter Notebooks](https://jovian.ml/docs/user-guide/upload.html)
+- [Reproduce Notebooks from Jovian](https://jovian.ml/docs/user-guide/reproduce.html)
+- [Notebooks as version, view Diffs between versions](https://jovian.ml/docs/user-guide/version.html)
+- [Attaching utility files and model outputs with the Notebook](https://jovian.ml/docs/user-guide/attach.html)
+- [Tracking Datasets, Hyperparameters and Metrics](https://jovian.ml/docs/user-guide/track.html)
+- [Comparing and Analyzing all the experiments](https://jovian.ml/docs/user-guide/compare.html)
+- [Collaborate with teammates/colleagues](https://jovian.ml/docs/user-guide/collaborate.html)
+- [Stay connected with your model training, live updates with Slack Notifications](https://jovian.ml/docs/user-guide/integrations.html)
+- [Embed Jupyter Notebooks and Cell upload on Jovian.ml](https://jovian.ml/docs/user-guide/embed.html)
 
-[![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian-py.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian.ml/docs/)
 
 ## Installation
 

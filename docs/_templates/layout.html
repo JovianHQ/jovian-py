@@ -1,14 +1,27 @@
 {% extends '!layout.html' %}
 
 {% block extrabody %}
-  <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-top">
+  <nav
+    class="navbar navbar-light navbar-expand-md fixed-top navbar-top"
+    style="justify-content: flex-start;"
+  >
     <button class="navbar-toggler" type="button" data-toggle="wy-nav-top">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand"href="{{ pathto(master_doc) }}">
-      <img src="{{ pathto('_static/' + logo, 1) }}" height="36" class="d-inline-block align-top" alt="Jovian.ml docs"/>
+    <a class="navbar-brand" href="{{ pathto(master_doc) }}">
+      <img
+        src="{{ pathto('_static/' + logo, 1) }}"
+        height="36"
+        class="d-inline-block align-top"
+        alt="Jovian.ml docs"
+      />
     </a>
-    <span/>
+    <div class="nav-links-wrapper">
+      <a class="nav-link" href="https://www.jovian.ml" target="_blank">Website</a>
+      <a class="nav-link" href="/forum" target="_blank">Forum</a>
+      <a class="nav-link" href="/community" target="_blank">Community</a>
+      <a class="nav-link" href="/blog" target="_blank">Blog</a>
+    </div>
   </nav>
   {{ super() }}
 {% endblock %}
