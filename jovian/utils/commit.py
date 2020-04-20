@@ -4,7 +4,7 @@ from time import sleep
 
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid
+from jovian.utils.misc import get_file_extension, is_uuid, urljoin
 from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
@@ -166,7 +166,7 @@ def commit(message=None,
     _perform_git_commit(filename, git_commit, git_message)
     _attach_records(slug, version)
 
-    log('Committed successfully! ' + read_webapp_url() + username + "/" + title)
+    log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
 
 def _parse_filename(filename):
