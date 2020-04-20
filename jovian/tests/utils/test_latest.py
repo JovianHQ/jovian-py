@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 from pkg_resources import parse_version
 
 from jovian._version import __version__
-from jovian.tests.resources import MockResponse
+from jovian.tests.resources.shared import MockResponse
 from jovian.utils.latest import _get_latest_version, _print_update_message, check_update
 
 

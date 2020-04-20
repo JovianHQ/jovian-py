@@ -1,7 +1,7 @@
 import json
 from unittest import TestCase, mock
 
-from jovian.tests.resources import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian.utils.request import _msg, get, post, pretty, retry
 
 

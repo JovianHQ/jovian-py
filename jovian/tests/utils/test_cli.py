@@ -70,14 +70,21 @@ def test_install_with_name(mock_install, runner):
 @mock.patch("jovian.cli.clone")
 def test_clone(mock_clone, runner):
     result = runner.invoke(main, ['clone', 'aakashns/jovian-tutorial', '-v', 3])
-    mock_clone.assert_called_with(slug='aakashns/jovian-tutorial', version=3, include_outputs=True)
+    mock_clone.assert_called_with(slug='aakashns/jovian-tutorial', version=3, include_outputs=True, overwrite=False)
     assert result.exit_code == 0
 
 
 @mock.patch("jovian.cli.clone")
 def test_clone_with_no_outputs(mock_clone, runner):
     result = runner.invoke(main, ['clone', 'aakashns/jovian-tutorial', '-v', 3, '--no-outputs'])
-    mock_clone.assert_called_with(slug='aakashns/jovian-tutorial', version=3, include_outputs=False)
+    mock_clone.assert_called_with(slug='aakashns/jovian-tutorial', version=3, include_outputs=False, overwrite=False)
+    assert result.exit_code == 0
+
+
+@mock.patch("jovian.cli.clone")
+def test_clone_with_overwrite(mock_clone, runner):
+    result = runner.invoke(main, ['clone', 'aakashns/jovian-tutorial', '-v', 3, '--overwrite'])
+    mock_clone.assert_called_with(slug='aakashns/jovian-tutorial', version=3, include_outputs=True, overwrite=True)
     assert result.exit_code == 0
 
 

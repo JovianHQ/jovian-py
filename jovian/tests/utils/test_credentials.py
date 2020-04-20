@@ -2,7 +2,7 @@ import os
 from unittest import TestCase, mock
 from uuid import UUID
 
-from jovian.tests.resources import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian.utils import credentials
 from jovian.utils.credentials import (API_TOKEN_KEY, GUEST_TOKEN_KEY, _generate_guest_key, _read_or_generate_guest_key,
                                       _u, _validate_guest_key, config_exists, creds_exist, ensure_org, get_api_key,

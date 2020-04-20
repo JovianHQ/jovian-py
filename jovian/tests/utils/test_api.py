@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 from unittest.mock import ANY
 
-from jovian.tests.resources import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian._version import __version__
 from jovian.utils.api import (
     _h,
@@ -802,4 +802,3 @@ class TestPostSlackMessage(TestCase):
                 },
                 json={"key": "value"},
             )
-

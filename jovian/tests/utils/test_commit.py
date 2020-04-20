@@ -8,23 +8,8 @@ from contextlib import contextmanager
 
 from jovian.utils.commit import (_parse_filename, _parse_project, _attach_file,
                                  _attach_files, _capture_environment, _perform_git_commit, _attach_records, commit)
-from jovian.tests.resources import fake_creds
+from jovian.tests.resources.shared import fake_creds, temp_directory, mock_git_repo
 from jovian.utils.error import CondaError
-
-
-@contextmanager
-def mock_git_repo():
-    os.mkdir('mock_git_repo')
-    os.chdir('mock_git_repo')
-    os.system("""git init
-    mkdir -p ./nested/folder/deep && touch ./nested/folder/deep/sample.ipynb""")
-    os.chdir('nested/folder/deep')
-    os.system('git add . && git commit -m "initial commit"')
-    try:
-        yield
-    finally:
-        os.chdir('../../../../')
-        shutil.rmtree('mock_git_repo')
 
 
 def mock_get_gist(project):
@@ -200,41 +185,33 @@ def test_attach_file_raises_error(mock_upload_file, capsys):
 
 
 @mock.patch("jovian.utils.commit._attach_file")
-def test_attach_files(mock_attach_file, capsys):
-    # setUp
-    os.mkdir('tempdir')
-    os.mkdir('tempdir/tempdir1')
-    os.system('touch tempdir/file.txt && touch tempdir/tempdir1/file1.txt')
-
-    try:
-        _attach_files([], 'fake_gist_slug', 2)
-        captured = capsys.readouterr()
-        assert captured.out.strip() == ''
-
-        _attach_files(['tempdir'], 'fake_gist_slug', 2)
-        calls = [
+@pytest.mark.parametrize(
+    "files, mock_calls",
+    [
+        ([], []),
+        (['tempdir'], [
             call('tempdir/file.txt', 'fake_gist_slug', 2, False),
             call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]
-        mock_attach_file.assert_has_calls(calls)
-
-        _attach_files(['tempdir/file.txt', 'tempdir/tempdir1', 'tempdir/doesnotexist.txt'], 'fake_gist_slug', 2)
-        calls = [
+        ]),
+        ('tempdir', [
             call('tempdir/file.txt', 'fake_gist_slug', 2, False),
             call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]
-        mock_attach_file.assert_has_calls(calls)
-
-        _attach_files('tempdir', 'fake_gist_slug', 2)
-        calls = [
+        ]),
+        (['tempdir/file.txt', 'tempdir/tempdir1', 'tempdir/doesnotexist.txt'], [
             call('tempdir/file.txt', 'fake_gist_slug', 2, False),
             call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]
-        mock_attach_file.assert_has_calls(calls)
+        ]),
+    ]
+)
+def test_attach_files(mock_attach_file, files, mock_calls, capsys):
+    with fake_creds(), temp_directory():
+        # setUp
+        os.mkdir('tempdir')
+        os.mkdir('tempdir/tempdir1')
+        os.system('touch tempdir/file.txt && touch tempdir/tempdir1/file1.txt')
 
-    finally:
-        # tearDown
-        shutil.rmtree('tempdir')
+        _attach_files(files, 'fake_gist_slug', 2)
+        mock_attach_file.assert_has_calls(mock_calls)
 
 
 @mock.patch("jovian.utils.commit.upload_conda_env")
@@ -449,11 +426,11 @@ def test_commit(mock_in_script,
 
     mock_capture_environment.assert_called_with('conda', 'fake_gist_slug', 2)
 
-    _attach_files_calls = [call(['file1', 'file2', 'file3'], 'fake_gist_slug', 2),
+    _attach_files_calls = [call(['file1', 'file2', 'file3'], 'fake_gist_slug', 2, exclude_files='file'),
                            call(['model.h5', 'gen.csv'], 'fake_gist_slug', 2, output=True)]
     mock_attach_files.assert_has_calls(_attach_files_calls)
 
-    mock_perform_git_commit.assert_called_with('file', True, 'initial commit')
+    mock_perform_git_commit.assert_called_with('file', False, 'initial commit')
 
     mock_attach_records.assert_called_with('fake_gist_slug', 2)
 

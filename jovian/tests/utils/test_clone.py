@@ -6,15 +6,16 @@ from unittest.mock import call
 
 import pytest
 
-from jovian.tests.resources import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian.utils.clone import _h, clone, get_gist, post_clone_msg, pull
+from jovian import __version__
 
 
 def test_h():
     with fake_creds('.jovian', 'credentials.json'):
         expected_result = {"Authorization": "Bearer fake_api_key",
                            "x-jovian-source": "library",
-                           "x-jovian-library-version": "0.2.3",
+                           "x-jovian-library-version": __version__,
                            "x-jovian-command": "clone",
                            "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                            "x-jovian-org": "staging"}
@@ -23,7 +24,7 @@ def test_h():
 
         expected_result = {"Authorization": "Bearer fake_api_key",
                            "x-jovian-source": "library",
-                           "x-jovian-library-version": "0.2.3",
+                           "x-jovian-library-version": __version__,
                            "x-jovian-command": "pull",
                            "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                            "x-jovian-org": "staging"}
@@ -38,7 +39,7 @@ def test_get_gist(mock_get):
 
         headers = {"Authorization": "Bearer fake_api_key",
                    "x-jovian-source": "library",
-                   "x-jovian-library-version": "0.2.3",
+                   "x-jovian-library-version": __version__,
                    "x-jovian-command": "clone",
                    "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                    "x-jovian-org": "staging"}
@@ -54,7 +55,7 @@ def test_get_gist_only_gist_slug(mock_get):
 
         headers = {"Authorization": "Bearer fake_api_key",
                    "x-jovian-source": "library",
-                   "x-jovian-library-version": "0.2.3",
+                   "x-jovian-library-version": __version__,
                    "x-jovian-command": "clone",
                    "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
                    "x-jovian-org": "staging"}

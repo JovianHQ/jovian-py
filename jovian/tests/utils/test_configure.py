@@ -2,10 +2,9 @@ from unittest import TestCase, mock
 from unittest.mock import ANY
 import pytest
 
-from jovian.tests.resources import fake_creds
+from jovian.tests.resources.shared import fake_creds, MockResponse
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.credentials import creds_exist, purge_creds, read_creds
-from jovian.tests.resources import MockResponse
 
 
 def mock_request_get(*args, **kwargs):

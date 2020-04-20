@@ -97,6 +97,7 @@ def activate_env(ctx):
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
 @click.option('--no-outputs', 'no_outputs', is_flag=True, default=False)
+@click.option('--overwrite', 'overwrite', is_flag=True)
 @click.pass_context
 def exec_clone(ctx, notebook, version, no_outputs, overwrite):
     """Clone a notebook hosted on Jovian:

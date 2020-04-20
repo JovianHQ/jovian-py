@@ -1,7 +1,7 @@
 import json
 from unittest import TestCase, mock
 
-from jovian.tests.resources import MockResponse
+from jovian.tests.resources.shared import MockResponse
 from jovian.utils.jupyter import (
     get_notebook_server_path, has_ipynb_shell, in_notebook, get_notebook_path_py, get_notebook_path, set_notebook_name,
     get_notebook_name_saved, get_notebook_name, get_notebook_history, save_notebook)

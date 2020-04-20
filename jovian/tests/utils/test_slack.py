@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase, mock
 
-from jovian.tests.resources import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian._version import __version__
 from jovian.utils import slack
 from jovian.utils.credentials import write_creds
