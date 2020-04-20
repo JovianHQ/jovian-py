@@ -8,7 +8,7 @@ from contextlib import contextmanager
 
 from jovian.utils.commit import (_parse_filename, _parse_project, _attach_file,
                                  _attach_files, _capture_environment, _perform_git_commit, _attach_records, commit)
-from jovian.tests.resources.shared import fake_creds, temp_directory, mock_git_repo
+from jovian.tests.resources.shared import fake_creds, temp_directory, mock_git_repo, fake_records
 from jovian.utils.error import CondaError
 
 
@@ -277,21 +277,6 @@ def test_perform_git_commit(mock_api_post_block, capsys):
         expected_result = "[jovian] Git repository identified. Performing git commit..."
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
-
-
-@contextmanager
-def fake_records():
-    import jovian.utils.records
-    _d = jovian.utils.records._data_blocks
-    jovian.utils.records._data_blocks = [('fake_slug_metrics_1', 'metrics', {}),
-                                         ('fake_slug_metrics_2', 'metrics', {}),
-                                         ('fake_slug_hyperparams_1', 'hyperparams', {}),
-                                         ('fake_slug_hyperparams_2', 'hyperparams', {})]
-
-    try:
-        yield
-    finally:
-        jovian.utils.records._data_blocks = _d
 
 
 @mock.patch("jovian.utils.commit.api.post_records")

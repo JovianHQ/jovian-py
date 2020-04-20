@@ -1,8 +1,10 @@
 import os
 from unittest import TestCase, mock
 
-from jovian.tests.resources.shared import MockResponse, fake_creds
+import pytest
+
 from jovian._version import __version__
+from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian.utils import slack
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
@@ -129,22 +131,21 @@ def test_add_slack_errors(mock_get, capsys):
         assert captured.out.strip() == "[jovian] Invalid guest key"
 
 
-class TestAddSlack(TestCase):
-    @mock.patch("jovian.utils.slack.get", side_effect=mock_requests_get)
-    def test_add_slack_api_error(self, mock_get):
-        with fake_creds(".jovian-add-slack", "credentials.json"):
-            # setUp
-            creds = {
-                "WEBAPP_URL": "https://staging.jovian.ml/",
-                "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-                "API_URL": "https://api-staging.jovian.ai",
-                "API_KEY": "fake_invalid_api_key",
-                "ORG_ID": "staging",
-            }
-            write_creds(creds)
+@mock.patch("jovian.utils.slack.get", side_effect=mock_requests_get)
+def test_add_slack_api_error(mock_get):
+    with fake_creds(".jovian-add-slack", "credentials.json"):
+        # setUp
+        creds = {
+            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+            "API_URL": "https://api-staging.jovian.ai",
+            "API_KEY": "fake_invalid_api_key",
+            "ORG_ID": "staging",
+        }
+        write_creds(creds)
 
-            with self.assertRaises(ApiError):
-                add_slack()
+        with pytest.raises(ApiError):
+            add_slack()
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
@@ -211,23 +212,20 @@ def test_notify_log_error(mock_requests_post, capsys):
         assert captured.err.strip() == "[jovian] Error: The token has expired"
 
 
-class TestNotify(TestCase):
-    @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
-    @mock.patch("requests.post", side_effect=mock_requests_post)
-    def test_notify_safe_false_raises_api_error(
-        self, mock_requests_post, mock_get_api_key
-    ):
-        with fake_creds(".jovian-notify", "credentials.json"):
-            # setUp
-            creds = {
-                "WEBAPP_URL": "https://staging.jovian.ml/",
-                "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-                "API_URL": "https://api-staging.jovian.ai",
-                "API_KEY": "fake_invalid_api_key",
-                "ORG_ID": "staging",
-            }
-            write_creds(creds)
+@mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
+@mock.patch("requests.post", side_effect=mock_requests_post)
+def test_notify_safe_false_raises_api_error(mock_requests_post, mock_get_api_key):
+    with fake_creds(".jovian-notify", "credentials.json"):
+        # setUp
+        creds = {
+            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
+            "API_URL": "https://api-staging.jovian.ai",
+            "API_KEY": "fake_invalid_api_key",
+            "ORG_ID": "staging",
+        }
+        write_creds(creds)
 
-            data = {"key": "value"}
-            with self.assertRaises(ApiError):
-                notify(data)
+        data = {"key": "value"}
+        with pytest.raises(ApiError):
+            notify(data)

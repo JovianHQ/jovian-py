@@ -61,6 +61,21 @@ def mock_git_repo():
     os.chdir(orig_dir)
 
 
+@contextmanager
+def fake_records():
+    import jovian.utils.records
+    _d = jovian.utils.records._data_blocks
+    jovian.utils.records._data_blocks = [('fake_slug_metrics_1', 'metrics', {}),
+                                         ('fake_slug_metrics_2', 'metrics', {}),
+                                         ('fake_slug_hyperparams_1', 'hyperparams', {}),
+                                         ('fake_slug_hyperparams_2', 'hyperparams', {})]
+
+    try:
+        yield
+    finally:
+        jovian.utils.records._data_blocks = _d
+
+
 class MockResponse:
     def __init__(self, json_data, status_code, text=""):
         self.json_data = json_data
