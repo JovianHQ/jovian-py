@@ -119,3 +119,7 @@ dmypy.json
 # Mac OS
 .DS_Store
 
+# Jupyter Lab
+jovian/jovian-jupyter-lab-extension/tsconfig.tsbuildinfo
+jovian/jovian-jupyter-lab-extension/yarn.lock
+jovian/jovian-jupyter-lab-extension/package-lock.json
