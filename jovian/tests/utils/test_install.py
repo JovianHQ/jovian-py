@@ -131,9 +131,11 @@ def test_install_env_name_none(mock_request_env_name, mock_get_conda_bin, capsys
     with fake_envfile():
         install('environment-test.yml')
 
-        expected_result = """[jovian] Detected conda environment file: environment-test.yml
+        expected_result = dedent("""
+            [jovian] Detected conda environment file: environment-test.yml
 
-[jovian] Environment name not provided/detected. Skipping.."""
+            [jovian] Environment name not provided/detected. Skipping..
+            """).strip()
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
 
@@ -147,18 +149,20 @@ def test_install_unsuccessful(mock_run_command, mock_request_env_name, mock_get_
 
         install('environment-test.yml')
 
-        expected_result = """[jovian] Detected conda environment file: environment-test.yml
+        expected_result = dedent("""
+                            [jovian] Detected conda environment file: environment-test.yml
 
-[jovian] Some pip packages failed to install.
-[jovian] 
-#
-# To activate this environment, use
-#
-#     $ conda activate test-env
-#
-# To deactivate an active environment, use
-#
-#     $ conda deactivate"""
+                            [jovian] Some pip packages failed to install.
+                            [jovian] 
+                            #
+                            # To activate this environment, use
+                            #
+                            #     $ conda activate test-env
+                            #
+                            # To deactivate an active environment, use
+                            #
+                            #     $ conda deactivate
+                        """).strip()
 
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
@@ -169,11 +173,12 @@ def test_activate(mock_get_conda_bin, capsys):
     with fake_envfile():
         activate('environment-test.yml')
 
-        expected_result = """
-[jovian] Detected conda environment file: environment-test.yml
+        expected_result = dedent("""
+            [jovian] Detected conda environment file: environment-test.yml
 
-[jovian] Copy and execute the following command (try "source activate" if "conda activate doesn't work" )
-    conda activate test-env"""
+            [jovian] Copy and execute the following command (try "source activate" if "conda activate doesn't work" )
+                conda activate test-env
+        """).strip()
 
         captured = capsys.readouterr()
         assert expected_result.strip() in captured.out.strip()

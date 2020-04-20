@@ -1,4 +1,5 @@
 import pytest
+from textwrap import dedent
 from unittest import mock, TestCase
 from unittest.mock import ANY
 import os
@@ -6,16 +7,17 @@ from jovian.utils.environment import (get_conda_bin, get_conda_env_name, read_co
                                       upload_conda_env, print_conda_message, read_pip_env, upload_pip_env)
 from jovian.utils.error import CondaError
 
-pip_env = """
-alabaster==0.7.12
-apipkg==1.5
-appdirs==1.4.3
-appnope==0.1.0
-argh==0.26.2
-astroid==2.2.5
-attrs==19.1.0
-autopep8==1.5
-Babel==2.7.0"""
+pip_env = dedent("""
+            alabaster==0.7.12
+            apipkg==1.5
+            appdirs==1.4.3
+            appnope==0.1.0
+            argh==0.26.2
+            astroid==2.2.5
+            attrs==19.1.0
+            autopep8==1.5
+            Babel==2.7.0
+        """)
 
 
 def mock_os_popen(num):
@@ -51,13 +53,15 @@ def mock_os_popen(num):
 
         ret1.read().strip.return_value = 'fake-env'  # first call, third call
         ret2.read().strip.return_value = 'conda'  # second call
-        ret3.read.return_value = """name: jovian-py-dev
-channels:
-  - defaults
-dependencies:
-  - appnope=0.1.0
-  - blas=1.0
-prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev"""
+        ret3.read.return_value = dedent("""
+                                    name: jovian-py-dev
+                                    channels:
+                                    - defaults
+                                    dependencies:
+                                    - appnope=0.1.0
+                                    - blas=1.0
+                                    prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev
+                                """).strip()
 
         return [ret1, ret2, ret1, ret3]
 
@@ -112,13 +116,15 @@ def test_get_conda_env_name_echo_conda_default_env(mock_popen):
 
 @mock.patch("os.popen", side_effect=mock_os_popen(6))
 def test_read_conda_env_name_none(mock_popen):
-    expected_result = """name: jovian-py-dev
-channels:
-  - defaults
-dependencies:
-  - appnope=0.1.0
-  - blas=1.0
-prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev"""
+    expected_result = dedent("""
+                        name: jovian-py-dev
+                        channels:
+                        - defaults
+                        dependencies:
+                        - appnope=0.1.0
+                        - blas=1.0
+                        prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev
+                    """).strip()
     assert read_conda_env() == expected_result
 
 
@@ -132,13 +138,15 @@ def test_read_conda_env_empty_env_str_raises_error(mock_popen):
 @mock.patch("jovian.utils.environment.upload_file")
 @mock.patch("os.popen", side_effect=mock_os_popen(6))
 def test_upload_conda_env(mock_popen, mock_upload_file, mock_get_platform):
-    env_str = """name: jovian-py-dev
-channels:
-  - defaults
-dependencies:
-  - appnope=0.1.0
-  - blas=1.0
-prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev"""
+    env_str = dedent("""
+                name: jovian-py-dev
+                channels:
+                - defaults
+                dependencies:
+                - appnope=0.1.0
+                - blas=1.0
+                prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev
+            """).strip()
     # setUp - Create pre-existing environment.yml file
     with open('environment-linux.yml', 'w') as f:
         f.write(env_str)
@@ -169,15 +177,17 @@ prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev"""
 def test_print_conda_message(capsys):
     print_conda_message('fake-env')
 
-    expected_result = """[jovian] 
-#
-# To activate this environment, use
-#
-#     $ conda activate fake-env
-#
-# To deactivate an active environment, use
-#
-#     $ conda deactivate"""
+    expected_result = dedent("""
+                        [jovian] 
+                        #
+                        # To activate this environment, use
+                        #
+                        #     $ conda activate fake-env
+                        #
+                        # To deactivate an active environment, use
+                        #
+                        #     $ conda deactivate
+                    """).strip()
     captured = capsys.readouterr()
     assert captured.out.strip() == expected_result.strip()
 
