@@ -1,6 +1,8 @@
 import json
 from unittest import TestCase, mock
 
+import pytest
+
 from jovian.tests.resources.shared import MockResponse, fake_creds
 from jovian.utils.request import _msg, get, post, pretty, retry
 
@@ -77,45 +79,42 @@ def mocked_requests(url, *args, **kwargs):
     return MockResponse(None, 404)
 
 
-@mock.patch('requests.get', side_effect=mocked_requests)
-def test_get(mock_get):
-    expected_result = {'key': 'value'}
+@pytest.mark.parametrize(
+    "func, url, req, ret_val_api_key, call_count",
+    [
+        (
+            get,
+            "http://someurl.com/test.json",
+            "requests.get",
+            None,
+            1
+        ),
+        (
+            get,
+            "http://someurl.com/noauth",
+            "requests.get",
+            "fake_api_key",
+            2
+        ),
+        (
+            post,
+            "http://someurl.com/noauth",
+            "requests.post",
+            "fake_api_key",
+            2
+        ),
+        (
+            post,
+            "http://someurl.com/create",
+            "requests.post",
+            None,
+            1
+        ),
+    ]
+)
+def test_request(func, url, req, ret_val_api_key, call_count):
+    with mock.patch(req, side_effect=mocked_requests) as mock_req, \
+            mock.patch('jovian.utils.request.get_api_key', return_value=ret_val_api_key):
 
-    assert get('http://someurl.com/test.json', headers={'key': 'value'}).json() == expected_result
-
-
-@mock.patch('requests.get', side_effect=mocked_requests)
-def test_get_called_once(mock_get):
-    get('http://someurl.com/test.json', headers={'key': 'value'})
-
-    assert mock_get.call_count == 1
-
-
-@mock.patch('jovian.utils.request.get_api_key', mock.Mock(return_value="fake_api_key"))
-@mock.patch('requests.get', side_effect=mocked_requests)
-def test_get_called_twice(mock_get):
-    get('http://someurl.com/noauth', headers={'key': 'value'})
-
-    assert mock_get.call_count == 2
-
-
-@mock.patch('requests.post', side_effect=mocked_requests)
-def test_post(mock_post):
-    expected_result = {"message": "created successfully"}
-
-    assert post('http://someurl.com/create', headers={'key': 'value'}).json() == expected_result
-
-
-@mock.patch('requests.post', side_effect=mocked_requests)
-def test_post_called_once(mock_post):
-    post('http://someurl.com/create', headers={'key': 'value'})
-
-    assert mock_post.call_count == 1
-
-
-@mock.patch('jovian.utils.request.get_api_key', mock.Mock(return_value="fake_api_key"))
-@mock.patch('requests.post', side_effect=mocked_requests)
-def test_post_called_twice(mock_post):
-    post('http://someurl.com/noauth', headers={'key': 'value'})
-
-    assert mock_post.call_count == 2
+        func(url, headers={'key': 'value'})
+        assert mock_req.call_count == call_count
