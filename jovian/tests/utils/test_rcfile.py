@@ -11,7 +11,7 @@ from jovian.utils.constants import RC_FILENAME
 from jovian.utils.rcfile import (get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists, save_rcdata,
                                  set_notebook_slug)
 
-data = {
+_data = {
     "notebooks": {
         "Testing Jovian.ipynb": {
             "slug": "46bd9a3f87e74de0baf8a6f0b60a8df9"
@@ -24,7 +24,7 @@ data = {
 def fake_rc():
     with temp_directory():
         with open(RC_FILENAME, 'w') as f:
-            json.dump(data, f, indent=2)
+            json.dump(_data, f, indent=2)
 
         yield
 
@@ -37,7 +37,7 @@ def test_rcfile_does_not_exist():
 @pytest.mark.parametrize(
     "data, expected_result",
     [
-        (data, data),
+        (_data, _data),
         (None, {
             "notebooks": {}
         })
@@ -59,7 +59,7 @@ def test_get_rcdata():
         assert get_rcdata() == expected_result
 
     with fake_rc():
-        assert get_rcdata() == data
+        assert get_rcdata() == _data
 
 
 @pytest.mark.parametrize(
