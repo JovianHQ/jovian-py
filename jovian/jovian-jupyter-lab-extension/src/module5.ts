@@ -20,7 +20,15 @@ import {
   getShell
 } from './commands'
 
+import { 
+  getUrl, 
+  shareToFacebook,
+  shareToTwitter,
+  shareToLinkedIn
+} from './module4';
+
 let sidebar:any = undefined;
+let url:string = undefined;
 
 export default async function showSidebar():Promise<void> {
   /**
@@ -34,6 +42,9 @@ export default async function showSidebar():Promise<void> {
   div.appendChild(addLine());
   // check if we have the slug of this notebook
   let slug:string|undefined = undefined, gist:any;
+  await getUrl().then(
+    (res) => url = res
+  );
   await getSlug().then(
     (res) => slug = res
   );
@@ -215,17 +226,14 @@ function addShareSection():HTMLElement {
   };
   let div:HTMLElement = document.createElement("div");
   (<any>div.style)['text-align'] = "center";
-  let fb = facebookIcon();
-  let tt = twitterIcon();
-  let li = linkedInIcon();
+  let fb = shareToFacebook(url, facebookIcon());
+  let tt = shareToTwitter(url, twitterIcon());
+  let li = shareToLinkedIn(url, linkedInIcon());
   div.appendChild(fb);
   div.appendChild(newSpan());
   div.appendChild(tt);
   div.appendChild(newSpan());
   div.appendChild(li);
-  fb.onclick = ()=>alert("fb");
-  tt.onclick = ()=>alert("tt");
-  li.onclick = ()=>alert("li");
   return div;
 }
 
