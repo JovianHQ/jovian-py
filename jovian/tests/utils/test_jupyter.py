@@ -1,22 +1,25 @@
 import json
 from unittest import TestCase, mock
 
+import pytest
+
 from jovian.tests.resources.shared import MockResponse
 from jovian.utils.jupyter import (
     get_notebook_server_path, has_ipynb_shell, in_notebook, get_notebook_path_py, get_notebook_path, set_notebook_name,
     get_notebook_name_saved, get_notebook_name, get_notebook_history, save_notebook)
 
 
+@pytest.mark.parametrize(
+    "get_ipython, expected_result",
+    [
+        ('ZMQInteractiveShell', True),
+        ('TerminalInteractiveShell', False)
+    ]
+)
 @mock.patch("IPython.get_ipython")
-def test_has_ipynb_shell_true(mock_get_ipython):
-    mock_get_ipython().__class__.__name__ = 'ZMQInteractiveShell'
-    assert has_ipynb_shell() == True
-
-
-@mock.patch("IPython.get_ipython")
-def test_has_ipynb_shell_terminal(mock_get_ipython):
-    mock_get_ipython().__class__.__name__ = 'TerminalInteractiveShell'
-    assert has_ipynb_shell() == False
+def test_has_ipynb_shell(mock_get_ipython, get_ipython, expected_result):
+    mock_get_ipython().__class__.__name__ = get_ipython
+    assert has_ipynb_shell() == expected_result
 
 
 @mock.patch('builtins.__import__', return_value=ImportError('fake import error'))
@@ -71,28 +74,20 @@ def mock_re():
     return ret1
 
 
+@pytest.mark.parametrize(
+    "func, expected_result",
+    [
+        (get_notebook_server_path, 'Fake-Notebook.ipynb'),
+        (get_notebook_path_py, '/Users/rohitsanjay/Fake-Notebook.ipynb'),
+        (get_notebook_path, '/Users/rohitsanjay/Fake-Notebook.ipynb'),
+    ]
+)
 @mock.patch("ipykernel.connect.get_connection_file", return_value='')
 @mock.patch("re.search", side_effect=mock_re())
 @mock.patch("notebook.notebookapp.list_running_servers", return_value=mock_list_running_servers())
 @mock.patch("requests.get", side_effect=mock_request_get)
-def test_get_notebook_server_path(mock_get, mock_servers, mock_re, mock_get_connection_file):
-    assert get_notebook_server_path() == 'Fake-Notebook.ipynb'
-
-
-@mock.patch("ipykernel.connect.get_connection_file", return_value='')
-@mock.patch("re.search", side_effect=mock_re())
-@mock.patch("notebook.notebookapp.list_running_servers", return_value=mock_list_running_servers())
-@mock.patch("requests.get", side_effect=mock_request_get)
-def test_get_notebook_path_py(mock_get, mock_servers, mock_re, mock_get_connection_file):
-    assert get_notebook_path_py() == '/Users/rohitsanjay/Fake-Notebook.ipynb'
-
-
-@mock.patch("ipykernel.connect.get_connection_file", return_value='')
-@mock.patch("re.search", side_effect=mock_re())
-@mock.patch("notebook.notebookapp.list_running_servers", return_value=mock_list_running_servers())
-@mock.patch("requests.get", side_effect=mock_request_get)
-def test_get_notebook_path_ipython_api(mock_get, mock_servers, mock_re, mock_get_connection_file):
-    assert get_notebook_path() == '/Users/rohitsanjay/Fake-Notebook.ipynb'
+def test_notebook_path_funs(mock_get, mock_servers, mock_re, mock_get_connection_file, func, expected_result):
+    assert func() == expected_result
 
 
 @mock.patch("jovian.utils.jupyter.get_notebook_name_saved", return_value="Fake-Notebook.ipynb")
