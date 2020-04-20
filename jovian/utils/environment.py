@@ -38,8 +38,7 @@ def read_conda_env(name=None):
     """Read the anaconda environment into a string"""
     if name is None:
         name = get_conda_env_name()
-    command = get_conda_bin() + ' env export -n ' + \
-        get_conda_env_name() + " --no-builds"
+    command = get_conda_bin() + ' env export -n ' + name + " --no-builds"
     env_str = os.popen(command).read()
     if env_str == '':
         error = 'Failed to read Anaconda environment using command: "' + command + '"'
