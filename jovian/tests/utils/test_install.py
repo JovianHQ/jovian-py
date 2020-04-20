@@ -3,6 +3,10 @@ from textwrap import dedent
 from unittest import TestCase, mock
 from unittest.mock import ANY, call
 from contextlib import contextmanager
+
+import pytest
+
+
 from jovian.utils.install import run_command, install, activate
 from jovian.tests.resources.shared import temp_directory
 
@@ -28,74 +32,59 @@ def fake_envfile(fname='environment-test.yml'):
         yield
 
 
+@pytest.mark.parametrize(
+    "side_effect, calls",
+    [
+        (
+            [(None, b'')],
+            [
+                call(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate()
+            ]
+        ),
+        (
+            [(None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""), (None, b'')],
+            [
+                call(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=-1),
+                call().communicate(),
+            ]
+        ),
+        (
+            [(None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
+             (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
+             (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0""")],
+            [
+                call(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate()
+            ]
+        ),
+        (
+            [(None, b"""Pip failed""")],
+            [
+                call(),
+                call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
+                call().communicate()
+            ]
+        ),
+
+    ]
+)
 @mock.patch("subprocess.Popen")
-def test_run_command(mock_popen):
+def test_run_command(mock_popen, side_effect, calls):
     with fake_envfile():
-        mock_popen().communicate.return_value = (None, b'')
+        mock_popen().communicate.side_effect = side_effect
         run_command('conda env update --file environment-test.yml --name environment-name',
                     'environment-test.yml', ['mixpanel=1.11.0', 'sigmasix=1.91.0'])
 
-        calls = [
-            call(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate()
-        ]
-        mock_popen.assert_has_calls(calls)
-
-
-@mock.patch("subprocess.Popen")
-def test_run_command_error(mock_popen):
-    with fake_envfile():
-        mock_popen().communicate.side_effect = [(None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
-                                                (None, b'')]
-        run_command('conda env update --file environment-test.yml --name environment-name',
-                    'environment-test.yml', ['mixpanel=1.11.0', 'sigmasix=1.91.0'])
-
-        calls = [
-            call(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=-1),
-            call().communicate()
-        ]
-        mock_popen.assert_has_calls(calls)
-
-
-@mock.patch("subprocess.Popen")
-def test_run_command_error_more_than_three(mock_popen):
-    with fake_envfile():
-        mock_popen().communicate.side_effect = [(None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
-                                                (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
-                                                (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0""")]
-
-        run_command('conda env update --file environment-test.yml --name environment-name',
-                    'environment-test.yml', ['mixpanel=1.11.0', 'sigmasix=1.91.0'])
-
-        calls = [
-            call(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate()
-        ]
-        mock_popen.assert_has_calls(calls)
-
-
-@mock.patch("subprocess.Popen")
-def test_run_command_pip_failed(mock_popen):
-    with fake_envfile():
-        mock_popen().communicate.return_value = (None, b"""Pip failed""")
-
-        assert run_command('conda env update --file environment-test.yml --name environment-name',
-                           'environment-test.yml', ['mixpanel=1.11.0', 'sigmasix=1.91.0']) == False
-
-        calls = [
-            call(),
-            call('conda env update --file environment-test.yml --name environment-name', shell=True, stderr=ANY),
-            call().communicate()
-        ]
         mock_popen.assert_has_calls(calls)
 
 
