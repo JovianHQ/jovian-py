@@ -394,8 +394,8 @@ function message():HTMLElement {
    * of the current project 
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("A short message to be used as the title for this version"));
-  div.appendChild(addInput());
+  div.appendChild(addText("Version Title"));
+  div.appendChild(addInput("The title for this version"));
   return div;
 }
 
@@ -408,7 +408,7 @@ function filename():HTMLElement {
   let div:HTMLElement = document.createElement("div");
   let inp:HTMLElement = addInput();
   disable(inp);
-  div.appendChild(addText("The filename of the jupyter notebook"));
+  div.appendChild(addText("Jupyter Notebook - file name"));
   div.appendChild(inp);
   return div;
 }
@@ -420,7 +420,7 @@ function files():HTMLElement {
    * name, which can be uploaded into Jovian
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Any additional scripts(*.py/*.csv) such as `utils.py, inputs.csv`"));
+  div.appendChild(addText("Additional scripts & utilities (comma separated) e.g helper.py, input.csv"));
   div.appendChild(addInput("utils.py, inputs.csv"));
   return div;
 }
@@ -432,7 +432,7 @@ function environment():HTMLElement {
    * environment will be captured along with the notebook
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Which type of environment to be captured?"));
+  div.appendChild(addText("Python environment type (Anaconda or Pip)"));
   div.appendChild(addEnvs());
   return div;
 }
@@ -444,7 +444,7 @@ function new_project():HTMLElement {
    * whether to create a new project
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("To create a new project?"));
+  div.appendChild(addText("Create a new project (instead of updating the existing project)?"));
   div.appendChild(addTrueOrFalse());
   return div;
 }
@@ -456,7 +456,7 @@ function project_id():HTMLElement {
    * in Jovian
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Name of the Jovian.ml project like `user_name_on_jovian/notebook_name`"));
+  div.appendChild(addText("(optional)Commit to an existing project eg. username/project-title"));
   div.appendChild(addInput());
   return div;
 }
@@ -468,7 +468,7 @@ function privacy():HTMLElement {
    * option for the privacy of the notebook
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Notebook privacy settings (applicable while creating a new notebook project)"));
+  div.appendChild(addText("Privacy (applicable only for new projects)"));
   div.appendChild(addPrivacy());
   return div;
 }
@@ -480,7 +480,7 @@ function outputs():HTMLElement {
    * name, which can be uploaded into Jovian
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Any outputs files or artifacts generated from the modeling processing such as `submission.csv, weights.h5`"));
+  div.appendChild(addText("Additional outputs or artifacts (comma separated) e.g. model.h5, submission.csv"));
   div.appendChild(addInput("submission.csv, weights.h5"));
   return div;
 }
@@ -492,7 +492,7 @@ function git_commit():HTMLElement {
    * whether to submit a git commit request
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("To perform a Git commit? (only when the notebook is inside a Git repository)"));
+  div.appendChild(addText("Perform Git commit (if notebook is in a git repository)"));
   div.appendChild(addTrueOrFalse());
   return div;
 }
@@ -503,8 +503,8 @@ function git_message():HTMLElement {
    * a input box for users to enter their git message
    */
   let div:HTMLElement = document.createElement("div");
-  div.appendChild(addText("Commit message for git"));
-  div.appendChild(addInput());
+  div.appendChild(addText("Git commit message"));
+  div.appendChild(addInput("Message for git commit"));
   return div;
 }
 
