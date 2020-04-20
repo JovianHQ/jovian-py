@@ -1,6 +1,5 @@
 import {
-  IDisposable,  
-  DisposableDelegate
+  IDisposable
 } from '@lumino/disposable';
 
 import {
@@ -23,11 +22,9 @@ import {
 } from '@jupyterlab/notebook';
 
 import {
-  downloadIcon, 
-  caretDownIcon
+  downloadIcon
 } from '@jupyterlab/ui-components';
 
-import getDropdown from './module1';
 import { 
   setApp,
   hasJovian 
@@ -97,59 +94,11 @@ class JovainButtonExtension implements DocumentRegistry.IWidgetExtension<Noteboo
   }
 }
 
-class dropdown implements DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel> {
-  /**
-   * Creates a dropdown button into the toolbar, so
-   * this class is needed
-   */
-   createNew(panel: NotebookPanel, context: DocumentRegistry.IContext<INotebookModel>): IDisposable {
-    
-    let callback = () => {
-      // display the dropdown menu 
-      hasJovian(getDropdown);
-    };
-
-    let button = new ToolbarButton({
-      className: 'jovian-lab-dropdown',
-      icon: caretDownIcon,
-      onClick: callback,
-      tooltip: 'Jovian Options'
-    });
-
-    panel.toolbar.insertItem(positionIndex+1, 'jovian dropdown', button);
-
-    button.node.addEventListener ("DOMNodeInserted", ()=>{
-      let jovian_dropdown:any = button.node.firstChild;
-      jovian_dropdown.style['border-radius'] = 0;
-      jovian_dropdown.style.background = "white";
-      (button.node as any).style["margin-left"] = "-2px";
-    },{
-      once: true,
-      passive: true,
-      capture: true
-    });
-
-    button.node.onmouseenter = ()=>{
-      let dropdown:any = button.node.firstChild;
-      dropdown.style.background = "rgb(209, 207, 207)";
-    };
-
-    button.node.onmouseleave = ()=>{
-      let dropdown:any = button.node.firstChild;
-      dropdown.style.background = "white";
-    };
-
-    return new DisposableDelegate(() => {
-      button.dispose();
-    });
-  }
-}
-
 function setIcon(color:string):string {
   /**
    * Helper function, which uses to set the icon for Jovian
    */
-  let icon:string = color + " url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAjCAIAAAAMti2GAAABTGlDQ1BpY2MAACjPY2BgUkksKMhhYWBgyM0rKQpyd1KIiIxSYH/IwA6EvAxiDAqJycUFjgEBPkAlDDAaFXy7xsAIoi/rgsw6JTW1SbVewNdipvDVi69EmxjwA66U1OJkIP0HiFOTC4pKGBgYU4Bs5fKSAhC7A8gWKQI6CsieA2KnQ9gbQOwkCPsIWE1IkDOQfQPIVkjOSASawfgDyNZJQhJPR2JD7QUBbpfM4oKcxEqFAGMGqoOS1IoSEO2cX1BZlJmeUaLgCAylVAXPvGQ9HQUjA0NzBgZQmENUfw4EhyWj2BmEWPN9Bgbb/f///9+NEPPaz8CwEaiTaydCTMOCgUGQm4HhxM6CxKJEsBAzEDOlpTEwfFrOwMAbycAgfAGoJ7o4zdgILM/I48TAwHrv///PagwM7JMZGP5O+P//96L///8uBmq+w8BwIA8AFSFl7ghfNBMAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAP8A/wD/oL2nkwAAAAd0SU1FB+MIBgkzIxDC+FwAAANlSURBVEjHtZZNTxtHGMf/M+O3uA5OttgG27UxSmrSppEhRJzKxTckc6nEuQeOfAOuPcIFiS/ByQcUwQfgVGMhgtI3NTah1KwJccB2bNaeeXpYt8QvyGvTzGm1+9+fnvnNPrPDiAifZ9j6JhoShyeyek0AOMOToPjSw/4fdP6dWntZ//CRAGge9tMP9yyied/EwbEsVQmAVHgcEKGHPV6RUg6Mrhm0n28qAgAbx4uYcLTPs1wur62tLS0tbW5u1mq1AYTk36k/i4pzEGF0hD2LiI5AOp1eXV01DGN3dzcSiaRSKatVZ/OyXCMGKMKTcTHu7czrum4YBoB6vV4qlawKqVxT9lia36ZdYHZS2DqLRiqVSiaTPp9vcXExmUxaFfKmqPLnijEQweflT8OiOxOPx7e2tnRdDwaDXq/XKno/LyvXxBkk4dsQD4z0nqKmaZqmdd+/FX1Vo4PjpnntsOFFzCZ6kYnIMAwi4pzb7XbGbj75W13/oau3F4oxKMKYl38TEj1jxWJxeXl5YWFhZWWlUqlYqno/1/xogDMowndh4bvfuwPr9fre3l4ulzs/P280Gp8+6l11qUoHb1sN5rJjdlIwS73dNnqjfzuTp++VWXLwAZ8aFwNib0ETIZOTNXNyhGcRoVnbj/qjLyp0eCJNAy4HZmNiGHBP9C8FWfjQsvGVxr8eG8ZGD7QiZN7I63+XOhEVD9zDFd2FLl6pV39JxkCA28GeT/T/V1hFvz5V+pXiDESIjvJHgf7/CktoqfBzrtlotTdmouK+a0gbneizS/X6VHIGAjwuNjMx5AL2QL86kedlYgykMOnjMd/wNtrQDYlMTjYlADCGmQnxhXN4G23ov0vq14I0F3DkHpuJ3slGG/rwRF5UyNxFHwV4dPRONm7QRhOZnJQKADjH85jNZb+TjRv0yXv1+1nLxkM3S0Ss2pBSmucbIQRr33lb6Gy+eVEhApoKj8dEWLNqI5/Pm2cEv9/vdDo/fWQDQEBY4z9+7zC3pKdh4by9vS8vL9PpdCKRCAQChUJhfX29XC4DmJubc7vdbVEacGxvb3s8Hr/fH4/H/X6/KSEejx8dHXUkB0ZvbGx4PJ7/KhNCTE9P7+zsdCfZoEf3arWayWSy2ayu606nc2pqan5+PhQKdScHRlsf/wCBmeWmRK6m9QAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOS0wOC0wNlQwOTo1MTozNS0wNDowMBKu+PQAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTktMDgtMDZUMDk6NTE6MzUtMDQ6MDBj80BIAAAAAElFTkSuQmCC') no-repeat 5px / 15px 17px";
+  let icon:string = color + " url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAABCCAMAAADUivDaAAAAsVBMVEUAAAAKYf8LYv8LYP8LYf8LYv8KYv8MYP8JY/8MYP8JY/8RX/8AYv8Ab/8LYv8QYv////8OZP/9/f8jZf8FYP8UYf8aY//19/8dZP8mZv8AWP8BW/8ATf/6+/8qaP8AXv8AVP8ASv8Pav8AUv9ti/8AUP/x8/9Xfv/v8v/c4v9Ccv8ARv/r7v/U2//O1v93kv9Pef9Ld//W3P9ihP87b//g5f/V3P/J0v/H0P8waf8APv8gm8uUAAAADnRSTlMA/tj33vSLy8a3fG8IB6vY0CcAAAGsSURBVFjD7ZjZdoIwEIabunRnIgmBALIIuFF3a6vv/2ClQLH1HE5j4EKt/91/853MMJNhclO3HptI+VvN9nMp4aHXUQTU6d29lBCeeg0kgkCo1y5B3HeQIqZOswRxK4yAVnVE4yQQFxPIGSM0rSLCIJbFDQTyCMOzx2vfIxQkEcCicKTrm1XEKUghQAtCFSfSVx5BUggNgiXuYlXFk92WggQCwBrrOD3G0KBMqYhglEkGEuWBTHdbBHLp9MIuTtQfmIRKf9TVpD+cDgJOQb60fIfEyRmgSoG7LmEIqrUZnEKzXxFXRE0I0A5b/kgE467LDQq//RFthgwzJs6PuZF7Lt7szJtPh/1lGGUMyPwmtB3BKweYuejjRN0wIGkWzHnuo4QhhCDxB+6qqopHPk8Hsp94nHpH8BTIfcXZ+FpYLPGuUniTiCEoPUDAt5+LIkj8nh38zebwFYhdeEc4nQMdJ1JnUZbOwtuO6Ew1gsFE10czm+cfNfMpQby0/PXYDorS2vtjCtyyiIGgxIsg9r9ne3+m98U/QVzMStOqfdWVX7irr/3yjw8ofXyoVZ+79KZpyz4GvQAAAABJRU5ErkJggg==')  no-repeat 3.5px center / 19px 17px";
   return icon;
 }
   
@@ -160,7 +109,6 @@ async function activate (app: JupyterFrontEnd, labShell: ILabShell) {
    *  - button2: Dropdown button
    */
   app.docRegistry.addWidgetExtension('Notebook', new JovainButtonExtension(app));
-  app.docRegistry.addWidgetExtension('Notebook', new dropdown());
   setApp(app, labShell);
 }
 
