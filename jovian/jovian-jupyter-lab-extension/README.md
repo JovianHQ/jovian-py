@@ -49,7 +49,7 @@ Slack : [Slack Invite](https://bit.ly/jovian-users)
 
 - JupyterLab >= 0.30.0
 - Jovian >= 0.1.89
-- nodejs >= 10.0.0
+- nodejs >= 10.20.0
 
 # Jupyter Lab Extension
 

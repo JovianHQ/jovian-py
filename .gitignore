@@ -123,3 +123,4 @@ dmypy.json
 jovian/jovian-jupyter-lab-extension/tsconfig.tsbuildinfo
 jovian/jovian-jupyter-lab-extension/yarn.lock
 jovian/jovian-jupyter-lab-extension/package-lock.json
+jovian/jovian-jupyter-lab-extension/*.tgz
