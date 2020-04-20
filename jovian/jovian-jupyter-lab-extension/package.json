@@ -1,18 +1,18 @@
 {
-  "name": "jovian_lab_extension",
-  "version": "0.2.1",
-  "description": "none",
+  "name": "jovian-lab-ext-test",
+  "version": "0.1.2",
+  "description": "The platform for all your Data Science projects",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/my_name/myextension",
+  "homepage": "https://github.com/JovianML/jovian-py",
   "bugs": {
-    "url": "https://github.com/my_name/myextension/issues"
+    "url": "https://github.com/JovianML/jovian-py/issues"
   },
   "license": "BSD-3-Clause",
-  "author": "jovian",
+  "author": "Mayank Saboo",
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
     "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
@@ -22,7 +22,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/my_name/myextension.git"
+    "url": "https://github.com/JovianML/jovian-py"
   },
   "scripts": {
     "build": "tsc",
@@ -32,7 +32,8 @@
   },
   "dependencies": {
     "@jupyterlab/application": "^2.0.0",
-    "@jupyterlab/notebook": "^2.0.2"
+    "@jupyterlab/notebook": "^2.0.2",
+    "nodejs": "^10.0.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.1",
