@@ -105,7 +105,7 @@ def runner():
     ]
 )
 def test_cli(func, cli_args, called_with_args, runner):
-    with mock.patch(f"jovian.cli.{func}") as mock_func:
+    with mock.patch("jovian.cli.{}".format(func)) as mock_func:
         result = runner.invoke(main, cli_args)
         mock_func.assert_called_with(**called_with_args)
         assert result.exit_code == 0
