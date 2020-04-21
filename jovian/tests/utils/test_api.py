@@ -184,7 +184,7 @@ def test_get_current_user(mock_requests_get):
 def test_get_current_user_raises_exception(
     mock_requests_get, mock_request_get_api_key
 ):
-    with fake_creds(".jovian-invalid-key", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -550,7 +550,7 @@ def test_post_blocks(mock_requests_post):
 @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_post_blocks_raises_api_error(mock_requests_post, mock_get_api_key):
-    with fake_creds(".jovian-invalid-key", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -617,7 +617,7 @@ def test_post_block(mock_requests_post, mock_timestamp):
 def test_post_block_raises_api_error(
     mock_requests_post, mock_get_api_key, mock_timestamp
 ):
-    with fake_creds(".jovian-invalid-key", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -677,7 +677,7 @@ def test_post_records(mock_requests_post):
 @mock.patch("jovian.utils.request.get_api_key", return_value="fake_invalid_api_key")
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_post_records_raises_api_error(mock_requests_post, mock_get_api_key):
-    with fake_creds(".jovian-invalid-key", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -712,7 +712,7 @@ def test_post_records_raises_api_error(mock_requests_post, mock_get_api_key):
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
 def test_post_slack_message(mock_requests_post):
-    with fake_creds(".jovian-notify", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -744,7 +744,7 @@ def test_post_slack_message(mock_requests_post):
 def test_post_slack_message_raises_api_error(
     mock_requests_post, mock_request_get_api_key
 ):
-    with fake_creds(".jovian-notify", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
@@ -779,7 +779,7 @@ def test_post_slack_message_raises_api_error(
 def test_post_slack_message_safe(
     mock_requests_post, mock_request_get_api_key
 ):
-    with fake_creds(".jovian-notify", "credentials.json"):
+    with fake_creds():
         # setUp
         creds = {
             "WEBAPP_URL": "https://staging.jovian.ml/",
