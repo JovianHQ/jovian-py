@@ -84,11 +84,11 @@ class JovianKerasCallback(Callback):
             met_dict.update(logs)
             log_metrics(met_dict, verbose=False)
 
-        if self.notify_slack:
-            result = {
-                'message': 'Training complete after ' + str(self.params['epochs']) + ' epochs.',
-                'metrics': met_dict
-            }
-            if self.hyperparams:
-                result['hyperparams'] = self.hyperparams
-            notify(json.dumps(result, indent=2, cls=Encoder), verbose=False, safe=True)
+            if self.notify_slack:
+                result = {
+                    'message': 'Training complete after ' + str(self.params['epochs']) + ' epochs.',
+                    'metrics': met_dict
+                }
+                if self.hyperparams:
+                    result['hyperparams'] = self.hyperparams
+                notify(json.dumps(result, indent=2, cls=Encoder), verbose=False, safe=True)
