@@ -142,7 +142,7 @@ def set_project(ctx,  notebook, project):
     This will create or update the .jovianrc file in the current directory to ensure that commits
     inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
     """
-    set_notebook_slug(notebook, project)
+    set_notebook_slug(filename=notebook, slug=project)
 
 
 @main.command("add-slack")
