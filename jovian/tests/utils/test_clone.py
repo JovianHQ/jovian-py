@@ -125,31 +125,105 @@ def test_clone(mock_get_gist, mock_requests_get):
             call("https://storage.com/slug2")
         ])
 
+        # Check that folder was created
         assert os.listdir() == ["metrics-example"]
+
+        # Check that files were downloaded
         assert set(os.listdir("metrics-example")) == {".jovianrc", "environment.yml", "metrics-example.ipynb"}
 
 
 @mock.patch("jovian.utils.clone.get")
 @mock.patch("jovian.utils.clone.get_gist")
+def test_clone_multiple(mock_get_gist, mock_requests_get):
+    with temp_directory() as dir:
+        mock_get_gist.return_value = {
+            "title": "metrics-example",
+            "files": [
+                {
+                    "filename": "metrics-example.ipynb",
+                    "artifact": False,
+                    "rawUrl": "https://storage.com/slug1"
+                },
+                {
+                    "filename": "environment.yml",
+                    "artifact": False,
+                    "rawUrl": "https://storage.com/slug2"
+                },
+            ],
+        }
+
+        get1, get2 = mock.Mock(), mock.Mock()
+        get1.content, get2.content = b"notebook content", b"environment content"
+
+        mock_requests_get.side_effect = [get1, get2] * 2
+
+        # first call
+        clone('aakashns/metrics-example', version='3')
+
+        os.chdir(dir)
+        # second call
+        clone('aakashns/metrics-example', version='3')
+
+        os.chdir(dir)
+
+        mock_get_gist.assert_called_with('aakashns/metrics-example', '3', True)
+        mock_requests_get.assert_has_calls([
+            call("https://storage.com/slug1"),
+            call("https://storage.com/slug2"),
+            call("https://storage.com/slug1"),
+            call("https://storage.com/slug2"),
+        ])
+
+        # Check that multiple folders were created
+        assert set(os.listdir()) == {"metrics-example", "metrics-example-1"}
+
+
+@mock.patch("jovian.utils.clone.get")
+@mock.patch("jovian.utils.clone.get_gist")
 def test_clone_fresh_false(mock_get_gist, mock_requests_get):
-    with temp_directory():
+    with temp_directory() as dir:
+        mock_get_gist.return_value = {
+            "title": "metrics-example",
+            "files": [
+                {
+                    "filename": "metrics-example.ipynb",
+                    "artifact": False,
+                    "rawUrl": "https://storage.com/slug1"
+                },
+                {
+                    "filename": "environment.yml",
+                    "artifact": False,
+                    "rawUrl": "https://storage.com/slug2"
+                },
+            ],
+        }
+
+        get1, get2 = mock.Mock(), mock.Mock()
+        get1.content, get2.content = b"notebook content", b"environment content"
+
+        mock_requests_get.side_effect = [get1, get2] * 2
+
         clone('aakashns/metrics-example', version='3', fresh=False)
+
+        os.chdir(dir)
+
         mock_get_gist.assert_called_with('aakashns/metrics-example', '3', False)
+        mock_requests_get.assert_has_calls([
+            call("https://storage.com/slug1"),
+            call("https://storage.com/slug2")
+        ])
+
+        # Check that directory was not created
+        assert "metrics-example" not in os.listdir()
+
+        # Check that files were downloaded
+        assert set(os.listdir()) == {"environment.yml", "metrics-example.ipynb"}
 
 
 @mock.patch("jovian.utils.clone.clone")
 def test_pull(mock_clone):
     pull('aakashns/metrics-example', version=3)
     mock_clone.assert_called_with('aakashns/metrics-example', 3, fresh=False)
-
-
-@mock.patch("jovian.utils.clone.rcfile_exists", return_value=False)
-def test_pull_rcfile_does_not_exist(mock_rcfile_exists, capsys):
-    pull()
-
-    expected_result = """[jovian] Error: Could not detect '.jovianrc' file. Make sure you are running 'jovian pull' inside a directory cloned with 'jovian clone'."""
-    captured = capsys.readouterr()
-    assert captured.err.strip() == expected_result.strip()
 
 
 @mock.patch("jovian.utils.clone.rcfile_exists", return_value=False)
