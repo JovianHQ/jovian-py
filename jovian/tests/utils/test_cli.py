@@ -1,7 +1,6 @@
 import pytest
 from click.testing import CliRunner
 from unittest import mock
-import pytest
 from jovian.cli import main
 
 
