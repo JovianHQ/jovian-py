@@ -3,6 +3,7 @@ import textwrap
 from contextlib import contextmanager
 from subprocess import check_call
 from tempfile import TemporaryDirectory
+from textwrap import dedent
 
 from jovian.utils import credentials
 from jovian.utils.credentials import purge_config, write_creds
@@ -76,6 +77,27 @@ def fake_records():
         yield
     finally:
         jovian.utils.records._data_blocks = _d
+
+
+@contextmanager
+def fake_envfile(fname='environment-test.yml'):
+    with temp_directory():
+        with open(fname, 'w') as f:
+            data = dedent("""
+            channels:
+                - defaults
+            dependencies:
+                - mixpanel=1.11.0
+                - sigmasix=1.91.0
+                - sqlite
+                - pip:
+                - six==1.11.0
+                - sqlite==2.0.0
+            name: test-env
+            prefix: /home/admin/anaconda3/envs/test-env
+            """)
+            f.write(data)
+        yield
 
 
 class MockResponse:

@@ -8,28 +8,7 @@ import pytest
 
 
 from jovian.utils.install import run_command, install, activate
-from jovian.tests.resources.shared import temp_directory
-
-
-@contextmanager
-def fake_envfile(fname='environment-test.yml'):
-    with temp_directory():
-        with open(fname, 'w') as f:
-            data = dedent("""
-            channels:
-                - defaults
-            dependencies:
-                - mixpanel=1.11.0
-                - sigmasix=1.91.0
-                - sqlite
-                - pip:
-                - six==1.11.0
-                - sqlite==2.0.0
-            name: test-env
-            prefix: /home/admin/anaconda3/envs/test-env
-            """)
-            f.write(data)
-        yield
+from jovian.tests.resources.shared import temp_directory, fake_envfile
 
 
 @pytest.mark.parametrize(
