@@ -54,7 +54,6 @@ from jovian.tests.resources.shared import temp_directory, fake_envfile
                 call().communicate()
             ]
         ),
-
     ]
 )
 @mock.patch("subprocess.Popen")
