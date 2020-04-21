@@ -80,8 +80,11 @@ def fake_records():
 
 
 @contextmanager
-def fake_envfile(fname='environment-test.yml'):
+def fake_envfile(fname='environment.yml'):
     with temp_directory():
+        with open('empty-yaml-file.yml', 'w') as f:
+            f.write("")
+
         with open(fname, 'w') as f:
             data = dedent("""
             channels:
@@ -91,8 +94,8 @@ def fake_envfile(fname='environment-test.yml'):
                 - sigmasix=1.91.0
                 - sqlite
                 - pip:
-                - six==1.11.0
-                - sqlite==2.0.0
+                    - six==1.11.0
+                    - sqlite==2.0.0
             name: test-env
             prefix: /home/admin/anaconda3/envs/test-env
             """)

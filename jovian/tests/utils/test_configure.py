@@ -88,7 +88,7 @@ def test_configure_confirm_yes(mock_confirm, mock_prompt, mock_validate_api_key,
         [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
         [jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
         [jovian] Configuration complete!
-        """).split()
+        """).strip()
 
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()
@@ -113,7 +113,7 @@ def test_configure_no_creds(mock_prompt, mock_validate_api_key, mock_get, capsys
         [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
         [jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
         [jovian] Configuration complete!
-        """).split()
+        """).strip()
 
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()
@@ -131,6 +131,6 @@ def test_configure_confirm_no(mock_confirm, capsys):
         expected_result = dedent("""
         [jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
         [jovian] Skipping..
-        """).split()
+        """).strip()
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()
