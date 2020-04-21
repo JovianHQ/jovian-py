@@ -22,18 +22,18 @@ except ImportError:
 
 
 def test_config_exits_false():
-    with fake_creds('.jovian-does-not-exist', 'credentials.json'):
+    with fake_creds():
         purge_config()
         assert config_exists() == False
 
 
 def test_config_exists_true():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert config_exists() == True
 
 
 def test_purge_config():
-    with fake_creds('.jovian-purge', 'credentials.json'):
+    with fake_creds():
         os.makedirs(credentials.CONFIG_DIR, exist_ok=True)
         assert config_exists() == True
         purge_config()
@@ -41,28 +41,28 @@ def test_purge_config():
 
 
 def test_get_creds_path():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert get_creds_path() == 'jovian/tests/resources/creds/.jovian/credentials.json'
 
 
 def test_init_config():
-    with fake_creds('.jovian-init-config', 'credentials.json'):
+    with fake_creds():
         init_config()
-        assert os.path.exists('jovian/tests/resources/creds/.jovian-init-config') == True
+        assert os.path.exists('jovian/tests/resources/creds/.jovian') == True
 
 
 def test_purge_creds():
-    with fake_creds('.jovian-purge-creds', 'credentials.json'):
+    with fake_creds():
         os.makedirs(credentials.CONFIG_DIR, exist_ok=True)
-        os.system('touch jovian/tests/resources/creds/.jovian-purge-creds/credentials.json')
-        assert os.path.exists('jovian/tests/resources/creds/.jovian-purge-creds/credentials.json') == True
+        os.system('touch jovian/tests/resources/creds/.jovian/credentials.json')
+        assert os.path.exists('jovian/tests/resources/creds/.jovian/credentials.json') == True
         purge_creds()
-        assert os.path.exists('jovian/tests/resources/creds/.jovian-purge-creds/credentials.json') == False
+        assert os.path.exists('jovian/tests/resources/creds/.jovian/credentials.json') == False
 
 
 class TestPurgeApiKey(TestCase):
     def test_purge_api_key(self):
-        with fake_creds('.jovian', 'credentials.json'):
+        with fake_creds():
             assert read_cred(API_TOKEN_KEY) == 'fake_api_key'
 
             purge_api_key()
@@ -72,13 +72,13 @@ class TestPurgeApiKey(TestCase):
 
 
 def test_read_creds_no_creds_folder():
-    with fake_creds('.jovian-no-creds', 'credentials.json'):
+    with fake_creds():
         purge_creds()
         assert read_creds() == {}
 
 
 def test_read_creds_folder_exists():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
                            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                            "ORG_ID": "staging",
@@ -94,34 +94,34 @@ def mock_json_load(*args, **kwargs):
 @mock.patch("jovian.utils.credentials.purge_creds", return_value=None)
 @mock.patch("json.load", side_effect=mock_json_load)
 def test_read_creds_with_value_error(mock_json_load, mock_purge_creds):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert read_creds() == {}
 
 
 def test_creds_exist_true():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert creds_exist() == True
 
 
 def test_creds_exist_false():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         purge_api_key()
 
         assert creds_exist() == False
 
 
 def test_read_cred_no_default():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert read_cred('ORG_ID') == 'staging'
 
 
 def test_read_cred_with_default():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert read_cred('FAKE_ID', 'default_value') == 'default_value'
 
 
 def test_write_creds():
-    with fake_creds('.jovian-write-creds', 'credentials.json'):
+    with fake_creds():
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -132,7 +132,7 @@ def test_write_creds():
 
 
 def test_write_cred():
-    with fake_creds('.jovian-write-cred', 'credentials.json'):
+    with fake_creds():
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -150,7 +150,7 @@ def test_write_cred():
 
 
 def test_write_cred_already_exists():
-    with fake_creds('.jovian-write-cred', 'credentials.json'):
+    with fake_creds():
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -164,7 +164,7 @@ def test_write_cred_already_exists():
 
 
 def test_purge_cred_key():
-    with fake_creds('.jovian-write-creds', 'credentials.json'):
+    with fake_creds():
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
@@ -181,7 +181,7 @@ def test_purge_cred_key():
 
 
 def test_write_api_url():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_api_url("https://fake_api.jovian.ai/")
 
         from jovian.utils.credentials import API_URL_KEY
@@ -189,13 +189,13 @@ def test_write_api_url():
 
 
 def test_read_api_url():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_api_url("https://fake_api.jovian.ai/")
         assert read_api_url() == "https://fake_api.jovian.ai/"
 
 
 def test_write_org_id():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_org_id("fake_org_id")
 
         from jovian.utils.credentials import ORG_ID_KEY
@@ -203,13 +203,13 @@ def test_write_org_id():
 
 
 def test_read_org_id():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_org_id("fake_org_id")
         assert read_org_id() == "fake_org_id"
 
 
 def test_write_webapp_url():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_webapp_url("http://fake-webapp-url.ai/")
 
         from jovian.utils.credentials import WEBAPP_URL_KEY
@@ -217,7 +217,7 @@ def test_write_webapp_url():
 
 
 def test_read_webapp_url():
-    with fake_creds('.jovian-write-api-url', 'credentials.json'):
+    with fake_creds():
         write_webapp_url("http://fake-webapp-url.ai/")
         assert read_webapp_url() == "http://fake-webapp-url.ai/"
 
@@ -268,7 +268,7 @@ def json_decode_error_raiser(*args, **kwargs):
 class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_all_creds_exist(self, mock_is_flavor_pro):
-        with fake_creds('.jovian', 'credentials.json'):
+        with fake_creds():
             assert ensure_org() == None
 
     @mock.patch("requests.get", side_effect=mock_requests_get)
@@ -276,7 +276,7 @@ class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_some_creds_exist_default_org_id(
             self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-some-creds', 'credentials.json'):
+        with fake_creds():
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -293,7 +293,7 @@ class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="fakecompany")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_with_connection_error(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-connection-error', 'credentials.json'):
+        with fake_creds():
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -304,14 +304,14 @@ class TestEnsureOrg(TestCase):
                 ensure_org()
 
             msg = "Failed to connect to https://fakecompany.jovian.ml/ . Please verify your organization ID and " + \
-                  "ensure you are connected to the internet."
+                "ensure you are connected to the internet."
             self.assertTrue(msg in context.exception.args[0])
 
     @mock.patch("requests.get", side_effect=mock_requests_get)
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="fakecompany")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_with_unsuccessful_response(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-unsuccessful-response', 'credentials.json'):
+        with fake_creds():
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -322,14 +322,14 @@ class TestEnsureOrg(TestCase):
                 ensure_org()
 
             msg = "Request to retrieve configuration file https://fakecompany.jovian.ml/config.json failed with " + \
-                  "status_code 500 . Looks like there's something wrong with your setup."
+                "status_code 500 . Looks like there's something wrong with your setup."
             self.assertTrue(msg in context.exception.args[0])
 
     @mock.patch("requests.get", side_effect=mock_requests_get)
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="jsonerror")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_with_json_decode_error(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-decode-error', 'credentials.json'):
+        with fake_creds():
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
@@ -346,7 +346,7 @@ class TestEnsureOrg(TestCase):
     @mock.patch("jovian.utils.credentials.request_org_id", return_value="no-api-key")
     @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
     def test_ensure_org_api_url_key_error(self, mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
-        with fake_creds('.jovian-api-key-error', 'credentials.json'):
+        with fake_creds():
             # setUp
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6"}
@@ -360,7 +360,7 @@ class TestEnsureOrg(TestCase):
 
 
 def test_write_api_key():
-    with fake_creds('.jovian-write-api-key', 'credentials.json'):
+    with fake_creds():
         write_api_key("fake_api_key")
 
         from jovian.utils.credentials import API_TOKEN_KEY
@@ -369,13 +369,13 @@ def test_write_api_key():
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
 def test_validate_api_key(mock_requests_get):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert validate_api_key('fake_correct_auth_key') == True
         assert validate_api_key('fake_invalid_auth_key') == False
 
 
 def test_write_guest_key():
-    with fake_creds('.jovian-write-guest-key', 'credentials.json'):
+    with fake_creds():
         write_guest_key("fake_guest_key")
 
         from jovian.utils.credentials import GUEST_TOKEN_KEY
@@ -388,25 +388,25 @@ def test_request_api_key(mock_prompt):
 
 
 def test_read_api_key_opt():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert read_api_key_opt() == ('fake_api_key', 'read')
 
 
 def test_read_api_key_opt_none():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         purge_api_key()
 
         assert read_api_key_opt() == (None, 'read')
 
 
 def test_read_or_request_api_key():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert read_or_request_api_key() == ('fake_api_key', 'read')
 
 
 @mock.patch("click.prompt", return_value="fake_api_key")
 def test_read_or_request_api_key_none(mock_prompt):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         purge_api_key()
 
         assert read_or_request_api_key() == ('fake_api_key', 'request')
@@ -418,13 +418,13 @@ def test_generate_guest_key(mock_uuid4):
 
 
 def test_read_or_generate_guest_key():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert _read_or_generate_guest_key() == "b6538d4dfde04fcf993463a828a9cec6"
 
 
 @mock.patch("uuid.uuid4", return_value=UUID('b66406dc-02c3-471b-ac27-d923fb4c6b1e'))
 def test_read_or_generate_guest_key_generate(mock_uuid4):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         purge_cred_key(GUEST_TOKEN_KEY)
         assert _read_or_generate_guest_key() == "b66406dc02c3471bac27d923fb4c6b1e"
 
@@ -435,13 +435,13 @@ def test_validate_guest_key():
 
 
 def test_get_guest_key():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         assert get_guest_key() == "b6538d4dfde04fcf993463a828a9cec6"
 
 
 @mock.patch("uuid.uuid4", return_value=UUID('b66406dc-02c3-471b-ac27-d923fb4c6b1e'))
 def test_get_guest_key_generate_key(mock_uuid4):
-    with fake_creds('.jovian-get-guest-key', 'credentials.json'):
+    with fake_creds():
         creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -453,7 +453,7 @@ def test_get_guest_key_generate_key(mock_uuid4):
 class TestGetApiKey(TestCase):
     @mock.patch("jovian.utils.credentials.validate_api_key", return_value=True)
     def test_get_api_key(self, mock_validate_api_key):
-        with fake_creds('.jovian-get-api-key', 'credentials.json'):
+        with fake_creds():
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "ORG_ID": "staging",
                      "API_KEY": "fake_api_key",
@@ -465,7 +465,7 @@ class TestGetApiKey(TestCase):
     @mock.patch("click.prompt", return_value="fake_api_key")
     @mock.patch("jovian.utils.credentials.validate_api_key", return_value=False)
     def test_get_api_key_api_error(self, mock_validate_api_key, mock_prompt):
-        with fake_creds('.jovian-get-api-key', 'credentials.json'):
+        with fake_creds():
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "ORG_ID": "staging",
                      "API_URL": "https://api-staging.jovian.ai"}
@@ -477,7 +477,7 @@ class TestGetApiKey(TestCase):
     @mock.patch("click.prompt", return_value="fake_api_key")
     @mock.patch("jovian.utils.credentials.validate_api_key", return_value=True)
     def test_get_api_key_request_once(self, mock_validate_api_key, mock_prompt):
-        with fake_creds('.jovian-get-api-key', 'credentials.json'):
+        with fake_creds():
             creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
                      "ORG_ID": "staging",
                      "API_URL": "https://api-staging.jovian.ai"}

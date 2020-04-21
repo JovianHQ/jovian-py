@@ -21,14 +21,14 @@ pip_env = dedent("""
         """)
 
 ENV_STR = dedent("""
-        name: jovian-py-dev
-        channels:
-        - defaults
-        dependencies:
-        - appnope=0.1.0
-        - blas=1.0
-        prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev
-    """).strip()
+            name: jovian-py-dev
+            channels:
+            - defaults
+            dependencies:
+            - appnope=0.1.0
+            - blas=1.0
+            prefix: /Users/rohitsanjay/miniconda3/envs/jovian-py-dev
+        """).strip()
 
 
 @mock.patch("os.popen")
