@@ -12,7 +12,7 @@ from jovian import __version__
 
 
 def test_h():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         expected_result = {"Authorization": "Bearer fake_api_key",
                            "x-jovian-source": "library",
                            "x-jovian-library-version": __version__,
@@ -34,7 +34,7 @@ def test_h():
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 200))
 def test_get_gist(mock_get):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         get_gist('aakashns/jovian-tutorial', 3, fresh=True)
 
         headers = {"Authorization": "Bearer fake_api_key",
@@ -50,7 +50,7 @@ def test_get_gist(mock_get):
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 200))
 def test_get_gist_only_gist_slug(mock_get):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         get_gist('fake_gist_slug', 3, fresh=True)
 
         headers = {"Authorization": "Bearer fake_api_key",
@@ -66,7 +66,7 @@ def test_get_gist_only_gist_slug(mock_get):
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 404))
 def test_get_gist_raises_exception(mock_get):
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         with pytest.raises(Exception):
             get_gist('does-not-exist', 3, fresh=True)
 

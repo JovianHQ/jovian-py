@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 
 import pytest
 
-from jovian.tests.resources.shared import MockResponse, fake_creds
+from jovian.tests.resources.shared import MockResponse
 from jovian.utils.request import _msg, get, post, pretty, retry
 
 

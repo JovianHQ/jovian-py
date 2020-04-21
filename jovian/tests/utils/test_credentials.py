@@ -43,23 +43,21 @@ def test_purge_config():
 
 
 def test_get_creds_path():
-    with fake_creds():
-        assert get_creds_path() == 'jovian/tests/resources/creds/.jovian/credentials.json'
+    with fake_creds() as dir:
+        assert get_creds_path() == os.path.join(dir, '.jovian/credentials.json')
 
 
 def test_init_config():
-    with fake_creds():
+    with fake_creds() as dir:
         init_config()
-        assert os.path.exists('jovian/tests/resources/creds/.jovian') == True
+        assert os.path.exists(os.path.join(dir, '.jovian')) == True
 
 
 def test_purge_creds():
-    with fake_creds():
-        os.makedirs(credentials.CONFIG_DIR, exist_ok=True)
-        os.system('touch jovian/tests/resources/creds/.jovian/credentials.json')
-        assert os.path.exists('jovian/tests/resources/creds/.jovian/credentials.json') == True
+    with fake_creds() as dir:
+        assert os.path.exists(os.path.join(dir, '.jovian/credentials.json')) == True
         purge_creds()
-        assert os.path.exists('jovian/tests/resources/creds/.jovian/credentials.json') == False
+        assert os.path.exists(os.path.join(dir, '.jovian/credentials.json')) == False
 
 
 def test_purge_api_key():
@@ -327,7 +325,8 @@ def test_ensure_org_some_creds_exist_default_org_id(
 )
 @mock.patch("jovian.utils.credentials.is_flavor_pro", return_value=True)
 def test_ensure_org_pro_raises_error(mock_is_flavor_pro, get_side_effect, request_org_id, creds, msg):
-    with fake_creds(), mock.patch("jovian.utils.credentials.request_org_id", return_value=request_org_id), \
+    with fake_creds(), \
+            mock.patch("jovian.utils.credentials.request_org_id", return_value=request_org_id), \
             mock.patch("requests.get", side_effect=get_side_effect):
 
         write_creds(creds)
@@ -346,11 +345,17 @@ def test_write_api_key():
         assert read_cred(API_TOKEN_KEY) == "fake_api_key"
 
 
+@pytest.mark.parametrize(
+    "api_key, expected_result",
+    [
+        ("fake_correct_auth_key", True),
+        ("fake_invalid_auth_key", False),
+    ]
+)
 @mock.patch("requests.get", side_effect=mock_requests_get)
-def test_validate_api_key(mock_requests_get):
+def test_validate_api_key(mock_requests_get, api_key, expected_result):
     with fake_creds():
-        assert validate_api_key('fake_correct_auth_key') == True
-        assert validate_api_key('fake_invalid_auth_key') == False
+        assert validate_api_key(api_key) == expected_result
 
 
 def test_write_guest_key():
@@ -363,7 +368,7 @@ def test_write_guest_key():
 
 @mock.patch("click.prompt", return_value="fake_api_key")
 def test_request_api_key(mock_prompt):
-    assert request_org_id() == "fake_api_key"
+    assert request_api_key() == "fake_api_key"
 
 
 def test_read_api_key_opt():

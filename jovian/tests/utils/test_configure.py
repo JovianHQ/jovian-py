@@ -1,4 +1,5 @@
 from tempfile import TemporaryDirectory
+from textwrap import dedent
 from unittest import TestCase, mock
 from unittest.mock import ANY
 import pytest
@@ -81,13 +82,13 @@ def test_configure_confirm_yes(mock_confirm, mock_prompt, mock_validate_api_key,
                                 'ORG_ID': 'staging',
                                 'WEBAPP_URL': 'https://staging.jovian.ml/'}
 
-        expected_result = """
-[jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
-[jovian] Removing existing configuration..
-[jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
-[jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
-[jovian] Configuration complete!
-"""
+        expected_result = dedent("""
+        [jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
+        [jovian] Removing existing configuration..
+        [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
+        [jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
+        [jovian] Configuration complete!
+        """).split()
 
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()
@@ -108,11 +109,11 @@ def test_configure_no_creds(mock_prompt, mock_validate_api_key, mock_get, capsys
                                 'ORG_ID': 'staging',
                                 'WEBAPP_URL': 'https://staging.jovian.ml/'}
 
-        expected_result = """
-[jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
-[jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
-[jovian] Configuration complete!
-"""
+        expected_result = dedent("""
+        [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
+        [jovian] Please enter your API key ( from https://staging.jovian.ml/ ):
+        [jovian] Configuration complete!
+        """).split()
 
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()
@@ -127,9 +128,9 @@ def test_configure_confirm_no(mock_confirm, capsys):
         # Check that creds were not modified
         assert read_creds() == creds
 
-        expected_result = """
-[jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
-[jovian] Skipping..
-"""
+        expected_result = dedent("""
+        [jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
+        [jovian] Skipping..
+        """).split()
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result.strip()

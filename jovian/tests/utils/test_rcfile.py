@@ -6,7 +6,7 @@ from contextlib import contextmanager
 
 import pytest
 
-from jovian.tests.resources.shared import temp_directory
+from jovian.tests.resources.shared import temp_directory, fake_rcdata
 from jovian.utils.constants import RC_FILENAME
 from jovian.utils.rcfile import (get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists, save_rcdata,
                                  set_notebook_slug)
@@ -58,7 +58,7 @@ def test_get_rcdata():
         }
         assert get_rcdata() == expected_result
 
-    with fake_rc():
+    with fake_rcdata():
         assert get_rcdata() == _data
 
 
@@ -70,12 +70,12 @@ def test_get_rcdata():
     ]
 )
 def test_get_notebook_slug_notebook_present(filename, expected_result):
-    with fake_rc():
+    with fake_rcdata():
         assert get_notebook_slug(filename) == expected_result
 
 
 def test_set_notebook_slug():
-    with fake_rc():
+    with fake_rcdata():
         filename = "Testing Jovian 2.ipynb"
         slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
 

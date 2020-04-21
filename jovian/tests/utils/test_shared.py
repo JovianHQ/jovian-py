@@ -8,7 +8,7 @@ def test_v():
 
 
 def test_u():
-    with fake_creds('.jovian', 'credentials.json'):
+    with fake_creds():
         path = 'user/profile'
 
         assert _u(path) == 'https://api-staging.jovian.ai/user/profile'

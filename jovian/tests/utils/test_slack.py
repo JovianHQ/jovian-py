@@ -12,7 +12,7 @@ from jovian.utils.slack import _h, add_slack, notify
 
 
 def test_h():
-    with fake_creds(".jovian", "credentials.json"):
+    with fake_creds():
         expected_result = {
             "Authorization": "Bearer fake_api_key",
             "x-jovian-source": "library",
