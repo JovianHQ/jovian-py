@@ -20,7 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install Cython --install-option="--no-cython-compile"
           pip install -r requirements.txt
-          pip install torch==1.4.0 
+          pip install torch
           pip install fastai==1.0.60
       - name: Test with pytest
         env:
