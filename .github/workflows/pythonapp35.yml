@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
+        python-version: [3.5]
 
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
           pip install Cython --install-option="--no-cython-compile"
           pip install -r requirements.txt
           pip install torch==1.4.0 
-          pip install fastai==1.0.60
+          pip install fastai
           pip install tensorflow==2.1.0
           pip install keras==2.3.1
       - name: Test with pytest
