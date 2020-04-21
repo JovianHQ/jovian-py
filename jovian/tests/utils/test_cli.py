@@ -88,6 +88,20 @@ def runner():
             ["set-project", "my_notebook.ipynb", "danb/keras-example"],
             {"filename": "my_notebook.ipynb", "slug": "danb/keras-example"}
         ),
+
+        # help
+        (
+            "main",
+            ["help"],
+            {}
+        ),
+
+        # version
+        (
+            "main",
+            ["version"],
+            {}
+        )
     ]
 )
 def test_cli(func, cli_args, called_with_args, runner):
