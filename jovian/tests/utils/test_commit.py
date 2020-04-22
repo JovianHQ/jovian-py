@@ -1,14 +1,15 @@
+import functools
 import os
 import shutil
-import pytest
-import functools
+from contextlib import contextmanager
+from textwrap import dedent
 from unittest import mock
 from unittest.mock import ANY, call
-from contextlib import contextmanager
 
-from jovian.utils.commit import (_parse_filename, _parse_project, _attach_file,
-                                 _attach_files, _capture_environment, _perform_git_commit, _attach_records, commit)
-from jovian.tests.resources.shared import fake_creds, temp_directory, mock_git_repo, fake_records
+import pytest
+from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory
+from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _parse_filename,
+                                 _parse_project, _perform_git_commit, commit)
 from jovian.utils.error import CondaError
 
 
@@ -49,139 +50,142 @@ def mock_get_gist(project):
     return responses[project]
 
 
+@pytest.mark.parametrize(
+    "filename, expected_result",
+    [
+        (None, 'fake-script.py'),
+        ('script.py', 'script.py'),
+        ('script.txt', 'script.txt.py')
+    ]
+)
 @mock.patch("jovian.utils.commit.get_script_filename", return_value='fake-script.py')
 @mock.patch("jovian.utils.commit.in_script", return_value=True)
-def test_parse_filename_in_script(mock_in_script, mock_get_script_filename):
-    assert _parse_filename(filename=None) == 'fake-script.py'
-
-    assert _parse_filename('script.py') == 'script.py'
-
-    assert _parse_filename('script.txt') == 'script.txt.py'
+def test_parse_filename_in_script(mock_in_script, mock_get_script_filename, filename, expected_result):
+    assert _parse_filename(filename=filename) == expected_result
 
 
+@pytest.mark.parametrize(
+    "filename, expected_result",
+    [
+        (None, 'fake-notebook.ipynb'),
+        ('notebook.ipynb', 'notebook.ipynb'),
+        ('notebook.txt', 'notebook.txt.ipynb')
+    ]
+)
 @mock.patch("jovian.utils.commit.in_script", return_value=False)
 @mock.patch("jovian.utils.commit.get_notebook_name", return_value='fake-notebook.ipynb')
 @mock.patch("jovian.utils.commit.in_notebook", return_value=True)
-def test_parse_filename_in_notebook(mock_in_notebook, mock_get_script_name, mock_in_script):
-    assert _parse_filename(filename=None) == 'fake-notebook.ipynb'
-
-    assert _parse_filename('notebook.ipynb') == 'notebook.ipynb'
-
-    assert _parse_filename('notebook.txt') == 'notebook.txt.ipynb'
+def test_parse_filename_in_notebook(mock_in_notebook, mock_get_script_name, mock_in_script, filename, expected_result):
+    assert _parse_filename(filename=filename) == expected_result
 
 
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
+@pytest.mark.parametrize(
+    "get_gist_side_effect, get_gist_access_return_value, args, expected_result",
+    [
+        (
+            mock_get_gist,
+            {"write": True},
+            {
+                "project": None,
+                "filename": "file.ipynb",
+                "new_project": False,
+            },
+            ("demo-notebook", "f67108fc906341d8b15209ce88ebc3d2")
+        ),
+        (
+            mock_get_gist,
+            {"write": True},
+            {
+                "project": "rohit/time-series",
+                "filename": "file.ipynb",
+                "new_project": False,
+            },
+            ("demo-notebook", "f67108fc906341d8b15209ce88ebc3d2")
+        ),
+        (
+            mock_get_gist,
+            {"write": True},
+            {
+                "project": "time-series",
+                "filename": "file.ipynb",
+                "new_project": True,
+            },
+            ("demo-notebook", "f67108fc906341d8b15209ce88ebc3d2")
+        ),
+        (
+            [None],
+            {"write": False},
+            {
+                "project": "time-series",
+                "filename": "file.ipynb",
+                "new_project": True,
+            },
+            ("time-series", None)
+        ),
+        (
+            mock_get_gist,
+            {"write": False},
+            {
+                "project": "time-series",
+                "filename": "file.ipynb",
+                "new_project": True,
+            },
+            ("demo-notebook", None)
+        ),
+        (
+            mock_get_gist,
+            {"write": False},
+            {
+                "project": "rohit/time-series-new",
+                "filename": "file.ipynb",
+                "new_project": True,
+            },
+            ("demo-notebook", None)
+        ),
+        (
+            None,
+            None,
+            {
+                "project": None,
+                "filename": "file.ipynb",
+                "new_project": True,
+            },
+            (None, None)
+        ),
+
+    ]
+)
 @mock.patch("jovian.utils.commit._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_in_memory(mock_current_slug, mock_get_gist_access):
-    with fake_creds():
-        assert _parse_project(
-            project=None,
-            filename='file.ipynb',
-            new_project=False) == ('demo-notebook', 'f67108fc906341d8b15209ce88ebc3d2')
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_from_jovianrc(mock_get_notebook_slug, mock_get_gist_access, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project=None,
-            filename='file.ipynb',
-            new_project=False) == ('demo-notebook', 'f67108fc906341d8b15209ce88ebc3d2')
-
-
-def test_parse_project_none():
-    with fake_creds():
-        assert _parse_project(project=None, filename='file.ipynb', new_project=True) == (None, None)
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_username_title(mock_get_notebook_slug, mock_get_gist_access, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project='rohit/time-series',
-            filename='file.ipynb',
-            new_project=True) == ('demo-notebook', 'f67108fc906341d8b15209ce88ebc3d2')
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
 @mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_only_title(mock_get_notebook_slug, mock_get_gist_access, mock_get_current_user, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project='time-series',
-            filename='file.ipynb',
-            new_project=True) == ('demo-notebook', 'f67108fc906341d8b15209ce88ebc3d2')
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", return_value=None)
-@mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_only_title_no_metadata(
-        mock_get_notebook_slug, mock_get_gist_access, mock_get_current_user, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project='time-series',
-            filename='file.ipynb',
-            new_project=True) == ('time-series', None)
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
-@mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': False})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_only_title_no_metadata_no_commit_permission(
-        mock_get_notebook_slug, mock_get_gist_access, mock_get_current_user, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project='time-series',
-            filename='file.ipynb',
-            new_project=True) == ('demo-notebook', None)
-
-
-@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
-@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={'write': True})
-@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="f67108fc906341d8b15209ce88ebc3d2")
-def test_parse_project_project_id_none(mock_get_notebook_slug, mock_get_gist_access, mock_get_gist):
-    with fake_creds():
-        assert _parse_project(
-            project='rohit/time-series-new',
-            filename='file.ipynb',
-            new_project=True) == ('demo-notebook', None)
+def test_parse_project(
+        mock_get_current_user, get_gist_side_effect, get_gist_access_return_value, args, expected_result):
+    with mock.patch("jovian.utils.commit.api.get_gist", side_effect=get_gist_side_effect), \
+            mock.patch("jovian.utils.commit.api.get_gist_access", return_value=get_gist_access_return_value):
+        with fake_creds():
+            assert _parse_project(**args) == expected_result
 
 
 @mock.patch("jovian.utils.commit.api.upload_file")
 def test_attach_file(mock_upload_file):
-    # setUp
-    os.system('touch tempfile.txt')
+    def upload_file_error(*args, **kwargs):
+        raise Exception('fake error')
 
-    try:
+    mock_upload_file.side_effect = upload_file_error
+
+    with temp_directory():
+        os.system('touch tempfile.txt')
+
         _attach_file('tempfile.txt', 'fake_gist_slug', version=2)
         mock_upload_file.assert_called_with('fake_gist_slug', ('tempfile.txt', ANY), ANY, 2, False)
-    finally:
-        # tearDown
-        os.system('rm tempfile.txt')
 
 
-def mock_upload_file(*args, **kwargs):
-    raise Exception('fake error')
+def test_attach_file_raises_error(capsys):
+    with temp_directory():
+        _attach_file('tempfile.txt', 'fake_gist_slug', version=2)
 
-
-@mock.patch("jovian.utils.commit.api.upload_file", side_effect=mock_upload_file)
-def test_attach_file_raises_error(mock_upload_file, capsys):
-
-    _attach_file('tempfile.txt', 'fake_gist_slug', version=2)
-
-    expected_result = "[jovian] Error: [Errno 2] No such file or directory: 'tempfile.txt' (tempfile.txt)"
-    captured = capsys.readouterr()
-    assert captured.err.strip() == expected_result
+        expected_result = "[jovian] Error: [Errno 2] No such file or directory: 'tempfile.txt' (tempfile.txt)"
+        captured = capsys.readouterr()
+        assert captured.err.strip() == expected_result
 
 
 @mock.patch("jovian.utils.commit._attach_file")
@@ -217,66 +221,61 @@ def test_attach_files(mock_attach_file, files, mock_calls, capsys):
 @mock.patch("jovian.utils.commit.upload_conda_env")
 def test_capture_environment(mock_upload_conda_env):
     _capture_environment('conda', 'fake_gist_slug', 2)
+
     mock_upload_conda_env.assert_called_with('fake_gist_slug', 2)
-
-
-def conda_error_raiser(*args, **kwargs):
-    raise CondaError('fake error')
 
 
 @mock.patch("jovian.utils.commit.upload_pip_env")
-@mock.patch("jovian.utils.commit.upload_conda_env", side_effect=conda_error_raiser)
-def test_capture_environment_conda_error(mock_upload_conda_env, mock_upload_pip_env, capsys):
-    _capture_environment('auto', 'fake_gist_slug', 2)
-    mock_upload_conda_env.assert_called_with('fake_gist_slug', 2)
-    mock_upload_pip_env.assert_called_with('fake_gist_slug', 2)
-
-    expected_result = "[jovian] Error: fake error"
-    captured = capsys.readouterr()
-    assert captured.err.strip() == expected_result
-
-
-def pip_exception_raiser(*args, **kwargs):
-    raise Exception('fake exception')
-
-
-@mock.patch("jovian.utils.commit.upload_pip_env", side_effect=pip_exception_raiser)
-@mock.patch("jovian.utils.commit.upload_conda_env", side_effect=conda_error_raiser)
+@mock.patch("jovian.utils.commit.upload_conda_env")
 def test_capture_environment_conda_error_and_pip_exception(mock_upload_conda_env, mock_upload_pip_env, capsys):
+
+    def conda_error_raiser(*args, **kwargs):
+        raise CondaError('fake conda error')
+
+    def pip_exception_raiser(*args, **kwargs):
+        raise Exception('fake pip error')
+
+    mock_upload_conda_env.side_effect = conda_error_raiser
+    mock_upload_pip_env.side_effect = pip_exception_raiser
+
     _capture_environment('auto', 'fake_gist_slug', 2)
+
     mock_upload_conda_env.assert_called_with('fake_gist_slug', 2)
     mock_upload_pip_env.assert_called_with('fake_gist_slug', 2)
 
-    expected_result = "[jovian] Error: fake error\n[jovian] Error: fake exception"
+    expected_result = dedent("""
+            [jovian] Error: fake conda error
+            [jovian] Error: fake pip error
+            """).strip()
     captured = capsys.readouterr()
     assert captured.err.strip() == expected_result
 
 
-def mock_api_post_block(*args, **kwargs):
-    data = {
-        'count': 1,
-        'tracking': {
-            'createdAt': 1577270059593,
-            'updatedAt': None, 'gistSlug': None,
-            'trackingSlug': 'fake_slug_3',
-            'gistVersion': None
-        }
-    }
-
-    return data
-
-
-@mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
-def test_perform_git_commit(mock_api_post_block, capsys):
+@mock.patch("jovian.utils.commit.log_git")
+def test_perform_git_commit(mock_log_git, capsys):
     with mock_git_repo():
         os.system("echo \"hello world\" >> file.txt")
+
         _perform_git_commit(filename='file.txt', git_commit=True, git_message='added file.txt')
 
+        # Assert that commit took place
         assert os.popen('git show -s --format=%s HEAD').read().strip() == 'added file.txt'
 
+        # Assert that it was logged
         expected_result = "[jovian] Git repository identified. Performing git commit..."
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
+
+        mock_log_git.assert_called_with(
+            {
+                'repository': 'https://github.com/JovianML/mock_repo',
+                'commit': ANY,
+                'filename': 'file.txt',
+                'path': '.',
+                'branch': 'master'
+            },
+            verbose=False
+        )
 
 
 @mock.patch("jovian.utils.commit.api.post_records")
@@ -308,15 +307,15 @@ def test_commit_deprecated_args_unsupported_environment(mock_in_script, mock_in_
         create_new=True,
         artifacts=['file1', 'file2'])
 
-    expected_result = """
-[jovian] Error: "secret" is deprecated. Use "privacy" instead (allowed options: "public", "private", "secret", "auto")
-[jovian] Error: "nb_filename" is deprecated. Use "filename" instead
-[jovian] Error: "env_type" is deprecated. Use "environment" instead
-[jovian] Error: "catpure_env" is deprecated. Use "environment=None" instead
-[jovian] Error: "notebook_id" is deprecated. Use "project" instead.
-[jovian] Error: "create_new" is deprecated. Use "new_project" instead.
-[jovian] Error: "artifacts" is deprecated. Use "outputs" instead
-[jovian] Error: Failed to detect Jupyter notebook or Python script. Skipping.."""
+    expected_result = dedent("""
+            [jovian] Error: "secret" is deprecated. Use "privacy" instead (allowed options: "public", "private", "secret", "auto")
+            [jovian] Error: "nb_filename" is deprecated. Use "filename" instead
+            [jovian] Error: "env_type" is deprecated. Use "environment" instead
+            [jovian] Error: "catpure_env" is deprecated. Use "environment=None" instead
+            [jovian] Error: "notebook_id" is deprecated. Use "project" instead.
+            [jovian] Error: "create_new" is deprecated. Use "new_project" instead.
+            [jovian] Error: "artifacts" is deprecated. Use "outputs" instead
+            [jovian] Error: Failed to detect Jupyter notebook or Python script. Skipping..""")
 
     captured = capsys.readouterr()
     assert captured.err.strip() == expected_result.strip()
@@ -331,9 +330,9 @@ def test_commit_in_notebook_filename_none(
 
     commit('initial commit')
 
-    expected_result = """
-[jovian] Attempting to save notebook..
-[jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    expected_result = dedent("""
+        [jovian] Attempting to save notebook..
+        [jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
     captured = capsys.readouterr()
     assert captured.out.strip() == expected_result.strip()
 
