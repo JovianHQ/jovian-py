@@ -31,14 +31,3 @@ jobs:
           git config --global user.name ${GITHUB_NAME}
           pip install pytest
           pytest
-      - name: Generate coverage report
-        run: |
-          pip install pytest-cov
-          python -m pytest -W ignore::DeprecationWarning --cov-config .coveragerc --cov-report xml --cov=jovian jovian/tests
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: true
