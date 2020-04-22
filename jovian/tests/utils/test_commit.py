@@ -427,32 +427,30 @@ def test_attach_records(mock_api_post_records, capsys):
         assert captured.out.strip() == expected_result
 
 
+@pytest.mark.parametrize(
+    "commit_kwargs, expected_result",
+    [({"secret": True},
+      """[jovian] Error: "secret" is deprecated. Use "privacy" instead (allowed options: "public", "private", "secret", "auto")"""),
+     ({"nb_filename": 'file'},
+      """[jovian] Error: "nb_filename" is deprecated. Use "filename" instead"""),
+     ({"env_type": "conda"},
+      """[jovian] Error: "env_type" is deprecated. Use "environment" instead"""),
+     ({"capture_env": False},
+      """[jovian] Error: "catpure_env" is deprecated. Use "environment=None" instead"""),
+     ({"notebook_id": "fake_notebook_id"},
+      """[jovian] Error: "notebook_id" is deprecated. Use "project" instead."""),
+     ({"create_new": True},
+      """[jovian] Error: "create_new" is deprecated. Use "new_project" instead."""),
+     ({"artifacts": ['file1', 'file2']},
+      """[jovian] Error: "artifacts" is deprecated. Use "outputs" instead"""), ])
 @mock.patch("jovian.utils.commit.in_notebook", return_value=False)
 @mock.patch("jovian.utils.commit.in_script", return_value=False)
-def test_commit_deprecated_args(mock_in_script, mock_in_notebook, capsys):
+def test_commit_deprecated_args(mock_in_script, mock_in_notebook, commit_kwargs, expected_result, capsys):
 
-    commit(
-        message="this is the first commit",
-        secret=True,
-        nb_filename='file',
-        env_type="conda",
-        capture_env=False,
-        notebook_id='fake_notebook_id',
-        create_new=True,
-        artifacts=['file1', 'file2'])
-
-    expected_result = dedent("""
-            [jovian] Error: "secret" is deprecated. Use "privacy" instead (allowed options: "public", "private", "secret", "auto")
-            [jovian] Error: "nb_filename" is deprecated. Use "filename" instead
-            [jovian] Error: "env_type" is deprecated. Use "environment" instead
-            [jovian] Error: "catpure_env" is deprecated. Use "environment=None" instead
-            [jovian] Error: "notebook_id" is deprecated. Use "project" instead.
-            [jovian] Error: "create_new" is deprecated. Use "new_project" instead.
-            [jovian] Error: "artifacts" is deprecated. Use "outputs" instead
-            [jovian] Error: Failed to detect Jupyter notebook or Python script. Skipping..""")
-
+    commit(message="this is the first commit", **commit_kwargs)
     captured = capsys.readouterr()
-    assert captured.err.strip() == expected_result.strip()
+    assert captured.err.strip() == \
+        expected_result.strip() + """\n[jovian] Error: Failed to detect Jupyter notebook or Python script. Skipping.."""
 
 
 @mock.patch("jovian.utils.commit.save_notebook", return_value=None)
