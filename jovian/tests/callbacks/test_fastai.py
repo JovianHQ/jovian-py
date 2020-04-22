@@ -15,11 +15,9 @@ except ImportError:
 
 @pytest.fixture
 def learn():
-    tfms = get_transforms(do_flip=False)
     data = (ImageList.from_folder(PosixPath("./jovian/tests/resources/mnist_tiny"))
             .split_by_folder()
             .label_from_folder()
-            .transform(tfms, size=32)
             .databunch()
             .normalize(imagenet_stats))
     data.batch_size = 2
