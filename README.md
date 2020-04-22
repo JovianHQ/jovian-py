@@ -3,8 +3,9 @@
 ![](/docs/jovian_horizontal_logo.svg)
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian.ml/docs/)
-![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)
-![Code](https://codecov.io/gh/JovianML/jovian-py/branch/unit-testing-5/graph/badge.svg)
+![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)]
+[![Code Coverage](https://codecov.io/gh/JovianML/jovian-py/branch/master/graph/badge.svg)](https://codecov.io/gh/JovianML/jovian-py)
+
 
 [Jovian.ml](https://www.jovian.ml?utm_source) is a platform for sharing and collaboraring on Jupyter notebooks and data science projects. `jovian-py` is an open-source Python package for uploading your data science code, Jupyter notebooks, ML models, hyperparameters, metrics etc. to your Jovian.ml account. 
 
