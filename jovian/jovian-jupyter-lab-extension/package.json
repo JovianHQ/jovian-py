@@ -7,9 +7,9 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "Jovian",
+  "homepage": "https://www.jovian.ml",
   "bugs": {
-    "url": "https://www.jovian.ml"
+    "url": "https://github.com/JovianML/jovian-support/issues"
   },
   "license": "BSD-3-Clause",
   "author": "Mayank Saboo",
