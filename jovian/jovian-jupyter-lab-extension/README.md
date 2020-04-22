@@ -86,6 +86,7 @@ Once the API key has been validated, you can start committing to [Jovian](https:
 
 <img src="https://i.imgur.com/BBesRzu.png" class="screenshot" alt="jovian commit success prompt">
 
+## _Comming Soon!_
 ## Commit with more options
 
 This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
@@ -106,10 +107,10 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 ## Install Jovian Juputer Lab Extension
 
-You can use NPM to install the extension by running the following command.
+You can install the extension by running the following command.
 
-```
-$ Coming soon
+```shell
+$ jupyter labextension install jovian-lab-ext-test
 ```
 
 ## Enable or Disable the extension
@@ -117,13 +118,13 @@ $ Coming soon
 You can also disable the extension by running the following command.
 
 ```
-$ jupyter labextension disable Jovian
+$ jupyter labextension disable jovian-lab-ext-test
 ```
 
 To Enable the Notebook Extension, when you have manually disabled it.
 
 ```
-$ jupyter labextension enable Jovian
+$ jupyter labextension enable jovian-lab-ext-test
 ```
 
 ## Contributing
@@ -136,7 +137,7 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Move to sampleButtonExt directory
+# Move to jovian-lab-ext-test directory
 # Install dependencies
 jlpm
 # Build Typescript source
@@ -161,5 +162,5 @@ jupyter lab --watch
 ### Uninstall
 
 ```bash
-jupyter labextension uninstall sampleButtonExt
+jupyter labextension uninstall jovian-lab-ext-test
 ```
