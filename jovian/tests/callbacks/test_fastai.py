@@ -1,7 +1,8 @@
+import os
 import sys
 from unittest import mock
 from unittest.mock import ANY
-
+from pathlib import Path
 import pytest
 try:
     from fastai import *
@@ -14,10 +15,8 @@ except ImportError:
 
 @pytest.fixture
 def learn():
-    mnist = untar_data(URLs.MNIST_TINY)
     tfms = get_transforms(do_flip=False)
-
-    data = (ImageList.from_folder(mnist)
+    data = (ImageList.from_folder("./jovian/tests/resources/mnist_tiny")
             .split_by_folder()
             .label_from_folder()
             .transform(tfms, size=32)
@@ -28,7 +27,6 @@ def learn():
     return learn
 
 
-@pytest.mark.skip(reason="need to deal with latest version of torch and torchvision")
 @mock.patch("jovian.callbacks.fastai.log_hyperparams")
 @mock.patch("jovian.callbacks.fastai.log_metrics")
 def test_on_train_begin_and_on_epoch_end(mock_log_metrics, mock_log_hyperparams, learn):

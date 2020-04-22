@@ -17,7 +17,6 @@ from jovian.tests.resources.shared import temp_directory, fake_envfile
         (
             [(None, b'')],
             [
-                call(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=ANY),
                 call().communicate()
             ]
@@ -25,7 +24,6 @@ from jovian.tests.resources.shared import temp_directory, fake_envfile
         (
             [(None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""), (None, b'')],
             [
-                call(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=ANY),
                 call().communicate(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=-1),
@@ -37,7 +35,6 @@ from jovian.tests.resources.shared import temp_directory, fake_envfile
              (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0"""),
              (None, b"""ResolvePackageNotFound: \n- mixpanel=1.11.0""")],
             [
-                call(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=ANY),
                 call().communicate(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=ANY),
@@ -49,7 +46,6 @@ from jovian.tests.resources.shared import temp_directory, fake_envfile
         (
             [(None, b"""Pip failed""")],
             [
-                call(),
                 call('conda env update --file environment.yml --name environment-name', shell=True, stderr=ANY),
                 call().communicate()
             ]

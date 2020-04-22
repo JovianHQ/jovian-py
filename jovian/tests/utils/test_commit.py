@@ -55,7 +55,7 @@ def mock_get_gist(project):
     [
         (None, 'fake-script.py'),
         ('script.py', 'script.py'),
-        ('script.txt', 'script.txt.py')
+        ('script', 'script.py')
     ]
 )
 @mock.patch("jovian.utils.commit.get_script_filename", return_value='fake-script.py')
@@ -69,7 +69,7 @@ def test_parse_filename_in_script(mock_in_script, mock_get_script_filename, file
     [
         (None, 'fake-notebook.ipynb'),
         ('notebook.ipynb', 'notebook.ipynb'),
-        ('notebook.txt', 'notebook.txt.ipynb')
+        ('notebook', 'notebook.ipynb')
     ]
 )
 @mock.patch("jovian.utils.commit.in_script", return_value=False)
@@ -177,11 +177,6 @@ def test_parse_project_from_rcfile(mock_get_gist_access, mock_get_gist, mock_get
 
 @mock.patch("jovian.utils.commit.api.upload_file")
 def test_attach_file(mock_upload_file):
-    def upload_file_error(*args, **kwargs):
-        raise Exception('fake error')
-
-    mock_upload_file.side_effect = upload_file_error
-
     with temp_directory():
         os.system('touch tempfile.txt')
 
@@ -200,7 +195,7 @@ def test_attach_file_raises_error(capsys):
 
 @mock.patch("jovian.utils.commit._attach_file")
 @pytest.mark.parametrize(
-    "args, extra_config, mock_calls",
+    "attach_files_kwargs, extra_config, mock_calls",
     [
         (
             {"paths": []},
@@ -257,6 +252,15 @@ def test_attach_file_raises_error(capsys):
             []
         ),
         (
+            {"paths": [], "output": True},
+            {
+                "DEFAULT_CONFIG": {
+                    "UPLOAD_WORKING_DIRECTORY": True
+                }
+            },
+            []
+        ),
+        (
             {"paths": [], "exclude_files": "notebook.ipynb"},
             {
                 "DEFAULT_CONFIG": {
@@ -295,15 +299,10 @@ def test_attach_file_raises_error(capsys):
                 call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
             ]
         ),
-        (
-            {"paths": [], "output": True},
-            {},
-            []
-        ),
     ]
 )
-def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
-    with fake_creds(extra=extra_config), temp_directory():
+def test_attach_files(mock_attach_file, attach_files_kwargs, extra_config, mock_calls, capsys):
+    with fake_creds(extra=extra_config):
 
         os.makedirs('tempdir/subdir')
         os.system('touch tempdir/file.txt && touch tempdir/subdir/file1.txt')
@@ -323,7 +322,7 @@ def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
         for file in invalid_files:
             os.system("touch invalid/{}".format(file))
 
-        _attach_files(gist_slug='fake_gist_slug', version=2, **args)
+        _attach_files(gist_slug='fake_gist_slug', version=2, **attach_files_kwargs)
 
         mock_attach_file.assert_has_calls(mock_calls, any_order=True)
 
@@ -420,7 +419,8 @@ def test_attach_records(mock_api_post_records, capsys):
         mock_api_post_records.assert_called_with(
             'fake_gist_slug',
             ['fake_slug_metrics_1', 'fake_slug_metrics_2', 'fake_slug_hyperparams_1', 'fake_slug_hyperparams_2'],
-            2)
+            2
+        )
 
         expected_result = "[jovian] Attaching records (metrics, hyperparameters, dataset etc.)"
         captured = capsys.readouterr()
@@ -429,7 +429,7 @@ def test_attach_records(mock_api_post_records, capsys):
 
 @mock.patch("jovian.utils.commit.in_notebook", return_value=False)
 @mock.patch("jovian.utils.commit.in_script", return_value=False)
-def test_commit_deprecated_args_unsupported_environment(mock_in_script, mock_in_notebook, capsys):
+def test_commit_deprecated_args(mock_in_script, mock_in_notebook, capsys):
 
     commit(
         message="this is the first commit",

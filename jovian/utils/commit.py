@@ -259,11 +259,10 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     if not isinstance(whitelist, list):
         whitelist = DEFAULT_EXTENSION_WHITELIST
 
-    if not paths and output:
-        return
-    elif not paths and not upload_wd:
-        return
-    elif not paths and upload_wd:
+    if not paths:
+        if output or not upload_wd:
+            return
+
         paths = [
             f
             for f in glob.glob('**/*', recursive=True)
