@@ -13,9 +13,9 @@ Jovian: The platform for all your Data Science projects
   :description lang=en:
     Jovian.ml is a better place for your data science projects, Jupyter notebooks, machine learning models, experiment logs, results and more.
 
-[Jovian.ml](https://www.jovian.ml?utm_source) is a platform for sharing and collaboraring on Jupyter notebooks and data science projects. `jovian-py` is an open-source Python package for uploading your data science code, Jupyter notebooks, ML models, hyperparameters, metrics etc. to your Jovian.ml account. 
+|Jovian.ml| is a platform for sharing and collaboraring on Jupyter notebooks and data science projects. `jovian-py` is an open-source Python package for uploading your data science code, Jupyter notebooks, ML models, hyperparameters, metrics etc. to your Jovian.ml account. 
 
-.. |Jovian| raw:: html
+.. |Jovian.ml| raw:: html
   
   <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
 
