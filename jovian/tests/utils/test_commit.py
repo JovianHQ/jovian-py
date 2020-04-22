@@ -165,6 +165,16 @@ def test_parse_project(
             assert _parse_project(**args) == expected_result
 
 
+@mock.patch("jovian.utils.commit._current_slug", None)
+@mock.patch("jovian.utils.commit.get_notebook_slug", return_value="rohit/time-series-new")
+@mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
+@mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
+@mock.patch("jovian.utils.commit.api.get_gist_access", return_value={"write": True})
+def test_parse_project_from_rcfile(mock_get_gist_access, mock_get_gist, mock_get_current_user, mock_get_notebook_slug):
+    with fake_creds():
+        assert _parse_project(project=None, filename="file.ipynb", new_project=False) == ('demo-notebook', None)
+
+
 @mock.patch("jovian.utils.commit.api.upload_file")
 def test_attach_file(mock_upload_file):
     def upload_file_error(*args, **kwargs):

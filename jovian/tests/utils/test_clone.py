@@ -18,6 +18,22 @@ HEADERS = {"Authorization": "Bearer fake_api_key",
            "x-jovian-guest": "b6538d4dfde04fcf993463a828a9cec6",
            "x-jovian-org": "staging"}
 
+FAKE_GIST = {
+    "title": "metrics-example",
+    "files": [
+        {
+            "filename": "metrics-example.ipynb",
+            "artifact": False,
+            "rawUrl": "https://storage.com/slug1"
+        },
+        {
+            "filename": "environment.yml",
+            "artifact": False,
+            "rawUrl": "https://storage.com/slug2"
+        },
+    ],
+}
+
 
 @pytest.mark.parametrize(
     "command, fresh",
@@ -94,21 +110,7 @@ def test_post_clone_message(capsys):
 @mock.patch("jovian.utils.clone.get_gist")
 def test_clone(mock_get_gist, mock_requests_get):
     with temp_directory() as dir:
-        mock_get_gist.return_value = {
-            "title": "metrics-example",
-            "files": [
-                {
-                    "filename": "metrics-example.ipynb",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug1"
-                },
-                {
-                    "filename": "environment.yml",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug2"
-                },
-            ],
-        }
+        mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
         get1.content, get2.content = b"notebook content", b"environment content"
@@ -136,72 +138,45 @@ def test_clone(mock_get_gist, mock_requests_get):
 @mock.patch("jovian.utils.clone.get_gist")
 def test_clone_multiple(mock_get_gist, mock_requests_get):
     with temp_directory() as dir:
-        mock_get_gist.return_value = {
-            "title": "metrics-example",
-            "files": [
-                {
-                    "filename": "metrics-example.ipynb",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug1"
-                },
-                {
-                    "filename": "environment.yml",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug2"
-                },
-            ],
-        }
+        mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
         get1.content, get2.content = b"notebook content", b"environment content"
 
-        mock_requests_get.side_effect = [get1, get2] * 2
+        mock_requests_get.side_effect = [get1, get2] * 3
 
         # first call
         clone('aakashns/metrics-example', version='3')
-
         os.chdir(dir)
+
         # second call
         clone('aakashns/metrics-example', version='3')
+        os.chdir(dir)
 
+        # third call
+        clone('aakashns/metrics-example', version='3')
         os.chdir(dir)
 
         mock_get_gist.assert_called_with('aakashns/metrics-example', '3', True)
         mock_requests_get.assert_has_calls([
             call("https://storage.com/slug1"),
-            call("https://storage.com/slug2"),
-            call("https://storage.com/slug1"),
-            call("https://storage.com/slug2"),
-        ])
+            call("https://storage.com/slug2")
+        ] * 3)
 
         # Check that multiple folders were created
-        assert set(os.listdir()) == {"metrics-example", "metrics-example-1"}
+        assert set(os.listdir()) == {"metrics-example", "metrics-example-1", "metrics-example-2"}
 
 
 @mock.patch("jovian.utils.clone.get")
 @mock.patch("jovian.utils.clone.get_gist")
 def test_clone_fresh_false(mock_get_gist, mock_requests_get):
     with temp_directory() as dir:
-        mock_get_gist.return_value = {
-            "title": "metrics-example",
-            "files": [
-                {
-                    "filename": "metrics-example.ipynb",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug1"
-                },
-                {
-                    "filename": "environment.yml",
-                    "artifact": False,
-                    "rawUrl": "https://storage.com/slug2"
-                },
-            ],
-        }
+        mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
         get1.content, get2.content = b"notebook content", b"environment content"
 
-        mock_requests_get.side_effect = [get1, get2] * 2
+        mock_requests_get.side_effect = [get1, get2]
 
         clone('aakashns/metrics-example', version='3', fresh=False)
 
@@ -218,6 +193,30 @@ def test_clone_fresh_false(mock_get_gist, mock_requests_get):
 
         # Check that files were downloaded
         assert set(os.listdir()) == {"environment.yml", "metrics-example.ipynb"}
+
+
+@mock.patch("jovian.utils.clone.get")
+@mock.patch("jovian.utils.clone.get_gist")
+def test_clone_overwrite(mock_get_gist, mock_requests_get):
+    with temp_directory() as dir:
+        mock_get_gist.return_value = FAKE_GIST
+
+        get1, get2 = mock.Mock(), mock.Mock()
+        get1.content, get2.content = b"notebook content", b"environment content"
+
+        mock_requests_get.side_effect = [get1, get2] * 2
+
+        clone('aakashns/metrics-example', version='3')
+        os.chdir(dir)
+
+        # Check that directory was created
+        assert "metrics-example" in os.listdir()
+
+        clone('aakashns/metrics-example', version='3', overwrite=True)
+        os.chdir(dir)
+
+        # Check that another directory was not created
+        assert os.listdir() == ["metrics-example"]
 
 
 @mock.patch("jovian.utils.clone.clone")
