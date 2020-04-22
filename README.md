@@ -3,7 +3,7 @@
 ![](/docs/jovian_horizontal_logo.svg)
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian.ml/docs/)
-![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)]
+[![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)](https://github.com/JovianML/jovian-py/actions?query=branch%3Amaster)
 [![Code Coverage](https://codecov.io/gh/JovianML/jovian-py/branch/master/graph/badge.svg)](https://codecov.io/gh/JovianML/jovian-py)
 
 
