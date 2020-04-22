@@ -2,9 +2,9 @@ from unittest import mock
 from unittest.mock import ANY
 import pytest
 import sys
+import numpy as np
 
 try:
-    import numpy as np
     from keras.layers import Dense, Dropout
     from keras.models import Sequential
 
