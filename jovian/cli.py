@@ -33,7 +33,7 @@ def main(ctx, log_level="info"):
 
 @main.command("help")
 @click.pass_context
-def help(ctx):
+def help(ctx):  # no-cover
     """Print this help message."""
 
     # Pretend user typed 'jovian --help' instead of 'jovian help'.
@@ -43,7 +43,7 @@ def help(ctx):
 
 @main.command('version')
 @click.pass_context
-def main_version(ctx):
+def main_version(ctx):  # no-cover
     """Print Jovian’s version number."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
@@ -81,12 +81,8 @@ def install_env(ctx, name=None):
 
     if not name:
         install()
-    elif name:
-        install(env_name=name)
     else:
-        # Show help
-        sys.argv[1] = "--help"
-        install_env()
+        install(env_name=name)
 
 
 @main.command("activate")
@@ -100,7 +96,7 @@ def activate_env(ctx):
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
-@click.option('--no-outputs', 'no_outputs')
+@click.option('--no-outputs', 'no_outputs', is_flag=True, default=False)
 @click.option('--overwrite', 'overwrite', is_flag=True)
 @click.pass_context
 def exec_clone(ctx, notebook, version, no_outputs, overwrite):
@@ -113,7 +109,7 @@ def exec_clone(ctx, notebook, version, no_outputs, overwrite):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version, include_outputs=not no_outputs, overwrite=overwrite)
+    clone(slug=notebook, version=version, include_outputs=not no_outputs, overwrite=overwrite)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
@@ -131,7 +127,7 @@ def exec_pull(ctx, notebook, version):
         $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
 
-    pull(notebook, version)
+    pull(slug=notebook, version=version)
 
 
 @main.command("set-project", short_help="Associate a notebook (filename.ipynb) to a Jovian project (username.title)")
@@ -146,7 +142,7 @@ def set_project(ctx,  notebook, project):
     This will create or update the .jovianrc file in the current directory to ensure that commits
     inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
     """
-    set_notebook_slug(notebook, project)
+    set_notebook_slug(filename=notebook, slug=project)
 
 
 @main.command("add-slack")

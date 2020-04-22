@@ -38,12 +38,12 @@ def reset(*record_types):
 def _parse_data(data, data_args):
     """Parse different types of arguments"""
     data = data or {}
-    if type(data) == dict:
+    if isinstance(data, dict):
         for k in data_args:
             data[k] = data_args[k]
-    elif type(data) == list and len(data_args.keys()) > 0:
+    elif isinstance(data, list) and len(data_args.keys()) > 0:
         data.append(data_args)
-    return data if len(data.keys()) > 0 else None
+    return data if len(data) > 0 else None
 
 
 def log_record(record_type, data=None, verbose=True, **data_args):

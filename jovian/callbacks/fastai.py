@@ -68,6 +68,6 @@ class JovianFastaiCallback(Callback):
                                                         for i in last_metrics[1:]])
         log_metrics(dict(zip(self.met_names, met_values)))
 
-    def on_train_end(self, **ka):
+    def on_train_end(self, **ka):  # no-cover
         if not self.valid_set:
             log('Metrics apart from train_loss are not calculated in fastai without a validation dataset')

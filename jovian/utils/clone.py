@@ -47,9 +47,9 @@ def post_clone_msg(title):
     log("Cloned successfully to '{}'".format(title), color='green')
     log(click.style('\nNext steps:', fg='yellow', underline=True) +
         click.style("""
-  $ cd {}                     
-  $ jovian install            
-  $ conda activate <env_name> 
+  $ cd {}
+  $ jovian install
+  $ conda activate <env_name>
   $ jupyter notebook
 """.format(title), bold=True), pre=False)
 
@@ -69,7 +69,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log(ISSUES_MSG)
 
     # Download gist metadata
-    ver_str = '(version ' + version + ')' if version else ''
+    ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
     title = gist['title']
@@ -126,6 +126,7 @@ def pull(slug=None, version=None):
 
     # Get list of notebooks
     nbs = get_rcdata()['notebooks']
+
     for fname in nbs:
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)
