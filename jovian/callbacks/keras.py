@@ -7,7 +7,7 @@ from jovian.utils.records import log_metrics, log_hyperparams, reset
 from jovian.utils.slack import notify
 
 
-class Encoder(json.JSONEncoder):  # no-cover
+class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, numpy.integer):
             return int(obj)

@@ -13,6 +13,21 @@ except:
     print('Tensorflow needs Python 3.7 or lower')
     pass
 
+from jovian.callbacks.keras import Encoder
+
+
+@pytest.mark.parametrize(
+    "data, encoded_type",
+    [
+        (np.int64(42), int),
+        (np.float64(42.24), float),
+        (np.ndarray([1, 2, 3]), list),
+    ]
+)
+def test_encoder(data, encoded_type):
+    enc = Encoder()
+    assert isinstance(enc.default(data), encoded_type)
+
 
 @pytest.fixture
 def model():

@@ -6,7 +6,7 @@ import jovian.utils.records
 from jovian.tests.resources.shared import fake_records
 from jovian.utils.records import get_records, log_dataset, log_git, log_hyperparams, log_metrics, log_record, reset
 
-records = [('fake_slug_metrics_1', 'metrics', {}),
+RECORDS = [('fake_slug_metrics_1', 'metrics', {}),
            ('fake_slug_metrics_2', 'metrics', {}),
            ('fake_slug_hyperparams_1', 'hyperparams', {}),
            ('fake_slug_hyperparams_2', 'hyperparams', {})]
@@ -80,7 +80,7 @@ def mock_api_post_block(*args, **kwargs):
 def test_log_record_no_data(mock_api_post_block):
     with fake_records():
         data = {}
-        expected_result = records
+        expected_result = RECORDS
 
         log_record('fake_record_type', data)
         assert jovian.utils.records._data_blocks == expected_result
@@ -119,8 +119,30 @@ def test_log_record_no_data(mock_api_post_block):
 def test_log_records(mock_api_post_block, data, func, metric_type, capsys):
     with fake_records():
         func(data)
-        assert jovian.utils.records._data_blocks == records + [('fake_slug_3', metric_type, data)]
+        assert jovian.utils.records._data_blocks == RECORDS + [('fake_slug_3', metric_type, data)]
 
         captured = capsys.readouterr()
         expected_result = '[jovian] {} logged.'.format(metric_type.capitalize())
         assert expected_result == captured.out.strip()
+
+
+@pytest.mark.parametrize(
+    "data, data_args, expected_result",
+    [
+        (
+            {"key1": "value1"},
+            {"key2": "value2"},
+            {"key1": "value1", "key2": "value2"},
+        ),
+        (
+            ["foo", "bar"],
+            {"spam": "eggs"},
+            ['foo', 'bar', {'spam': 'eggs'}],
+        ),
+    ]
+)
+@mock.patch("jovian.utils.records.api.post_block", side_effect=mock_api_post_block)
+def test_log_record_with_data_args(mock_api_post_block, data, data_args, expected_result):
+    with fake_records():
+        log_record('fake_record_type', data, **data_args)
+        assert jovian.utils.records._data_blocks == RECORDS + [('fake_slug_3', 'fake_record_type', expected_result)]

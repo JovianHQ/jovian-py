@@ -107,6 +107,11 @@ def fake_envfile(fname='environment.yml'):
         yield
 
 
+def touch(file):
+    """Create an empty file with touch"""
+    os.system("touch {}".format(file))
+
+
 class MockResponse:
     def __init__(self, json_data, status_code, text=""):
         self.json_data = json_data

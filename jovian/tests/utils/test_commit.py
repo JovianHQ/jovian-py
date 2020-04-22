@@ -7,7 +7,7 @@ from unittest import mock
 from unittest.mock import ANY, call
 
 import pytest
-from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory
+from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory, touch
 from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _parse_filename,
                                  _parse_project, _perform_git_commit, commit)
 from jovian.utils.error import CondaError
@@ -319,8 +319,8 @@ def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
 
         # invalid files
         os.mkdir('invalid')
-        valid_files = ["file.file", "no_extension", "file.pyc"]
-        for file in valid_files:
+        invalid_files = ["file.file", "no_extension", "file.pyc"]
+        for file in invalid_files:
             os.system("touch invalid/{}".format(file))
 
         _attach_files(gist_slug='fake_gist_slug', version=2, **args)
@@ -330,9 +330,33 @@ def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
 
 @mock.patch("jovian.utils.commit.upload_conda_env")
 def test_capture_environment(mock_upload_conda_env):
-    _capture_environment('conda', 'fake_gist_slug', 2)
+    with fake_creds():
+        _capture_environment('conda', 'fake_gist_slug', 2)
 
-    mock_upload_conda_env.assert_called_with('fake_gist_slug', 2)
+        mock_upload_conda_env.assert_called_with('fake_gist_slug', 2)
+
+
+@pytest.mark.parametrize(
+    "environment, env_config, mock_upload",
+    [
+        ("auto", "conda", "jovian.utils.commit.upload_conda_env"),
+        ("auto", "pip", "jovian.utils.commit.upload_pip_env"),
+    ]
+)
+def test_capture_environment_from_config(environment, env_config, mock_upload):
+    with fake_creds(extra={"DEFAULT_CONFIG": {"environment": env_config}}), mock.patch(mock_upload) as mock_upload:
+        _capture_environment(environment, 'fake_gist_slug', 2)
+        mock_upload.assert_called_with('fake_gist_slug', 2)
+
+
+@mock.patch("jovian.utils.commit.upload_pip_env")
+@mock.patch("jovian.utils.commit.upload_conda_env")
+def test_capture_environment_from_config_none(mock_upload_conda_env, mock_upload_pip_env):
+    with fake_creds(extra={"DEFAULT_CONFIG": {"environment": None}}):
+        _capture_environment("auto", "fake_gist_slug", 2)
+
+        mock_upload_conda_env.assert_not_called()
+        mock_upload_pip_env.assert_not_called()
 
 
 @mock.patch("jovian.utils.commit.upload_pip_env")
