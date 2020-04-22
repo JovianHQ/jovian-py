@@ -15,6 +15,8 @@ jovian is an open-source Python package integrated with [Jovian](https://jovian.
 - [Embed Jupyter Notebooks and Cell upload on Jovian.ml](https://jovian.ml/docs/user-guide/embed.html)
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian.ml/docs/)
+![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)
+![Code](https://codecov.io/gh/JovianML/jovian-py/branch/unit-testing-5/graph/badge.svg)
 
 ## Installation
 
