@@ -1,19 +1,18 @@
-from unittest import mock
-from unittest.mock import ANY
+from unittest import mock, ANY
 import pytest
 import sys
 
 try:
+
     import numpy as np
-    from unittest import mock
     from keras.layers import Dense, Dropout
     from keras.models import Sequential
+
     from jovian.callbacks.keras import JovianKerasCallback
+    from jovian.callbacks.keras import Encoder
 except:
     print('Tensorflow needs Python 3.7 or lower')
     pass
-
-from jovian.callbacks.keras import Encoder
 
 
 @pytest.mark.parametrize(
