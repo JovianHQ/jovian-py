@@ -325,7 +325,7 @@ def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
 
         _attach_files(gist_slug='fake_gist_slug', version=2, **args)
 
-        mock_attach_file.assert_has_calls(mock_calls)
+        mock_attach_file.assert_has_calls(mock_calls, any_order=True)
 
 
 @mock.patch("jovian.utils.commit.upload_conda_env")
