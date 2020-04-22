@@ -1,4 +1,4 @@
-# Jovian.ml: Collaboration Platform for Jupyter Notebooks & Data Science Projects
+# Jovian.ml: Collaboration Platform for Data Science Projects
 
 ![](/docs/jovian_horizontal_logo.svg)
 
