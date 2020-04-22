@@ -10,7 +10,7 @@ from jovian.utils.credentials import purge_config, write_creds
 
 
 @contextmanager
-def fake_creds(config_dir='.jovian', creds_filename='credentials.json'):
+def fake_creds(config_dir='.jovian', creds_filename='credentials.json', extra=None):
     with temp_directory() as dir:
         _d, _f = credentials.CONFIG_DIR, credentials.CREDS_FNAME
         credentials.CONFIG_DIR = os.path.join(dir, config_dir)
@@ -20,8 +20,12 @@ def fake_creds(config_dir='.jovian', creds_filename='credentials.json'):
             "API_URL": "https://api-staging.jovian.ai",
             "WEBAPP_URL": "https://staging.jovian.ml/",
             "ORG_ID": "staging",
-            "API_KEY": "fake_api_key"
+            "API_KEY": "fake_api_key",
         }
+
+        if extra and isinstance(extra, dict):
+            creds.update(extra)
+
         write_creds(creds)
         try:
             yield dir

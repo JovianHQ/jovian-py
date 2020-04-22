@@ -200,31 +200,131 @@ def test_attach_file_raises_error(capsys):
 
 @mock.patch("jovian.utils.commit._attach_file")
 @pytest.mark.parametrize(
-    "files, mock_calls",
+    "args, extra_config, mock_calls",
     [
-        ([], []),
-        (['tempdir'], [
-            call('tempdir/file.txt', 'fake_gist_slug', 2, False),
-            call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]),
-        ('tempdir', [
-            call('tempdir/file.txt', 'fake_gist_slug', 2, False),
-            call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]),
-        (['tempdir/file.txt', 'tempdir/tempdir1', 'tempdir/doesnotexist.txt'], [
-            call('tempdir/file.txt', 'fake_gist_slug', 2, False),
-            call('tempdir/tempdir1/file1.txt', 'fake_gist_slug', 2, False)
-        ]),
+        (
+            {"paths": []},
+            {},
+            []
+        ),
+        (
+            {"paths": ['tempdir']},
+            {},
+            [
+                call('tempdir/file.txt', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {"paths": "tempdir"},
+            {},
+            [
+                call('tempdir/file.txt', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {"paths": ['tempdir/file.txt', 'tempdir/subdir', 'tempdir/doesnotexist.txt']},
+            {},
+            [
+                call('tempdir/file.txt', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {"paths": []},
+            {
+                "DEFAULT_CONFIG": {
+                    "UPLOAD_WORKING_DIRECTORY": True
+                }
+            },
+            [
+                call('notebook.ipynb', 'fake_gist_slug', 2, False),
+                call('valid/file.txt', 'fake_gist_slug', 2, False),
+                call('valid/file.ipynb', 'fake_gist_slug', 2, False),
+                call('valid/file.tsv', 'fake_gist_slug', 2, False),
+                call('valid/file.yaml', 'fake_gist_slug', 2, False),
+                call('valid/file.yml', 'fake_gist_slug', 2, False),
+                call('valid/file.py', 'fake_gist_slug', 2, False),
+                call('valid/file.csv', 'fake_gist_slug', 2, False),
+                call('tempdir/file.txt', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {"paths": [], "output": True},
+            {},
+            []
+        ),
+        (
+            {"paths": [], "exclude_files": "notebook.ipynb"},
+            {
+                "DEFAULT_CONFIG": {
+                    "UPLOAD_WORKING_DIRECTORY": True
+                }
+            },
+            [
+                call('valid/file.txt', 'fake_gist_slug', 2, False),
+                call('valid/file.ipynb', 'fake_gist_slug', 2, False),
+                call('valid/file.tsv', 'fake_gist_slug', 2, False),
+                call('valid/file.yaml', 'fake_gist_slug', 2, False),
+                call('valid/file.yml', 'fake_gist_slug', 2, False),
+                call('valid/file.py', 'fake_gist_slug', 2, False),
+                call('valid/file.csv', 'fake_gist_slug', 2, False),
+                call('tempdir/file.txt', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {
+                "paths": [],
+                "exclude_files": ["notebook.ipynb", "valid/file.txt", "tempdir/file.txt", "nonexistentfile.txt"]
+            },
+            {
+                "DEFAULT_CONFIG": {
+                    "UPLOAD_WORKING_DIRECTORY": True
+                }
+            },
+            [
+                call('valid/file.ipynb', 'fake_gist_slug', 2, False),
+                call('valid/file.tsv', 'fake_gist_slug', 2, False),
+                call('valid/file.yaml', 'fake_gist_slug', 2, False),
+                call('valid/file.yml', 'fake_gist_slug', 2, False),
+                call('valid/file.py', 'fake_gist_slug', 2, False),
+                call('valid/file.csv', 'fake_gist_slug', 2, False),
+                call('tempdir/subdir/file1.txt', 'fake_gist_slug', 2, False)
+            ]
+        ),
+        (
+            {"paths": [], "output": True},
+            {},
+            []
+        ),
     ]
 )
-def test_attach_files(mock_attach_file, files, mock_calls, capsys):
-    with fake_creds(), temp_directory():
-        # setUp
-        os.mkdir('tempdir')
-        os.mkdir('tempdir/tempdir1')
-        os.system('touch tempdir/file.txt && touch tempdir/tempdir1/file1.txt')
+def test_attach_files(mock_attach_file, args, extra_config, mock_calls, capsys):
+    with fake_creds(extra=extra_config), temp_directory():
 
-        _attach_files(files, 'fake_gist_slug', 2)
+        os.makedirs('tempdir/subdir')
+        os.system('touch tempdir/file.txt && touch tempdir/subdir/file1.txt')
+
+        # current notebook
+        os.system('touch notebook.ipynb')
+
+        # valid files
+        os.mkdir('valid')
+        valid_files = ["file.txt", "file.py", "file.csv", "file.yaml", "file.yml", "file.ipynb", "file.tsv"]
+        for file in valid_files:
+            os.system("touch valid/{}".format(file))
+
+        # invalid files
+        os.mkdir('invalid')
+        valid_files = ["file.file", "no_extension", "file.pyc"]
+        for file in valid_files:
+            os.system("touch invalid/{}".format(file))
+
+        _attach_files(gist_slug='fake_gist_slug', version=2, **args)
+
         mock_attach_file.assert_has_calls(mock_calls)
 
 
