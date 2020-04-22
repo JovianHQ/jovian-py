@@ -15,6 +15,7 @@ except:
     pass
 
 
+@pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
 @pytest.mark.parametrize(
     "data, encoded_type",
     [
