@@ -15,7 +15,7 @@ class Encoder(json.JSONEncoder):
             return float(obj)
         elif isinstance(obj, numpy.ndarray):
             return obj.tolist()
-        else:
+        else:  # no-cover
             return super(Encoder, self).default(obj)
 
 
