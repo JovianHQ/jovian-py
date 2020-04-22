@@ -2,7 +2,7 @@
 
 ![](/docs/jovian_horizontal_logo.svg)
 
-jovian is an open-source Python package integrated with [Jovian](https://jovian.ml/?utm_source=github) to provide the tools necessary for Data Scientists and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects where even Students and Enthusiasts can leverage the same and also use [Jovian](https://jovian.ml/?utm_source=github) **Share** and **Showcase** their projects.
+[Jovian.ml](https://www.jovian.ml?utm_source) is a platform for sharing and collaboraring on Jupyter notebooks and data science projects. `jovian-py` is an open-source Python package for uploading your data science code, Jupyter notebooks, ML models, hyperparameters, metrics etc. to your Jovian.ml account. 
 
 - [Upload and share Jupyter Notebooks](https://jovian.ml/docs/user-guide/upload.html)
 - [Reproduce Notebooks from Jovian](https://jovian.ml/docs/user-guide/reproduce.html)
