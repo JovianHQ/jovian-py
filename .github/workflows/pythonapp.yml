@@ -20,8 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install Cython --install-option="--no-cython-compile"
           pip install -r requirements.txt
-          pip install fastai==1.0.60
-          pip install torch==1.4.0
+          pip install torch fastai
           pip install tensorflow==2.1.0
           pip install keras==2.3.1
       - name: Test with pytest
