@@ -1,4 +1,4 @@
-## Guide To Publish the Extention to npm
+## Guide To Publish the Extension to npm
 ---
 
 ### Before you begin register for a [npm](https://www.npmjs.com/ "npm") account and enable 2FA, and login through the console:
