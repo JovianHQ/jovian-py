@@ -3,7 +3,7 @@ import {
   SessionAPI,
   KernelManager,
   KernelMessage
-} from '@jupyterlab/services';
+} from "@jupyterlab/services";
 
 class NBKernel {
   /**
@@ -11,30 +11,38 @@ class NBKernel {
    * current notebook name, and execute Python code in the
    * current notebook Kernel
    */
-  async execute(pythonCode:string):Promise<string> {
-    /** 
+  async execute(pythonCode: string): Promise<string> {
+    /**
      * Execute Python code and return a promise with the corresponding
      * result of that code
      */
-    return new Promise((resolve, reject = (msg)=>{console.log(msg)}) => {
-      this.currentKernel().then(
-        (kernel) => {
-          let result = (kernel as Kernel.IKernelConnection).requestExecute({code:pythonCode, allow_stdin:true});
-          let text:string = "";
-          result.onIOPub = (msg) => {
-            if (KernelMessage.isErrorMsg(msg)){
+    return new Promise(
+      (
+        resolve,
+        reject = msg => {
+          console.log("KERNEL_EXECUTE_ERROR:" + msg);
+        }
+      ) => {
+        this.currentKernel().then(kernel => {
+          let result = (kernel as Kernel.IKernelConnection).requestExecute({
+            code: pythonCode,
+            allow_stdin: true
+          });
+          let text: string = "";
+          result.onIOPub = msg => {
+            if (KernelMessage.isErrorMsg(msg)) {
               reject(msg.content);
             } else if (KernelMessage.isStreamMsg(msg)) {
               text += msg.content.text + "\n";
-            } else if (KernelMessage.isStatusMsg(msg)){
-              if (msg.content.execution_state.toLowerCase() == "idle"){
+            } else if (KernelMessage.isStatusMsg(msg)) {
+              if (msg.content.execution_state.toLowerCase() == "idle") {
                 resolve(text);
               }
             }
-          }
-        }
-      )
-    });
+          };
+        });
+      }
+    );
   }
 
   async currentKernel() {
@@ -42,33 +50,38 @@ class NBKernel {
      * Retrieve the current Kernel and return in a promise
      */
     return new Promise(resolve => {
-      SessionAPI.listRunning().then(
-        (allSessions)=>{
-          for (let i = 0; i < allSessions.length; i++){
-            let session = allSessions[i];
-            if (session.type.toLowerCase() == "notebook"){
-              let NBnameFromSession = session.name;
-              if (NBnameFromSession.toLowerCase() == this.currentNotebookName().toLowerCase()){
-                let km = new KernelManager();
-                resolve(km.connectTo({model:session.kernel}));
-              }
+      SessionAPI.listRunning().then(allSessions => {
+        for (let i = 0; i < allSessions.length; i++) {
+          let session = allSessions[i];
+          if (session.type.toLowerCase() == "notebook") {
+            let NBnameFromSession = session.name;
+            if (
+              NBnameFromSession.toLowerCase() ==
+              this.currentNotebookName().toLowerCase()
+            ) {
+              let km = new KernelManager();
+              resolve(km.connectTo({ model: session.kernel }));
             }
           }
         }
-      )
+      });
     });
   }
-  
-  currentNotebookName():string{
+
+  currentNotebookName(): string {
     /**
      * Return the name of current Notebook
      * note:
      *   (document.getElementsByClassName("jp-mod-current")
      *   might have zero length, which means JupyterLab did not activate yet
      */
-    return (document.getElementsByClassName("jp-mod-current")[0].childNodes[1] as any).innerText;
+    if (document.getElementsByClassName("jp-mod-current").length !== 0) {
+      return (document.getElementsByClassName("jp-mod-current")[0]
+        .childNodes[1] as any).innerText;
+    } else {
+      console.log("JupyterLab not activated yet!");
+    }
   }
-
 }
 
-export default (new NBKernel());
+export default new NBKernel();

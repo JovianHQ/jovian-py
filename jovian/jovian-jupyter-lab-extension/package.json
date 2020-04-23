@@ -1,25 +1,24 @@
 {
-  "name": "jovian-lab-ext-test",
-  "version": "0.1.4",
+  "name": "jovian-jupyterlab",
+  "version": "0.1.0",
   "description": "The platform for all your Data Science projects",
   "keywords": [
+    "jovain.ml",
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://www.jovian.ml",
+  "homepage": "https://www.jovian.ml?utm_source=npm",
   "bugs": {
     "url": "https://github.com/JovianML/jovian-support/issues"
   },
   "license": "BSD-3-Clause",
-  "author": "Mayank Saboo",
+  "author": "Jovian Development Team",
   "files": [
-    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "style": "style/index.css",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JovianML/jovian-py.git"
@@ -44,9 +43,6 @@
     "bufferutil": "^4.0.1",
     "utf-8-validate": "^5.0.2"
   },
-  "sideEffects": [
-    "style/*.css"
-  ],
   "jupyterlab": {
     "extension": true
   },

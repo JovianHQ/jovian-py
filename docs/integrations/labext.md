@@ -3,18 +3,6 @@
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
 Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
-## Installing Jovian Jupyter Lab Extension
-
-Jovian Jupyter Lab Extension is currently in the testing phase and could also be directly searched and installed through Jupyter Lab Extension Manager.
-
-### **Note: Make sure Jupyter lab Extension Manager is ENABLED under Jupyter Lab settings.**
-
- <img src ="https://media.giphy.com/media/QBYnFbQWuVOfBRXyjd/source.gif" class="screenshot" alt="Jupyter lab enable ext manager">
-
-### Now to install the Jovian Extension, It's Easy just search it under the Extensions
-
- <img src ="https://media.giphy.com/media/jVZxlpIjTWfaAfj1Yl/source.gif" class="screenshot" alt="Jupyter lab search ext and install">
-
 ## Using Jovian Jupyter Lab Extension
 
 <img src="https://i.imgur.com/uezsdYX.png" class="screenshot" alt="jupyter extension toolbar button">
@@ -63,54 +51,16 @@ This makes use of [jovian.commit's](../api-reference/commit) parameters to enabl
 
 <img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-## Settings for Jovian Jupyter Lab Extension
-
-Settings are accessed in the dropdown menu
-
-<img src="https://i.imgur.com/q7qakXQ.png" class="screenshot" alt="jovian settings entry">
-
-After clicking `Settings`, the settings window will be displayed
-
-<img src="https://i.imgur.com/ykjaaV0.png" class="screenshot" alt="jovian settings">
-
-#### Set Default Commit Parameters
-
-Sets the Parameters for Commit without Commiting to Jovian.
-
-<img src="https://i.imgur.com/6RoD0x8.png" class="screenshot" alt="set default commit parameters">
-
-#### Clear API Key
-
-Clears the current API key.
-
-<img src="https://i.imgur.com/hmunSvk.png" class="screenshot" alt="clear API key">
-
-#### Change API Key
-
-Allows the API key to be changed.
-
-<img src="https://i.imgur.com/I5uKjQw.png" class="screenshot" alt="change api key">
-
-#### Disable Jovian Extension
-
-Disable the Jovian extension from Jupyter Lab System.
-
-<img src="https://i.imgur.com/7vf7IOd.png" class="screenshot" alt="disable Jovian extension">
-
 ## Enable or Disable the extension from CLI
 
 You can also disable the extension by running the following command.
 
 ```
-$ jupyter labextension disable jovian-lab-ext-test
+$ jupyter labextension disable jovian-jupyterlab
 ```
 
 To Enable the Notebook Extension, when you have manually disabled it.
 
 ```
-$ jupyter labextension enable jovian-lab-ext-test
+$ jupyter labextension enable jovian-jupyterlab
 ```
-
-## Coming Soon
-
-### Sidebar! A a new feature is on it's way. Stay tuned.

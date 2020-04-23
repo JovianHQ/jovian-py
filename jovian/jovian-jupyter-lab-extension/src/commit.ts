@@ -1,69 +1,64 @@
-import NBKernel from './NBKernel';
-import { 
-  saveNotebook
-} from './commands';
+import NBKernel from "./NBKernel";
+import { saveNotebook } from "./commands";
 
-let body:any;
-let lock:boolean = false;
+let body: any;
+let lock: boolean = false;
 
-async function commit():Promise<void> {
+async function commit(): Promise<void> {
   /**
    * This function will commit the current notebook to
-   * Jovian, it can commit with default options or 
+   * Jovian, it can commit with default options or
    * commit with user-selected options
    */
-  let commit:string = "\tcommit()\n";
+  const nbFilename: string = NBKernel.currentNotebookName();
+  let commit: string = '\tcommit(filename="' + nbFilename + '")\n';
   if (lock == true) {
     return;
   }
   lock = true;
   await saveNotebook();
-  getAPIKeys().then(
-    async (result) => {
-      if (result == true){
-        const jvn_commit =
-          "from jovian import commit\n" +
-          "import io\n" +
-          "from contextlib import redirect_stdout\n" +
-          "f = io.StringIO()\n" +
-          "with redirect_stdout(f):\n" +
-          commit +
-          "out = f.getvalue().splitlines()[-1]\n" +
-          "if(out.split()[1] == 'Committed'):\n" +
-          "\tprint(out.split()[-1])\n" +
-          "else:\n" +
-          "\tprint(out)";
-        await NBKernel.execute(jvn_commit).then(
-          (result) => {
-            committedWindow((result as string).trim());
-          }
-        );
-      } else {
-        askAPIKeys();
-      }
-      lock = false;
+  getAPIKeys().then(async result => {
+    if (result == true) {
+      const jvn_commit =
+        "from jovian import commit\n" +
+        "import io\n" +
+        "from contextlib import redirect_stdout\n" +
+        "f = io.StringIO()\n" +
+        "with redirect_stdout(f):\n" +
+        commit +
+        "out = f.getvalue().splitlines()[-1]\n" +
+        "if(out.split()[1] == 'Committed'):\n" +
+        "\tprint(out.split()[-1])\n" +
+        "else:\n" +
+        "\tprint(out)";
+      await NBKernel.execute(jvn_commit).then(result => {
+        committedWindow((result as string).trim());
+      });
+    } else {
+      askAPIKeys();
     }
-  );
+    lock = false;
+  });
 }
 
-export function askAPIKeys():void {
+export function askAPIKeys(): void {
   /**
    * Uses to display a window with a input box, so
    * users can enter their API key to enable the
    * Jovian commit function
    */
-  let header:HTMLElement = initialHeader();
-  let div:HTMLElement = document.createElement("div");
-  let span:HTMLElement = addText("Please enter your API key from ");
-  let a:HTMLElement = addLink("Jovian", "https://jovian.ml");
-  let err:HTMLElement = addErrorMsg("Invalid API key");
-  let input:HTMLElement = addInput();
-  let inError = (isError:boolean) => {
+  let header: HTMLElement = initialHeader();
+  let div: HTMLElement = document.createElement("div");
+  let span: HTMLElement = addText("Please enter your API key from ");
+  let a: HTMLElement = addLink("Jovian", "https://jovian.ml");
+  let err: HTMLElement = addErrorMsg("Invalid API key");
+  let input: HTMLElement = addInput("Paste your API key", "password");
+  let inError = (isError: boolean) => {
     let inp = input.getElementsByTagName("input")[0];
-    if (isError){
+    if (isError) {
       err.hidden = false;
       (<any>inp.style)["border-color"] = "red";
-      inp.onkeydown = ()=> {
+      inp.onkeydown = () => {
         inError(false);
         inp.onkeydown = null;
       };
@@ -71,20 +66,22 @@ export function askAPIKeys():void {
       err.hidden = true;
       (<any>inp.style) = "";
     }
-  }
+  };
   span.appendChild(a);
   div.appendChild(span);
   div.appendChild(input);
   header.appendChild(div);
   header.appendChild(err);
-  header.appendChild(addButtons("Save", ()=>{
-    setAPIKeys(getInputText(input), inError);
-  }));
+  header.appendChild(
+    addButtons("Save", () => {
+      setAPIKeys(getInputText(input), inError);
+    })
+  );
   inError(false);
   openWindow();
 }
 
-function setAPIKeys(value:string, inError:any):void {
+function setAPIKeys(value: string, inError: any): void {
   /**
    * Sets the received API key to Jovian library, and
    * if the key is invalid, displays a error message
@@ -95,33 +92,39 @@ function setAPIKeys(value:string, inError:any):void {
     "write_api_key('" +
     api_key +
     "')\n";
-  NBKernel.execute(write_api).then(
-    ()=>{
-      getAPIKeys().then(
-        (result)=>{
-          if (result == true){
-            alert("Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button");
+  NBKernel.execute(write_api)
+    .then(() => {
+      getAPIKeys()
+        .then(result => {
+          if (result == true) {
+            alert(
+              "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
+            );
             closeWindow();
           } else {
             inError(true);
           }
-        }
-      )
-    }
-  );
+        })
+        .catch(() => {
+          console.log("Failed to validate API key");
+        });
+    })
+    .catch(() => {
+      console.log("Failed to write API key");
+    });
 }
 
-function committedWindow(url:string):void {
+function committedWindow(url: string): void {
   /**
    * Diaplays a window after committing to Jovian, and
-   * this window will show whether the committing was 
+   * this window will show whether the committing was
    * successful or not
    */
-  let header:HTMLElement = initialHeader();
-  let div:HTMLElement = document.createElement("div");
+  let header: HTMLElement = initialHeader();
+  let div: HTMLElement = document.createElement("div");
   if (url.startsWith("https://")) {
     let label = addText("Committed Successfully!");
-    let nb_link = addLink(url,url);
+    let nb_link = addLink(url, url);
     div.appendChild(label);
     div.appendChild(document.createElement("br"));
     div.appendChild(document.createElement("br"));
@@ -151,16 +154,14 @@ export async function getAPIKeys() {
     "\telse:\n" +
     '\t\tkey_status = "invalid"\n' +
     "print(key_status)\n";
-  return new Promise((res) => {
-    NBKernel.execute(validate_api).then(
-      (result) => {
-        if ((result as string).trim() == "valid"){
-          res(true);
-        } else {
-          res(false);
-        }
+  return new Promise(res => {
+    NBKernel.execute(validate_api).then(result => {
+      if ((result as string).trim() == "valid") {
+        res(true);
+      } else {
+        res(false);
       }
-    )
+    });
   });
 }
 
@@ -170,24 +171,24 @@ export async function getAPIKeys() {
  *
  * ******************************************************/
 
-function addText(title:string):HTMLElement{
+function addText(title: string): HTMLElement {
   /**
    * Creates a text message, which can be later added
    * into the commit window or other windows
    */
-  let text:HTMLSpanElement = document.createElement("span");
+  let text: HTMLSpanElement = document.createElement("span");
   text.className = "p-Widget jp-Dialog-header";
   text.innerText = title;
   (<any>text.style)["margin-top"] = "0.5em";
   return text;
 }
 
-function addErrorMsg(msg:string):HTMLElement{
+function addErrorMsg(msg: string): HTMLElement {
   /**
    * Creates a errors message, which can be later added
    * into the commit infos window
    */
-  let err:HTMLSpanElement = document.createElement("p");
+  let err: HTMLSpanElement = document.createElement("p");
   err.className = "p-Widget";
   err.innerText = msg;
   (<any>err.style)["margin-top"] = "-0.8em";
@@ -195,57 +196,60 @@ function addErrorMsg(msg:string):HTMLElement{
   return err;
 }
 
-function addInput(placeHolder:string = ""):HTMLElement{
+function addInput(
+  placeHolder: string = "",
+  type: string = "text"
+): HTMLElement {
   /**
    * Creates a input box with a placeholder value, which
    * can be later added into the commit window
    */
-  let div:HTMLElement = document.createElement("div");
-  let div1:HTMLElement = document.createElement("div");
-  let inp:HTMLInputElement = document.createElement("input");
+  let div: HTMLElement = document.createElement("div");
+  let div1: HTMLElement = document.createElement("div");
+  let inp: HTMLInputElement = document.createElement("input");
   div.className = "p-Widget jp-Input-Dialog jp-Dialog-body";
   div1.className = "jp-select-wrapper";
   inp.className = "jp-mod-styled";
-  inp.type = "text";
+  inp.type = type;
   inp.placeholder = placeHolder;
   div.appendChild(div1);
   div1.appendChild(inp);
   return div;
 }
 
-function getInputText(input:HTMLElement):string{
+function getInputText(input: HTMLElement): string {
   /**
    * Gets the value from a input box
    */
-  let text:string = input.getElementsByTagName("input")[0].value;
+  let text: string = input.getElementsByTagName("input")[0].value;
   return text.trim();
 }
 
-function addLink(text:string, link:string):HTMLElement{
+function addLink(text: string, link: string): HTMLElement {
   /**
    * Creates a link HTMLElement with corresponding
    * text and link url
    */
-  let a:HTMLElement = document.createElement("a");
-  a.setAttribute('href', link);
-  a.setAttribute("target", "_blank")
+  let a: HTMLElement = document.createElement("a");
+  a.setAttribute("href", link);
+  a.setAttribute("target", "_blank");
   a.style.color = "rgb(27, 87, 177)";
   a.innerText = text;
   return a;
 }
 
-function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
+function addButtons(name: string | null, callBack = () => {}): HTMLElement {
   /**
-   * Create a footer for the window, and add necessary button(s) 
+   * Create a footer for the window, and add necessary button(s)
    * with corresponding callback function(s)
    */
-  let footer:HTMLElement = document.createElement("div");
-  let icon1:HTMLElement = document.createElement("div");
-  let icon2:HTMLElement = document.createElement("div");
-  let cancel:HTMLElement = document.createElement("div");
-  let ok:HTMLElement = document.createElement("div");
-  let cancelBut:HTMLElement = document.createElement("button");
-  let okBut:HTMLElement = document.createElement("button");
+  let footer: HTMLElement = document.createElement("div");
+  let icon1: HTMLElement = document.createElement("div");
+  let icon2: HTMLElement = document.createElement("div");
+  let cancel: HTMLElement = document.createElement("div");
+  let ok: HTMLElement = document.createElement("div");
+  let cancelBut: HTMLElement = document.createElement("button");
+  let okBut: HTMLElement = document.createElement("button");
   footer.className = "p-Widget jp-Dialog-footer";
   icon1.className = "jp-Dialog-buttonIcon";
   icon2.className = "jp-Dialog-buttonIcon";
@@ -257,10 +261,10 @@ function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
   cancelBut.appendChild(icon1);
   cancelBut.appendChild(cancel);
   footer.appendChild(cancelBut);
-  (<any>cancelBut).onclick = ()=>{
+  (<any>cancelBut).onclick = () => {
     closeWindow();
   };
-  if (name!=null){
+  if (name != null) {
     cancel.innerText = "Cancel";
     ok.innerText = name;
     okBut.appendChild(icon2);
@@ -271,12 +275,12 @@ function addButtons(name:string|null, callBack = ()=>{}):HTMLElement{
   return footer;
 }
 
-function initialHeader():HTMLElement{
+function initialHeader(): HTMLElement {
   /**
    * Use to create a modal, so we can add HTMLElements into this new modal
    */
-  let header:HTMLElement = document.createElement("div");
-  let subHeader:HTMLElement = document.createElement("div");
+  let header: HTMLElement = document.createElement("div");
+  let subHeader: HTMLElement = document.createElement("div");
   header.className = "p-Widget jp-Dialog";
   subHeader.className = "p-Widget p-Panel jp-Dialog-content";
   header.appendChild(subHeader);
@@ -284,21 +288,21 @@ function initialHeader():HTMLElement{
   return subHeader;
 }
 
-function openWindow():void {
+function openWindow(): void {
   /**
    * When the modal is ready, this function will show the modal (window)
    */
   insertAfter(body, document.getElementById("main"));
 }
 
-function closeWindow():void {
+function closeWindow(): void {
   /**
    * Close and clean the modal (window)
    */
   body.parentNode.removeChild(body);
 }
 
-function insertAfter (newNode:any, referenceNode:any):void {
+function insertAfter(newNode: any, referenceNode: any): void {
   /**
    * Insert modal into the corresponding position of Document.body
    */
