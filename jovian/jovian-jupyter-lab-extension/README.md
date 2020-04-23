@@ -19,7 +19,7 @@
 **To install Jupyter Lab Extension**
 
 ```
-jupyter labextension install jovian-jupyterlab
+jupyter labextension install @jovianml/jupyterlab-extension
 ```
 
 **To install Jovian python library**

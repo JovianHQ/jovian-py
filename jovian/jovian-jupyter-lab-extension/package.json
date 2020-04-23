@@ -1,6 +1,7 @@
 {
-  "name": "jovian-jupyterlab",
-  "version": "0.1.0",
+  "private": false,
+  "name": "@jovianml/jupyterlab-extension",
+  "version": "0.1.1",
   "description": "The platform for all your Data Science projects",
   "keywords": [
     "jovain.ml",
