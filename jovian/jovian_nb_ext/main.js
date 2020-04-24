@@ -514,7 +514,107 @@ define([
       return form;
     };
 
-    const saveParams = function() {
+    const settingsUI = function() {
+      /**
+       * Body of the Form
+       *
+       * Layout:
+       *  - div :
+       *    - label : text: Set Default Commit Parameters
+       *    - input : type: button | id: default_param_button | class: btn btn-primary | text: Set Default | title: Open Parameter Window to set Default Parameters
+       *
+       *    - label : text: Clear API Key
+       *    - input : type: button | id: clear_api_button | class: btn btn-primary | text: Clear Key | title: Clear the Jovian API key
+       *
+       *    - label : text: Add/Change API Key
+       *    - input : type: button | id: change_api_button | class: btn btn-primary | text: Change Key | title: Add/Change the Jovian API key
+       *
+       *    - label : text: Disable Jovian Extension
+       *    - input : type: button | id: disable_button | class: btn btn-primary | text: Disable | title: Disable the Jovian Extension
+       *
+       */
+      const div = $("<div/>").attr("id", "input_div");
+
+      const option_Set_Default = $("<div/>")
+        .append($("<label/>").text("Set default parameters for jovian commit"))
+        .append(
+          $("<button/>")
+            .attr("id", "default_param_button")
+            .addClass("btn btn-primary")
+            .text("Set Default Parameters")
+            .attr("title", "Set default parameters for jovian commit")
+        );
+
+      const option_Clear_API = $("<div/>")
+        .append($("<label/>").text("Clear API Key"))
+        .append(
+          $("<button/>")
+            .attr("id", "clear_api_button")
+            .addClass("btn btn-primary")
+            .text("Clear")
+            .attr("title", "Clear the Jovian API key")
+        );
+
+      const option_Change_API = $("<div/>")
+        .append($("<label/>").text("Add/Change Jovian API Key"))
+        .append(
+          $("<button/>")
+            .attr("id", "change_api_button")
+            .addClass("btn btn-primary")
+            .text("Change")
+            .attr("title", "Add/Change Jovian API key")
+        );
+
+      const option_Disable_Ext = $("<div/>")
+        .append($("<label/>").text("Disable Jovian Extension"))
+        .append(
+          $("<button/>")
+            .attr("id", "disable_button")
+            .addClass("btn btn-primary")
+            .text("Disable")
+            .attr("title", "Disable the Jovian Extension")
+        );
+
+      div
+        .append(option_Set_Default)
+        .append(option_Clear_API)
+        .append(option_Change_API)
+        .append(option_Disable_Ext);
+
+      return div;
+    };
+
+    const settingsDialog = function() {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: settingsUI()
+       *
+       */
+      const jvn_setting_modal = dialog.modal({
+        show: false,
+        title: "Jovian Settings",
+        body: settingsUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        open: function() {
+          const option1 = $("#default_param_button");
+          const option2 = $("#clear_api_button");
+          const option3 = $("#change_api_button");
+          const option4 = $("#disable_button");
+
+          option1.click(() => jvn_setting_modal.find(".close").click());
+          option1.click(() => openModal(saveParams));
+          option2.click(() => clearAPI());
+          option3.click(() => changeAPI());
+          option4.click(() => removeExtension());
+        }
+      });
+      jvn_setting_modal.modal("show");
+    };
+
+    //to save parameters and commit with those parameters
+    const saveParamsAndCommit = function() {
       /**
        * Initializes a dialog modal triggered by a dropdown button on the toolbar
        *
@@ -636,6 +736,128 @@ define([
       jvn_params_modal.modal("show");
     };
 
+    //just save new default parameters
+    const saveParams = function() {
+      /**
+       * Initializes a dialog modal triggered by a dropdown button on the toolbar
+       *
+       * Body: formParamsUI()
+       *
+       * Button:
+       *  - Set: store all params to window.jvn_params
+       */
+      const jvn_default_params_modal = dialog.modal({
+        show: false,
+        title: "Set Default Parameters",
+        body: formParamsUI,
+        notebook: Jupyter.notebook,
+        keyboard_manager: Jupyter.notebook.keyboard_manager,
+        buttons: {
+          Cancel: {},
+          Set: {
+            class: "btn-primary",
+            click: function() {
+              storeParams();
+            }
+          }
+        },
+        open: async function() {
+          let project_id_helper = async () => {
+            if (getParams() == null) {
+              return;
+            }
+            let project_id = getParams().project_id;
+            let j_id = "#project_id_box";
+            if (project_id.length != 0 && !$(j_id).prop("disabled")) {
+              $(j_id).val(project_id);
+              return;
+            }
+            let project_title = "";
+            await getProjectTitle().then(title => {
+              if (title != undefined) {
+                project_title = title;
+              }
+              if (!$(j_id).prop("disabled")) {
+                $(j_id).val(project_title);
+              }
+            });
+          };
+          let git_message_helper = () => {
+            if (!$("#git_msg_box").prop("disabled")) {
+              $("#git_msg_box").val($("#project_msg_box").val());
+            }
+          };
+
+          let params = getParams();
+          if (params != null) {
+            $("#project_msg_box").val(params.message);
+            $("#nb_filename_box").val(params.filename);
+            $("#files_box").val(params.files);
+            $("#env_opt option:contains(" + params.environment + ")").prop(
+              "selected",
+              true
+            );
+            await project_id_helper();
+            $("#if_new option:contains(" + params.new_project + ")").prop(
+              "selected",
+              true
+            );
+            $("#nb_opt option:contains(" + params.privacy + ")").prop(
+              "selected",
+              true
+            );
+            $("#artifacts_box").val(params.outputs);
+            $("#if_git option:contains(" + params.git_commit + ")").prop(
+              "selected",
+              true
+            );
+            // $("#git_msg_box").val(params.git_message);
+            git_message_helper();
+          } else {
+            $("#nb_filename_box").val(
+              Jupyter.notebook.notebook_name.replace(".ipynb", "")
+            );
+            $("#env_opt option:contains('auto')").prop("selected", true);
+            $("#if_new option:contains('False')").prop("selected", true);
+            $("#if_git option:contains('True')").prop("selected", true);
+            $("#nb_opt option:contains('auto')").prop("selected", true);
+          }
+
+          let show = (target, list) => {
+            let keys = Object.keys(list);
+            keys.forEach(k => {
+              if ($(target + " option:selected").text() == "True") {
+                $(k).prop("disabled", !list[k]);
+              } else {
+                $(k).prop("disabled", list[k]);
+              }
+              if ($(k).prop("disabled") && $(k).is("input")) {
+                $(k).val("");
+              }
+            });
+          };
+          show("#if_new", { "#project_id_box": false });
+          $("#if_new").change(() => {
+            show("#if_new", { "#project_id_box": false });
+            project_id_helper();
+          });
+
+          $(jvn_default_params_modal)
+            .find(".modal-content")
+            .show("fast");
+        }
+      });
+
+      const modal = $(jvn_default_params_modal).find(".modal-content");
+      modal
+        .children()
+        .first()
+        .remove();
+      modal.parent().css("width", "500px");
+      modal.hide();
+      jvn_default_params_modal.modal("show");
+    };
+
     const formDropDownUI = function() {
       /**
        * module 1:
@@ -657,12 +879,15 @@ define([
       //   .addClass("btn btn-primary")
       //   .text("Open sidebar");
 
-      // const option3 = $("<button/>")
-      //   .attr("id", "jvn_module1_option3")
-      //   .addClass("btn btn-primary")
-      //   .text("Settings");
+      const option3 = $("<button/>")
+        .attr("id", "jvn_module1_option3")
+        .addClass("btn btn-primary")
+        .text("Settings");
 
-      div.append(option1);
+      div
+        .append(option1)
+        .append(option2)
+        .append(option3);
 
       return div;
     };
@@ -688,9 +913,9 @@ define([
           const option1 = $("#jvn_module1_option1");
           const option2 = $("#jvn_module1_option2");
           const option3 = $("#jvn_module1_option3");
-          option1.click(() => openModal(saveParams));
+          option1.click(() => openModal(saveParamsAndCommit));
           option2.click(() => alert("feature coming soon"));
-          option3.click(() => openModal(clearParams));
+          option3.click(() => openModal(settingsDialog));
         }
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
@@ -703,6 +928,52 @@ define([
         .offset({ left: jvn_pos.left, top: jvn_pos.top + 25 })
         .modal("show");
     };
+
+    // disables the extension
+    function removeExtension() {
+      Jupyter.notebook.save_checkpoint();
+      new Promise(resolve => {
+        remove_ext =
+        "import os\n" +
+        "os.system('jovian disable-extension')\n";
+        console.log(remove_ext);
+        alert(
+          "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable the Jovian extension"
+        );
+        Jupyter.notebook.kernel.execute(remove_ext);
+        resolve();
+      });
+      location.reload();
+    }
+
+    //Clears the API key
+    function clearAPI() {
+      new Promise(resolve => {
+        const purge_api =
+          "from jovian.utils.credentials import purge_creds\n" +
+          "purge_creds()";
+
+        Jupyter.notebook.kernel.execute(purge_api);
+        alert("You have cleared the API key");
+        resolve();
+      });
+    }
+
+    //Changes the API key
+    function changeAPI() {
+      new Promise(resolve => {
+        const purge_api =
+          "from jovian.utils.credentials import purge_creds\n" +
+          "purge_creds()";
+
+        Jupyter.notebook.kernel.execute(purge_api);
+        resolve();
+      });
+      setTimeout(() => {
+        //to allow purge_api to complete
+        modalInit();
+      }, 400);
+    }
 
     /* 
       Adding a button for the nbextension in the notebook's toolbar 
@@ -726,9 +997,10 @@ define([
       help: "Show a list of parameters for user to set up",
       handler: showDropDown //saveParams
     };
+
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
-      "set_params_ext",
+      "set_commit_params_ext",
       prefix
     );
 

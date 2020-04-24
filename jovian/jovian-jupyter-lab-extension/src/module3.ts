@@ -43,7 +43,7 @@ function setting():void{
     () => {
       NBKernel.execute("import os\nos.system('jupyter labextension disable jovian_lab_extension')").then(
         ()=>{
-          alert("You have disabled the Jovian extension, please refresh your browser.");
+          alert("You have disabled the Jovian extension, please refresh your browser. Run !jovian enable-extension in the lab to renable the Jovian extension");
           closeWindow();
         }
       );
