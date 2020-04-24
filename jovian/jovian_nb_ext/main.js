@@ -938,7 +938,7 @@ define([
         "os.system('jovian disable-extension')\n";
         console.log(remove_ext);
         alert(
-          "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable Jovian extension"
+          "You have disabled the Jovian Extension. Run !jovian enable-extension in the notebook to renable the Jovian extension"
         );
         Jupyter.notebook.kernel.execute(remove_ext);
         resolve();
