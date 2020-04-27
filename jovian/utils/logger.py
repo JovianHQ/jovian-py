@@ -5,6 +5,6 @@ import click
 def log(msg, pre=True, error=False, color=None):
     """Print a message to stdout"""
     if error:
-        click.secho(('[jovian] ' if pre else '') + 'Error: ' + msg, fg='bright_red')
+        click.secho(('[jovian] ' if pre else '') + 'Error: ' + msg, fg='red')
     else:
         click.echo(('[jovian] ' if pre else '') + click.style(msg, fg=color))
