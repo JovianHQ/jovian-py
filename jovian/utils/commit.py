@@ -14,6 +14,7 @@ from jovian.utils.logger import log
 from jovian.utils import api, git
 
 _current_slug = None
+warnings = []
 
 
 def commit(message=None,
@@ -83,6 +84,8 @@ def commit(message=None,
         <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
     """
     global _current_slug
+    global warnings
+    warnings = []
 
     # Deprecated argument (secret)
     if privacy == 'auto' and 'secret' in kwargs:
@@ -123,7 +126,7 @@ def commit(message=None,
     # Skip if unsupported environment
     if not in_script() and not in_notebook():
         log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
-        return
+        return (False, 'Failed to detect Jupyter notebook or Python script', None)
 
     # Attempt to save Jupyter notebook
     if in_notebook():
@@ -135,14 +138,18 @@ def commit(message=None,
     filename = _parse_filename(filename)
     if filename is None:
         log(FILENAME_MSG)
-        return
+        return (False, FILENAME_MSG, None)
 
     # Ensure that the file exists
     if not os.path.exists(filename):
         log('The detected/provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
             'as the "filename" argument to "jovian.commit".')
-        return
+        return (False,
+                'The detected/provided file "' + filename +
+                '" does not exist. Please provide the correct notebook filename ' +
+                'as the "filename" argument to "jovian.commit".',
+                None)
 
     # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
@@ -167,6 +174,7 @@ def commit(message=None,
     _attach_records(slug, version)
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
+    return (True, urljoin(read_webapp_url(), username, title), warnings)
 
 
 def _parse_filename(filename):
@@ -247,6 +255,7 @@ def _attach_file(path, gist_slug, version, output=False):
             api.upload_file(gist_slug, file_obj, folder, version, output)
     except Exception as e:
         log(str(e) + " (" + path + ")", error=True)
+        warnings.append(str(e) + " (" + path + ")")
 
 
 def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
@@ -298,6 +307,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
             _attach_file(path, gist_slug, version, output)
         else:
             log('Ignoring "' + path + '" (not found)', error=True)
+            warnings.append('Ignoring "' + path + '" (not found)')
 
 
 def _capture_environment(environment, gist_slug, version):
@@ -323,6 +333,7 @@ def _capture_environment(environment, gist_slug, version):
                 captured = True
             except CondaError as e:
                 log(str(e), error=True)
+                warnings.append(str(e))
 
         if not captured and (environment == 'pip' or environment == 'auto'):
             # Capture pip environment
@@ -330,6 +341,7 @@ def _capture_environment(environment, gist_slug, version):
                 upload_pip_env(gist_slug, version)
             except Exception as e:
                 log(str(e), error=True)
+                warnings.append(str(e))
 
 
 def _perform_git_commit(filename, git_commit, git_message):

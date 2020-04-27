@@ -21,16 +21,18 @@ async function commit(): Promise<void> {
     if (result == true) {
       const jvn_commit =
         "from jovian import commit\n" +
+        "import json\n" +
         "import io\n" +
         "from contextlib import redirect_stdout\n" +
         "f = io.StringIO()\n" +
         "with redirect_stdout(f):\n" +
+        "\tstatus, msg, warnings = " +
         commit +
-        "out = f.getvalue().splitlines()[-1]\n" +
-        "if(out.split()[1] == 'Committed'):\n" +
-        "\tprint(out.split()[-1])\n" +
+        "\n" +
+        "if(status):\n" +
+        "\tprint(json.dumps({'success': str(status),'url': msg,'warnings': warnings}))\n" +
         "else:\n" +
-        "\tprint(out)";
+        "\tprint(json.dumps({'success': str(status),'msg': msg}))";
       await NBKernel.execute(jvn_commit).then(result => {
         committedWindow((result as string).trim());
       });
@@ -49,8 +51,7 @@ export function askAPIKeys(): void {
    */
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
-  let span: HTMLElement = addText("Please enter your API key from ");
-  let a: HTMLElement = addLink("Jovian", "https://jovian.ml");
+  let span: HTMLElement = addText("Please enter your API key from Jovian");
   let err: HTMLElement = addErrorMsg("Invalid API key");
   let input: HTMLElement = addInput("Paste your API key", "password");
   let inError = (isError: boolean) => {
@@ -67,7 +68,6 @@ export function askAPIKeys(): void {
       (<any>inp.style) = "";
     }
   };
-  span.appendChild(a);
   div.appendChild(span);
   div.appendChild(input);
   header.appendChild(div);
@@ -97,10 +97,10 @@ function setAPIKeys(value: string, inError: any): void {
       getAPIKeys()
         .then(result => {
           if (result == true) {
-            alert(
-              "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
-            );
             closeWindow();
+            alertWindow(
+              "Success! API key saved. Use commit button to upload your notebook to Jovian."
+            );
           } else {
             inError(true);
           }
@@ -114,25 +114,46 @@ function setAPIKeys(value: string, inError: any): void {
     });
 }
 
-function committedWindow(url: string): void {
+function committedWindow(output: string): void {
   /**
    * Diaplays a window after committing to Jovian, and
    * this window will show whether the committing was
    * successful or not
    */
+  console.log(output);
+  const outputObj = JSON.parse(output);
+  const status = outputObj["success"] === "True";
+
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
-  if (url.startsWith("https://")) {
-    let label = addText("Committed Successfully!");
-    let nb_link = addLink(url, url);
+
+  if (status) {
+    const label = addText("Committed Successfully!");
+    const url = outputObj["url"];
+    const warnings = outputObj["warnings"];
+    const nbLink = addLink(url, url);
+
     div.appendChild(label);
     div.appendChild(document.createElement("br"));
     div.appendChild(document.createElement("br"));
-    div.appendChild(nb_link);
+    div.appendChild(nbLink);
+
+    if (warnings.length > 0) {
+      div.appendChild(document.createElement("br"));
+      div.appendChild(document.createElement("br"));
+      div.appendChild(addText("Warning!"));
+
+      warnings.forEach((element: string) => {
+        const p = document.createElement("p");
+        p.innerText = element;
+        div.appendChild(p);
+      });
+    }
   } else {
-    let label = addText("Commit failed! " + url);
+    let label = addText("Commit failed! " + outputObj["msg"]);
     div.appendChild(label);
   }
+
   header.appendChild(div);
   header.appendChild(addButtons(null));
   openWindow();
@@ -288,6 +309,18 @@ function initialHeader(): HTMLElement {
   return subHeader;
 }
 
+function alertWindow(msg: string): void {
+  /**
+   * alert Dialog inside Jupyter lab instead of a browser alert
+   */
+  const header: HTMLElement = initialHeader();
+  let div: HTMLElement = document.createElement("div");
+  div.appendChild(addText(msg));
+  header.append(div);
+  header.append(addButtons(null));
+  openWindow();
+}
+
 function openWindow(): void {
   /**
    * When the modal is ready, this function will show the modal (window)
@@ -309,4 +342,4 @@ function insertAfter(newNode: any, referenceNode: any): void {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-export { commit };
+export { commit, alertWindow };
