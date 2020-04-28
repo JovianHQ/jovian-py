@@ -12,6 +12,17 @@ define([
      *  else prompts the user with a modal to get the API key.
      */
 
+    const setCurrentSlug = () => {
+      const filename = Jupyter.notebook.notebook_name;
+      const code =
+        "from jovian.utils.slug import set_current_slug\n" +
+        "set_current_slug('" +
+        filename +
+        "')";
+      Jupyter.notebook.kernel.execute(code);
+    };
+    setCurrentSlug();
+
     const jvnCommit = () =>
       /**
        * Commits the notebook to Jovian(https://jovian.ml).
@@ -692,7 +703,7 @@ define([
     //toolbar button to commit to Jovian
     const save_action = {
       icon: "fa-bookmark-o", // icon
-      help: "Commit to Jovian", // tooltip
+      help: "Commit to Jovian...", // tooltip
       handler: modalInit // trigger for the click
     };
     const save_action_name = Jupyter.actions.register(

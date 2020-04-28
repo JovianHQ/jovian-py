@@ -11,9 +11,11 @@ from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_en
 from jovian.utils.records import log_git, get_records, reset
 from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
+from jovian.utils.slug import get_current_slug
 from jovian.utils import api, git
 
-_current_slug = None
+
+_current_slug = get_current_slug()
 
 
 def commit(message=None,
