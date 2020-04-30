@@ -10,19 +10,9 @@ from jovian.utils.error import CondaError
 
 def get_conda_bin():
     """Get the path to the Anaconda binary"""
-    conda_bin = 'conda'
-    # Try executing the `conda` command
-    if os.popen(conda_bin).read().strip() == '':
-        # If it fails, look for $CONDA_EXE
-        conda_exe = os.popen('echo $CONDA_EXE').read().strip()
-        # Check if it returns a valid path
-        if conda_exe != '' and conda_exe != '$CONDA_EXE':
-            # Update binary and execute again
-            conda_bin = conda_exe
-
-    if os.popen(conda_bin).read().strip() == '':
+    conda_bin = os.environ.get("CONDA_EXE")
+    if not conda_bin:
         raise CondaError(CONDA_NOT_FOUND)
-
     logging.info('Anaconda binary: ' + conda_bin)
     return conda_bin
 
