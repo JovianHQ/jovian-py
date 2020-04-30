@@ -61,22 +61,17 @@ def test_get_conda_bin_look_for_conda_exe_raises_error(mock_popen):
         get_conda_bin()
 
 
-@mock.patch("os.popen")
-def test_get_conda_env_name(mock_popen):
-    mock_popen().read().strip.return_value = 'fake-env'
-    assert get_conda_env_name() == 'fake-env'
-
-
-@mock.patch("os.popen")
-def test_get_conda_env_name_base(mock_popen):
-    mock_popen().read().strip.return_value = ''
-    assert get_conda_env_name() == 'base'
-
-
-@mock.patch("os.popen")
-def test_get_conda_env_name_echo_conda_default_env(mock_popen):
-    mock_popen().read().strip.return_value = '$CONDA_DEFAULT_ENV'
-    assert get_conda_env_name() == 'base'
+@pytest.mark.parametrize(
+    "env_dict, expected_result",
+    [
+        ({"CONDA_DEFAULT_ENV": "fake-env"}, "fake-env"),
+        ({"CONDA_DEFAULT_ENV": ""}, "base"),
+        ({}, "base")
+    ]
+)
+def test_get_conda_env_name(env_dict, expected_result):
+    with mock.patch.dict("os.environ", env_dict, clear=True):
+        assert get_conda_env_name() == expected_result
 
 
 @mock.patch("jovian.utils.environment.get_conda_env_name", return_value='fake-env')

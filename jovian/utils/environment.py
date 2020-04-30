@@ -30,6 +30,10 @@ def get_conda_bin():
 def get_conda_env_name():
     """Get the name of the active conda environment"""
     env_name = os.environ.get("CONDA_DEFAULT_ENV", "base")
+
+    if not env_name:
+        env_name = "base"
+
     logging.info('Anaconda environment: ' + env_name)
     return env_name
 
