@@ -91,6 +91,14 @@ define([
             iopub: { output: jvnLog }
           });
         });
+        Jupyter.notebook.events.one(
+          "notebook_save_failed.Notebook",
+          function () {
+            Jupyter.notebook.kernel.execute(jvn_commit, {
+              iopub: { output: jvnLog }
+            });
+          }
+        );
       });
 
     const validateApi = () =>
