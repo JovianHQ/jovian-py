@@ -14,7 +14,6 @@ from jovian.utils.logger import log
 from jovian.utils.slug import get_current_slug
 from jovian.utils import api, git
 
-
 _current_slug = None
 
 
