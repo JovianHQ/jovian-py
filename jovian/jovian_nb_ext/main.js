@@ -21,7 +21,10 @@ define([
         "')";
       Jupyter.notebook.kernel.execute(code);
     };
-    setCurrentSlug();
+    Jupyter.notebook.events.on("kernel_ready.Kernel", () => {
+      // Extension only loads up when there is broswer refresh, this ensures even when kernel is restarted
+      setCurrentSlug();
+    });
 
     const jvnCommit = () =>
       /**
