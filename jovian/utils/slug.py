@@ -4,6 +4,7 @@ _current_slug = None
 
 
 def set_current_slug(filename):
+    """ Helper function to set current slug from notebook extension"""
     global _current_slug
     if _current_slug is None:
         _current_slug = get_notebook_slug(filename)

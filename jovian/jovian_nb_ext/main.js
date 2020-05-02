@@ -706,7 +706,7 @@ define([
     //toolbar button to commit to Jovian
     const save_action = {
       icon: "fa-bookmark-o", // icon
-      help: "Commit to Jovian...", // tooltip
+      help: "Commit to Jovian", // tooltip
       handler: modalInit // trigger for the click
     };
     const save_action_name = Jupyter.actions.register(

@@ -190,6 +190,7 @@ def _parse_filename(filename):
 def _parse_project(project, filename, new_project):
     """Perform the required checks and get the final project name"""
     global _current_slug
+
     # Check for existing project in-memory or in .jovianrc
     if not new_project and project is None:
         # From in-memory variable
