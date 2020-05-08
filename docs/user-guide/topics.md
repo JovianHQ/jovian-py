@@ -1,10 +1,10 @@
-## Classifying your notebooks with topics
+## Adding Topics to you Notebooks
 
 <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian </a> allows you to add topics to your notebooks. Adding topics to your notebooks helps other people find and contribute to your projects easily. You can add topics related to your project's intended purpose, subject area, frameworks/languages used, or other important qualities that you find useful.
 
 ### About Topics
 
-With topics, you can explore notebooks in a particular subject area, find projects to contribute to, discover new solutions to a specific problem, or simply explore the frameworks that you love in action. Topics appear on the main page of a notebook. You can click a topic name to see related list of other notebooks classified with that topic.
+With topics, you can explore notebooks in a particular subject area, find projects to contribute to, discover new solutions to a specific problem, or simply explore the frameworks that you love in action. Topics appear on the main page of a notebook. You can click a topic name to see related list of other notebooks tagged with that topic.
 
 <img src="https://i.imgur.com/HmBU5s0.png" class="screenshot" alt="Topics Box">
 
@@ -34,7 +34,7 @@ To browse the most used topics, go to [https://jovian.ml/explore](https://jovian
 
 Public, secret and private notebooks can have topics, although you will only see private/secret notebooks that you have access to in topic search results.
 
-To explore more notebooks classified with a topic, simply click on a topic badge that appears in the Notebook page.
+To explore more notebooks tagged with a topic, simply click on a topic badge that appears in the Notebook page.
 
 You can search for notebooks that are associated with a particular topic. You can also search for a list of topics on Jovian. Change the URL on topics page with a comma separated list of topics.
 
