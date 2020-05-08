@@ -13,12 +13,15 @@ To browse the most used topics, go to [https://jovian.ml/explore](https://jovian
 ### How to add Topics in your notebooks?
 
 1.&nbsp;Click on "Add Topics" button in the Notebook page.
+
 <img src="https://i.imgur.com/fhJ6MTq.png" class="screenshot" alt="Add Topics button in Notebook landing page">
 
 2.&nbsp;Type the topic you want to add to your notebook, then type a space. Only lowercase letters, digits and hyphens are allowed in a topic name.
+
 <img src="https://i.imgur.com/xSm1JG9.png" class="screenshot" alt="Type/add/modify topics">
 
 3.&nbsp;After you're finished adding topics, click "Save".
+
 <img src="https://i.imgur.com/tdzcrfv.png" class="screenshot" alt="Save topics">
 
 ```eval_rst
