@@ -22,14 +22,15 @@ To browse the most used topics, go to [https://jovian.ml/explore](https://jovian
 NOTE: [Collaborators](collaborate.md) in your project will also be able to Add/Modify topics.
 
 ### Explore Topics
-Public and private repositories can have topics, although you will only see private repositories that you have access to in topic search results. 
+Public and private notebooks can have topics, although you will only see private notebooks that you have access to in topic search results. 
 
 To explore more notebooks classified with a topic, simply click on any topic badge that appears in the Notebook page.
 
 You can search for notebooks that are associated with a particular topic. You can also search for a list of topics on Jovian. Change the URL on topics page with a comma separated list of topics.
+
 Examples:
 - [https://jovian.ml/topics/pytorch](https://jovian.ml/topics/pytorch)
 - [https://jovian.ml/topics/pytorch,tutorial](https://jovian.ml/topics/pytorch,tutorial)
 
-Topics Page
+### Topics Page
 <img src="https://i.imgur.com/TZdWoHp.png" class="screenshot" alt="Topics Page" >
