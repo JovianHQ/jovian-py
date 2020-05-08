@@ -4,7 +4,7 @@
 
 ### About Topics
 
-With topics, you can explore repositories in a particular subject area, find projects to contribute to, discover new solutions to a specific problem, or simply explore the frameworks that you love in action. Topics appear on the main page of a notebook. You can click a topic name to see related list of other notebooks classified with that topic.
+With topics, you can explore notebooks in a particular subject area, find projects to contribute to, discover new solutions to a specific problem, or simply explore the frameworks that you love in action. Topics appear on the main page of a notebook. You can click a topic name to see related list of other notebooks classified with that topic.
 
 <img src="https://i.imgur.com/HmBU5s0.png" class="screenshot" alt="Topics Box">
 
@@ -15,7 +15,7 @@ To browse the most used topics, go to [https://jovian.ml/explore](https://jovian
 1.&nbsp;Click on "Add Topics" button in the Notebook page.
 <img src="https://i.imgur.com/fhJ6MTq.png" class="screenshot" alt="Add Topics button in Notebook landing page">
 
-2.&nbsp;Type the topic you want to add to your repository, then type a space. Only lowercase letters, digits and hyphens are allowed in a topic name .
+2.&nbsp;Type the topic you want to add to your notebook, then type a space. Only lowercase letters, digits and hyphens are allowed in a topic name.
 <img src="https://i.imgur.com/xSm1JG9.png" class="screenshot" alt="Type/add/modify topics">
 
 3.&nbsp;After you're finished adding topics, click "Save".
@@ -29,7 +29,7 @@ To browse the most used topics, go to [https://jovian.ml/explore](https://jovian
 
 ### Explore Topics
 
-Public and private repositories can have topics, although you will only see private repositories that you have access to in topic search results.
+Public, secret and private notebooks can have topics, although you will only see private/secret notebooks that you have access to in topic search results.
 
 To explore more notebooks classified with a topic, simply click on a topic badge that appears in the Notebook page.
 
@@ -40,5 +40,6 @@ Examples:
 - [https://jovian.ml/topics/pytorch](https://jovian.ml/topics/pytorch)
 - [https://jovian.ml/topics/pytorch,tutorial](https://jovian.ml/topics/pytorch,tutorial)
 
-Topics Page
+### Topics Page
+
 <img src="https://i.imgur.com/TZdWoHp.png" class="screenshot" alt="Topics Page" >
