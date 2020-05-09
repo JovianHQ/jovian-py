@@ -44,6 +44,6 @@ Examples:
 
 - <a href="https://jovian.ml/topics/pytorch,tutorial?utm_source=docs" target="_blank">https://jovian.ml/topics/pytorch,tutorial</a>
 
-### Topics Page
+<h3>Topics Page</h3>
 
 <img src="https://i.imgur.com/TZdWoHp.png" class="screenshot" alt="Topics Page" >
