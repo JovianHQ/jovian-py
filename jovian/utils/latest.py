@@ -33,7 +33,7 @@ def _print_update_message(current_version, latest_version):
         log('Run `pip install jovian --upgrade` to upgrade\n')
 
 
-def check_update(probability=1):
+def check_update(probability=0.8):
     """Check if there is a update available and logs
     current and latest version with the command to update
     the library.

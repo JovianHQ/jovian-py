@@ -461,12 +461,13 @@ def test_commit_in_notebook_filename_none(
         mock_in_script, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
 
     commit('initial commit')
-
-    expected_result = dedent("""
-        [jovian] Attempting to save notebook..
-        [jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
+    expected_result_out = dedent("""
+    [jovian] Attempting to save notebook..""")
+    expected_result_err = dedent("""
+        [jovian] Error: Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
     captured = capsys.readouterr()
-    assert captured.err.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_result_out.strip()
+    assert captured.err.strip() == expected_result_err.strip()
 
 
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
@@ -478,7 +479,7 @@ def test_commit_file_does_not_exist(
 
     commit('initial commit')
 
-    expected_result = """[jovian] The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    expected_result = """[jovian] Error: The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
     captured = capsys.readouterr()
     assert captured.err.strip() == expected_result.strip()
 
