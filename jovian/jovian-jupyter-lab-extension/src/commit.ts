@@ -155,12 +155,6 @@ function committedWindow(output: string): void {
     let label = addText("Commit failed!");
     div.appendChild(label);
 
-    if (msg) {
-      const p = document.createElement("p");
-      p.innerText = msg;
-      div.appendChild(p);
-    }
-
     if (err) {
       const p = document.createElement("p");
       p.innerText = err;
