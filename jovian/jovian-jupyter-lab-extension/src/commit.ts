@@ -10,9 +10,8 @@ async function commit(): Promise<void> {
    * Jovian, it can commit with default options or
    * commit with user-selected options
    */
-  // const nbFilename: string = NBKernel.currentNotebookName();
-  // let commit: string = 'commit(filename="' + nbFilename + '")';
-  const commit: string = `commit()`;
+  const nbFilename: string = NBKernel.currentNotebookName();
+  let commit: string = `commit(filename="${nbFilename}", jupyter_extension=True)`;
   if (lock == true) {
     return;
   }
@@ -39,7 +38,6 @@ async function commit(): Promise<void> {
       print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
 
       del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
-      console.log(jvn_commit);
 
       await NBKernel.execute(jvn_commit).then(result => {
         committedWindow((result as string).trim());
@@ -128,9 +126,8 @@ function committedWindow(output: string): void {
    * this window will show whether the committing was
    * successful or not
    */
-  console.log(output);
   const outputObj = JSON.parse(output);
-  const status = outputObj["success"] === "True";
+  const success = outputObj["success"] === "True";
   const msg = outputObj["msg"];
   const err = outputObj["err"];
   const update = outputObj["update"];
@@ -138,7 +135,7 @@ function committedWindow(output: string): void {
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
 
-  if (status) {
+  if (success) {
     const label = addText("Committed Successfully!");
     const nbLink = addLink(msg, msg);
 
@@ -155,8 +152,14 @@ function committedWindow(output: string): void {
       div.appendChild(p);
     }
   } else {
-    let label = addText("Commit failed! " + outputObj["msg"]);
+    let label = addText("Commit failed!");
     div.appendChild(label);
+
+    if (msg) {
+      const p = document.createElement("p");
+      p.innerText = msg;
+      div.appendChild(p);
+    }
 
     if (err) {
       const p = document.createElement("p");

@@ -32,7 +32,10 @@ define([
         let filename = Jupyter.notebook.notebook_name.split(".");
         filename.pop();
         filename.join();
-        let commit = "\tcommit(filename=" + getValInPython(filename) + ")\n";
+        let commit = `commit(filename=${getValInPython(
+          filename
+        )}, jupyter_extension=True)`;
+
         // if we have a set of params already, then use it to call commit.
         if ((params = getParams()) != null) {
           const new_project = params.new_project;
@@ -70,20 +73,26 @@ define([
             ")\n";
         }
 
-        const jvn_commit =
-          "from jovian import commit\n" +
-          "import io\n" +
-          "from contextlib import redirect_stdout\n" +
-          "f = io.StringIO()\n" +
-          "with redirect_stdout(f):\n" +
-          "\t" +
-          commit +
-          "out = f.getvalue().splitlines()[-1]\n" +
-          "if(out.split()[1] == 'Committed'):\n" +
-          "\tprint(out.split()[-1])\n" +
-          "else:\n" +
-          "\tprint(out)";
-
+        const jvn_commit = `
+        from contextlib import redirect_stdout, redirect_stderr
+        from io import StringIO
+        import json
+        
+        jvn_update = StringIO()
+        
+        with redirect_stdout(jvn_update):
+          from jovian import commit
+        
+        jvn_f_out = StringIO()
+        jvn_f_err = StringIO()
+        
+        with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+          jvn_status, jvn_msg = ${commit}
+  
+        print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+  
+        del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
+        console.log(jvn_commit);
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
         Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
@@ -157,10 +166,15 @@ define([
             jvn_notif.element.show(); // show "committing to jovian..." on the menubar
 
             jvnCommit().then(log_data => {
+              const output = JSON.parse(log_data);
+              const success = output["success"] === "True";
+              const msg = output["msg"];
+              const err = output["err"];
+              const update = output["update"];
+
+              console.log(output);
               function copyToClipboard() {
-                jvn_modal
-                  .find("#i_label")
-                  .append($("<textarea>").val(log_data)); // temp element
+                jvn_modal.find("#i_label").append($("<textarea>").val(msg)); // temp element
                 jvn_modal.find("textarea").select(); // select the text as required by execCommand
                 document.execCommand("copy");
                 jvn_modal.find("textarea").remove();
@@ -175,11 +189,11 @@ define([
               }
 
               // Successful Commit
-              if (log_data.startsWith("https://")) {
+              if (success) {
                 const nb_link = $("<a/>")
-                  .attr("href", log_data)
+                  .attr("href", msg)
                   .attr("target", "_blank")
-                  .text(log_data);
+                  .text(msg);
 
                 const copy_btn = $("<button/>")
                   .attr("id", "copy")
@@ -196,8 +210,26 @@ define([
                   .append($("<br/>"))
                   .append(nb_link)
                   .append(copy_btn);
+
+                if (err) {
+                  const label = $("<h3/>").text("Warning! ");
+                  const p = $("<p/>").text(err);
+                  jvn_modal.find("#i_label").append(label).append(p);
+                }
               } else {
-                jvn_modal.find("#i_label").text("Commit failed! " + log_data);
+                jvn_modal.find("#i_label").text("Commit failed! ");
+
+                if (err) {
+                  const p = $("<p/>").text(err);
+                  jvn_modal.find("#i_label").append(p);
+                }
+              }
+
+              if (update) {
+                const label = $("<h3/>").text("Update Available! ");
+                const p = $("<p/>").text(update);
+
+                jvn_modal.find("#i_label").append(label).append(p);
               }
 
               jvn_notif.element.hide(); // hide "Committing to Jovian..."
