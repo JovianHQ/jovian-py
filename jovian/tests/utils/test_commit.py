@@ -466,7 +466,7 @@ def test_commit_in_notebook_filename_none(
         [jovian] Attempting to save notebook..
         [jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.err.strip() == expected_result.strip()
 
 
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
@@ -480,7 +480,7 @@ def test_commit_file_does_not_exist(
 
     expected_result = """[jovian] The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.err.strip() == expected_result.strip()
 
 
 def mock_create_gist_simple(*args, **kwargs):
