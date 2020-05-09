@@ -331,10 +331,8 @@ def _capture_environment(environment, gist_slug, version):
         if environment == 'auto' or environment == 'conda':
             # Capture conda environment
             try:
-                # upload_conda_env(gist_slug, version)
-                # captured = True
-                log("hello", error=True)
-                log("world", error=True)
+                upload_conda_env(gist_slug, version)
+                captured = True
             except CondaError as e:
                 log(str(e), error=True)
 

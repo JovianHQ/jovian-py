@@ -92,7 +92,7 @@ define([
         print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
   
         del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
-        console.log(jvn_commit);
+
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
         Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
@@ -172,7 +172,6 @@ define([
               const err = output["err"];
               const update = output["update"];
 
-              console.log(output);
               function copyToClipboard() {
                 jvn_modal.find("#i_label").append($("<textarea>").val(msg)); // temp element
                 jvn_modal.find("textarea").select(); // select the text as required by execCommand
