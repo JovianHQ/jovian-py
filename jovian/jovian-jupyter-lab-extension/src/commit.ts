@@ -10,8 +10,9 @@ async function commit(): Promise<void> {
    * Jovian, it can commit with default options or
    * commit with user-selected options
    */
-  const nbFilename: string = NBKernel.currentNotebookName();
-  let commit: string = '\tcommit(filename="' + nbFilename + '")\n';
+  // const nbFilename: string = NBKernel.currentNotebookName();
+  // let commit: string = 'commit(filename="' + nbFilename + '")';
+  const commit: string = `commit()`;
   if (lock == true) {
     return;
   }
@@ -19,20 +20,27 @@ async function commit(): Promise<void> {
   await saveNotebook();
   getAPIKeys().then(async result => {
     if (result == true) {
-      const jvn_commit =
-        "from jovian import commit\n" +
-        "import json\n" +
-        "import io\n" +
-        "from contextlib import redirect_stdout\n" +
-        "f = io.StringIO()\n" +
-        "with redirect_stdout(f):\n" +
-        "\tstatus, msg, warnings = " +
-        commit +
-        "\n" +
-        "if(status):\n" +
-        "\tprint(json.dumps({'success': str(status),'url': msg,'warnings': warnings}))\n" +
-        "else:\n" +
-        "\tprint(json.dumps({'success': str(status),'msg': msg}))";
+      const jvn_commit = `
+      from contextlib import redirect_stdout, redirect_stderr
+      from io import StringIO
+      import json
+      
+      jvn_update = StringIO()
+      
+      with redirect_stdout(jvn_update):
+        from jovian import commit
+        
+      jvn_f_out = StringIO()
+      jvn_f_err = StringIO()
+      
+      with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+        jvn_status, jvn_msg = ${commit}
+
+      print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+
+      del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
+      console.log(jvn_commit);
+
       await NBKernel.execute(jvn_commit).then(result => {
         committedWindow((result as string).trim());
       });
@@ -123,35 +131,45 @@ function committedWindow(output: string): void {
   console.log(output);
   const outputObj = JSON.parse(output);
   const status = outputObj["success"] === "True";
+  const msg = outputObj["msg"];
+  const err = outputObj["err"];
+  const update = outputObj["update"];
 
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
 
   if (status) {
     const label = addText("Committed Successfully!");
-    const url = outputObj["url"];
-    const warnings = outputObj["warnings"];
-    const nbLink = addLink(url, url);
+    const nbLink = addLink(msg, msg);
 
     div.appendChild(label);
     div.appendChild(document.createElement("br"));
-    div.appendChild(document.createElement("br"));
     div.appendChild(nbLink);
+    div.appendChild(document.createElement("br"));
 
-    if (warnings.length > 0) {
-      div.appendChild(document.createElement("br"));
+    if (err) {
       div.appendChild(document.createElement("br"));
       div.appendChild(addText("Warning!"));
-
-      warnings.forEach((element: string) => {
-        const p = document.createElement("p");
-        p.innerText = element;
-        div.appendChild(p);
-      });
+      const p = document.createElement("p");
+      p.innerText = err;
+      div.appendChild(p);
     }
   } else {
     let label = addText("Commit failed! " + outputObj["msg"]);
     div.appendChild(label);
+
+    if (err) {
+      const p = document.createElement("p");
+      p.innerText = err;
+      div.appendChild(p);
+    }
+  }
+
+  if (update) {
+    div.appendChild(addText("Update Available!"));
+    const p = document.createElement("p");
+    p.innerText = update;
+    div.appendChild(p);
   }
 
   header.appendChild(div);

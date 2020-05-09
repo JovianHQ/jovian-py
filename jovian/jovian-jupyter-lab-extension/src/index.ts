@@ -41,7 +41,7 @@ class JovainButtonExtension
       className: "jovian-lab-ext",
       icon: downloadIcon,
       onClick: callback,
-      tooltip: "commit to jovian"
+      tooltip: "Commit to Jovian"
     });
 
     // Add the toolbar button to the notebook
