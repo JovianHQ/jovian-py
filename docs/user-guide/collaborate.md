@@ -26,4 +26,4 @@ You can find the option to `Public`, `Secret` and `Private` in the settings for 
 
 <img src="https://i.imgur.com/sHJrtYM.gif" class="screenshot" alt="private jupyter notebooks" >
 
-Note that Private and Secret notebooks will still be visible when you're viewing your own profile. To hide from your own profile you can archive it.
+Note that Private and Secret notebooks will still be visible when you're viewing your own profile. To hide a notebook from your own profile you can archive it.
