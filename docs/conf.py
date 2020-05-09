@@ -33,7 +33,8 @@ html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
 
 html_theme_options = {
     'sticky_navigation': False,
-    'analytics_id': os.getenv('ANALYTICS_ID', '')
+    'analytics_id': os.getenv('ANALYTICS_ID', ''),
+    'collapse_navigation': False
 }
 
 html_context = {
