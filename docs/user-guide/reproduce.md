@@ -66,6 +66,8 @@ jovian pull
 
 ### Fork
 
+A _fork_ is a copy of a notebook. Forking a notebook version allows you to freely experiment with changes without affecting the original notebook.
+
 When you <a href="#clone">clone</a> a notebook from Jovian, it creates a _local_ copy of the notebook in your machine. You can fork a notebook instead, to create a copy in your Jovian profile.
 
 <h4>Forking a notebook</h4>
