@@ -20,8 +20,10 @@ Users can comment on any code cells individually and maintain that thread to hav
 
 You can find the option to `Public`, `Secret` and `Private` in the settings for each notebook.
 
-- **Public** : These notebooks are visible on your profile and accessible to all.
-- **Secret** : These notebooks are hidden from the profile but anyone with the link can access the notebook.
-- **Private** : These notebooks are only accessible to the owner and collaborators.
+- **Public** : These notebooks are visible on your public profile and accessible to all.
+- **Secret** : These notebooks are hidden from your public profile but anyone with the link can access the notebook.
+- **Private** : These notebooks are also hidden from your public profile and are only accessible to the owner and collaborators.
 
 <img src="https://i.imgur.com/sHJrtYM.gif" class="screenshot" alt="private jupyter notebooks" >
+
+Note that Private and Secret notebooks will still be visible when you're viewing your own profile. To hide from your own profile you can archive it.
