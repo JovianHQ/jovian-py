@@ -164,12 +164,11 @@ ul > li.toctree-l1 {
   color: #636363;
 }
 
+.wy-menu-vertical li.toctree-l1.current > a,
 .wy-menu-vertical li.toctree-l1.current > a span.toctree-expand,
 .wy-menu-vertical li.toctree-l1.current > a:hover span.toctree-expand {
-  color: #fff;
-}
-
-.wy-menu-vertical li.toctree-l1.current > a {
+  /* Text color of toc
+     List on nav bar when selected */
   color: #fff !important;
   background: #0d61ff;
 }
