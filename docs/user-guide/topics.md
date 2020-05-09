@@ -8,19 +8,19 @@ With topics, you can explore notebooks in a particular subject area, find projec
 
 <img src="https://i.imgur.com/HmBU5s0.png" class="screenshot" alt="Topics Box">
 
-To browse the most used topics, go to [https://jovian.ml/explore](https://jovian.ml/explore).
+To browse the most used topics, go to <a href="https://jovian.ml/explore?utm_source=docs" target="_blank">https://jovian.ml/explore</a>.
 
 ### How to add Topics in your notebooks?
 
-1.&nbsp;Click on "Add Topics" button in the Notebook page.
+**1.**&nbsp;Click on **Add Topics** button in the Notebook page.
 
 <img src="https://i.imgur.com/fhJ6MTq.png" class="screenshot" alt="Add Topics button in Notebook landing page">
 
-2.&nbsp;Type the topic you want to add to your notebook, then type a space. Only lowercase letters, digits and hyphens are allowed in a topic name.
+**2.**&nbsp;Type the topic you want to add to your notebook, then type a space. Only lowercase letters, digits and hyphens are allowed in a topic name.
 
 <img src="https://i.imgur.com/xSm1JG9.png" class="screenshot" alt="Type/add/modify topics">
 
-3.&nbsp;After you're finished adding topics, click "Save".
+**3.**&nbsp;After you're done adding topics, click **Save**.
 
 <img src="https://i.imgur.com/tdzcrfv.png" class="screenshot" alt="Save topics">
 
@@ -40,8 +40,9 @@ You can search for notebooks that are associated with a particular topic. You ca
 
 Examples:
 
-- [https://jovian.ml/topics/pytorch](https://jovian.ml/topics/pytorch)
-- [https://jovian.ml/topics/pytorch,tutorial](https://jovian.ml/topics/pytorch,tutorial)
+- <a href="https://jovian.ml/topics/pytorch?utm_source=docs" target="_blank">https://jovian.ml/topics/pytorch</a>
+
+- <a href="https://jovian.ml/topics/pytorch,tutorial?utm_source=docs" target="_blank">https://jovian.ml/topics/pytorch,tutorial</a>
 
 ### Topics Page
 

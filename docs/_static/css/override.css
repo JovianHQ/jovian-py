@@ -157,10 +157,18 @@ ul > li.toctree-l1 {
 }
 
 .wy-menu-vertical a,
-.wy-menu-vertical li.toctree-l1.current > a {
+.wy-menu-vertical li.toctree-l1 > a {
   /* Text color of toc 
      List on nav bar when not selected */
   color: #636363 !important;
+}
+
+.wy-menu-vertical li.toctree-l1 > a:hover span.toctree-expand {
+  color: #636363;
+}
+
+.wy-menu-vertical li.toctree-l1.current > a span.toctree-expand {
+  color: #fff;
 }
 
 .wy-menu-vertical li.toctree-l1.current > a {
