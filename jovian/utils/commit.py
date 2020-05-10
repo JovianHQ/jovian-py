@@ -131,7 +131,7 @@ def commit(message=None,
         is_jupyter_extension = kwargs['jupyter_extension']
 
     # Attempt to save Jupyter notebook
-    if in_notebook():
+    if in_notebook() and not is_jupyter_extension:
         save_notebook()
         log('Attempting to save notebook..')
         sleep(1)

@@ -499,9 +499,17 @@ def mock_create_gist_simple(*args, **kwargs):
     return data
 
 
-@mock.patch("jovian.utils.commit.in_script", return_value=True)
+@mock.patch("jovian.utils.commit.in_notebook", return_value=True)
 @mock.patch("jovian.utils.commit._parse_filename", return_value=None)
-def test_is_jupyter_extesnsion(mock_parse_filename, mock_in_notebook):
+def test_commit_in_jupyter_extesnsion_filename_none(mock_parse_filename, mock_in_notebook):
+
+    assert commit(jupyter_extension=True) == (False, "")
+
+
+@mock.patch("jovian.utils.commit.in_notebook", return_value=True)
+@mock.patch("jovian.utils.commit._parse_filename", return_value='file')
+@mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
+def test_commit_in_jupyter_extesnsion_file_not_exist(mock_os_path_exists, mock_parse_filename, mock_in_notebook):
 
     assert commit(jupyter_extension=True) == (False, "")
 
@@ -525,6 +533,12 @@ def patch_all(f):
     return functor
 
 
+@pytest.mark.parametrize(
+    "commit_kwargs, expected_result",
+    [({"jupyter_extension": True},
+        (True, "https://staging.jovian.ml/rohit/demo-notebook")),
+     ({"jupyter_extension": False},
+      "")])
 @patch_all
 def test_commit(mock_in_script,
                 mock_in_notebook,
@@ -538,10 +552,12 @@ def test_commit(mock_in_script,
                 mock_attach_files,
                 mock_perform_git_commit,
                 mock_attach_records,
+                commit_kwargs,
+                expected_result,
                 capsys):
 
-    commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
-           environment='conda', outputs=['model.h5', 'gen.csv'])
+    returned_value = commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
+                            environment='conda', outputs=['model.h5', 'gen.csv'], **commit_kwargs)
 
     mock_create_gist_simple.assert_called_with(
         'file', 'fake_project_id', 'secret', 'fake_project_title', 'initial commit')
@@ -558,6 +574,9 @@ def test_commit(mock_in_script,
 
     mock_attach_records.assert_called_with('fake_gist_slug', 2)
 
-    expected_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
+    expected_common_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_common_result.strip()
+
+    if(commit_kwargs == {"jupyter_extension": True}):
+        assert returned_value == expected_result
