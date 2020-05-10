@@ -1,0 +1,7 @@
+{
+  "notebooks": {
+    "/home/prajwal/anaconda3/envs/jovian-py-dev/lib/python3.8/site-packages/pytest/__main__.py": {
+      "slug": "fake_gist_slug"
+    }
+  }
+}

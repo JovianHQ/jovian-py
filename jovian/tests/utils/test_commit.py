@@ -499,6 +499,13 @@ def mock_create_gist_simple(*args, **kwargs):
     return data
 
 
+@mock.patch("jovian.utils.commit.in_script", return_value=True)
+@mock.patch("jovian.utils.commit._parse_filename", return_value=None)
+def test_is_jupyter_extesnsion(mock_parse_filename, mock_in_notebook):
+
+    assert commit(jupyter_extension=True) == (False, "")
+
+
 def patch_all(f):
     @mock.patch("jovian.utils.commit._attach_records")
     @mock.patch("jovian.utils.commit._perform_git_commit")
