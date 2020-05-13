@@ -31,16 +31,16 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@jupyterlab/application": "^2.0.0",
-    "@jupyterlab/notebook": "^2.0.2",
+    "@jupyterlab/application": "^1.1.0",
+    "@jupyterlab/notebook": "^1.1.0",
     "bufferutil": "^4.0.1",
     "utf-8-validate": "^5.0.2"
   },
   "devDependencies": {
     "rimraf": "^2.6.1",
     "typescript": "~3.7.0",
-    "@jupyterlab/application": "^2.0.0",
-    "@jupyterlab/notebook": "^2.0.2",
+    "@jupyterlab/application": "^1.1.0",
+    "@jupyterlab/notebook": "^1.1.0",
     "bufferutil": "^4.0.1",
     "utf-8-validate": "^5.0.2"
   },

@@ -1,4 +1,4 @@
-import { IDisposable } from "@lumino/disposable";
+import { IDisposable } from "@phosphor/disposable";
 import {
   JupyterFrontEndPlugin,
   JupyterFrontEnd,
@@ -7,7 +7,6 @@ import {
 import { ToolbarButton } from "@jupyterlab/apputils";
 import { DocumentRegistry } from "@jupyterlab/docregistry";
 import { NotebookPanel, INotebookModel } from "@jupyterlab/notebook";
-import { downloadIcon } from "@jupyterlab/ui-components";
 import { setApp, hasJovian } from "./commands";
 import { commit } from "./commit";
 import NK from "./NBKernel";
@@ -39,7 +38,7 @@ class JovainButtonExtension
     // Create the toolbar button
     let button = new ToolbarButton({
       className: "jovian-lab-ext",
-      icon: downloadIcon,
+      iconClassName: "fa fa-bookmark-o",
       onClick: callback,
       tooltip: "commit to jovian"
     });

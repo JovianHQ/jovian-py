@@ -1,9 +1,4 @@
-import {
-  Kernel,
-  SessionAPI,
-  KernelManager,
-  KernelMessage
-} from "@jupyterlab/services";
+import { Kernel, Session, KernelMessage } from "@jupyterlab/services";
 
 class NBKernel {
   /**
@@ -50,7 +45,7 @@ class NBKernel {
      * Retrieve the current Kernel and return in a promise
      */
     return new Promise(resolve => {
-      SessionAPI.listRunning().then(allSessions => {
+      Session.listRunning().then(allSessions => {
         for (let i = 0; i < allSessions.length; i++) {
           let session = allSessions[i];
           if (session.type.toLowerCase() == "notebook") {
@@ -59,8 +54,7 @@ class NBKernel {
               NBnameFromSession.toLowerCase() ==
               this.currentNotebookName().toLowerCase()
             ) {
-              let km = new KernelManager();
-              resolve(km.connectTo({ model: session.kernel }));
+              resolve(Kernel.connectTo(session.kernel) as Kernel.IKernel);
             }
           }
         }
