@@ -503,7 +503,7 @@ def mock_create_gist_simple(*args, **kwargs):
 @mock.patch("jovian.utils.commit._parse_filename", return_value=None)
 def test_commit_in_jupyter_extesnsion_filename_none(mock_parse_filename, mock_in_notebook):
 
-    assert commit(jupyter_extension=True) == (False, "")
+    assert commit(jupyter_extension=True) == False
 
 
 @mock.patch("jovian.utils.commit.in_notebook", return_value=True)
@@ -511,7 +511,7 @@ def test_commit_in_jupyter_extesnsion_filename_none(mock_parse_filename, mock_in
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
 def test_commit_in_jupyter_extesnsion_file_not_exist(mock_os_path_exists, mock_parse_filename, mock_in_notebook):
 
-    assert commit(jupyter_extension=True) == (False, "")
+    assert commit(jupyter_extension=True) == False
 
 
 def patch_all(f):
@@ -536,7 +536,7 @@ def patch_all(f):
 @pytest.mark.parametrize(
     "commit_kwargs, expected_result",
     [({"jupyter_extension": True},
-        (True, "https://staging.jovian.ml/rohit/demo-notebook")),
+        "https://staging.jovian.ml/rohit/demo-notebook"),
      ({"jupyter_extension": False},
       "")])
 @patch_all
