@@ -20,24 +20,24 @@ async function commit(): Promise<void> {
   getAPIKeys().then(async result => {
     if (result == true) {
       const jvn_commit = `
-      from contextlib import redirect_stdout, redirect_stderr
-      from io import StringIO
-      import json
-      
-      jvn_update = StringIO()
-      
-      with redirect_stdout(jvn_update):
-        from jovian import commit
-        
-      jvn_f_out = StringIO()
-      jvn_f_err = StringIO()
-      
-      with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-        jvn_status, jvn_msg = ${commit}
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
+import json
 
-      print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+jvn_update = StringIO()
 
-      del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
+with redirect_stdout(jvn_update):
+  from jovian import commit
+
+jvn_f_out = StringIO()
+jvn_f_err = StringIO()
+
+with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+  jvn_msg = ${commit}
+
+print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+
+del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
 
       await NBKernel.execute(jvn_commit).then(result => {
         committedWindow((result as string).trim());
@@ -127,7 +127,6 @@ function committedWindow(output: string): void {
    * successful or not
    */
   const outputObj = JSON.parse(output);
-  const success = outputObj["success"] === "True";
   const msg = outputObj["msg"];
   const err = outputObj["err"];
   const update = outputObj["update"];
@@ -135,7 +134,7 @@ function committedWindow(output: string): void {
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
 
-  if (success) {
+  if (msg) {
     const label = addText("Committed Successfully!");
     const nbLink = addLink(msg, msg);
 

@@ -70,28 +70,28 @@ define([
             outputs +
             ",environment=" +
             environment +
-            ")\n";
+            ",jupyter_extension=True)";
         }
 
         const jvn_commit = `
-        from contextlib import redirect_stdout, redirect_stderr
-        from io import StringIO
-        import json
-        
-        jvn_update = StringIO()
-        
-        with redirect_stdout(jvn_update):
-          from jovian import commit
-        
-        jvn_f_out = StringIO()
-        jvn_f_err = StringIO()
-        
-        with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-          jvn_status, jvn_msg = ${commit}
-  
-        print(json.dumps({'success': str(jvn_status), 'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
-  
-        del jvn_update, jvn_f_out, jvn_f_err, jvn_status, jvn_msg`;
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
+import json
+
+jvn_update = StringIO()
+
+with redirect_stdout(jvn_update):
+  from jovian import commit
+
+jvn_f_out = StringIO()
+jvn_f_err = StringIO()
+
+with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+  jvn_msg = ${commit}
+
+print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+
+del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
 
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
@@ -167,7 +167,6 @@ define([
 
             jvnCommit().then(log_data => {
               const output = JSON.parse(log_data);
-              const success = output["success"] === "True";
               const msg = output["msg"];
               const err = output["err"];
               const update = output["update"];
@@ -188,7 +187,7 @@ define([
               }
 
               // Successful Commit
-              if (success) {
+              if (msg) {
                 const nb_link = $("<a/>")
                   .attr("href", msg)
                   .attr("target", "_blank")
@@ -211,7 +210,7 @@ define([
                   .append(copy_btn);
 
                 if (err) {
-                  const label = $("<h3/>").text("Warning! ");
+                  const label = $("<h4/>").text("Warning! ");
                   const p = $("<p/>").text(err);
                   jvn_modal.find("#i_label").append(label).append(p);
                 }
@@ -225,7 +224,7 @@ define([
               }
 
               if (update) {
-                const label = $("<h3/>").text("Update Available! ");
+                const label = $("<h4/>").text("Update Available! ");
                 const p = $("<p/>").text(update);
 
                 jvn_modal.find("#i_label").append(label).append(p);
@@ -287,6 +286,7 @@ define([
       const input_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "text_box")
+        .attr("type", "password")
         .attr("placeholder", "Paste and Save your API key");
 
       const error_msg = $("<label />")

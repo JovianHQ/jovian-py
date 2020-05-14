@@ -126,12 +126,10 @@ def commit(message=None,
         return
 
     # Check for commit from jupyter extension
-    is_jupyter_extension = False
-    if 'jupyter_extension' in kwargs:
-        is_jupyter_extension = kwargs['jupyter_extension']
+    in_jupyter_extension = kwargs.get('jupyter_extension', False)
 
     # Attempt to save Jupyter notebook
-    if in_notebook() and not is_jupyter_extension:
+    if in_notebook() and not in_jupyter_extension:
         save_notebook()
         log('Attempting to save notebook..')
         sleep(1)
@@ -140,8 +138,8 @@ def commit(message=None,
     filename = _parse_filename(filename)
     if filename is None:
         log(FILENAME_MSG, error=True)
-        if is_jupyter_extension:
-            return False, ""
+        if in_jupyter_extension:
+            return False
         return
 
     # Ensure that the file exists
@@ -149,8 +147,8 @@ def commit(message=None,
         log('The detected/provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
             'as the "filename" argument to "jovian.commit".', error=True)
-        if is_jupyter_extension:
-            return False, ""
+        if in_jupyter_extension:
+            return False
         return
 
     # Retrieve Gist ID & title
@@ -177,8 +175,8 @@ def commit(message=None,
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
-    if is_jupyter_extension:
-        return True, urljoin(read_webapp_url(), username, title)
+    if in_jupyter_extension:
+        return urljoin(read_webapp_url(), username, title)
 
 
 def _parse_filename(filename):
