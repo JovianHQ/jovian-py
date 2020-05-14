@@ -12,6 +12,7 @@ author = 'Aakash N S, Siddhant Ujjain'
 extensions = ['recommonmark',  # to use .md along with .rst
               'sphinx.ext.autodoc',  # import doc from docstrings
               'sphinx.ext.linkcode',  # linking the source code on github
+              'sphinx_sitemap', # generate sitemap
               'sphinxcontrib.napoleon']  # to support Google style docstrings for autodoc
 
 master_doc = 'index'
@@ -26,6 +27,7 @@ templates_path = ['_templates']
 html_static_path = ['_static']
 html_css_files = ['css/navbar.css', 'css/override.css']
 
+html_baseurl = 'https://jovian.ml/docs/'
 html_logo = 'jovian_horizontal_logo.svg'
 html_show_sphinx = False
 
