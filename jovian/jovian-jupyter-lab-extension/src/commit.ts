@@ -135,24 +135,38 @@ function committedWindow(output: string): void {
   let div: HTMLElement = document.createElement("div");
 
   if (msg) {
-    const label = addText("Committed Successfully!");
+    const label = document.createElement("p");
+    label.innerText = "Committed Successfully ";
+    const icon = document.createElement("i");
+    icon.innerHTML = '<i class="fa fa-check-circle" aria-hidden="true"></i>';
+    icon.style.color = "green";
     const nbLink = addLink(msg, msg);
 
-    div.appendChild(label);
-    div.appendChild(document.createElement("br"));
+    div.appendChild(label).append(icon);
     div.appendChild(nbLink);
     div.appendChild(document.createElement("br"));
 
     if (err) {
+      const label = document.createElement("p");
+      label.innerText = "Warning ";
+      const icon = document.createElement("i");
+      icon.innerHTML =
+        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+      icon.style.color = "rgb(191, 191, 0)";
       div.appendChild(document.createElement("br"));
-      div.appendChild(addText("Warning!"));
+      div.appendChild(label).append(icon);
+
       const p = document.createElement("p");
       p.innerText = err;
       div.appendChild(p);
     }
   } else {
-    let label = addText("Commit failed!");
-    div.appendChild(label);
+    const label = document.createElement("p");
+    label.innerText = "Committed Failed ";
+    const icon = document.createElement("i");
+    icon.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+    icon.style.color = "red";
+    div.appendChild(label).append(icon);
 
     if (err) {
       const p = document.createElement("p");
@@ -162,7 +176,9 @@ function committedWindow(output: string): void {
   }
 
   if (update) {
-    div.appendChild(addText("Update Available!"));
+    const label = document.createElement("p");
+    label.innerText = "Update available ";
+    div.appendChild(label);
     const p = document.createElement("p");
     p.innerText = update;
     div.appendChild(p);

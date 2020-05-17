@@ -204,18 +204,42 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
 
                 jvn_modal
                   .find("#i_label")
-                  .text("Committed Successfully! ")
+                  .text("Committed Successfully  ")
+                  .append(
+                    $(
+                      '<i class="fa fa-check-circle" aria-hidden="true"></i>'
+                    ).css("color", "green")
+                  )
                   .append($("<br/>"))
                   .append(nb_link)
                   .append(copy_btn);
 
                 if (err) {
-                  const label = $("<h4/>").text("Warning! ");
+                  const label = $("<p/>")
+                    .text("Warning ")
+                    .append(
+                      $(
+                        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                      ).css("color", "rgb(191, 191, 0)")
+                    );
                   const p = $("<p/>").text(err);
-                  jvn_modal.find("#i_label").append(label).append(p);
+                  jvn_modal
+                    .find("#i_label")
+                    .append($("<br/>"))
+                    .append($("<br/>"))
+                    .append(label)
+                    .append(p);
                 }
               } else {
-                jvn_modal.find("#i_label").text("Commit failed! ");
+                jvn_modal
+                  .find("#i_label")
+                  .text("Commit failed ")
+                  .append(
+                    $('<i class="fa fa-times" aria-hidden="true"></i>').css(
+                      "color",
+                      "red"
+                    )
+                  );
 
                 if (err) {
                   const p = $("<p/>").text(err);
@@ -224,7 +248,7 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
               }
 
               if (update) {
-                const label = $("<h4/>").text("Update Available! ");
+                const label = $("<p/>").text("Update Available");
                 const p = $("<p/>").text(update);
 
                 jvn_modal.find("#i_label").append(label).append(p);
