@@ -14,15 +14,14 @@ define([
 
     const setCurrentSlug = () => {
       const filename = Jupyter.notebook.notebook_name;
-      const code =
-        "from jovian.utils.slug import set_current_slug\n" +
-        "set_current_slug('" +
-        filename +
-        "')";
+      const code = `
+from jovian.utils.slug import set_current_slug
+set_current_slug("${filename}")`;
+
       Jupyter.notebook.kernel.execute(code);
     };
     Jupyter.notebook.events.on("kernel_ready.Kernel", () => {
-      // Extension only loads up when there is broswer refresh, this ensures even when kernel is restarted
+      // Extension only loads up when there is broswer refresh, this ensures both when kernel is restarted and that kernel is ready
       setCurrentSlug();
     });
 

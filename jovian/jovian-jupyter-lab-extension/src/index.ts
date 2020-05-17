@@ -56,6 +56,21 @@ class JovainButtonExtension
         jovian_button.firstChild.innerText = "Commit";
         jovian_button.firstChild.style.color = "black";
         jovian_button.firstChild.style["padding-left"] = "17px";
+
+        // To set current slug when the notebook is loaded
+        function delay(ms: number) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        (async () => {
+          await delay(3000);
+          // TODO: Replace this delay when you discover kernel_ready type of event from Jlab
+          // TODO: Also add event listener when you find one of kernel_restart like in notebook extension
+          const code = `
+from jovian.utils.slug import set_current_slug
+set_current_slug("${NK.currentNotebookName()}")`;
+          NK.execute(code);
+        })();
       },
       {
         once: true,
