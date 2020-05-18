@@ -11,27 +11,35 @@ async function commit(): Promise<void> {
    * commit with user-selected options
    */
   const nbFilename: string = NBKernel.currentNotebookName();
-  let commit: string = '\tcommit(filename="' + nbFilename + '")\n';
+  let commit: string = `commit(filename="${nbFilename}")`;
   if (lock == true) {
     return;
   }
   lock = true;
   await saveNotebook();
-  getAPIKeys().then(async result => {
+  getAPIKeys().then(async (result) => {
     if (result == true) {
-      const jvn_commit =
-        "from jovian import commit\n" +
-        "import io\n" +
-        "from contextlib import redirect_stdout\n" +
-        "f = io.StringIO()\n" +
-        "with redirect_stdout(f):\n" +
-        commit +
-        "out = f.getvalue().splitlines()[-1]\n" +
-        "if(out.split()[1] == 'Committed'):\n" +
-        "\tprint(out.split()[-1])\n" +
-        "else:\n" +
-        "\tprint(out)";
-      await NBKernel.execute(jvn_commit).then(result => {
+      const jvn_commit = `
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
+import json
+
+jvn_update = StringIO()
+
+with redirect_stdout(jvn_update):
+  from jovian import commit
+
+jvn_f_out = StringIO()
+jvn_f_err = StringIO()
+
+with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+  jvn_msg = ${commit}
+
+print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+
+del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
+
+      await NBKernel.execute(jvn_commit).then((result) => {
         committedWindow((result as string).trim());
       });
     } else {
@@ -49,8 +57,7 @@ export function askAPIKeys(): void {
    */
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
-  let span: HTMLElement = addText("Please enter your API key from ");
-  let a: HTMLElement = addLink("Jovian", "https://jovian.ml");
+  let span: HTMLElement = addText("Please enter your API key from Jovian");
   let err: HTMLElement = addErrorMsg("Invalid API key");
   let input: HTMLElement = addInput("Paste your API key", "password");
   let inError = (isError: boolean) => {
@@ -67,7 +74,6 @@ export function askAPIKeys(): void {
       (<any>inp.style) = "";
     }
   };
-  span.appendChild(a);
   div.appendChild(span);
   div.appendChild(input);
   header.appendChild(div);
@@ -95,12 +101,12 @@ function setAPIKeys(value: string, inError: any): void {
   NBKernel.execute(write_api)
     .then(() => {
       getAPIKeys()
-        .then(result => {
+        .then((result) => {
           if (result == true) {
-            alert(
-              "Congrats! You have saved a valid API key, now you can commit directly from the Commit toolbar button"
-            );
             closeWindow();
+            alertWindow(
+              'Success! API key saved. Use the "Commit" button to upload your notebook to Jovian.'
+            );
           } else {
             inError(true);
           }
@@ -114,25 +120,70 @@ function setAPIKeys(value: string, inError: any): void {
     });
 }
 
-function committedWindow(url: string): void {
+function committedWindow(output: string): void {
   /**
    * Diaplays a window after committing to Jovian, and
    * this window will show whether the committing was
    * successful or not
    */
+  const outputObj = JSON.parse(output);
+  const msg = outputObj["msg"];
+  const err = outputObj["err"];
+  const update = outputObj["update"];
+
   let header: HTMLElement = initialHeader();
   let div: HTMLElement = document.createElement("div");
-  if (url.startsWith("https://")) {
-    let label = addText("Committed Successfully!");
-    let nb_link = addLink(url, url);
-    div.appendChild(label);
+
+  if (msg) {
+    const label = document.createElement("p");
+    label.innerText = "Committed Successfully ";
+    const icon = document.createElement("i");
+    icon.innerHTML = '<i class="fa fa-check-circle" aria-hidden="true"></i>';
+    icon.style.color = "green";
+    const nbLink = addLink(msg, msg);
+
+    div.appendChild(label).append(icon);
+    div.appendChild(nbLink);
     div.appendChild(document.createElement("br"));
-    div.appendChild(document.createElement("br"));
-    div.appendChild(nb_link);
+
+    if (err) {
+      const label = document.createElement("p");
+      label.innerText = "Warning ";
+      const icon = document.createElement("i");
+      icon.innerHTML =
+        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+      icon.style.color = "rgb(191, 191, 0)";
+      div.appendChild(document.createElement("br"));
+      div.appendChild(label).append(icon);
+
+      const p = document.createElement("p");
+      p.innerText = err;
+      div.appendChild(p);
+    }
   } else {
-    let label = addText("Commit failed! " + url);
-    div.appendChild(label);
+    const label = document.createElement("p");
+    label.innerText = "Committed Failed ";
+    const icon = document.createElement("i");
+    icon.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+    icon.style.color = "red";
+    div.appendChild(label).append(icon);
+
+    if (err) {
+      const p = document.createElement("p");
+      p.innerText = err;
+      div.appendChild(p);
+    }
   }
+
+  if (update) {
+    const label = document.createElement("p");
+    label.innerText = "Update available ";
+    div.appendChild(label);
+    const p = document.createElement("p");
+    p.innerText = update;
+    div.appendChild(p);
+  }
+
   header.appendChild(div);
   header.appendChild(addButtons(null));
   openWindow();
@@ -154,8 +205,8 @@ export async function getAPIKeys() {
     "\telse:\n" +
     '\t\tkey_status = "invalid"\n' +
     "print(key_status)\n";
-  return new Promise(res => {
-    NBKernel.execute(validate_api).then(result => {
+  return new Promise((res) => {
+    NBKernel.execute(validate_api).then((result) => {
       if ((result as string).trim() == "valid") {
         res(true);
       } else {
@@ -288,6 +339,18 @@ function initialHeader(): HTMLElement {
   return subHeader;
 }
 
+function alertWindow(msg: string): void {
+  /**
+   * alert Dialog inside Jupyter lab instead of a browser alert
+   */
+  const header: HTMLElement = initialHeader();
+  let div: HTMLElement = document.createElement("div");
+  div.appendChild(addText(msg));
+  header.append(div);
+  header.append(addButtons(null));
+  openWindow();
+}
+
 function openWindow(): void {
   /**
    * When the modal is ready, this function will show the modal (window)
@@ -309,4 +372,4 @@ function insertAfter(newNode: any, referenceNode: any): void {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-export { commit };
+export { commit, alertWindow };
