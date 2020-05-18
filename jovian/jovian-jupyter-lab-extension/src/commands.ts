@@ -36,7 +36,7 @@ export async function hasJovian(callBack: () => any): Promise<void> {
     callBack();
   } else {
     alertWindow(
-      "This extension requires jovian python library. Install using 'pip intsall jovian --upgrade' "
+      "This extension requires the \"jovian\" python library. Install using 'pip intsall jovian --upgrade' "
     );
   }
 }

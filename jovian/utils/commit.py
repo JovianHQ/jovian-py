@@ -138,8 +138,6 @@ def commit(message=None,
     filename = _parse_filename(filename)
     if filename is None:
         log(FILENAME_MSG, error=True)
-        if in_jupyter_extension:
-            return False
         return
 
     # Ensure that the file exists
@@ -147,8 +145,6 @@ def commit(message=None,
         log('The detected/provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
             'as the "filename" argument to "jovian.commit".', error=True)
-        if in_jupyter_extension:
-            return False
         return
 
     # Retrieve Gist ID & title
@@ -175,8 +171,7 @@ def commit(message=None,
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
-    if in_jupyter_extension:
-        return urljoin(read_webapp_url(), username, title)
+    return urljoin(read_webapp_url(), username, title)
 
 
 def _parse_filename(filename):
