@@ -1,5 +1,6 @@
 import { JupyterFrontEnd, ILabShell } from "@jupyterlab/application";
 import nb from "./NBKernel";
+import { alertWindow } from "./commit";
 
 let app: JupyterFrontEnd;
 let labShell: ILabShell;
@@ -34,9 +35,8 @@ export async function hasJovian(callBack: () => any): Promise<void> {
   if (found) {
     callBack();
   } else {
-    alert(
-      "Jovian python library not found!" +
-        "Please install Jovian, by running 'pip install jovian --upgrade'."
+    alertWindow(
+      "This extension requires the \"jovian\" python library. Install using 'pip intsall jovian --upgrade' "
     );
   }
 }

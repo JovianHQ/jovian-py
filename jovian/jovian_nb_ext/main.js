@@ -2,7 +2,7 @@ define([
   "jquery",
   "base/js/namespace",
   "base/js/dialog",
-  "base/js/keyboard"
+  "base/js/keyboard",
 ], function ($, Jupyter, dialog, keyboard) {
   function loadJovianExtension() {
     /**
@@ -24,15 +24,16 @@ define([
        *  - jovian.commit()
        */
 
-      new Promise(resolve => {
-        const jvnLog = data => {
+      new Promise((resolve) => {
+        const jvnLog = (data) => {
           resolve(data.content.text.trim());
         };
 
         let filename = Jupyter.notebook.notebook_name.split(".");
         filename.pop();
         filename.join();
-        let commit = "\tcommit(filename=" + getValInPython(filename) + ")\n";
+        let commit = `commit(filename=${getValInPython(filename)})`;
+
         // if we have a set of params already, then use it to call commit.
         if ((params = getParams()) != null) {
           const new_project = params.new_project;
@@ -67,28 +68,34 @@ define([
             outputs +
             ",environment=" +
             environment +
-            ")\n";
+            ")";
         }
 
-        const jvn_commit =
-          "from jovian import commit\n" +
-          "import io\n" +
-          "from contextlib import redirect_stdout\n" +
-          "f = io.StringIO()\n" +
-          "with redirect_stdout(f):\n" +
-          "\t" +
-          commit +
-          "out = f.getvalue().splitlines()[-1]\n" +
-          "if(out.split()[1] == 'Committed'):\n" +
-          "\tprint(out.split()[-1])\n" +
-          "else:\n" +
-          "\tprint(out)";
+        const jvn_commit = `
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
+import json
+
+jvn_update = StringIO()
+
+with redirect_stdout(jvn_update):
+  from jovian import commit
+
+jvn_f_out = StringIO()
+jvn_f_err = StringIO()
+
+with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
+  jvn_msg = ${commit}
+
+print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
+
+del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
 
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
         Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
           Jupyter.notebook.kernel.execute(jvn_commit, {
-            iopub: { output: jvnLog }
+            iopub: { output: jvnLog },
           });
         });
       });
@@ -108,8 +115,8 @@ define([
        *   - jovian.utils.credentials.creds_exist
        */
 
-      new Promise(resolve => {
-        const valStatus = data => {
+      new Promise((resolve) => {
+        const valStatus = (data) => {
           resolve(data.content.text.trim());
         };
 
@@ -127,8 +134,8 @@ define([
 
         Jupyter.notebook.kernel.execute(validate_api, {
           iopub: {
-            output: valStatus
-          }
+            output: valStatus,
+          },
         });
       });
 
@@ -148,7 +155,7 @@ define([
        *    - false : Triggered from the toolbar button(modal not shown).
        */
 
-      const val = validateApi().then(key_status => {
+      const val = validateApi().then((key_status) => {
         if (key_status === "valid") {
           jvn_modal.find("#save_button").hide();
           jvn_modal.find("#text_box").hide();
@@ -156,11 +163,14 @@ define([
           if (!shown) {
             jvn_notif.element.show(); // show "committing to jovian..." on the menubar
 
-            jvnCommit().then(log_data => {
+            jvnCommit().then((log_data) => {
+              const output = JSON.parse(log_data);
+              const msg = output["msg"];
+              const err = output["err"];
+              const update = output["update"];
+
               function copyToClipboard() {
-                jvn_modal
-                  .find("#i_label")
-                  .append($("<textarea>").val(log_data)); // temp element
+                jvn_modal.find("#i_label").append($("<textarea>").val(msg)); // temp element
                 jvn_modal.find("textarea").select(); // select the text as required by execCommand
                 document.execCommand("copy");
                 jvn_modal.find("textarea").remove();
@@ -175,11 +185,11 @@ define([
               }
 
               // Successful Commit
-              if (log_data.startsWith("https://")) {
+              if (msg) {
                 const nb_link = $("<a/>")
-                  .attr("href", log_data)
+                  .attr("href", msg)
                   .attr("target", "_blank")
-                  .text(log_data);
+                  .text(msg);
 
                 const copy_btn = $("<button/>")
                   .attr("id", "copy")
@@ -192,12 +202,54 @@ define([
 
                 jvn_modal
                   .find("#i_label")
-                  .text("Committed Successfully! ")
+                  .text("Committed Successfully  ")
+                  .append(
+                    $(
+                      '<i class="fa fa-check-circle" aria-hidden="true"></i>'
+                    ).css("color", "green")
+                  )
                   .append($("<br/>"))
                   .append(nb_link)
                   .append(copy_btn);
+
+                if (err) {
+                  const label = $("<p/>")
+                    .text("Warning ")
+                    .append(
+                      $(
+                        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                      ).css("color", "rgb(191, 191, 0)")
+                    );
+                  const p = $("<p/>").text(err);
+                  jvn_modal
+                    .find("#i_label")
+                    .append($("<br/>"))
+                    .append($("<br/>"))
+                    .append(label)
+                    .append(p);
+                }
               } else {
-                jvn_modal.find("#i_label").text("Commit failed! " + log_data);
+                jvn_modal
+                  .find("#i_label")
+                  .text("Commit failed ")
+                  .append(
+                    $('<i class="fa fa-times" aria-hidden="true"></i>').css(
+                      "color",
+                      "red"
+                    )
+                  );
+
+                if (err) {
+                  const p = $("<p/>").text(err);
+                  jvn_modal.find("#i_label").append(p);
+                }
+              }
+
+              if (update) {
+                const label = $("<p/>").text("Update Available");
+                const p = $("<p/>").text(update);
+
+                jvn_modal.find("#i_label").append(label).append(p);
               }
 
               jvn_notif.element.hide(); // hide "Committing to Jovian..."
@@ -256,6 +308,7 @@ define([
       const input_box = $("<input/>")
         .addClass("form-control")
         .attr("id", "text_box")
+        .attr("type", "password")
         .attr("placeholder", "Paste and Save your API key");
 
       const error_msg = $("<label />")
@@ -305,7 +358,7 @@ define([
               Jupyter.notebook.kernel.execute(write_api);
               jvn_modal.data("bs.modal").isShown = false; // Retains the modal
 
-              updateForm(jvn_modal, true).then(x => {
+              updateForm(jvn_modal, true).then((x) => {
                 jvn_modal.data("bs.modal").isShown = true; // Modal can be dismissed after this
 
                 if (x == "saved_valid_key") {
@@ -315,8 +368,8 @@ define([
                   );
                 }
               });
-            }
-          }
+            },
+          },
         },
         open: function () {
           // bind enter key for #save_button when the modal is open
@@ -329,7 +382,7 @@ define([
 
           // Select the input when modal is open, easy to paste the key without the need for user to click first
           jvn_modal.find("#text_box").focus().select();
-        }
+        },
       });
 
       updateForm(jvn_modal);
@@ -522,8 +575,8 @@ define([
             click: function () {
               storeParams();
               openModal(modalInit); // use openModal() to prevent keyboard loss when need to ask users API key
-            }
-          }
+            },
+          },
         },
         open: async function () {
           let project_id_helper = async () => {
@@ -537,7 +590,7 @@ define([
               return;
             }
             let project_title = "";
-            await getProjectTitle().then(title => {
+            await getProjectTitle().then((title) => {
               if (title != undefined) {
                 project_title = title;
               }
@@ -589,7 +642,7 @@ define([
 
           let show = (target, list) => {
             let keys = Object.keys(list);
-            keys.forEach(k => {
+            keys.forEach((k) => {
               if ($(target + " option:selected").text() == "True") {
                 $(k).prop("disabled", !list[k]);
               } else {
@@ -607,7 +660,7 @@ define([
           });
 
           $(jvn_params_modal).find(".modal-content").show("fast");
-        }
+        },
       });
 
       const modal = $(jvn_params_modal).find(".modal-content");
@@ -672,7 +725,7 @@ define([
           option1.click(() => openModal(saveParams));
           option2.click(() => alert("feature coming soon"));
           option3.click(() => openModal(clearParams));
-        }
+        },
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
       const body = modal.find(".modal-body");
@@ -693,7 +746,7 @@ define([
     const save_action = {
       icon: "fa-bookmark-o", // icon
       help: "Commit to Jovian", // tooltip
-      handler: modalInit // trigger for the click
+      handler: modalInit, // trigger for the click
     };
     const save_action_name = Jupyter.actions.register(
       save_action,
@@ -705,7 +758,7 @@ define([
     const set_params_ext_action = {
       icon: "fa-caret-down",
       help: "Show a list of parameters for user to set up",
-      handler: showDropDown //saveParams
+      handler: showDropDown, //saveParams
     };
     const set_params_ext_name = Jupyter.actions.register(
       set_params_ext_action,
@@ -715,7 +768,7 @@ define([
 
     const jvn_btn_grp = Jupyter.toolbar.add_buttons_group([
       save_action_name,
-      set_params_ext_name
+      set_params_ext_name,
     ]);
 
     //adding jovian logo and Commit text next to it
@@ -745,7 +798,7 @@ define([
   function openModal(func) {
     // Helper function; which use to open a new window(modal)
     // from an existing window(modal/dialog)
-    return new Promise(res => {
+    return new Promise((res) => {
       let len = $(".modal-backdrop").length;
       let it = setInterval(() => {
         if (len != $(".modal-backdrop").length) {
@@ -764,7 +817,7 @@ define([
       "[" +
       arrInString
         .split(",")
-        .map(e => "'" + e.trim() + "'")
+        .map((e) => "'" + e.trim() + "'")
         .join(",") +
       "]";
     if (arr == "['']") {
@@ -783,8 +836,8 @@ define([
   }
 
   function getProjectTitle() {
-    return new Promise(resolve => {
-      const jvnLog = data => {
+    return new Promise((resolve) => {
+      const jvnLog = (data) => {
         let ms = data.content.text
           .trim()
           .replace(/.*?\"/, "")
@@ -800,7 +853,7 @@ define([
         "a = p(project=None, new_project=None, filename=None)\n" +
         "print(a[0])";
       Jupyter.notebook.kernel.execute(code, {
-        iopub: { output: jvnLog }
+        iopub: { output: jvnLog },
       });
     });
   }
@@ -818,7 +871,7 @@ define([
       privacy: $("#nb_opt option:selected").text(),
       outputs: $("#artifacts_box").val(),
       git_commit: $("#if_git option:selected").text(),
-      git_message: $("#git_msg_box").val()
+      git_message: $("#git_msg_box").val(),
     };
 
     localStorage.setItem(
@@ -838,6 +891,6 @@ define([
   }
 
   return {
-    load_ipython_extension: loadJovianExtension
+    load_ipython_extension: loadJovianExtension,
   };
 });

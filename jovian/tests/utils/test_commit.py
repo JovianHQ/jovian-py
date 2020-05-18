@@ -461,12 +461,13 @@ def test_commit_in_notebook_filename_none(
         mock_in_script, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
 
     commit('initial commit')
-
-    expected_result = dedent("""
-        [jovian] Attempting to save notebook..
-        [jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
+    expected_result_out = dedent("""
+    [jovian] Attempting to save notebook..""")
+    expected_result_err = dedent("""
+        [jovian] Error: Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_result_out.strip()
+    assert captured.err.strip() == expected_result_err.strip()
 
 
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
@@ -478,9 +479,9 @@ def test_commit_file_does_not_exist(
 
     commit('initial commit')
 
-    expected_result = """[jovian] The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    expected_result = """[jovian] Error: The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.err.strip() == expected_result.strip()
 
 
 def mock_create_gist_simple(*args, **kwargs):
@@ -532,8 +533,8 @@ def test_commit(mock_in_script,
                 mock_attach_records,
                 capsys):
 
-    commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
-           environment='conda', outputs=['model.h5', 'gen.csv'])
+    returned_value = commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
+                            environment='conda', outputs=['model.h5', 'gen.csv'])
 
     mock_create_gist_simple.assert_called_with(
         'file', 'fake_project_id', 'secret', 'fake_project_title', 'initial commit')
@@ -550,6 +551,7 @@ def test_commit(mock_in_script,
 
     mock_attach_records.assert_called_with('fake_gist_slug', 2)
 
-    expected_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
+    expected_common_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_common_result.strip()
+    assert returned_value == "https://staging.jovian.ml/rohit/demo-notebook"

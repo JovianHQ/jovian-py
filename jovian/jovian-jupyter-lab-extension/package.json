@@ -9,7 +9,7 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://www.jovian.ml?utm_source=npm",
+  "homepage": "https://www.jovian.ml",
   "bugs": {
     "url": "https://github.com/JovianML/jovian-support/issues"
   },
