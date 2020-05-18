@@ -125,11 +125,8 @@ def commit(message=None,
         log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
         return
 
-    # Check for commit from jupyter extension
-    in_jupyter_extension = kwargs.get('jupyter_extension', False)
-
     # Attempt to save Jupyter notebook
-    if in_notebook() and not in_jupyter_extension:
+    if in_notebook():
         save_notebook()
         log('Attempting to save notebook..')
         sleep(1)

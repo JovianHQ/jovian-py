@@ -11,13 +11,13 @@ async function commit(): Promise<void> {
    * commit with user-selected options
    */
   const nbFilename: string = NBKernel.currentNotebookName();
-  let commit: string = `commit(filename="${nbFilename}", jupyter_extension=True)`;
+  let commit: string = `commit(filename="${nbFilename}")`;
   if (lock == true) {
     return;
   }
   lock = true;
   await saveNotebook();
-  getAPIKeys().then(async result => {
+  getAPIKeys().then(async (result) => {
     if (result == true) {
       const jvn_commit = `
 from contextlib import redirect_stdout, redirect_stderr
@@ -39,7 +39,7 @@ print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_upd
 
 del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
 
-      await NBKernel.execute(jvn_commit).then(result => {
+      await NBKernel.execute(jvn_commit).then((result) => {
         committedWindow((result as string).trim());
       });
     } else {
@@ -101,11 +101,11 @@ function setAPIKeys(value: string, inError: any): void {
   NBKernel.execute(write_api)
     .then(() => {
       getAPIKeys()
-        .then(result => {
+        .then((result) => {
           if (result == true) {
             closeWindow();
             alertWindow(
-              "Success! API key saved. Use the \"Commit\" button to upload your notebook to Jovian."
+              'Success! API key saved. Use the "Commit" button to upload your notebook to Jovian.'
             );
           } else {
             inError(true);
@@ -205,8 +205,8 @@ export async function getAPIKeys() {
     "\telse:\n" +
     '\t\tkey_status = "invalid"\n' +
     "print(key_status)\n";
-  return new Promise(res => {
-    NBKernel.execute(validate_api).then(result => {
+  return new Promise((res) => {
+    NBKernel.execute(validate_api).then((result) => {
       if ((result as string).trim() == "valid") {
         res(true);
       } else {
