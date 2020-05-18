@@ -5,15 +5,13 @@ from time import sleep
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
+from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, get_cached_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
 from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
 from jovian.utils import api, git
-
-_current_slug = None
 
 
 def commit(message=None,
@@ -29,7 +27,7 @@ def commit(message=None,
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
-    Saves the checkpoint of the notebook, captures the required dependencies from 
+    Saves the checkpoint of the notebook, captures the required dependencies from
     the python environment and uploads the notebook, env file, additional files like scripts, csv etc.
     to |Jovian|. Capturing the python environment ensures that the notebook can be reproduced.
 
@@ -52,37 +50,36 @@ def commit(message=None,
             * 'secret' - not on profile only accessible via the direct link
             * 'private' - only for the accessible to owner and collaborators
 
-            This argument has no effect on existing project. Change the privacy settings of a existing notebook 
+            This argument has no effect on existing project. Change the privacy settings of a existing notebook
             on the webapp.
 
-        filename(string, optional): The filename of the current Jupyter notebook or Python script. This is 
-            detected automatically in most cases, but in certain environments like Jupyter Lab or password protected notebooks, the detection 
+        filename(string, optional): The filename of the current Jupyter notebook or Python script. This is
+            detected automatically in most cases, but in certain environments like Jupyter Lab or password protected notebooks, the detection
             may fail and the filename needs to be provided using this argument.
 
 
-        project(string, optional): Name of the |Jovian| project to which the current notebook/file should 
-            be committed. Format: 'username/title' e.g. 'aakashns/jovian-example' or 'jovian-example' 
-            (username of current user inferred automatically). If the project does not exist, a new one is 
-            created. If it exists, the current notebook is added as a new version to the existing project, if 
-            you are a owner/collaborator. If left empty, project name is picked up from the `.jovianrc` file in the 
-            current directory, or a new project is created using the filename as the project name. 
+        project(string, optional): Name of the |Jovian| project to which the current notebook/file should
+            be committed. Format: 'username/title' e.g. 'aakashns/jovian-example' or 'jovian-example'
+            (username of current user inferred automatically). If the project does not exist, a new one is
+            created. If it exists, the current notebook is added as a new version to the existing project, if
+            you are a owner/collaborator. If left empty, project name is picked up from the `.jovianrc` file in the
+            current directory, or a new project is created using the filename as the project name.
 
-        new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option 
+        new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option
             are False (use the existing project, if a .jovianrc file exists, if available), True (create a new project)
 
-        git_commit(bool, optional): If True, also performs a Git commit and records the commit hash. This is 
+        git_commit(bool, optional): If True, also performs a Git commit and records the commit hash. This is
             applicable only when the notebook is inside a Git repository.
 
         git_message(string, optional): Commit message for git. If not provided, it uses the `message` argument
 
     .. attention::
-        Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected 
+        Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected
         notebooks sometimes it may fail to detect notebook automatically.
     .. |Jovian| raw:: html
 
         <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
     """
-    global _current_slug
 
     # Deprecated argument (secret)
     if privacy == 'auto' and 'secret' in kwargs:
@@ -153,7 +150,6 @@ def commit(message=None,
     username = owner['username']
 
     # Cache slug for further commits
-    _current_slug = slug
     set_notebook_slug(filename, slug)
 
     # Attach environment, files and outputs
@@ -188,13 +184,13 @@ def _parse_filename(filename):
 
 def _parse_project(project, filename, new_project):
     """Perform the required checks and get the final project name"""
-    global _current_slug
+    current_slug = get_cached_slug()
 
     # Check for existing project in-memory or in .jovianrc
     if not new_project and project is None:
         # From in-memory variable
-        if _current_slug is not None:
-            project = _current_slug
+        if current_slug is not None:
+            project = current_slug
         # From .jovianrc file
         else:
             project = get_notebook_slug(filename)

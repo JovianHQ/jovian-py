@@ -12,6 +12,19 @@ define([
      *  else prompts the user with a modal to get the API key.
      */
 
+    const setCurrentSlug = () => {
+      const filename = Jupyter.notebook.notebook_name;
+      const code = `
+from jovian.utils.rcfile import get_notebook_slug
+get_notebook_slug("${filename}")`;
+
+      Jupyter.notebook.kernel.execute(code);
+    };
+    Jupyter.notebook.events.on("kernel_ready.Kernel", () => {
+      // Extension only loads up when there is broswer refresh, this ensures both when kernel is restarted and that kernel is ready
+      setCurrentSlug();
+    });
+
     const jvnCommit = () =>
       /**
        * Commits the notebook to Jovian(https://jovian.ml).
