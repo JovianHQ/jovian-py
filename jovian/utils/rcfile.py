@@ -32,7 +32,7 @@ def get_notebook_slug(filename, cache_result=True):
     """Get the gist slug for a notebook filename"""
     global _current_slug
     data = get_rcdata()
-    if (filename in data['notebooks']):
+    if (filename in data.get('notebooks', {})):
         slug = data['notebooks'][filename]['slug']
         if slug and cache_result:
             _current_slug = slug
