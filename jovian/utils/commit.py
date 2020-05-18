@@ -5,16 +5,13 @@ from time import sleep
 from jovian.utils.script import in_script, get_script_filename
 from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
+from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, get_cached_slug
 from jovian.utils.credentials import read_webapp_url, read_creds
 from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
 from jovian.utils.records import log_git, get_records, reset
 from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
 from jovian.utils.logger import log
-from jovian.utils.slug import get_current_slug
 from jovian.utils import api, git
-
-_current_slug = None
 
 
 def commit(message=None,
@@ -83,8 +80,6 @@ def commit(message=None,
 
         <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
     """
-    global _current_slug
-    _current_slug = get_current_slug()
 
     # Deprecated argument (secret)
     if privacy == 'auto' and 'secret' in kwargs:
@@ -155,7 +150,6 @@ def commit(message=None,
     username = owner['username']
 
     # Cache slug for further commits
-    _current_slug = slug
     set_notebook_slug(filename, slug)
 
     # Attach environment, files and outputs
@@ -190,13 +184,13 @@ def _parse_filename(filename):
 
 def _parse_project(project, filename, new_project):
     """Perform the required checks and get the final project name"""
-    global _current_slug
+    current_slug = get_cached_slug()
 
     # Check for existing project in-memory or in .jovianrc
     if not new_project and project is None:
         # From in-memory variable
-        if _current_slug is not None:
-            project = _current_slug
+        if current_slug is not None:
+            project = current_slug
         # From .jovianrc file
         else:
             project = get_notebook_slug(filename)

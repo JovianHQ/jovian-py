@@ -155,7 +155,7 @@ def test_parse_filename_in_notebook(mock_in_notebook, mock_get_script_name, mock
 
     ]
 )
-@mock.patch("jovian.utils.commit._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
 @mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
 def test_parse_project(
         mock_get_current_user, get_gist_side_effect, get_gist_access_return_value, args, expected_result):
@@ -165,7 +165,7 @@ def test_parse_project(
             assert _parse_project(**args) == expected_result
 
 
-@mock.patch("jovian.utils.commit._current_slug", None)
+@mock.patch("jovian.utils.rcfile._current_slug", None)
 @mock.patch("jovian.utils.commit.get_notebook_slug", return_value="rohit/time-series-new")
 @mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
 @mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)

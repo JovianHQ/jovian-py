@@ -15,8 +15,8 @@ define([
     const setCurrentSlug = () => {
       const filename = Jupyter.notebook.notebook_name;
       const code = `
-from jovian.utils.slug import set_current_slug
-set_current_slug("${filename}")`;
+from jovian.utils.rcfile import get_notebook_slug
+get_notebook_slug("${filename}")`;
 
       Jupyter.notebook.kernel.execute(code);
     };
