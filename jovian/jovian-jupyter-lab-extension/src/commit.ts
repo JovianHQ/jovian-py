@@ -105,7 +105,7 @@ function setAPIKeys(value: string, inError: any): void {
           if (result == true) {
             closeWindow();
             alertWindow(
-              "Success! API key saved. Use commit button to upload your notebook to Jovian."
+              "Success! API key saved. Use the \"Commit\" button to upload your notebook to Jovian."
             );
           } else {
             inError(true);
