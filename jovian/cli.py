@@ -1,14 +1,14 @@
 import sys
 
 import click
-
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
+from jovian.utils.commit import commit
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
-from jovian.utils.slack import add_slack
 from jovian.utils.rcfile import set_notebook_slug
+from jovian.utils.slack import add_slack
 
 
 @click.group()
@@ -143,6 +143,17 @@ def set_project(ctx,  notebook, project):
     inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
     """
     set_notebook_slug(filename=notebook, slug=project)
+
+
+@main.command("commit", short_help="Create a new notebook on Jovian")
+@click.argument('notebook')
+@click.pass_context
+def exec_commit(ctx,  notebook):
+    """Create a new notebook on Jovian
+
+        $ jovian commit my_notebook.ipynb
+    """
+    commit(filename=notebook, environment=None, is_cli=True)
 
 
 @main.command("add-slack")
