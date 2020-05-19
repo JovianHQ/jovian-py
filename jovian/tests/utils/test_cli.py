@@ -87,6 +87,13 @@ def runner():
             ["set-project", "my_notebook.ipynb", "danb/keras-example"],
             {"filename": "my_notebook.ipynb", "slug": "danb/keras-example"}
         ),
+
+        # commit
+        (
+            "commit",
+            ["commit", "my_notebook.ipynb"],
+            {"filename": "my_notebook.ipynb", "environment": None, "is_cli": True}
+        )
     ]
 )
 def test_cli(func, cli_args, called_with_args, runner):
