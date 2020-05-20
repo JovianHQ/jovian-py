@@ -4,10 +4,12 @@ import click
 
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
-from jovian.utils.commit import commit_cli
+from jovian.utils.commit import commit
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
+from jovian.utils.logger import log
+from jovian.utils.misc import is_py2
 from jovian.utils.rcfile import set_notebook_slug
 from jovian.utils.slack import add_slack
 
@@ -149,12 +151,15 @@ def set_project(ctx,  notebook, project):
 @main.command("commit", short_help="Create a new notebook on Jovian")
 @click.argument('notebook')
 @click.pass_context
-def exec_commit(ctx, notebook):
+def exec_commit(ctx,  notebook):
     """Create a new notebook on Jovian
 
         $ jovian commit my_notebook.ipynb
     """
-    commit_cli(path=notebook, environment=None, is_cli=True)
+    if is_py2():
+        log("Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+            warn=True)
+    commit(filename=notebook, environment=None, is_cli=True)
 
 
 @main.command("add-slack")
