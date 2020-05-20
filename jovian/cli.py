@@ -4,7 +4,7 @@ import click
 
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
-from jovian.utils.commit import commit
+from jovian.utils.commit import commit_cli
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
@@ -149,12 +149,12 @@ def set_project(ctx,  notebook, project):
 @main.command("commit", short_help="Create a new notebook on Jovian")
 @click.argument('notebook')
 @click.pass_context
-def exec_commit(ctx,  notebook):
+def exec_commit(ctx, notebook):
     """Create a new notebook on Jovian
 
         $ jovian commit my_notebook.ipynb
     """
-    commit(filename=notebook, environment=None, is_cli=True)
+    commit_cli(path=notebook, environment=None, is_cli=True)
 
 
 @main.command("add-slack")

@@ -1,17 +1,47 @@
-import os
 import glob
+import os
 from time import sleep
 
-from jovian.utils.script import in_script, get_script_filename
-from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid, urljoin
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, get_cached_slug
-from jovian.utils.credentials import read_webapp_url, read_creds
-from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
-from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
-from jovian.utils.logger import log
+import click
 from jovian.utils import api, git
+from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
+from jovian.utils.credentials import read_creds, read_webapp_url
+from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
+from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.logger import log
+from jovian.utils.misc import get_file_extension, is_uuid, urljoin
+from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
+from jovian.utils.records import get_records, log_git, reset
+from jovian.utils.script import get_script_filename, in_script
+
+
+def commit_cli(path, **kwargs):
+    if os.path.isfile(path):
+        commit(filename=os.path.normpath(path), **kwargs)
+    elif os.path.isdir(path):
+        files = [os.path.normpath(f) for f in sorted(glob.glob(os.path.join(path, '*.ipynb')))]
+        num_files = len(files)
+        if num_files == 0:
+            log("No notebooks found in directory: " + path)
+            return
+        elif num_files >= 50:
+            log("Can't upload more than 50 files at once")
+            return
+        elif num_files == 1:
+            log('Uploading 1 notebook: {}'.format(files[0]))
+        else:
+            log('Uploading {} notebook:'.format(num_files))
+            log('\n'.join(files), pre=False)
+
+        if click.confirm('\n[jovian] Do you want to continue?', default=True):
+            for filename in files:
+                commit(filename=filename, reset_slug=True, **kwargs)
+                log("", pre=False)
+                sleep(1)
+        else:
+            log("Upload aborted")
+    else:
+        log("Failed to parse path: " + path)
 
 
 def commit(message=None,
@@ -163,6 +193,9 @@ def commit(message=None,
         git_message = message or 'jovian commit ' + username + '/' + title + ' v' + str(version)
     _perform_git_commit(filename, git_commit, git_message)
     _attach_records(slug, version)
+
+    if kwargs.get("reset_slug", False):
+        reset_notebook_slug()
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
