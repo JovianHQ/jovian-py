@@ -15,32 +15,6 @@ from jovian.utils.records import get_records, log_git, reset
 from jovian.utils.script import get_script_filename, in_script
 
 
-def commit_path(path, **kwargs):
-    files = _list_ipynb_files(path)
-    num_files = len(files)
-
-    if num_files == 0:
-        log("No notebooks found in path: " + path)
-        return
-
-    if num_files >= 50:
-        log("Can't upload more than 50 files at once")
-        return
-
-    if num_files == 1:
-        log('Uploading 1 notebook: {}'.format(files[0]))
-    else:
-        log('Uploading {} notebook:'.format(num_files))
-        log('\n'.join(files), pre=False)
-
-    if click.confirm('\n[jovian] Do you want to continue?', default=True):
-        for filename in files:
-            reset_notebook_slug()
-            commit(filename=filename, **kwargs)
-            log("", pre=False)
-            sleep(1)
-
-
 def commit(message=None,
            files=[],
            outputs=[],
@@ -194,6 +168,32 @@ def commit(message=None,
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
     return urljoin(read_webapp_url(), username, title)
+
+
+def commit_path(path, **kwargs):
+    files = _list_ipynb_files(path)
+    num_files = len(files)
+
+    if num_files == 0:
+        log("No notebook found in path: " + path)
+        return
+
+    if num_files >= 50:
+        log("Can't upload more than 50 files at once")
+        return
+
+    if num_files == 1:
+        log('Uploading 1 notebook: {}'.format(files[0]))
+    else:
+        log('Uploading {} notebooks:'.format(num_files))
+        log('\n'.join(files), pre=False)
+
+    if click.confirm('\n[jovian] Do you want to continue?', default=True):
+        for filename in files:
+            reset_notebook_slug()
+            commit(filename=filename, **kwargs)
+            log("", pre=False)
+            sleep(1)
 
 
 def _parse_filename(filename):
