@@ -117,8 +117,10 @@ def commit(message=None,
         outputs = kwargs['artifacts']
         log('"artifacts" is deprecated. Use "outputs" instead', error=True)
 
+    is_cli = kwargs.get('is_cli', False)
+
     # Skip if unsupported environment
-    if not in_script() and not in_notebook():
+    if not in_script() and not in_notebook() and not is_cli:
         log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
         return
 

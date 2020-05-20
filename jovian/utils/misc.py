@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import platform
 
@@ -14,6 +15,11 @@ def is_uuid(text):
         return True
     except ValueError:
         return False
+
+
+def is_py2():
+    """Check if current Python version is 2.x"""
+    return sys.version_info[0] < 3
 
 
 def get_platform():
