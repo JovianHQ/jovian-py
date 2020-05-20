@@ -15,33 +15,30 @@ from jovian.utils.records import get_records, log_git, reset
 from jovian.utils.script import get_script_filename, in_script
 
 
-def commit_cli(path, **kwargs):
-    if os.path.isfile(path):
-        commit(filename=os.path.normpath(path), **kwargs)
-    elif os.path.isdir(path):
-        files = [os.path.normpath(f) for f in sorted(glob.glob(os.path.join(path, '*.ipynb')))]
-        num_files = len(files)
-        if num_files == 0:
-            log("No notebooks found in directory: " + path)
-            return
-        elif num_files >= 50:
-            log("Can't upload more than 50 files at once")
-            return
-        elif num_files == 1:
-            log('Uploading 1 notebook: {}'.format(files[0]))
-        else:
-            log('Uploading {} notebook:'.format(num_files))
-            log('\n'.join(files), pre=False)
+def commit_path(path, **kwargs):
+    files = _list_ipynb_files(path)
+    num_files = len(files)
 
-        if click.confirm('\n[jovian] Do you want to continue?', default=True):
-            for filename in files:
-                commit(filename=filename, reset_slug=True, **kwargs)
-                log("", pre=False)
-                sleep(1)
-        else:
-            log("Upload aborted")
+    if num_files == 0:
+        log("No notebooks found in path: " + path)
+        return
+
+    if num_files >= 50:
+        log("Can't upload more than 50 files at once")
+        return
+
+    if num_files == 1:
+        log('Uploading 1 notebook: {}'.format(files[0]))
     else:
-        log("Failed to parse path: " + path)
+        log('Uploading {} notebook:'.format(num_files))
+        log('\n'.join(files), pre=False)
+
+    if click.confirm('\n[jovian] Do you want to continue?', default=True):
+        for filename in files:
+            reset_notebook_slug()
+            commit(filename=filename, **kwargs)
+            log("", pre=False)
+            sleep(1)
 
 
 def commit(message=None,
@@ -193,9 +190,6 @@ def commit(message=None,
         git_message = message or 'jovian commit ' + username + '/' + title + ' v' + str(version)
     _perform_git_commit(filename, git_commit, git_message)
     _attach_records(slug, version)
-
-    if kwargs.get("reset_slug", False):
-        reset_notebook_slug()
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
@@ -388,3 +382,14 @@ def _attach_records(gist_slug, version):
     if len(tracking_slugs) > 0:
         log('Attaching records (metrics, hyperparameters, dataset etc.)')
         api.post_records(gist_slug, tracking_slugs, version)
+
+
+def _list_ipynb_files(path):
+    """Return list of ipynb files in a path"""
+    if os.path.isfile(path) and get_file_extension(path) == ".ipynb":
+        files = [os.path.normpath(path)]
+    elif os.path.isdir(path):
+        files = [os.path.normpath(f) for f in sorted(glob.glob(os.path.join(path, '*.ipynb')))]
+    else:
+        files = []
+    return files

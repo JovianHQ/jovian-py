@@ -90,9 +90,14 @@ def runner():
 
         # commit
         (
-            "commit",
+            "commit_path",
             ["commit", "my_notebook.ipynb"],
-            {"filename": "my_notebook.ipynb", "environment": None, "is_cli": True}
+            {"path": "my_notebook.ipynb", "environment": None, "is_cli": True}
+        ),
+        (
+            "commit_path",
+            ["commit", "./directory"],
+            {"path": "./directory", "environment": None, "is_cli": True}
         )
     ]
 )
@@ -103,7 +108,7 @@ def test_cli(func, cli_args, called_with_args, runner):
         assert result.exit_code == 0
 
 
-@mock.patch("jovian.cli.commit")
+@mock.patch("jovian.cli.commit_path")
 @mock.patch("jovian.cli.log")
 @mock.patch("jovian.cli.is_py2", return_value=True)
 def test_commit_py2(mock_py2, mock_log, mock_commit, runner):
@@ -111,6 +116,6 @@ def test_commit_py2(mock_py2, mock_log, mock_commit, runner):
     mock_log.assert_called_with(
         "Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
         warn=True)
-    called_with_args = {"filename": "my_notebook.ipynb", "environment": None, "is_cli": True}
+    called_with_args = {"path": "my_notebook.ipynb", "environment": None, "is_cli": True}
     mock_commit.assert_called_with(**called_with_args)
     assert result.exit_code == 0

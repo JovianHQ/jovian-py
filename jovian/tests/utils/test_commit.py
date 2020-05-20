@@ -7,9 +7,10 @@ from unittest import mock
 from unittest.mock import ANY, call
 
 import pytest
+
 from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory, touch
-from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _parse_filename,
-                                 _parse_project, _perform_git_commit, commit)
+from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _list_ipynb_files,
+                                 _parse_filename, _parse_project, _perform_git_commit, commit, commit_path)
 from jovian.utils.error import CondaError
 
 
@@ -425,6 +426,43 @@ def test_attach_records(mock_api_post_records, capsys):
         expected_result = "[jovian] Attaching records (metrics, hyperparameters, dataset etc.)"
         captured = capsys.readouterr()
         assert captured.out.strip() == expected_result
+
+
+def test_list_ipynb_files(tmpdir, capsys):
+    folder1 = tmpdir.mkdir("sub")
+    folder2 = tmpdir.mkdir("sub2")
+    file1 = folder1.join("test1.ipynb").ensure(file=True)
+    file2 = folder1.join("test2.ipynb").ensure(file=True)
+    file3 = folder1.join("test3.py").ensure(file=True)
+
+    assert len(tmpdir.listdir()) == 2
+    assert len(_list_ipynb_files(file1)) == 1
+    assert len(_list_ipynb_files(file3)) == 0
+    assert len(_list_ipynb_files(folder1)) == 2
+    assert len(_list_ipynb_files(folder2)) == 0
+
+
+@pytest.mark.parametrize(
+    "ipynb_files, confirm, expected_files", [
+        ([], True, []),
+        ([], False, []),
+        (["test1.ipynb"], True, ["test1.ipynb"]),
+        (["test1.ipynb"], False, []),
+        (["test1.ipynb", "test2.ipynb"], True, ["test1.ipynb", "test2.ipynb"]),
+        (["test1.ipynb", "test2.ipynb"], False, []),
+        (["test{}.ipynb".format(i) for i in range(0, 20)], True, ["test{}.ipynb".format(i) for i in range(0, 20)]),
+        (["test{}.ipynb".format(i) for i in range(0, 20)], False, []),
+        (["test{}.ipynb".format(i) for i in range(0, 50)], True, []),
+        (["test{}.ipynb".format(i) for i in range(0, 50)], False, [])
+    ]
+)
+@mock.patch("time.sleep")
+@mock.patch("jovian.utils.commit.commit")
+def test_commit_path(mock_commit, mock_sleep, ipynb_files, confirm, expected_files):
+    with mock.patch("jovian.utils.commit._list_ipynb_files", return_value=ipynb_files) as mock_func:
+        with mock.patch("click.confirm", return_value=confirm) as mock_confirm:
+            commit_path(path="notebook", environment=None, is_cli=True)
+            mock_commit.assert_has_calls([call(filename=f, environment=None, is_cli=True) for f in expected_files])
 
 
 @pytest.mark.parametrize(
