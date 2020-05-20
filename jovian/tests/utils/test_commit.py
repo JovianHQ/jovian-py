@@ -436,10 +436,10 @@ def test_list_ipynb_files(tmpdir, capsys):
     file3 = folder1.join("test3.py").ensure(file=True)
 
     assert len(tmpdir.listdir()) == 2
-    assert len(_list_ipynb_files(file1)) == 1
-    assert len(_list_ipynb_files(file3)) == 0
-    assert len(_list_ipynb_files(folder1)) == 2
-    assert len(_list_ipynb_files(folder2)) == 0
+    assert len(_list_ipynb_files(str(file1))) == 1
+    assert len(_list_ipynb_files(str(file3))) == 0
+    assert len(_list_ipynb_files(str(folder1))) == 2
+    assert len(_list_ipynb_files(str(folder2))) == 0
 
 
 @pytest.mark.parametrize(
