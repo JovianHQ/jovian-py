@@ -16,4 +16,4 @@ def test_log_error(capsys):
 def test_log_warn(capsys):
     log("This is a warning", warn=True)
     captured = capsys.readouterr()
-    assert captured.err.strip() == "[jovian] This is a warning"
+    assert captured.out.strip() == "[jovian] This is a warning"
