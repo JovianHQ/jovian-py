@@ -8,6 +8,8 @@ from jovian.utils.commit import commit
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
+from jovian.utils.logger import log
+from jovian.utils.misc import is_py2
 from jovian.utils.rcfile import set_notebook_slug
 from jovian.utils.slack import add_slack
 
@@ -154,6 +156,9 @@ def exec_commit(ctx,  notebook):
 
         $ jovian commit my_notebook.ipynb
     """
+    if is_py2():
+        log("Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+            warn=True)
     commit(filename=notebook, environment=None, is_cli=True)
 
 
