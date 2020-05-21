@@ -1,17 +1,18 @@
-import os
 import glob
+import os
 from time import sleep
 
-from jovian.utils.script import in_script, get_script_filename
-from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid, urljoin
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug, get_cached_slug
-from jovian.utils.credentials import read_webapp_url, read_creds
-from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
-from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG, DEFAULT_EXTENSION_WHITELIST
-from jovian.utils.logger import log
+import click
 from jovian.utils import api, git
+from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
+from jovian.utils.credentials import read_creds, read_webapp_url
+from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
+from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.logger import log
+from jovian.utils.misc import get_file_extension, is_uuid, urljoin
+from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
+from jovian.utils.records import get_records, log_git, reset
+from jovian.utils.script import get_script_filename, in_script
 
 
 def commit(message=None,
@@ -167,6 +168,32 @@ def commit(message=None,
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
 
     return urljoin(read_webapp_url(), username, title)
+
+
+def commit_path(path, **kwargs):
+    files = _list_ipynb_files(path)
+    num_files = len(files)
+
+    if num_files == 0:
+        log("No notebook found in path: " + path)
+        return
+
+    if num_files >= 50:
+        log("Can't upload more than 50 files at once")
+        return
+
+    if num_files == 1:
+        log('Uploading 1 notebook: {}'.format(files[0]))
+    else:
+        log('Uploading {} notebooks:'.format(num_files))
+        log('\n'.join(files), pre=False)
+
+    if click.confirm('\n[jovian] Do you want to continue?', default=True):
+        for filename in files:
+            reset_notebook_slug()
+            commit(filename=filename, **kwargs)
+            log("", pre=False)
+            sleep(1)
 
 
 def _parse_filename(filename):
@@ -355,3 +382,14 @@ def _attach_records(gist_slug, version):
     if len(tracking_slugs) > 0:
         log('Attaching records (metrics, hyperparameters, dataset etc.)')
         api.post_records(gist_slug, tracking_slugs, version)
+
+
+def _list_ipynb_files(path):
+    """Return list of ipynb files in a path"""
+    if os.path.isfile(path) and get_file_extension(path) == ".ipynb":
+        files = [os.path.normpath(path)]
+    elif os.path.isdir(path):
+        files = [os.path.normpath(f) for f in sorted(glob.glob(os.path.join(path, '*.ipynb')))]
+    else:
+        files = []
+    return files

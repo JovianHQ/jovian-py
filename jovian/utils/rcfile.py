@@ -56,6 +56,12 @@ def set_notebook_slug(filename, slug, cache_result=True):
     return slug
 
 
+def reset_notebook_slug():
+    """Reset cached notebook slug"""
+    global _current_slug
+    _current_slug = None
+
+
 def make_rcdata(filename, slug):
     """Make a JSON string for an individual file"""
     data = {
