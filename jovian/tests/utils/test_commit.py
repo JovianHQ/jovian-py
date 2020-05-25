@@ -7,9 +7,10 @@ from unittest import mock
 from unittest.mock import ANY, call
 
 import pytest
+
 from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory, touch
-from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _parse_filename,
-                                 _parse_project, _perform_git_commit, commit)
+from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _list_ipynb_files,
+                                 _parse_filename, _parse_project, _perform_git_commit, commit, commit_path)
 from jovian.utils.error import CondaError
 
 
@@ -155,7 +156,7 @@ def test_parse_filename_in_notebook(mock_in_notebook, mock_get_script_name, mock
 
     ]
 )
-@mock.patch("jovian.utils.commit._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
 @mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
 def test_parse_project(
         mock_get_current_user, get_gist_side_effect, get_gist_access_return_value, args, expected_result):
@@ -165,7 +166,7 @@ def test_parse_project(
             assert _parse_project(**args) == expected_result
 
 
-@mock.patch("jovian.utils.commit._current_slug", None)
+@mock.patch("jovian.utils.rcfile._current_slug", None)
 @mock.patch("jovian.utils.commit.get_notebook_slug", return_value="rohit/time-series-new")
 @mock.patch("jovian.utils.commit.api.get_current_user", return_value={'username': 'rohit'})
 @mock.patch("jovian.utils.commit.api.get_gist", side_effect=mock_get_gist)
@@ -427,6 +428,43 @@ def test_attach_records(mock_api_post_records, capsys):
         assert captured.out.strip() == expected_result
 
 
+def test_list_ipynb_files(tmpdir, capsys):
+    folder1 = tmpdir.mkdir("sub")
+    folder2 = tmpdir.mkdir("sub2")
+    file1 = folder1.join("test1.ipynb").ensure(file=True)
+    file2 = folder1.join("test2.ipynb").ensure(file=True)
+    file3 = folder1.join("test3.py").ensure(file=True)
+
+    assert len(tmpdir.listdir()) == 2
+    assert len(_list_ipynb_files(str(file1))) == 1
+    assert len(_list_ipynb_files(str(file3))) == 0
+    assert len(_list_ipynb_files(str(folder1))) == 2
+    assert len(_list_ipynb_files(str(folder2))) == 0
+
+
+@pytest.mark.parametrize(
+    "ipynb_files, confirm, expected_files", [
+        ([], True, []),
+        ([], False, []),
+        (["test1.ipynb"], True, ["test1.ipynb"]),
+        (["test1.ipynb"], False, []),
+        (["test1.ipynb", "test2.ipynb"], True, ["test1.ipynb", "test2.ipynb"]),
+        (["test1.ipynb", "test2.ipynb"], False, []),
+        (["test{}.ipynb".format(i) for i in range(0, 20)], True, ["test{}.ipynb".format(i) for i in range(0, 20)]),
+        (["test{}.ipynb".format(i) for i in range(0, 20)], False, []),
+        (["test{}.ipynb".format(i) for i in range(0, 50)], True, []),
+        (["test{}.ipynb".format(i) for i in range(0, 50)], False, [])
+    ]
+)
+@mock.patch("time.sleep")
+@mock.patch("jovian.utils.commit.commit")
+def test_commit_path(mock_commit, mock_sleep, ipynb_files, confirm, expected_files):
+    with mock.patch("jovian.utils.commit._list_ipynb_files", return_value=ipynb_files) as mock_func:
+        with mock.patch("click.confirm", return_value=confirm) as mock_confirm:
+            commit_path(path="notebook", environment=None, is_cli=True)
+            mock_commit.assert_has_calls([call(filename=f, environment=None, is_cli=True) for f in expected_files])
+
+
 @pytest.mark.parametrize(
     "commit_kwargs, expected_result",
     [({"secret": True},
@@ -461,12 +499,13 @@ def test_commit_in_notebook_filename_none(
         mock_in_script, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
 
     commit('initial commit')
-
-    expected_result = dedent("""
-        [jovian] Attempting to save notebook..
-        [jovian] Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
+    expected_result_out = dedent("""
+    [jovian] Attempting to save notebook..""")
+    expected_result_err = dedent("""
+        [jovian] Error: Failed to detect notebook filename. Please provide the correct notebook filename as the "filename" argument to "jovian.commit".""")
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_result_out.strip()
+    assert captured.err.strip() == expected_result_err.strip()
 
 
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
@@ -478,9 +517,9 @@ def test_commit_file_does_not_exist(
 
     commit('initial commit')
 
-    expected_result = """[jovian] The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
+    expected_result = """[jovian] Error: The detected/provided file "file" does not exist. Please provide the correct notebook filename as the "filename" argument to "jovian.commit"."""
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.err.strip() == expected_result.strip()
 
 
 def mock_create_gist_simple(*args, **kwargs):
@@ -532,8 +571,8 @@ def test_commit(mock_in_script,
                 mock_attach_records,
                 capsys):
 
-    commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
-           environment='conda', outputs=['model.h5', 'gen.csv'])
+    returned_value = commit('initial commit', files=['file1', 'file2', 'file3'], privacy='secret',
+                            environment='conda', outputs=['model.h5', 'gen.csv'])
 
     mock_create_gist_simple.assert_called_with(
         'file', 'fake_project_id', 'secret', 'fake_project_title', 'initial commit')
@@ -550,6 +589,7 @@ def test_commit(mock_in_script,
 
     mock_attach_records.assert_called_with('fake_gist_slug', 2)
 
-    expected_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
+    expected_common_result = "[jovian] Committed successfully! https://staging.jovian.ml/rohit/demo-notebook"
     captured = capsys.readouterr()
-    assert captured.out.strip() == expected_result.strip()
+    assert captured.out.strip() == expected_common_result.strip()
+    assert returned_value == "https://staging.jovian.ml/rohit/demo-notebook"

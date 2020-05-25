@@ -1,15 +1,15 @@
 import json
 import os
 import shutil
-from unittest import TestCase, mock
 from contextlib import contextmanager
+from unittest import TestCase, mock
 
 import pytest
 
 from jovian.tests.resources.shared import temp_directory
 from jovian.utils.constants import RC_FILENAME
-from jovian.utils.rcfile import (get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists, save_rcdata,
-                                 set_notebook_slug)
+from jovian.utils.rcfile import (get_cached_slug, get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists,
+                                 reset_notebook_slug, save_rcdata, set_notebook_slug)
 
 _data = {
     "notebooks": {
@@ -99,3 +99,15 @@ def test_make_rcdata():
     expected_result = '{"notebooks": {"Testing Jovian.ipynb": {"slug": "46bd9a3f87e74de0baf8a6f0b60a8df9"}}}'
 
     assert make_rcdata(filename, slug) == expected_result
+
+
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+def test_get_cached_slug():
+    assert get_cached_slug() == "f67108fc906341d8b15209ce88ebc3d2"
+
+
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+def test_reset_notebook_slug():
+    assert get_cached_slug() == "f67108fc906341d8b15209ce88ebc3d2"
+    reset_notebook_slug()
+    assert get_cached_slug() == None
