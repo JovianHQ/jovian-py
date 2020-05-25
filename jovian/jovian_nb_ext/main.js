@@ -109,7 +109,6 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
         /* Saves the notebook creates a checkpoint and then commits*/
         Jupyter.notebook.save_checkpoint();
         Jupyter.notebook.events.one("notebook_saved.Notebook", function () {
-          saveFail = true;
           Jupyter.notebook.kernel.execute(jvn_commit, {
             iopub: { output: jvnLog }
           });
