@@ -4,9 +4,13 @@ import click
 
 from jovian._version import __version__
 from jovian.utils.clone import clone, pull
+from jovian.utils.commit import commit_path
 from jovian.utils.configure import configure, reset_config
 from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
+from jovian.utils.logger import log
+from jovian.utils.misc import is_py2
+from jovian.utils.rcfile import set_notebook_slug
 from jovian.utils.slack import add_slack
 
 
@@ -32,7 +36,7 @@ def main(ctx, log_level="info"):
 
 @main.command("help")
 @click.pass_context
-def help(ctx):
+def help(ctx):  # no-cover
     """Print this help message."""
 
     # Pretend user typed 'jovian --help' instead of 'jovian help'.
@@ -42,7 +46,7 @@ def help(ctx):
 
 @main.command('version')
 @click.pass_context
-def main_version(ctx):
+def main_version(ctx):  # no-cover
     """Print Jovian’s version number."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
@@ -80,12 +84,8 @@ def install_env(ctx, name=None):
 
     if not name:
         install()
-    elif name:
-        install(env_name=name)
     else:
-        # Show help
-        sys.argv[1] = "--help"
-        install_env()
+        install(env_name=name)
 
 
 @main.command("activate")
@@ -99,9 +99,10 @@ def activate_env(ctx):
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
 @click.argument('notebook')
 @click.option('-v', '--version', 'version')
-@click.option('--no-outputs', 'no_outputs')
+@click.option('--no-outputs', 'no_outputs', is_flag=True, default=False)
+@click.option('--overwrite', 'overwrite', is_flag=True)
 @click.pass_context
-def exec_clone(ctx, notebook, version, no_outputs):
+def exec_clone(ctx, notebook, version, no_outputs, overwrite):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -111,7 +112,7 @@ def exec_clone(ctx, notebook, version, no_outputs):
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
 
-    clone(notebook, version, not no_outputs)
+    clone(slug=notebook, version=version, include_outputs=not no_outputs, overwrite=overwrite)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
@@ -129,7 +130,36 @@ def exec_pull(ctx, notebook, version):
         $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
 
-    pull(notebook, version)
+    pull(slug=notebook, version=version)
+
+
+@main.command("set-project", short_help="Associate a notebook (filename.ipynb) to a Jovian project (username.title)")
+@click.argument('notebook')
+@click.argument('project')
+@click.pass_context
+def set_project(ctx,  notebook, project):
+    """Associate notebook (filename.ipynb) to Jovian project (username.title)
+
+        $ jovian set-project my_notebook.ipynb danb/keras-example
+
+    This will create or update the .jovianrc file in the current directory to ensure that commits
+    inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
+    """
+    set_notebook_slug(filename=notebook, slug=project)
+
+
+@main.command("commit", short_help="Create a new notebook on Jovian")
+@click.argument('notebook')
+@click.pass_context
+def exec_commit(ctx, notebook):
+    """Create a new notebook on Jovian
+
+        $ jovian commit my_notebook.ipynb
+    """
+    if is_py2():
+        log("Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+            warn=True)
+    commit_path(path=notebook, environment=None, is_cli=True)
 
 
 @main.command("add-slack")

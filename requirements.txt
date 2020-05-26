@@ -7,7 +7,7 @@ attrs==19.1.0
 autopep8==1.4.4
 Babel==2.7.0
 backcall==0.1.0
-bleach==3.1.2
+bleach==3.1.4
 bumpversion==0.5.3
 certifi==2018.8.24
 chardet==3.0.4
@@ -33,6 +33,7 @@ livereload==2.6.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==8.0.2
+notebook==6.0.2
 packaging==19.1
 parso==0.5.1
 pathlib2==2.3.5
@@ -68,6 +69,7 @@ snowballstemmer==1.9.1
 Sphinx==2.2.0
 sphinx-autobuild==0.7.1
 sphinx-rtd-theme==0.4.3
+sphinx-sitemap==2.1.0
 sphinxcontrib-applehelp==1.0.1
 sphinxcontrib-devhelp==1.0.1
 sphinxcontrib-htmlhelp==1.0.2

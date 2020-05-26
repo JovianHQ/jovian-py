@@ -1,19 +1,16 @@
 from jovian.utils.error import ApiError, CondaError, ConfigError
+import pytest
 
 
-def test_conda_error():
+@pytest.mark.parametrize(
+    "Error",
+    [
+        CondaError,
+        ApiError,
+        ConfigError
+    ]
+)
+def test_error(Error):
     msg = 'This is a error'
-    e = CondaError(msg)
-    assert e.args == (msg,)
-
-
-def test_api_error():
-    msg = 'This is a error'
-    e = ApiError(msg)
-    assert e.args == (msg,)
-
-
-def test_config_error():
-    msg = 'This is a error'
-    e = ConfigError(msg)
+    e = Error(msg)
     assert e.args == (msg,)

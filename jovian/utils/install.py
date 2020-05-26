@@ -71,7 +71,7 @@ def install(env_fname=None, env_name=None):
     if len(packages) > 0:
         success = run_command(command=command, env_fname=env_fname, packages=packages, run=1)
         if not success:
-            print('Some pip packages failed to install.')
+            log('Some pip packages failed to install.')
             print_conda_message(env_name=env_name)
 
 
@@ -102,5 +102,5 @@ def activate(env_fname=None):
 
     # Activate the environment
     command = conda_bin + " activate " + env_name
-    log('Copy and execte the following command (try "source activate" if "conda activate doesn\'t work" )')
+    log('Copy and execute the following command (try "source activate" if "conda activate doesn\'t work" )')
     print("    " + command + " \n")

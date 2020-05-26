@@ -1,9 +1,22 @@
 from keras.backend import get_value
 from keras.callbacks import Callback
 import json
+import numpy
 
 from jovian.utils.records import log_metrics, log_hyperparams, reset
 from jovian.utils.slack import notify
+
+
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, numpy.integer):
+            return int(obj)
+        elif isinstance(obj, numpy.floating):
+            return float(obj)
+        elif isinstance(obj, numpy.ndarray):
+            return obj.tolist()
+        else:  # no-cover
+            return super(Encoder, self).default(obj)
 
 
 class JovianKerasCallback(Callback):
@@ -78,4 +91,4 @@ class JovianKerasCallback(Callback):
                 }
                 if self.hyperparams:
                     result['hyperparams'] = self.hyperparams
-                notify(json.dumps(result, indent=2), verbose=False, safe=True)
+                notify(json.dumps(result, indent=2, cls=Encoder), verbose=False, safe=True)

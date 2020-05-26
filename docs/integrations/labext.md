@@ -45,30 +45,22 @@ This makes use of [jovian.commit's](../api-reference/commit) parameters to enabl
 
 <img src="https://i.imgur.com/NzRMRH8.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/api-reference/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](../api-reference/commit), changes to any parameter persists after commit.
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
 <img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-## Install Jovian Juputer Lab Extension
-
-You can use NPM to install the extension by running the following command.
-
-```
-$ Coming soon
-```
-
-## Enable or Disable the extension
+## Enable or Disable the extension from CLI
 
 You can also disable the extension by running the following command.
 
 ```
-$ jupyter labextension disable Jovian
+$ jupyter labextension disable jovian-jupyterlab
 ```
 
 To Enable the Notebook Extension, when you have manually disabled it.
 
 ```
-$ jupyter labextension enable Jovian
+$ jupyter labextension enable jovian-jupyterlab
 ```

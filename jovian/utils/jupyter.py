@@ -30,7 +30,8 @@ def in_notebook():
 def get_notebook_server_path():
     try:  # Python 3
         from notebook.notebookapp import list_running_servers
-    except ImportError:  # Python 2
+    except ImportError:  # no-cover
+        # Python 2
         import warnings
         from IPython.utils.shimmodule import ShimWarning
         with warnings.catch_warnings():
@@ -54,7 +55,8 @@ def get_notebook_server_path():
 def get_notebook_path_py():
     try:  # Python 3
         from notebook.notebookapp import list_running_servers
-    except ImportError:  # Python 2
+    except ImportError:  # no-cover
+        # Python 2
         import warnings
         from IPython.utils.shimmodule import ShimWarning
         with warnings.catch_warnings():
@@ -111,7 +113,7 @@ def get_notebook_name():
     if nb_path:
         return os.path.basename(nb_path)
     if nb_path and not os.path.exists(nb_path):
-        set_notebook_name()
+        set_notebook_name()  # no-cover
     return None
 
 

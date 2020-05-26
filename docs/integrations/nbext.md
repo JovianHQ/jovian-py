@@ -45,7 +45,7 @@ This makes use of [jovian.commit's](../api-reference/commit) parameters to enabl
 
 <img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/api-reference/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](../api-reference/commit), changes to any parameter persists after commit.
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
