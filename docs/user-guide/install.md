@@ -27,11 +27,11 @@ You can also install the `jovian` library directly within a <a href="https://jup
         $ pip install jovian --upgrade --user
 ```
 
-Once the installation is complete, you can start [uploading Jupyter notebooks to Jovian](02-upload.md).
+Once the installation is complete, you can start [uploading Jupyter notebooks to Jovian](upload.md).
 
 **Configuration (for Jovian Pro users only)**
 
-If you are a [Jovian Pro](12-pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
+If you are a [Jovian Pro](pro.md) user, run the following commands on the terminal (or command line) to connect the `jovian` library with your company's internal Jovian Pro site:
 
 ```
 jovian configure
@@ -58,4 +58,4 @@ The above command prompts for the following information:
 
 ```
 
-You can learn more about Jovian Pro [here](12-pro.md), or start [uploading Jupyter notebooks to Jovian](02-upload.md) in the next section.
+You can learn more about Jovian Pro [here](pro.md), or start [uploading Jupyter notebooks to Jovian](upload.md) in the next section.

@@ -1,4 +1,4 @@
-# Slack Integration
+# Slack Notifications
 
 Get notifications from your training experiment and stay updated with all the milestones of your code. No more watching the progress bar of your fit function to keep track of your model training.
 Use the same integration to get notification about other activities on Jovian.
@@ -27,10 +27,10 @@ This will be helpful to get updates on while training a model. You can send any 
 
 We have this integrated to our callbacks to get automated notifications about the metrics, check out [Callbacks Section](../callbacks/keras).
 
-For API documentation check out [Jovian Slack Notify](../jvn/notif)
+For API documentation check out [Jovian Slack Notify](../api-reference/notif)
 
 ### Integration Preferences
 
-You can customize on what notifications you get to your Slack. To update the preferences visit <a href="https://jovian.ml/settings/integrations?utm_source=docs" target=_blank> Jovian.ml Integrations </a> or you go to your `Profile Dropdown` on the top right corner and click on `Integrations`.
+You can customize on what notifications you get to your Slack. To update the preferences visit <a href="https://jovian.ml/settings/integrations?utm_source=docs" target=_blank> Jovian.ml Settings </a> or you go to your `Profile Dropdown` on the top right corner and click on `Settings`.
 
 <img src="https://i.imgur.com/C2oZohS.png" class="screenshot" alt="docs images" >

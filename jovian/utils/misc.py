@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 import platform
 
@@ -13,6 +15,11 @@ def is_uuid(text):
         return True
     except ValueError:
         return False
+
+
+def is_py2():
+    """Check if current Python version is 2.x"""
+    return sys.version_info[0] < 3
 
 
 def get_platform():
@@ -50,7 +57,7 @@ def is_flavor_pro():
 
 def get_file_extension(filename):
     """Get the extension of a file"""
-    return filename.split('.')[-1] if type(filename) == str else ''
+    return os.path.splitext(filename)[1]
 
 
 def urljoin(*args):

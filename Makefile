@@ -65,10 +65,10 @@ run-docs:
 	sphinx-autobuild docs docs/_build/html
 
 test-watch:
-	python -m pytest -f --cov-config .coveragerc --cov jovian jovian/tests
+	python -m pytest -W ignore::DeprecationWarning -f --cov-config .coveragerc --cov jovian jovian/tests
 
 test:
-	python -m pytest --cov-config .coveragerc --cov jovian jovian/tests
+	python -m pytest -W ignore::DeprecationWarning --cov-config .coveragerc --cov jovian jovian/tests
 
 test-coverage:
 	coverage html -i
