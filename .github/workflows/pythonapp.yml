@@ -4,29 +4,42 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
-
+        python-version: [3.6, 3.7]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Test with pytest
-      env:
-        GITHUB_NAME: name
-        GITHUB_EMAIL: name@email.com
-      run: |
-        git config --global user.email ${GITHUB_EMAIL}
-        git config --global user.name ${GITHUB_NAME}
-        pip install pytest
-        pytest
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Cython --install-option="--no-cython-compile"
+          pip install -r requirements.txt
+          pip install torch fastai
+          pip install tensorflow==2.1.0
+          pip install keras==2.3.1
+      - name: Test with pytest
+        env:
+          GITHUB_NAME: name
+          GITHUB_EMAIL: name@email.com
+        run: |
+          git config --global user.email ${GITHUB_EMAIL}
+          git config --global user.name ${GITHUB_NAME}
+          pip install pytest
+          pytest
+      - name: Generate coverage report
+        run: |
+          pip install pytest-cov
+          python -m pytest -W ignore::DeprecationWarning --cov-config .coveragerc --cov-report xml --cov=jovian jovian/tests
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true

@@ -1,7 +1,7 @@
 # Jupyter Lab Extension
 
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
-Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
+Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
 ## Using Jovian Jupyter Lab Extension
 
@@ -35,7 +35,7 @@ Once the API key has been validated, you can start committing to [Jovian](https:
 
 ## Commit with more options
 
-This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
+This makes use of [jovian.commit's](../api-reference/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
 
 **Step 1:** click the dropdown menu
 
@@ -45,42 +45,35 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 <img src="https://i.imgur.com/NzRMRH8.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](../api-reference/commit), changes to any parameter persists after commit.
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
 <img src="https://i.imgur.com/XdVkMPZ.png" class="screenshot" alt="jupyter extension commit options prompt">
 
-## Install Jovian Juputer Lab Extension
-
-You can use NPM to install the extension by running the following command.
-
-```
-$ Coming soon
-```
-
-## Enable or Disable the extension
+## Enable or Disable the extension from CLI
 
 You can also disable the extension by running the following command.
 
 ```
-$ jupyter labextension disable Jovian
+$ jupyter labextension disable jovian-jupyterlab
 ```
 
 To Enable the Notebook Extension, when you have manually disabled it.
 
 ```
-$ jupyter labextension enable Jovian
+$ jupyter labextension enable jovian-jupyterlab
 ```
-## Commit with Share Dialog
 
-After you have succesfully commited your notebook to [Jovian](https://jovian.ml?utm_source=docs), you can share your notebook to social media. 
+<!-- ## Commit with Share Dialog
+
+After you have succesfully commited your notebook to [Jovian](https://jovian.ml?utm_source=docs), you can share your notebook to social media.
 
 The following window will appear, providing the user with the options to share the notebook to facebook, twitter, or linkedin.
 
 <img src="https://i.imgur.com/FUUk82w.png" class="screenshot" alt="Share Dialog Window" >
 
-Once the facebook button is click. A share post will appear, providing the choice to add a description to the share notebook. 
+Once the facebook button is click. A share post will appear, providing the choice to add a description to the share notebook.
 
 <img src="https://i.imgur.com/4EfyHbn.png" class="screenshot" alt="Facebook post" >
 
@@ -92,6 +85,6 @@ If the twitter button is click. A share post will appear, also providing the cho
 
 <img src="https://i.imgur.com/HVP6t4M.png" class="screenshot" alt="Twitter post" >
 
-Finally you will see your tweet display. 
+Finally you will see your tweet display.
 
-<img src="https://i.imgur.com/Qg0TUU3.png" class="screenshot" alt="Twitter post" >
+<img src="https://i.imgur.com/Qg0TUU3.png" class="screenshot" alt="Twitter post" > -->

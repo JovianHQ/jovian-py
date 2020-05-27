@@ -13,43 +13,40 @@ Jovian: The platform for all your Data Science projects
   :description lang=en:
     Jovian.ml is a better place for your data science projects, Jupyter notebooks, machine learning models, experiment logs, results and more.
 
-Jovian is an open-source Python package integrated with 
-|Jovian| to provide the tools necessary for Data Scientists
-and ML/DL Engineers to **Track**, **Collaborate** and **Automate** projects
-where even Students and Enthusiasts can leverage the same and also use 
-|Jovian| to **Share** and **Showcase** their projects.
+|Jovian.ml| is a platform for sharing and collaboraring on Jupyter notebooks and data science projects. `jovian-py` is an open-source Python package for uploading your data science code, Jupyter notebooks, ML models, hyperparameters, metrics etc. to your Jovian.ml account. 
 
-.. |Jovian| raw:: html
+.. |Jovian.ml| raw:: html
   
   <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
 
 .. toctree::
   :caption: Getting Started
 
-  user-guide/01-install
-  user-guide/02-upload
-  user-guide/03-reproduce
-  user-guide/04-version
-  user-guide/05-attach
-  user-guide/06-track
-  user-guide/07-compare
-  user-guide/08-collaborate
-  user-guide/09-integrations
-  user-guide/10-embed
-  user-guide/11-github
-  user-guide/12-pro
+  user-guide/install
+  user-guide/upload
+  user-guide/reproduce
+  user-guide/version
+  user-guide/attach
+  user-guide/track
+  user-guide/compare
+  user-guide/collaborate
+  user-guide/embed
+  integrations/slack
+  user-guide/topics
+  user-guide/github
+  user-guide/pro
 
 .. toctree::
   :caption: API Reference
   :hidden:
 
-  jvn/commit
-  jvn/logger
-  jvn/notif
-  jvn/cli
+  api-reference/commit
+  api-reference/logger
+  api-reference/notif
+  api-reference/cli
   callbacks/fastai
   callbacks/keras
-  jvn/oembed
+  api-reference/oembed
 
 ########################################################
 Jovian: Libraries and Integrations

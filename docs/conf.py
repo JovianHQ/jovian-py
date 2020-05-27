@@ -12,27 +12,31 @@ author = 'Aakash N S, Siddhant Ujjain'
 extensions = ['recommonmark',  # to use .md along with .rst
               'sphinx.ext.autodoc',  # import doc from docstrings
               'sphinx.ext.linkcode',  # linking the source code on github
+              'sphinx_sitemap',  # generate sitemap
               'sphinxcontrib.napoleon']  # to support Google style docstrings for autodoc
 
 master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
-autodoc_mock_imports = ["torch", "fastai", "keras", "click"]
+autodoc_mock_imports = ["torch", "fastai", "keras", "click", "numpy"]
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'TermsOfService.md', 'PrivacyPolicy.md']
 
 html_theme = 'sphinx_rtd_theme'
 
 templates_path = ['_templates']
 html_static_path = ['_static']
-html_style = 'css/override.css'  # adding some custom styles on the theme
+html_css_files = ['css/navbar.css', 'css/override.css']
 
+html_baseurl = 'https://jovian.ml/docs/'
 html_logo = 'jovian_horizontal_logo.svg'
 html_show_sphinx = False
 
 html_favicon = 'jovian_favicon.png'  # icon next to title on the browser's tab
 
 html_theme_options = {
-    'sticky_navigation': False
+    'sticky_navigation': False,
+    'analytics_id': os.getenv('ANALYTICS_ID', ''),
+    'collapse_navigation': False
 }
 
 html_context = {

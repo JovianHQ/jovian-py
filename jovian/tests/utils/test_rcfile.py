@@ -1,13 +1,17 @@
 import json
 import os
 import shutil
+from contextlib import contextmanager
 from unittest import TestCase, mock
 
-from jovian.utils.constants import RC_FILENAME
-from jovian.utils.rcfile import (get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists, save_rcdata,
-                                 set_notebook_slug)
+import pytest
 
-data = {
+from jovian.tests.resources.shared import temp_directory
+from jovian.utils.constants import RC_FILENAME
+from jovian.utils.rcfile import (get_cached_slug, get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists,
+                                 reset_notebook_slug, save_rcdata, set_notebook_slug)
+
+_data = {
     "notebooks": {
         "Testing Jovian.ipynb": {
             "slug": "46bd9a3f87e74de0baf8a6f0b60a8df9"
@@ -16,96 +20,62 @@ data = {
 }
 
 
-class RCFile(TestCase):
-    path = 'rcfile-testing-folder'
-
-    def setUp(self):
-        os.mkdir(self.path)
-        os.chdir(self.path)
-
-    def tearDown(self):
-        os.chdir('..')
-        shutil.rmtree(self.path)
-
-
-class CreateNewRCFile(RCFile):
-    def setUp(self):
-        super().setUp()
+@contextmanager
+def fake_rc():
+    with temp_directory():
         with open(RC_FILENAME, 'w') as f:
-            json.dump(data, f, indent=2)
+            json.dump(_data, f, indent=2)
 
-    def tearDown(self):
-        os.system('rm .jovianrc')
-        super().tearDown()
+        yield
 
 
-class TestRCFileDoesNotExist(RCFile):
+def test_rcfile_does_not_exist():
+    with temp_directory():
+        assert not rcfile_exists()
 
-    def test_rcfile_does_not_exist(self):
-        self.assertFalse(rcfile_exists())
 
-
-class TestSaveRCData(RCFile):
-
-    def test_save_rcdata_data_none(self):
-        save_rcdata(data=None)
-        expected_result = {
+@pytest.mark.parametrize(
+    "data, expected_result",
+    [
+        (_data, _data),
+        (None, {
             "notebooks": {}
-        }
-        with open(RC_FILENAME, 'r') as f:
-            self.assertEqual(json.load(f), expected_result)
-
-    def test_save_rcdata_data_exists(self):
+        })
+    ]
+)
+def test_save_rcdata(data, expected_result):
+    with temp_directory():
         save_rcdata(data=data)
-        expected_result = data
 
         with open(RC_FILENAME, 'r') as f:
-            self.assertEqual(json.load(f), expected_result)
+            assert json.load(f) == expected_result
 
 
-class TestGetRCDataRCFileNotExist(RCFile):
-
-    @mock.patch('jovian.utils.rcfile.rcfile_exists', mock.Mock(return_value=False))
-    def test_get_rcdata_rcfile_does_not_exist(self):
+def test_get_rcdata():
+    with temp_directory():
         expected_result = {
             "notebooks": {}
         }
-        self.assertEqual(get_rcdata(), expected_result)
+        assert get_rcdata() == expected_result
+
+    with fake_rc():
+        assert get_rcdata() == _data
 
 
-class TestGetRCData(RCFile):
-
-    def test_get_rcdata_rcfile_exists(self):
-        with open(RC_FILENAME, 'w') as f:
-            json.dump(data, f, indent=2)
-
-        expected_result = data
-
-        self.assertEqual(get_rcdata(), expected_result)
-
-    def tearDown(self):
-        os.system('rm .jovianrc')
-        super().tearDown()
+@pytest.mark.parametrize(
+    "filename, expected_result",
+    [
+        ("Testing Jovian.ipynb", "46bd9a3f87e74de0baf8a6f0b60a8df9"),
+        ("Testing Jovian123.ipynb", None)
+    ]
+)
+def test_get_notebook_slug_notebook_present(filename, expected_result):
+    with fake_rc():
+        assert get_notebook_slug(filename) == expected_result
 
 
-class TestGetNotebookSlug(CreateNewRCFile):
-
-    def test_get_notebook_slug_notebook_present(self):
-        filename = "Testing Jovian.ipynb"
-        expected_result = "46bd9a3f87e74de0baf8a6f0b60a8df9"
-
-        self.assertEqual(get_notebook_slug(filename), expected_result)
-
-    def test_get_notebook_slug_notebook_not_present(self):
-        filename = "Testing Jovian123.ipynb"
-        expected_result = None
-
-        self.assertEqual(get_notebook_slug(filename), expected_result)
-
-
-class TestSetNotebookSlug(CreateNewRCFile):
-
-    def test_set_notebook_slug_new_entry(self):
+def test_set_notebook_slug():
+    with fake_rc():
         filename = "Testing Jovian 2.ipynb"
         slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
 
@@ -119,24 +89,25 @@ class TestSetNotebookSlug(CreateNewRCFile):
                 }
             }
         }
-
         set_notebook_slug(filename, slug)
-        self.assertEqual(get_rcdata(), expected_result)
-
-    def test_set_notebook_slug_existing_entry(self):
-        filename = "Testing Jovian.ipynb"
-        slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
-
-        expected_result = data
-
-        set_notebook_slug(filename, slug)
-        self.assertEqual(get_rcdata(), expected_result)
+        assert get_rcdata() == expected_result
 
 
-class TestMakeRCData(CreateNewRCFile):
-    def test_make_rcdata(self):
-        filename = "Testing Jovian.ipynb"
-        slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
-        expected_result = '{"notebooks": {"Testing Jovian.ipynb": {"slug": "46bd9a3f87e74de0baf8a6f0b60a8df9"}}}'
+def test_make_rcdata():
+    filename = "Testing Jovian.ipynb"
+    slug = "46bd9a3f87e74de0baf8a6f0b60a8df9"
+    expected_result = '{"notebooks": {"Testing Jovian.ipynb": {"slug": "46bd9a3f87e74de0baf8a6f0b60a8df9"}}}'
 
-        self.assertEqual(make_rcdata(filename, slug), expected_result)
+    assert make_rcdata(filename, slug) == expected_result
+
+
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+def test_get_cached_slug():
+    assert get_cached_slug() == "f67108fc906341d8b15209ce88ebc3d2"
+
+
+@mock.patch("jovian.utils.rcfile._current_slug", "f67108fc906341d8b15209ce88ebc3d2")
+def test_reset_notebook_slug():
+    assert get_cached_slug() == "f67108fc906341d8b15209ce88ebc3d2"
+    reset_notebook_slug()
+    assert get_cached_slug() == None

@@ -47,9 +47,9 @@ def post_clone_msg(title):
     log("Cloned successfully to '{}'".format(title), color='green')
     log(click.style('\nNext steps:', fg='yellow', underline=True) +
         click.style("""
-  $ cd {}                     
-  $ jovian install            
-  $ conda activate <env_name> 
+  $ cd {}
+  $ jovian install
+  $ conda activate <env_name>
   $ jupyter notebook
 """.format(title), bold=True), pre=False)
 
@@ -63,26 +63,32 @@ so please make sure you have it installed and added to path.
 """, pre=False)
 
 
-def clone(slug, version=None, fresh=True, include_outputs=True):
+def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False):
     """Download the files for a gist"""
     # Print issues link
     log(ISSUES_MSG)
 
     # Download gist metadata
-    ver_str = '(version ' + version + ')' if version else ''
+    ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
     title = gist['title']
 
     # If fresh clone, create directory
-    if fresh:
-        if os.path.exists(title):
-            i = 1
-            while os.path.exists(title + '-' + str(i)):
-                i += 1
-            title = title + '-' + str(i)
-        if not os.path.exists(title):
-            os.makedirs(title)
+    if fresh and not os.path.exists(title):
+        os.makedirs(title)
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and overwrite:
+        os.chdir(title)
+
+    elif fresh and os.path.exists(title) and not overwrite:
+        i = 1
+        while os.path.exists(title + '-' + str(i)):
+            i += 1
+        title = title + '-' + str(i)
+
+        os.makedirs(title)
         os.chdir(title)
 
     # Download the files
@@ -120,6 +126,7 @@ def pull(slug=None, version=None):
 
     # Get list of notebooks
     nbs = get_rcdata()['notebooks']
+
     for fname in nbs:
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)

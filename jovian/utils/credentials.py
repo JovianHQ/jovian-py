@@ -17,7 +17,7 @@ from jovian.utils.misc import is_flavor_pro, urljoin
 try:
     # Python 3
     from json.decoder import JSONDecodeError
-except ImportError:
+except ImportError:  # no-cover
     # Python 2
     JSONDecodeError = ValueError
 

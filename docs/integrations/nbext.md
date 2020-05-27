@@ -1,7 +1,7 @@
 # Jupyter Notebook Extension
 
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
-Make sure you’ve completed the [Installation](../user-guide/01-install.md) before reading further.
+Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
 ## Using Jovian Jupyter Extension
 
@@ -35,7 +35,7 @@ Once the API key has been validated, you can start committing to [Jovian](https:
 
 ## Commit with more options
 
-This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
+This makes use of [jovian.commit's](../api-reference/commit) parameters to enable the user to commit with preferences like private notebook, new notebook project, to add outputs and files .....
 
 **Step 1:** click the dropdown menu
 
@@ -45,7 +45,7 @@ This makes use of [jovian.commit's](../jvn/commit) parameters to enable the user
 
 <img src="https://i.imgur.com/jZEpIjl.png" class="screenshot" alt="jovian commit options jupyter extension">
 
-**Note:** By default the parameters are derived from [jovian.commit](https://jovian-py.readthedocs.io/en/latest/jvn/commit.html), changes to any parameter persists after commit.
+**Note:** By default the parameters are derived from [jovian.commit](../api-reference/commit), changes to any parameter persists after commit.
 
 **Step 3:** Click on `Commit` to commit the notebook with following options.
 
@@ -66,15 +66,16 @@ To Enable the Notebook Extension, when you have manually disabled it.
 ```
 $ jovian enable-extension
 ```
-## Commit with Share Dialog
 
-After you have succesfully commited your notebook to [Jovian](https://jovian.ml?utm_source=docs), you can share your notebook to social media. 
+<!-- ## Commit with Share Dialog
+
+After you have succesfully commited your notebook to [Jovian](https://jovian.ml?utm_source=docs), you can share your notebook to social media.
 
 The following window will appear, providing the user with the options to share the notebook to facebook, twitter, or linkedin.
 
 <img src="https://i.imgur.com/FUUk82w.png" class="screenshot" alt="Share Dialog Window" >
 
-Once the facebook button is click. A share post will appear, providing the choice to add a description to the share notebook. 
+Once the facebook button is click. A share post will appear, providing the choice to add a description to the share notebook.
 
 <img src="https://i.imgur.com/4EfyHbn.png" class="screenshot" alt="Facebook post" >
 
@@ -86,8 +87,28 @@ If the twitter button is click. A share post will appear, also providing the cho
 
 <img src="https://i.imgur.com/HVP6t4M.png" class="screenshot" alt="Twitter post" >
 
-Finally you will see your tweet display. 
+Finally you will see your tweet display.
 
-<img src="https://i.imgur.com/Qg0TUU3.png" class="screenshot" alt="Twitter post" >
+<img src="https://i.imgur.com/Qg0TUU3.png" class="screenshot" alt="Twitter post" > -->
 
+<!-- ## Jovian Settings
 
+Jovian settings are accessed in in the dropdown
+<img src="https://i.imgur.com/dnu5qkY.png" class="screenshot">
+
+<img src="https://i.imgur.com/iDFrZsd.png" class="screenshot">
+
+### Set Default Commit Parameters
+
+Sets the Parameters for Commit without Committing to Jovian.
+<img src="https://i.imgur.com/al3f6gU.png" class="screenshot">
+
+### Clear Api Key
+
+Clears the API key.
+<img src="https://i.imgur.com/DPAR6rh.png" class="screenshot">
+
+### Change Api Key
+
+Allows the API key to be changed.
+<img src="https://i.imgur.com/kfAtxFE.png" class="screenshot"> -->

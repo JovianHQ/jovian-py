@@ -1,18 +1,18 @@
+import glob
 import os
 from time import sleep
 
-from jovian.utils.script import in_script, get_script_filename
-from jovian.utils.jupyter import in_notebook, get_notebook_name, save_notebook
-from jovian.utils.misc import get_file_extension, is_uuid
-from jovian.utils.rcfile import get_notebook_slug, set_notebook_slug
-from jovian.utils.credentials import read_webapp_url
-from jovian.utils.environment import upload_conda_env, CondaError, upload_pip_env
-from jovian.utils.records import log_git, get_records, reset
-from jovian.utils.constants import FILENAME_MSG
-from jovian.utils.logger import log
+import click
 from jovian.utils import api, git
-
-_current_slug = None
+from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
+from jovian.utils.credentials import read_creds, read_webapp_url
+from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
+from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.logger import log
+from jovian.utils.misc import get_file_extension, is_uuid, urljoin
+from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
+from jovian.utils.records import get_records, log_git, reset
+from jovian.utils.script import get_script_filename, in_script
 
 
 def commit(message=None,
@@ -23,12 +23,12 @@ def commit(message=None,
            filename=None,
            project=None,
            new_project=None,
-           git_commit=True,
+           git_commit=False,
            git_message='auto',
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
-    Saves the checkpoint of the notebook, captures the required dependencies from 
+    Saves the checkpoint of the notebook, captures the required dependencies from
     the python environment and uploads the notebook, env file, additional files like scripts, csv etc.
     to |Jovian|. Capturing the python environment ensures that the notebook can be reproduced.
 
@@ -51,37 +51,36 @@ def commit(message=None,
             * 'secret' - not on profile only accessible via the direct link
             * 'private' - only for the accessible to owner and collaborators
 
-            This argument has no effect on existing project. Change the privacy settings of a existing notebook 
+            This argument has no effect on existing project. Change the privacy settings of a existing notebook
             on the webapp.
 
-        filename(string, optional): The filename of the current Jupyter notebook or Python script. This is 
-            detected automatically in most cases, but in certain environments like Jupyter Lab or password protected notebooks, the detection 
+        filename(string, optional): The filename of the current Jupyter notebook or Python script. This is
+            detected automatically in most cases, but in certain environments like Jupyter Lab or password protected notebooks, the detection
             may fail and the filename needs to be provided using this argument.
 
 
-        project(string, optional): Name of the |Jovian| project to which the current notebook/file should 
-            be committed. Format: 'username/title' e.g. 'aakashns/jovian-example' or 'jovian-example' 
-            (username of current user inferred automatically). If the project does not exist, a new one is 
-            created. If it exists, the current notebook is added as a new version to the existing project, if 
-            you are a owner/collaborator. If left empty, project name is picked up from the `.jovianrc` file in the 
-            current directory, or a new project is created using the filename as the project name. 
+        project(string, optional): Name of the |Jovian| project to which the current notebook/file should
+            be committed. Format: 'username/title' e.g. 'aakashns/jovian-example' or 'jovian-example'
+            (username of current user inferred automatically). If the project does not exist, a new one is
+            created. If it exists, the current notebook is added as a new version to the existing project, if
+            you are a owner/collaborator. If left empty, project name is picked up from the `.jovianrc` file in the
+            current directory, or a new project is created using the filename as the project name.
 
-        new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option 
+        new_project(bool, optional): Whether to create a new project or update the existing one. Allowed option
             are False (use the existing project, if a .jovianrc file exists, if available), True (create a new project)
 
-        git_commit(bool, optional): If True, also performs a Git commit and records the commit hash. This is 
+        git_commit(bool, optional): If True, also performs a Git commit and records the commit hash. This is
             applicable only when the notebook is inside a Git repository.
 
         git_message(string, optional): Commit message for git. If not provided, it uses the `message` argument
 
     .. attention::
-        Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected 
+        Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected
         notebooks sometimes it may fail to detect notebook automatically.
     .. |Jovian| raw:: html
 
         <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
     """
-    global _current_slug
 
     # Deprecated argument (secret)
     if privacy == 'auto' and 'secret' in kwargs:
@@ -96,7 +95,7 @@ def commit(message=None,
 
     # Deprecated argument (env_type)
     if 'env_type' in kwargs:
-        environment = kwargs['environment']
+        environment = kwargs['env_type']
         log('"env_type" is deprecated. Use "environment" instead', error=True)
 
     # Deprecated argument (capture_env)
@@ -119,8 +118,10 @@ def commit(message=None,
         outputs = kwargs['artifacts']
         log('"artifacts" is deprecated. Use "outputs" instead', error=True)
 
+    is_cli = kwargs.get('is_cli', False)
+
     # Skip if unsupported environment
-    if not in_script() and not in_notebook():
+    if not in_script() and not in_notebook() and not is_cli:
         log('Failed to detect Jupyter notebook or Python script. Skipping..', error=True)
         return
 
@@ -133,14 +134,14 @@ def commit(message=None,
     # Extract notebook/script filename
     filename = _parse_filename(filename)
     if filename is None:
-        log(FILENAME_MSG)
+        log(FILENAME_MSG, error=True)
         return
 
     # Ensure that the file exists
     if not os.path.exists(filename):
         log('The detected/provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
-            'as the "filename" argument to "jovian.commit".')
+            'as the "filename" argument to "jovian.commit".', error=True)
         return
 
     # Retrieve Gist ID & title
@@ -152,12 +153,11 @@ def commit(message=None,
     username = owner['username']
 
     # Cache slug for further commits
-    _current_slug = slug
     set_notebook_slug(filename, slug)
 
     # Attach environment, files and outputs
     _capture_environment(environment, slug, version)
-    _attach_files(files, slug, version)
+    _attach_files(files, slug, version, exclude_files=filename)
     _attach_files(outputs, slug, version, output=True)
 
     if not git_message or git_message == 'auto':
@@ -165,7 +165,35 @@ def commit(message=None,
     _perform_git_commit(filename, git_commit, git_message)
     _attach_records(slug, version)
 
-    log('Committed successfully! ' + read_webapp_url() + username + "/" + title)
+    log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
+
+    return urljoin(read_webapp_url(), username, title)
+
+
+def commit_path(path, **kwargs):
+    files = _list_ipynb_files(path)
+    num_files = len(files)
+
+    if num_files == 0:
+        log("No notebook found in path: " + path)
+        return
+
+    if num_files >= 50:
+        log("Can't upload more than 50 files at once")
+        return
+
+    if num_files == 1:
+        log('Uploading 1 notebook: {}'.format(files[0]))
+    else:
+        log('Uploading {} notebooks:'.format(num_files))
+        log('\n'.join(files), pre=False)
+
+    if click.confirm('\n[jovian] Do you want to continue?', default=True):
+        for filename in files:
+            reset_notebook_slug()
+            commit(filename=filename, **kwargs)
+            log("", pre=False)
+            sleep(1)
 
 
 def _parse_filename(filename):
@@ -178,20 +206,20 @@ def _parse_filename(filename):
             filename = get_notebook_name()
 
     # Add the right extension to the filename
-    elif get_file_extension(filename) not in ['py', 'ipynb']:
+    elif get_file_extension(filename) not in ['.py', '.ipynb']:
         filename += '.py' if in_script() else '.ipynb'
     return filename
 
 
 def _parse_project(project, filename, new_project):
     """Perform the required checks and get the final project name"""
-    global _current_slug
+    current_slug = get_cached_slug()
 
     # Check for existing project in-memory or in .jovianrc
     if not new_project and project is None:
         # From in-memory variable
-        if _current_slug is not None:
-            project = _current_slug
+        if current_slug is not None:
+            project = current_slug
         # From .jovianrc file
         else:
             project = get_notebook_slug(filename)
@@ -248,11 +276,35 @@ def _attach_file(path, gist_slug, version, output=False):
         log(str(e) + " (" + path + ")", error=True)
 
 
-def _attach_files(paths, gist_slug, version, output=False):
+def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
     """Helper functions to attach files & folders to a commit"""
-    # Skip if empty
-    if not paths or len(paths) == 0:
-        return
+    config = read_creds().get("DEFAULT_CONFIG", {})
+
+    whitelist = config.get("EXTENSION_WHITELIST")
+    upload_wd = config.get("UPLOAD_WORKING_DIRECTORY", False)
+
+    if not isinstance(whitelist, list):
+        whitelist = DEFAULT_EXTENSION_WHITELIST
+
+    if not paths:
+        if output or not upload_wd:
+            return
+
+        paths = [
+            f
+            for f in glob.glob('**/*', recursive=True)
+            if get_file_extension(f) in whitelist
+        ]
+
+    if exclude_files:
+        if not isinstance(exclude_files, list):
+            exclude_files = [exclude_files]
+
+        for filename in exclude_files:
+            try:
+                paths.remove(filename)
+            except ValueError:
+                pass
 
     log('Uploading additional ' + ('outputs' if output else 'files') + '...')
 
@@ -262,10 +314,13 @@ def _attach_files(paths, gist_slug, version, output=False):
 
     for path in paths:
         if os.path.isdir(path):
-            for folder, _, files in os.walk(path):
-                for fname in files:
-                    fpath = os.path.join(folder, fname)
-                    _attach_file(fpath, gist_slug, version, output)
+            files = [
+                f
+                for f in glob.glob(os.path.join(path, '**/*'), recursive=True)
+                if get_file_extension(f) in whitelist
+            ]
+            for file in files:
+                _attach_file(file, gist_slug, version, output)
         elif os.path.exists(path):
             _attach_file(path, gist_slug, version, output)
         else:
@@ -275,6 +330,16 @@ def _attach_files(paths, gist_slug, version, output=False):
 def _capture_environment(environment, gist_slug, version):
     """Capture the python environment and attach it to the commit"""
     if environment is not None:
+        # Check credentials if environment config exists
+        creds = read_creds()
+        if 'DEFAULT_CONFIG' in creds and 'environment' in creds['DEFAULT_CONFIG']:
+            environment_config = creds['DEFAULT_CONFIG']['environment']
+            if not environment_config:
+                # Disable environment capture
+                return
+            if environment == 'auto' and (environment_config == 'conda' or environment_config == 'pip'):
+                environment = environment_config
+
         log('Capturing environment..')
         captured = False
 
@@ -317,3 +382,14 @@ def _attach_records(gist_slug, version):
     if len(tracking_slugs) > 0:
         log('Attaching records (metrics, hyperparameters, dataset etc.)')
         api.post_records(gist_slug, tracking_slugs, version)
+
+
+def _list_ipynb_files(path):
+    """Return list of ipynb files in a path"""
+    if os.path.isfile(path) and get_file_extension(path) == ".ipynb":
+        files = [os.path.normpath(path)]
+    elif os.path.isdir(path):
+        files = [os.path.normpath(f) for f in sorted(glob.glob(os.path.join(path, '*.ipynb')))]
+    else:
+        files = []
+    return files

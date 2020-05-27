@@ -25,6 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+jovian/jovian_lab_ext/node_modules
+node_modules
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -117,3 +119,6 @@ dmypy.json
 # Mac OS
 .DS_Store
 
+# Jupyter Lab
+jovian/jovian-jupyter-lab-extension/tsconfig.tsbuildinfo
+jovian/jovian-jupyter-lab-extension/yarn.lock

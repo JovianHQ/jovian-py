@@ -1,0 +1,53 @@
+{
+  "private": false,
+  "name": "@jovianml/jupyterlab-extension",
+  "version": "0.1.1",
+  "description": "The platform for all your Data Science projects",
+  "keywords": [
+    "jovain.ml",
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://www.jovian.ml",
+  "bugs": {
+    "url": "https://github.com/JovianML/jovian-support/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Jovian Development Team",
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JovianML/jovian-py.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "prepare": "jlpm run clean && jlpm run build",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^2.0.0",
+    "@jupyterlab/notebook": "^2.0.2",
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1",
+    "typescript": "~3.7.0",
+    "@jupyterlab/application": "^2.0.0",
+    "@jupyterlab/notebook": "^2.0.2",
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  },
+  "jupyterlab": {
+    "extension": true
+  },
+  "directories": {
+    "lib": "lib"
+  }
+}

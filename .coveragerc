@@ -1,5 +1,11 @@
 [run]
-omit = jovian/tests/*
+omit = 
+    jovian/tests/*
+    *__init__*
 
 [report]
 sort = Cover
+exclude_lines = 
+    no-cover
+    if __name__ == .__main__.:
+
