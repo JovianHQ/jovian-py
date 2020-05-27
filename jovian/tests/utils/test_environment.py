@@ -35,48 +35,43 @@ ENV_STR = dedent("""
 def test_get_conda_bin(mock_popen):
     ret1 = mock.Mock()
     ret1.read().strip.return_value = 'usage: conda [-h] [-V] command ...'
-    mock_popen.side_effect = [ret1, ret1]
+    mock_popen.side_effect = [ret1]
     assert get_conda_bin() == 'conda'
 
 
+@mock.patch.dict("os.environ", {"CONDA_EXE": "/Users/username/miniconda3/bin/conda"})
 @mock.patch("os.popen")
 def test_get_conda_bin_look_for_conda_exe(mock_popen):
     ret1, ret2, ret3 = mock.Mock(), mock.Mock(), mock.Mock()
     ret1.read().strip.return_value = ''
-    ret2.read().strip.return_value = '/usr/bin/conda'
-    ret3.read().strip.return_value = 'usage: conda [-h] [-V] command ...'
-    mock_popen.side_effect = [ret1, ret2, ret3]
+    ret2.read().strip.return_value = 'usage: conda [-h] [-V] command ...'
+    mock_popen.side_effect = [ret1, ret2]
 
-    assert get_conda_bin() == '/usr/bin/conda'
+    assert get_conda_bin() == "/Users/username/miniconda3/bin/conda"
 
 
+@mock.patch.dict("os.environ", "")
 @mock.patch("os.popen")
 def test_get_conda_bin_look_for_conda_exe_raises_error(mock_popen):
     ret1, ret2 = mock.Mock(), mock.Mock()
     ret1.read().strip.return_value = ''
-    ret2.read().strip.return_value = '/Users/rohitsanjay/miniconda3/bin/conda'
-    mock_popen.side_effect = [ret1, ret2, ret1]
+    mock_popen.side_effect = [ret1, ret1]
 
     with pytest.raises(CondaError):
         get_conda_bin()
 
 
-@mock.patch("os.popen")
-def test_get_conda_env_name(mock_popen):
-    mock_popen().read().strip.return_value = 'fake-env'
-    assert get_conda_env_name() == 'fake-env'
-
-
-@mock.patch("os.popen")
-def test_get_conda_env_name_base(mock_popen):
-    mock_popen().read().strip.return_value = ''
-    assert get_conda_env_name() == 'base'
-
-
-@mock.patch("os.popen")
-def test_get_conda_env_name_echo_conda_default_env(mock_popen):
-    mock_popen().read().strip.return_value = '$CONDA_DEFAULT_ENV'
-    assert get_conda_env_name() == 'base'
+@pytest.mark.parametrize(
+    "env_dict, expected_result",
+    [
+        ({"CONDA_DEFAULT_ENV": "fake-env"}, "fake-env"),
+        ({"CONDA_DEFAULT_ENV": ""}, "base"),
+        ({}, "base")
+    ]
+)
+def test_get_conda_env_name(env_dict, expected_result):
+    with mock.patch.dict("os.environ", env_dict, clear=True):
+        assert get_conda_env_name() == expected_result
 
 
 @mock.patch("jovian.utils.environment.get_conda_env_name", return_value='fake-env')

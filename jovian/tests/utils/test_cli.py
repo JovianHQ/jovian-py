@@ -87,6 +87,18 @@ def runner():
             ["set-project", "my_notebook.ipynb", "danb/keras-example"],
             {"filename": "my_notebook.ipynb", "slug": "danb/keras-example"}
         ),
+
+        # commit
+        (
+            "commit_path",
+            ["commit", "my_notebook.ipynb"],
+            {"path": "my_notebook.ipynb", "environment": None, "is_cli": True}
+        ),
+        (
+            "commit_path",
+            ["commit", "./directory"],
+            {"path": "./directory", "environment": None, "is_cli": True}
+        )
     ]
 )
 def test_cli(func, cli_args, called_with_args, runner):
@@ -94,3 +106,16 @@ def test_cli(func, cli_args, called_with_args, runner):
         result = runner.invoke(main, cli_args)
         mock_func.assert_called_with(**called_with_args)
         assert result.exit_code == 0
+
+
+@mock.patch("jovian.cli.commit_path")
+@mock.patch("jovian.cli.log")
+@mock.patch("jovian.cli.is_py2", return_value=True)
+def test_commit_py2(mock_py2, mock_log, mock_commit, runner):
+    result = runner.invoke(main, ["commit", "my_notebook.ipynb"])
+    mock_log.assert_called_with(
+        "Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+        warn=True)
+    called_with_args = {"path": "my_notebook.ipynb", "environment": None, "is_cli": True}
+    mock_commit.assert_called_with(**called_with_args)
+    assert result.exit_code == 0

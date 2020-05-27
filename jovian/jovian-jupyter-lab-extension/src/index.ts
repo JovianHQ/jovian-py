@@ -2,7 +2,7 @@ import { IDisposable } from "@lumino/disposable";
 import {
   JupyterFrontEndPlugin,
   JupyterFrontEnd,
-  ILabShell
+  ILabShell,
 } from "@jupyterlab/application";
 import { ToolbarButton } from "@jupyterlab/apputils";
 import { DocumentRegistry } from "@jupyterlab/docregistry";
@@ -41,7 +41,7 @@ class JovainButtonExtension
       className: "jovian-lab-ext",
       icon: downloadIcon,
       onClick: callback,
-      tooltip: "commit to jovian"
+      tooltip: "Commit to Jovian",
     });
 
     // Add the toolbar button to the notebook
@@ -56,11 +56,26 @@ class JovainButtonExtension
         jovian_button.firstChild.innerText = "Commit";
         jovian_button.firstChild.style.color = "black";
         jovian_button.firstChild.style["padding-left"] = "17px";
+
+        // To set current slug when the notebook is loaded
+        function delay(ms: number) {
+          return new Promise((resolve) => setTimeout(resolve, ms));
+        }
+
+        (async () => {
+          await delay(3000);
+          // TODO: Replace this delay when you discover kernel_ready type of event from Jlab
+          // TODO: Also add event listener when you find one of kernel_restart like in notebook extension
+          const code = `
+from jovian.utils.rcfile import get_notebook_slug
+get_notebook_slug("${NK.currentNotebookName()}")`;
+          NK.execute(code);
+        })();
       },
       {
         once: true,
         passive: true,
-        capture: true
+        capture: true,
       }
     );
 
@@ -108,7 +123,7 @@ const extension: JupyterFrontEndPlugin<void> = {
   id: "jovian_lab_extension",
   autoStart: true,
   requires: [ILabShell],
-  activate
+  activate,
 };
 
 export default extension;

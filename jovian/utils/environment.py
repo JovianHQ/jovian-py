@@ -14,24 +14,22 @@ def get_conda_bin():
     # Try executing the `conda` command
     if os.popen(conda_bin).read().strip() == '':
         # If it fails, look for $CONDA_EXE
-        conda_exe = os.popen('echo $CONDA_EXE').read().strip()
+        conda_exe = os.environ.get("CONDA_EXE")
         # Check if it returns a valid path
         if conda_exe != '' and conda_exe != '$CONDA_EXE':
             # Update binary and execute again
             conda_bin = conda_exe
-
-    if os.popen(conda_bin).read().strip() == '':
-        raise CondaError(CONDA_NOT_FOUND)
-
+            if os.popen(conda_bin).read().strip() == '':
+                raise CondaError(CONDA_NOT_FOUND)
     logging.info('Anaconda binary: ' + conda_bin)
     return conda_bin
 
 
 def get_conda_env_name():
     """Get the name of the active conda environment"""
-    env_name = os.popen('echo $CONDA_DEFAULT_ENV').read().strip()
-    if env_name == '' or env_name == '$CONDA_DEFAULT_ENV':
-        env_name = 'base'
+    env_name = os.environ.get("CONDA_DEFAULT_ENV", "base")
+    if not env_name:
+        env_name = "base"
     logging.info('Anaconda environment: ' + env_name)
     return env_name
 

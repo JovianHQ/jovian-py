@@ -157,14 +157,19 @@ ul > li.toctree-l1 {
 }
 
 .wy-menu-vertical a,
-.wy-menu-vertical li.toctree-l1.current > a {
+.wy-menu-vertical li.toctree-l1 > a,
+.wy-menu-vertical li.toctree-l1 > a:hover span.toctree-expand {
   /* Text color of toc 
      List on nav bar when not selected */
-  color: #636363 !important;
+  color: #636363;
 }
 
-.wy-menu-vertical li.toctree-l1.current > a {
-  color: #ffffff !important;
+.wy-menu-vertical li.toctree-l1.current > a,
+.wy-menu-vertical li.toctree-l1.current > a span.toctree-expand,
+.wy-menu-vertical li.toctree-l1.current > a:hover span.toctree-expand {
+  /* Text color of toc
+     List on nav bar when selected */
+  color: #fff !important;
   background: #0d61ff;
 }
 
