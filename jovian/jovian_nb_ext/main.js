@@ -12,6 +12,10 @@ define([
      *  else prompts the user with a modal to get the API key.
      */
 
+    //config
+    const settingsFeature = false;
+    const sidebarFeature = false;
+
     const setCurrentSlug = () => {
       const filename = Jupyter.notebook.notebook_name;
       const code = `
@@ -21,7 +25,7 @@ get_notebook_slug("${filename}")`;
       Jupyter.notebook.kernel.execute(code);
     };
     Jupyter.notebook.events.on("kernel_ready.Kernel", () => {
-      // Extension only loads up when there is broswer refresh, this ensures both when kernel is restarted and that kernel is ready
+      // Extension only loads up when there is browser reload, this ensures both when kernel is restarted and that kernel is ready
       setCurrentSlug();
     });
 
@@ -918,19 +922,24 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
         .addClass("btn btn-primary")
         .text("Commit with options");
 
-      const option2 = $("<button/>")
-        .attr("id", "jvn_module1_option2")
-        .addClass("btn btn-primary")
-        .text("Open sidebar");
-
-      const option3 = $("<button/>")
-        .attr("id", "jvn_module1_option3")
-        .addClass("btn btn-primary")
-        .text("Settings");
-
       div.append(option1);
-      div.append(option2);
-      div.append(option3);
+
+      if (sidebarFeature) {
+        const option2 = $("<button/>")
+          .attr("id", "jvn_module1_option2")
+          .addClass("btn btn-primary")
+          .text("Open sidebar");
+        div.append(option2);
+      }
+
+      if (settingsFeature) {
+        const option3 = $("<button/>")
+          .attr("id", "jvn_module1_option3")
+          .addClass("btn btn-primary")
+          .text("Settings");
+
+        div.append(option3);
+      }
 
       return div;
     };
