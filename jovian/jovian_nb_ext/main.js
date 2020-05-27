@@ -10,6 +10,7 @@ define([
    * the sidebar is close.
    */
   var sidebar_open = { value: false };
+  const nbName = Jupyter.notebook.notebook_name;
 
   const get_version_list_url = () => {
     /**
@@ -24,30 +25,27 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const gvlu =
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "import jovian.utils.api as api\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "book = get_notebook_name()\n" +
-        "slug = lib[book]\n" +
-        "slug_number = slug['slug']\n" +
-        "net1 = api.get_gist(slug_number)\n" +
-        "net2 = net1['currentUser']\n" +
-        "username = net2['username']\n" +
-        "step1 = api.get_gist(slug_number)\n" +
-        "book = step1['title']\n" +
-        "count = api.get_gist(slug_number)\n" +
-        "total = count['version']\n" +
-        "list_link = []\n" +
-        "for x in range(0+1, total+1):\n" +
-        "\ta = 'https://jovian.ml/'+username+'/'+book+'/v/'+str(x)+''\n" +
-        "\tlist_link.append(a)\n" +
-        "print(list_link)\n";
+      const versionsUrls = `
+  from jovian.utils.api import get_gist
+  from jovian.utils.credentials import read_webapp_url
+  from jovian.utils.misc import urljoin
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  username = gist_metadata['currentUser']['username']
+  title = gist_metadata['title']
+  count = gist_metadata['version']
+  
+  link = urljoin(read_webapp_url(), username, title)
+  version_urls = [urljoin(link, str(version)) for version in range(1, count+1)]
+      
+  print(versions_urls)`;
 
-      Jupyter.notebook.kernel.execute(gvlu, {
+      Jupyter.notebook.kernel.execute(versionsUrls, {
         iopub: { output: valStatus }
       });
     });
@@ -65,24 +63,21 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const gvl =
-        "import jovian.utils.api as api\n" +
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "book = get_notebook_name()\n" +
-        "slug = lib[book]\n" +
-        "slug_number = slug['slug']\n" +
-        "line1 = api.get_gist(slug_number)\n" +
-        "version_list = []\n" +
-        "for line2 in line1['versions']:\n" +
-        "\ta = line2['title']\n" +
-        "\tversion_list.append(a)\n" +
-        "print(version_list)\n";
+      const versionNames = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  version_names = [version['title'] for version in gist_metadata['versions']]
+  
+  print(version_names)`;
 
-      Jupyter.notebook.kernel.execute(gvl, {
+      Jupyter.notebook.kernel.execute(versionNames, {
         iopub: { output: valStatus }
       });
     });
@@ -100,22 +95,18 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const avatars =
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "book = get_notebook_name()\n" +
-        "x = lib[book]\n" +
-        "slug_number = x['slug']\n" +
-        "record = api.get_gist(slug_number)\n" +
-        "avatar_list = []\n" +
-        "for step in record['members']:\n" +
-        "\ta = step['account']\n" +
-        "\tb = a['avatar']\n" +
-        "\tavatar_list.append(b)\n" +
-        "print(avatar_list)\n";
+      const avatars = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  avatar_list = [collaborator['account']['avatar'] for collaborator in gist_metadata['members']]
+  print(avatar_list)`;
 
       Jupyter.notebook.kernel.execute(avatars, {
         iopub: { output: valStatus }
@@ -136,22 +127,19 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const c_names =
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "book = get_notebook_name()\n" +
-        "x = lib[book]\n" +
-        "slug_number = x['slug']\n" +
-        "record = api.get_gist(slug_number)\n" +
-        "name_list = []\n" +
-        "for step in record['members']:\n" +
-        "\ta = step['account']\n" +
-        "\tc = a['name']\n" +
-        "\tname_list.append(c)\n" +
-        "print(name_list)\n";
+      const c_names = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  collaborator_names = [collaborator['account']['name'] for collaborator in gist_metadata['members']]
+  
+  print(collaborator_names)`;
 
       Jupyter.notebook.kernel.execute(c_names, {
         iopub: { output: valStatus }
@@ -171,19 +159,18 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const listV =
-        "import jovian\n" +
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "import jovian.utils.api as api\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "book = get_notebook_name()\n" +
-        "x = lib[book]\n" +
-        "slug_number = x['slug']\n" +
-        "print(json.dumps(api.get_gist(slug_number)))\n";
-
+      const listV = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  print(json.dumps(gist_metadata))`;
+      console.log(listV);
       Jupyter.notebook.kernel.execute(listV, {
         iopub: { output: valStatus }
       });
@@ -203,19 +190,20 @@ define([
         resolve(data.content.text.trim());
       };
 
-      const rc =
-        "from jovian.utils.jupyter import get_notebook_name\n" +
-        "i = get_notebook_name()\n" +
-        "import json\n" +
-        "with open('.jovianrc') as f:\n" +
-        "\tjovianrc = json.load(f)\n" +
-        "lib = jovianrc['notebooks']\n" +
-        "x = lib[i]\n" +
-        "x2 = x['slug']\n" +
-        "i2 = i[:-6]\n" +
-        "URL = 'https://jovian.ml/'+i2+'/'+x2\n" +
-        "print(URL)\n";
-
+      const rc = `
+  from jovian.utils.credentials import read_webapp_url
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  username = gist_metadata['currentUser']['username']
+  title = gist_metadata['title']
+  
+  print(urljoin(read_webapp_url(), username, title))`;
+      console.log(rc);
       Jupyter.notebook.kernel.execute(rc, {
         iopub: { output: valStatus }
       });
@@ -224,7 +212,7 @@ define([
 
   async function user_and_notebook() {
     /**
-     * This funciton will be
+     * This function will be
      * used to display the user
      * name and current
      * notebook name.
@@ -238,7 +226,7 @@ define([
 
     let user_name = new_list.currentUser.username;
     let display = user_name + " / " + new_list.title;
-
+    console.log("user_and_notebook", display);
     document.getElementById("prototypeONe").innerHTML = display;
   }
 
@@ -256,6 +244,7 @@ define([
     let version_number = JSON.parse(list);
 
     let new_latestVersion = "Version " + version_number.version;
+    console.log("refresh_latest_version", new_latestVersion);
     document.getElementById("prototypeTwo").innerHTML = new_latestVersion;
   }
 
@@ -276,14 +265,14 @@ define([
       list2 = theList2;
     });
     var versions = list2.split(", ");
-
+    console.log("refresh_latest_version_control", links, versions);
     let new_html =
       '<!DOCTYPE html><html><head><meta charset="utf-8"> <style type="text/css">select{font-size: 400%;}</style></head><body><center><form size="50" name="jump2"><select id="container" name="myjumpbox" OnChange="window.open(jump2.myjumpbox.options[selectedIndex].value)"></select></form></center><script>arr = ' +
       versions +
       " ;link = " +
       links +
       ' ;arr.forEach((num1,index)=>{const num2 = link[index];let card = document.createElement("div");var option = document.createElement("OPTION");option.setAttribute("value",link[index]);txt = document.createTextNode(arr[index]);option.appendChild(txt);card.insertBefore(option,card.lastChild);let container = document.querySelector("#container");container.appendChild(option);});</script></body></html>';
-
+    console.log("refresh_latest_version_control", new_html);
     document.getElementById("prototypeThree").src =
       "data:text/html;charset=utf-8," + encodeURI(new_html);
   }
@@ -1322,28 +1311,18 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
         notebook: Jupyter.notebook,
         keyboard_manager: Jupyter.notebook.keyboard_manager,
         open: function () {
-          if (sidebar_open.value == false) {
-            /**
-             * when user opens sidebar, we change
-             * boolean variable: sidebar_open to true.
-             */
-            sidebar_open.value = true;
+          $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
+          const option1 = $("#jvn_module1_option1");
+          option1.click(() => openModal(saveParamsAndCommit));
 
-            $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
-            const option1 = $("#jvn_module1_option1");
+          if (sidebarFeature) {
             const option2 = $("#jvn_module1_option2");
-            const option3 = $("#jvn_module1_option3");
-            option1.click(() => openModal(saveParams));
             option2.click(() => sidebar());
-            option3.click(() => openModal(clearParams));
-          } else {
-            $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
-            const option1 = $("#jvn_module1_option1");
-            const option2 = $("#jvn_module1_option2");
+          }
+
+          if (settingsDialog) {
             const option3 = $("#jvn_module1_option3");
-            option1.click(() => openModal(saveParams));
-            option2.click(() => alert("Side bar already open!"));
-            option3.click(() => openModal(clearParams));
+            option3.click(() => openModal(settingsDialog));
           }
         }
       });
