@@ -4,6 +4,350 @@ define([
   "base/js/dialog",
   "base/js/keyboard"
 ], function ($, Jupyter, dialog, keyboard) {
+  /**
+   * create boolean variable: sidebar_open
+   * and initiate it to false, because at the beginning
+   * the sidebar is close.
+   */
+  var sidebar_open = { value: false };
+  const nbName = Jupyter.notebook.notebook_name;
+
+  const get_version_list_url = () => {
+    /**
+     * promise function: to get
+     * the list of urls, for every
+     * version of the current
+     * notebook.
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const versionsUrls = `
+  from jovian.utils.api import get_gist
+  from jovian.utils.credentials import read_webapp_url
+  from jovian.utils.misc import urljoin
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  username = gist_metadata['currentUser']['username']
+  title = gist_metadata['title']
+  count = gist_metadata['version']
+  
+  link = urljoin(read_webapp_url(), username, title)
+  version_urls = [urljoin(link, str(version)) for version in range(1, count+1)]
+      
+  print(versions_urls)`;
+
+      Jupyter.notebook.kernel.execute(versionsUrls, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  const get_version_list = () => {
+    /**
+     * promise function: to get the
+     * list of versions, that
+     * belong to the current notebook
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const versionNames = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  version_names = [version['title'] for version in gist_metadata['versions']]
+  
+  print(version_names)`;
+
+      Jupyter.notebook.kernel.execute(versionNames, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  const get_avatars = () => {
+    /**
+     * promise function: to get
+     * the list of avatars, that
+     * belong to the current notebook
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const avatars = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  avatar_list = [collaborator['account']['avatar'] for collaborator in gist_metadata['members']]
+  print(avatar_list)`;
+
+      Jupyter.notebook.kernel.execute(avatars, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  const get_colab_names = () => {
+    /**
+     * promise function: to get
+     * the list of names of the
+     * collaborators, to the
+     * current notebook.
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const c_names = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  collaborator_names = [collaborator['account']['name'] for collaborator in gist_metadata['members']]
+  
+  print(collaborator_names)`;
+
+      Jupyter.notebook.kernel.execute(c_names, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  const get_latest_version = () => {
+    /**
+     * promise fuction: to get
+     * the latest version number of
+     * the current notebook
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const listV = `
+  from jovian.utils.api import get_gist
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  
+  print(json.dumps(gist_metadata))`;
+      console.log(listV);
+      Jupyter.notebook.kernel.execute(listV, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  const get_url = () => {
+    /**
+     * promise function: to get
+     * the url to the current notebook
+     * this url will be use for
+     * share dialog.
+     */
+
+    return new Promise(resolve => {
+      const valStatus = data => {
+        resolve(data.content.text.trim());
+      };
+
+      const rc = `
+  from jovian.utils.credentials import read_webapp_url
+  import json
+  
+  with open('.jovianrc') as f:
+      jovianrc = json.load(f)
+  
+  slug = jovianrc['notebooks']["${nbName}"]['slug']
+  gist_metadata = get_gist(slug)
+  username = gist_metadata['currentUser']['username']
+  title = gist_metadata['title']
+  
+  print(urljoin(read_webapp_url(), username, title))`;
+      console.log(rc);
+      Jupyter.notebook.kernel.execute(rc, {
+        iopub: { output: valStatus }
+      });
+    });
+  };
+
+  async function user_and_notebook() {
+    /**
+     * This function will be
+     * used to display the user
+     * name and current
+     * notebook name.
+     */
+
+    let list = "";
+    await get_latest_version().then(theList => {
+      list = theList;
+    });
+    let new_list = JSON.parse(list);
+
+    let user_name = new_list.currentUser.username;
+    let display = user_name + " / " + new_list.title;
+    console.log("user_and_notebook", display);
+    document.getElementById("prototypeONe").innerHTML = display;
+  }
+
+  async function refresh_latest_version() {
+    /**
+     * This function updates the
+     * latest vesion number for
+     * current notebook
+     */
+
+    let list = "";
+    await get_latest_version().then(theList => {
+      list = theList;
+    });
+    let version_number = JSON.parse(list);
+
+    let new_latestVersion = "Version " + version_number.version;
+    console.log("refresh_latest_version", new_latestVersion);
+    document.getElementById("prototypeTwo").innerHTML = new_latestVersion;
+  }
+
+  async function refresh_version_control() {
+    /**
+     * This function updates the
+     * version control dropdown menu
+     */
+
+    let list1 = "";
+    await get_version_list_url().then(theList => {
+      list1 = theList;
+    });
+    var links = list1.split(", ");
+
+    let list2 = "";
+    await get_version_list().then(theList2 => {
+      list2 = theList2;
+    });
+    var versions = list2.split(", ");
+    console.log("refresh_latest_version_control", links, versions);
+    let new_html =
+      '<!DOCTYPE html><html><head><meta charset="utf-8"> <style type="text/css">select{font-size: 400%;}</style></head><body><center><form size="50" name="jump2"><select id="container" name="myjumpbox" OnChange="window.open(jump2.myjumpbox.options[selectedIndex].value)"></select></form></center><script>arr = ' +
+      versions +
+      " ;link = " +
+      links +
+      ' ;arr.forEach((num1,index)=>{const num2 = link[index];let card = document.createElement("div");var option = document.createElement("OPTION");option.setAttribute("value",link[index]);txt = document.createTextNode(arr[index]);option.appendChild(txt);card.insertBefore(option,card.lastChild);let container = document.querySelector("#container");container.appendChild(option);});</script></body></html>';
+    console.log("refresh_latest_version_control", new_html);
+    document.getElementById("prototypeThree").src =
+      "data:text/html;charset=utf-8," + encodeURI(new_html);
+  }
+
+  async function share_dialog() {
+    /**
+     * This function display
+     * buttons for the share dialog
+     * module
+     */
+
+    let url = "";
+    await get_url().then(theUrl => {
+      url = theUrl;
+    });
+
+    var facebook =
+      '<div id="fb-root"></div><script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0"></script><div class="fb-share-button" data-href=' +
+      url +
+      ' data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>';
+    var twitter =
+      '<div><a class="twitter-share-button" href="https://twitter.com/intent/tweet" data-size="large" data-text="custom text" data-url=' +
+      url +
+      ' data-hashtags="" data-via="" data-related="twitterapi,twitter">Tweet</a><script>window.twttr = (function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {}; if (d.getElementById(id)) return t; js = d.createElement(s); js.id = id; js.src = "https://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); t._e = []; t.ready = function(f) { t._e.push(f);}; return t;} (document, "script", "twitter-wjs"));</script></div>';
+    var linkedin =
+      "<div><script src='https://platform.linkedin.com/in.js' type='text/javascript'>lang: en_US</script><script type='IN/Share' data-url='" +
+      url +
+      "'></script></div>";
+    let new_html =
+      "<html><body><center><table><tr><th>" +
+      facebook +
+      "</th><th>" +
+      twitter +
+      "</th></tr></table></center><br><h><center>" +
+      linkedin +
+      "</center></h></body></html>";
+
+    document.getElementById("prototypeFour").src =
+      "data:text/html;charset=utf-8," + encodeURI(new_html);
+  }
+
+  async function collaborators() {
+    /**
+     * This function
+     * will be use to
+     * display collaborators
+     */
+
+    let avatar_list = "";
+    await get_avatars().then(List => {
+      avatar_list = List;
+    });
+    var avatars = avatar_list.split(", ");
+
+    let avatar_names = "";
+    await get_colab_names().then(List2 => {
+      avatar_names = List2;
+    });
+    var fullname = avatar_names.split(", ");
+
+    var n = fullname.length;
+
+    var new_html =
+      '<!DOCTYPE html><html><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><body><center><b><h style="color:#585858";>Collaborators: ' +
+      n +
+      '</h></b></center><div class="w3-card-4 w3-margin" style="width:100%"><div class="w3-xlarge w3-display-bottomleft w3-padding"></div></div><div class="w3-row"><div id="container"></div></div><script>arr = ' +
+      fullname +
+      ";links = " +
+      avatars +
+      ';arr.forEach((num1,index) => {const num2 = links[index];let card = document.createElement("card");card.setAttribute("class","w3-third w3-center");let h3 = document.createElement("h3");h3.style.color = "#585858";txt = document.createTextNode(arr[index]);h3.appendChild(txt);card.insertBefore(h3,card.lastChild);let avatar = document.createElement("IMG");avatar.setAttribute("src",links[index]);avatar.setAttribute("alt","sun");avatar.setAttribute("width","80px");card.appendChild(avatar);let container = document.querySelector("#container");container.appendChild(card);});</script></body></html>';
+
+    document.getElementById("prototypeFive").src =
+      "data:text/html;charset=utf-8," + encodeURI(new_html);
+  }
+
   function loadJovianExtension() {
     /**
      *  Jupyter extension to commit the notebook to Jovian.
@@ -245,6 +589,12 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
                     .append(label)
                     .append(p);
                 }
+
+                user_and_notebook();
+                refresh_latest_version();
+                refresh_version_control();
+                share_dialog();
+                collaborators();
               } else {
                 jvn_modal
                   .find("#i_label")
@@ -963,11 +1313,17 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
         open: function () {
           $(".fade").click(() => jvn_dropdown_modal.modal("hide"));
           const option1 = $("#jvn_module1_option1");
-          const option2 = $("#jvn_module1_option2");
-          const option3 = $("#jvn_module1_option3");
           option1.click(() => openModal(saveParamsAndCommit));
-          option2.click(() => sidebar());
-          option3.click(() => openModal(settingsDialog));
+
+          if (sidebarFeature) {
+            const option2 = $("#jvn_module1_option2");
+            option2.click(() => sidebar());
+          }
+
+          if (settingsDialog) {
+            const option3 = $("#jvn_module1_option3");
+            option3.click(() => openModal(settingsDialog));
+          }
         }
       });
       const modal = $(jvn_dropdown_modal).find(".modal-content");
@@ -1082,128 +1438,222 @@ os.system('jovian disable-extension')`;
   }
 
   // function for sidebar, activates when option 2 is selected from dropdown menu
-  function sidebar(modal, option) {
+  const sidebar = function () {
+    /**
+     * This function displays
+     * the sidebar.
+     */
+
     // made the notebook float left
     var original = document.getElementById("notebook-container");
     original.style.width = "79%";
     original.style.cssFloat = "right";
 
-    // ADD div element to the page
+    // add div element to the page
     var div = document.createElement("div");
-
+    div.setAttribute("id", "sidebar");
     div.style.width = "20%";
     div.style.height = "650px";
     div.style.marginTop = "-100px";
     div.style.background = "white";
     div.style.color = "black";
     div.style.cssFloat = "left";
-    div.style.boxShadow = "10px 20px 30px grey";
-    div.style.border = "thick solid black";
+    div.style.position = "sticky";
+    div.style.position = "fixed";
 
+    // X button to close sidebar
     var button = document.createElement("BUTTON");
     button.innerHTML = "X";
     button.style.color = "black";
     button.style.cssFloat = "right";
-    button.style.cssFloat = "top";
+    div.appendChild(button);
 
-    //div.appendChild(button);
+    // displays Jovian logo
+    var Jlogo = document.createElement("IMG");
+    Jlogo.setAttribute("src", "https://www.jovian.ml/jovian_logo.svg");
+    Jlogo.setAttribute("width", "250px");
+    div.appendChild(Jlogo);
 
-    div.innerHTML += "<a align='center'><font size='6'>Jovian</font></a>";
+    function display_user_and_notebook() {
+      /**
+       * This function displays the
+       * user name and current notebook name
+       * in the side bar.
+       */
 
-    var closeButton = document.createElement("BUTTON");
-    closeButton.innerHTML += "X";
-    closeButton.style.cssFloat = "right";
-    closeButton.style.cssFloat = "top";
-    div.appendChild(closeButton);
+      let project = "";
 
-    var button1 = document.createElement("BUTTON");
-    button1.innerHTML = "commit w/ option";
-    button1.style.color = "black";
-    button1.style.flex = "center";
-    div.appendChild(button1);
+      let label = document.createElement("div");
+      label.style.color = "#585858";
+      label.style.textAlign = "center";
+      label.style.fontSize = "x-large";
+      label.style.paddingTop = "10px";
+      label.setAttribute("id", "prototypeONe");
 
-    var button2 = document.createElement("BUTTON");
-    button2.innerHTML = "Share";
-    button2.style.color = "black";
-    button2.style.cssFloat = "center";
-    div.appendChild(button2);
+      var content = document.createTextNode(project);
+      label.appendChild(content);
 
-    var version_controll = document.createElement("div");
+      user_and_notebook();
 
-    version_controll.style.width = "100%";
-    version_controll.style.height = "200px";
-    version_controll.style.background = "grey";
-    version_controll.style.color = "white";
-    version_controll.style.border = "solid black";
-    version_controll.style.borderLeft = "0";
-    version_controll.style.borderRight = "0";
-    version_controll.innerHTML = "<h3 align='center'>Version Controll</h3>";
-    div.appendChild(version_controll);
+      return label;
+    }
 
-    var commit = document.createElement("div");
+    function display_latest_version() {
+      /**
+       * This function displays
+       * the latest version number
+       * in the sidebar
+       */
 
-    commit.style.width = "100%";
-    commit.style.height = "100px";
-    commit.style.background = "grey";
-    commit.style.color = "white";
-    commit.style.border = "solid black";
-    //commit.style.borderTop = "0";
-    commit.style.borderLeft = "0";
-    commit.style.borderRight = "0";
-    commit.innerHTML = "<h3 align='center'>Version Controll</h3>";
-    commit.appendChild(button1);
-    div.appendChild(commit);
+      let latestVersion = "";
 
-    var share = document.createElement("div");
+      let label = document.createElement("div");
+      label.style.color = "#585858";
+      label.style.textAlign = "center";
+      label.style.fontSize = "x-large";
+      label.setAttribute("id", "prototypeTwo");
+      var content = document.createTextNode(latestVersion);
+      label.appendChild(content);
 
-    share.style.width = "100%";
-    share.style.height = "100px";
-    share.style.background = "grey";
-    share.style.color = "white";
-    share.style.border = "solid black";
-    share.style.borderLeft = "0";
-    share.style.borderRight = "0";
-    share.innerHTML = "<h3 align='center'>Share</h3>";
-    share.appendChild(button2);
-    div.appendChild(share);
+      refresh_latest_version();
 
-    var collaborator = document.createElement("div");
+      return label;
+    }
 
-    collaborator.style.width = "100%";
-    collaborator.style.height = "215px";
-    collaborator.style.background = "grey";
-    collaborator.style.color = "white";
-    collaborator.style.border = "solid black";
-    collaborator.style.borderLeft = "0";
-    collaborator.style.borderRight = "0";
-    collaborator.innerHTML = "<h3 align='center'>collaborator</h3>";
-    div.appendChild(collaborator);
+    function display_version_control() {
+      /**
+       * This function displays the
+       * version control dropdown menu
+       * in the sidebar
+       */
+
+      var html = "";
+
+      let iframe = document.createElement("IFRAME");
+      iframe.src = "data:text/html;charset=utf-8," + encodeURI(html);
+      iframe.height = "140px";
+      iframe.width = "250px";
+      iframe.style.border = "0";
+      iframe.setAttribute("id", "prototypeThree");
+      document.body.appendChild(iframe);
+
+      refresh_version_control();
+
+      return iframe;
+    }
+
+    function display_share_dialog() {
+      /**
+       * This function will display the
+       * share dialog in the sidebar
+       */
+
+      var html = "";
+
+      let iframe = document.createElement("IFRAME");
+      iframe.src = "data:text/html;charset=utf-8," + encodeURI(html);
+      iframe.height = "140px";
+      iframe.width = "250px";
+      iframe.style.border = "0";
+      iframe.setAttribute("id", "prototypeFour");
+      document.body.appendChild(iframe);
+
+      share_dialog();
+
+      return iframe;
+    }
+
+    function display_collaborators() {
+      /**
+       * This function will display
+       * collaborators in the sidebar
+       */
+
+      var html = "";
+
+      let iframe = document.createElement("IFRAME");
+      iframe.src = "data:text/html;charset=utf-8," + encodeURI(html);
+      iframe.height = "190px";
+      iframe.width = "250px";
+      iframe.style.border = "0";
+      iframe.setAttribute("id", "prototypeFive");
+      document.body.appendChild(iframe);
+
+      collaborators();
+
+      return iframe;
+    }
+
+    // User and notebook: Section
+    var User_and_Notebook = document.createElement("div");
+    User_and_Notebook.style.width = "100%";
+    User_and_Notebook.style.height = "40px";
+    User_and_Notebook.style.borderTopColor = "blue";
+    User_and_Notebook.appendChild(display_user_and_notebook());
+    div.append(User_and_Notebook);
+
+    // Latest_Version: Section
+    var Latest_Version = document.createElement("div");
+    Latest_Version.style.width = "100%";
+    Latest_Version.style.height = "40px";
+    Latest_Version.style.borderColor = "red";
+    Latest_Version.appendChild(display_latest_version());
+    div.append(Latest_Version);
+
+    // Version_Control: Section
+    var Version_Control = document.createElement("div");
+    Version_Control.style.width = "100%";
+    Version_Control.style.height = "140px";
+    Version_Control.style.borderWidth = "5px";
+    Version_Control.style.border = "solid";
+    Version_Control.style.borderTopColor = "blue";
+    Version_Control.style.borderRightColor = "white";
+    Version_Control.style.borderLeftColor = "white";
+    Version_Control.style.borderBottomColor = "white";
+    Version_Control.appendChild(display_version_control());
+    div.append(Version_Control);
+
+    // Share Dialog: Section
+    var Share_Dialog = document.createElement("div");
+    Share_Dialog.style.width = "100%";
+    Share_Dialog.style.height = "140px";
+    Share_Dialog.style.borderWidth = "5px";
+    Share_Dialog.style.border = "solid";
+    Share_Dialog.style.borderTopColor = "blue";
+    Share_Dialog.style.borderLeftColor = "white";
+    Share_Dialog.style.borderRightColor = "white";
+    Share_Dialog.style.borderBottomColor = "white";
+    Share_Dialog.appendChild(display_share_dialog());
+    div.append(Share_Dialog);
+
+    // Collaborators: Section
+    var collaborators_section = document.createElement("div");
+    collaborators_section.width = "100%";
+    collaborators_section.height = "140px";
+    collaborators_section.style.borderWidth = "5px";
+    collaborators_section.style.border = "solid";
+    collaborators_section.style.borderTopColor = "blue";
+    collaborators_section.style.borderLeftColor = "white";
+    collaborators_section.style.borderRightColor = "white";
+    collaborators_section.style.borderBottomColor = "blue";
+    collaborators_section.appendChild(display_collaborators());
+    div.append(collaborators_section);
 
     button.addEventListener("click", function () {
+      /**
+       * when sidebar is close the boolean
+       * variable: sidebar_open is switch to false.
+       */
+      sidebar_open.value = false;
+
       original.style.cssFloat = "none";
       div.remove();
     });
 
-    button1.addEventListener("click", function () {
-      dropdownOption(jvn_dropdown_modal, saveParams);
-    });
-
-    button2.addEventListener("click", function () {});
-
-    closeButton.addEventListener("click", function () {
-      original.style.cssFloat = "none";
-      div.remove();
-    });
-
-    // line 827, makes is go all the way up
-
-    //div.style.position = "absolute";
-    //div.style.position = "fixed";
-    div.style.position = "relative";
-    div.style.position = "-webkit-sticky";
-    div.style.top = "-4px";
     document.getElementById("notebook").appendChild(div);
-  }
+
+    return original;
+  };
 
   function openModal(func) {
     // Helper function; which use to open a new window(modal)
