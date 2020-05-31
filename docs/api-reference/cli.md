@@ -1,6 +1,12 @@
 ## Command Line Commands
 
-#### Initialize
+```eval_rst
+.. click:: jovian.cli:main
+    :prog: jovian
+    :show-nested:
+```
+
+<!-- #### Initialize
 
 Requests for a API Key for a new user, can find the key at [Jovian](https://jnv.io). By clicking on `API key` button, key will be copied to the clipboard.
 
@@ -69,4 +75,4 @@ $ jovian disable-extension
 ```eval_rst
 .. note::
     The changes are observed when the webpage of the notebook is refreshed.
-```
+``` -->
