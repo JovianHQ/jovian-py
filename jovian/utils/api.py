@@ -5,6 +5,7 @@ from jovian.utils.logger import log
 from jovian.utils.misc import timestamp_ms
 from jovian.utils.request import get, post, pretty
 from jovian.utils.shared import _u, _v
+import json
 
 
 def _h():
@@ -54,6 +55,10 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
     auth_headers = _h()
 
     with open(filename, 'rb') as f:
+        empty_notebook = len(json.loads(f.read())["cells"]) == 0
+        if empty_notebook:
+            return
+
         nb_file = (filename, f)
         log('Uploading notebook..')
         if gist_slug:

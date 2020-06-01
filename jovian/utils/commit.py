@@ -149,6 +149,10 @@ def commit(message=None,
 
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
+    if res is None:
+        log("Notebook that you're trying to upload seems to be empty! Please retry by manually saving the notebook", error=True)
+        return
+
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
 
