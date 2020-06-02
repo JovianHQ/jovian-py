@@ -3,7 +3,7 @@ import sys
 
 from recommonmark.transform import AutoStructify
 
-sys.path.insert(0, os.path.abspath('../'))  # source path to access the module
+sys.path.insert(0, os.path.abspath('..'))  # source path to access the module
 
 project = 'Jovian'
 copyright = '2020, SwiftAce Inc'
