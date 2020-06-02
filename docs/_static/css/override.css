@@ -302,3 +302,14 @@ input[type="search"] {
 .nav-link:hover {
   color: #0d61ff;
 }
+
+/* sphinx-click styles */
+h3 {
+  font-size: 24px;
+  margin-top: 4%;
+  margin-bottom: 2%;
+}
+p.rubric,
+dl.option {
+  margin-left: 1%;
+}
