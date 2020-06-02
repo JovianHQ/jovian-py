@@ -3,7 +3,7 @@ import sys
 
 from recommonmark.transform import AutoStructify
 
-sys.path.insert(0, os.path.abspath('..'))  # source path to access the module
+sys.path.insert(0, os.path.abspath('../'))  # source path to access the module
 
 project = 'Jovian'
 copyright = '2020, SwiftAce Inc'
@@ -19,7 +19,7 @@ extensions = ['recommonmark',  # to use .md along with .rst
 master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
-autodoc_mock_imports = ["torch", "fastai", "keras", "click", "numpy"]
+autodoc_mock_imports = ["torch", "fastai", "keras", "numpy"]
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'TermsOfService.md', 'PrivacyPolicy.md']
 
 html_theme = 'sphinx_rtd_theme'
