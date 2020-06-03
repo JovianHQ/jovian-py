@@ -1,4 +1,4 @@
-## Command Line Commands
+## CLI Commands
 
 ```eval_rst
 .. click:: jovian.cli:main
