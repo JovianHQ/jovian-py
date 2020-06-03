@@ -82,7 +82,7 @@ six==1.12.0
 snowballstemmer==1.9.1
 Sphinx==2.2.0
 sphinx-autobuild==0.7.1
-sphinx-click==2.3.2
+git+https://github.com/PrajwalPrashanth/sphinx-click.git
 sphinx-rtd-theme==0.4.3
 sphinx-sitemap==2.1.0
 sphinxcontrib-applehelp==1.0.1
