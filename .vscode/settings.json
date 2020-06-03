@@ -87,5 +87,6 @@
   ],
   "cSpell.ignoreWords": ["jvn", "mycompany", "notif", "seealso"],
   "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "prettier.disableLanguages": ["html"]
 }
