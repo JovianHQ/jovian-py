@@ -1,4 +1,4 @@
-# PRIVACY POLICY
+# Privacy Policy
 
 SWIFTACE AI PRIVATE LIMITED ("Us" or "We" or "Our" or "Jovian.ml" ) operates the website available at [www.jovian.ml](https://www.jovian.ml) or any other Platform which will be made available to render the Services (“Platform”).
 
@@ -195,9 +195,9 @@ Name: Aakash N S
 
 Email address: [support@jovian.ml](mailto:support@jovian.ml)
 
-Contact details: 
-FalconX, Suite 217, 
-291 South Milpitas Blvd, 
+Contact details:
+FalconX, Suite 217,
+291 South Milpitas Blvd,
 Milpitas, CA, USA 95035
 
 **17. CONTACT US**
