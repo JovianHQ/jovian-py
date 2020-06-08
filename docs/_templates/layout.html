@@ -1,39 +1,38 @@
 {% extends '!layout.html' %}
 
 {% block extrahead %}
-<script>
-  (function (h, o, t, j, a, r) {
-    h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-    h._hjSettings = { hjid: 1819338, hjsv: 6 };
-    a = o.getElementsByTagName('head')[0];
-    r = o.createElement('script'); r.async = 1;
-    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-    a.appendChild(r);
-  })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
-</script>
-
+  <script>
+    (function (h, o, t, j, a, r) {
+      h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+      h._hjSettings = { hjid: {{ hotjar_analytics_id }}, hjsv: 6 };
+      a = o.getElementsByTagName('head')[0];
+      r = o.createElement('script'); r.async = 1;
+      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+      a.appendChild(r);
+    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+  </script>
 {% endblock %}
 
 {% block extrabody %}
-<nav class="navbar navbar-light navbar-expand-md fixed-top navbar-top" style="justify-content: flex-start;">
-  <button class="navbar-toggler" type="button" data-toggle="wy-nav-top">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="{{ pathto(master_doc) }}">
-    <img src="{{ pathto('_static/' + logo, 1) }}" height="36" class="d-inline-block align-top" alt="Jovian.ml docs" />
-  </a>
-  <div class="nav-links-wrapper">
-    <a class="nav-link" href="https://www.jovian.ml" target="_blank">Website</a>
-    <a class="nav-link" href="/forum" target="_blank">Forum</a>
-    <a class="nav-link" href="/community" target="_blank">Community</a>
-    <a class="nav-link" href="/blog" target="_blank">Blog</a>
-  </div>
-</nav>
-{{ super() }}
+  <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-top" style="justify-content: flex-start;">
+    <button class="navbar-toggler" type="button" data-toggle="wy-nav-top">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="{{ pathto(master_doc) }}">
+      <img src="{{ pathto('_static/' + logo, 1) }}" height="36" class="d-inline-block align-top" alt="Jovian.ml docs" />
+    </a>
+    <div class="nav-links-wrapper">
+      <a class="nav-link" href="https://www.jovian.ml" target="_blank">Website</a>
+      <a class="nav-link" href="/forum" target="_blank">Forum</a>
+      <a class="nav-link" href="/community" target="_blank">Community</a>
+      <a class="nav-link" href="/blog" target="_blank">Blog</a>
+    </div>
+  </nav>
+  {{ super() }}
 {% endblock %}
 
 {% block mobile_nav%} {% endblock %}
 
 {% block sidebartitle %}
-{% include "searchbox.html" %}
+  {% include "searchbox.html" %}
 {% endblock %}
