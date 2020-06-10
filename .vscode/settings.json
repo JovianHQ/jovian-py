@@ -90,5 +90,7 @@
   "editor.formatOnSave": true,
   "prettier.arrowParens": "avoid",
   "prettier.trailingComma": "none",
-  "prettier.disableLanguages": ["html"]
+  "prettier.disableLanguages": ["html"],
+  "html.format.wrapLineLength": 50,
+  "html.format.wrapAttributes": "align"
 }
