@@ -44,7 +44,8 @@ html_context = {
     'github_user': 'JovianML',
     'github_repo': 'jovian-py',
     'github_version': 'master',
-    'conf_py_path': '/docs/'
+    'conf_py_path': '/docs/',
+    'hotjar_analytics_id': os.getenv('HOTJAR_ANALYTICS_ID', '')
 }
 
 
