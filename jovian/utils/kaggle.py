@@ -10,6 +10,7 @@ from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
 from jovian.utils.constants import DEFAULT_WEBAPP_URL
 
 
+
 def perform_kaggle_commit(project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
     # Get user profile
@@ -20,7 +21,10 @@ def perform_kaggle_commit(project):
     log("Uploading notebook to " + url)
 
     # Construct filename
-    filename = project + ".ipynb"
+    if is_kaggle_batch():
+        filename = "__notebook__.ipynb"
+    else:
+        filename = project + ".ipynb"
 
     # Consturct javascript code
     js_code = '''
@@ -61,7 +65,7 @@ with redirect_stdout(jvn_update), redirect_stderr(jvn_update_err):
 jvn_f_out = StringIO()
 jvn_f_err = StringIO()
 with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None, is_kaggle=False)
+    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None, check_kaggle=False)
 
 print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
         `;
@@ -73,6 +77,11 @@ print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_upd
     });'''
 
     get_ipython().run_cell_magic('javascript', '', js_code)
+
+
+def is_kaggle_batch():
+    return os.getenv("KAGGLE_KERNEL_RUN_TYPE") == "Batch"
+
 
 def in_kaggle():
     return os.getenv("KAGGLE_KERNEL_RUN_TYPE") != None

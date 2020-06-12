@@ -139,7 +139,7 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
-    is_kaggle = kwargs.get('is_kaggle', in_kaggle())
+    is_kaggle = kwargs.get('check_kaggle', in_kaggle())
 
     # Commit from Kaggle (After many bug reports of empty notebook)
     if is_kaggle:
