@@ -85,8 +85,12 @@
     "vsre",
     "webapp"
   ],
-  "cSpell.ignoreWords": ["jvn", "mycompany", "notif", "seealso"],
-  "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}",
+  "cSpell.ignoreWords": [
+    "jvn",
+    "mycompany",
+    "notif",
+    "seealso"
+  ],
   "editor.formatOnSave": true,
   "prettier.arrowParens": "avoid",
   "prettier.trailingComma": "none",
