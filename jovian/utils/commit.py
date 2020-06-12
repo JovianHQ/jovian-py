@@ -9,7 +9,7 @@ from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
 from jovian.utils.credentials import read_creds, read_webapp_url
 from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
-from jovian.utils.kaggle import get_kaggle_notebook
+from jovian.utils.kaggle import perform_kaggle_commit
 from jovian.utils.logger import log
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
 from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
@@ -146,7 +146,8 @@ def commit(message=None,
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
 
-        filename = get_kaggle_notebook(project)
+        perform_kaggle_commit(project)
+        return
 
     # Ensure that the file exists
     if not os.path.exists(filename):
