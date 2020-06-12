@@ -82,6 +82,8 @@ print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_upd
 def is_kaggle_batch():
     return os.getenv("KAGGLE_KERNEL_RUN_TYPE") == "Batch"
 
+def is_kaggle_interactive():
+    return os.getenv("KAGGLE_KERNEL_RUN_TYPE") == "Interactive"
 
 def in_kaggle():
     return os.getenv("KAGGLE_KERNEL_RUN_TYPE") != None
