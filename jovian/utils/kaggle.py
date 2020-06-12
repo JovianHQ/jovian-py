@@ -20,7 +20,7 @@ def get_kaggle_notebook(project):
         });
         ''')
 
-    filename = '{}.ipynb'.format(filename)
+    filename = '{}.ipynb'.format(project)
     sleep(2)
 
     if not jovian_temp:
