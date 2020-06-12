@@ -9,14 +9,6 @@ from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
 from jovian.utils.constants import DEFAULT_WEBAPP_URL
 
 
-# 0. Detect Kaggle notebook
-# 1. Get API key
-# 2. Get user profile
-# 3. Validate project title
-# 4. Construct URL jovian.ml/username/project-title and print it
-# 5. Call perform_kaggle_commit (gets the JSON and commits from JS)
-# 6. Get result of commit in JS, and show an alert (success/failure)
-
 def perform_kaggle_commit(project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
     # Get user profile
