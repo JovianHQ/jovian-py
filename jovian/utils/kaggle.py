@@ -61,7 +61,7 @@ with redirect_stdout(jvn_update), redirect_stderr(jvn_update_err):
 jvn_f_out = StringIO()
 jvn_f_err = StringIO()
 with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None, is_kaggle=True)
+    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None, is_kaggle=False)
 
 print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
         `;
