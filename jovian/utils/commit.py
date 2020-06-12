@@ -145,7 +145,7 @@ def commit(message=None,
             log("Looks like you're on Kaggle. Please provide a project argument", error=True)
             return
 
-        filename = get_kaggle_notebook(project)
+        filename = get_kaggle_notebook()
 
     # Ensure that the file exists
     if not os.path.exists(filename):
