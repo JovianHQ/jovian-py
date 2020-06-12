@@ -155,12 +155,12 @@ def commit(message=None,
         return
 
     # Ensure the notebook is not empty
-    if in_notebook():
-        with open('{}.ipynb'.format(filename), 'r') as f:
-            empty_notebook = len(json.load(f).get("cells", [])) == 0
-            if empty_notebook:
-                log("Retrieved notebook seems to be empty. Please retry, if it persists please report")
-                return
+    # if in_notebook():
+    #     with open('{}.ipynb'.format(filename), 'r') as f:
+    #         empty_notebook = len(json.load(f).get("cells", [])) == 0
+    #         if empty_notebook:
+    #             log("Retrieved notebook seems to be empty. Please retry, if it persists please report")
+    #             return
 
     # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
