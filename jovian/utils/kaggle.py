@@ -1,4 +1,5 @@
 import json
+import os
 from time import sleep
 
 
@@ -72,3 +73,6 @@ print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_upd
     });'''
 
     get_ipython().run_cell_magic('javascript', '', js_code)
+
+def in_kaggle():
+    return os.getenv("KAGGLE_KERNEL_RUN_TYPE") != None
