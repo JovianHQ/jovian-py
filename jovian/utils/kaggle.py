@@ -37,7 +37,7 @@ def perform_kaggle_commit(project):
               var msg = result['msg'];
               var err = result['err'];
               if (msg) {
-                  element.text("Committed successfully: " + msg)
+                  element.html(`Committed successfully: <a href="${msg}" target="_blank">${msg}</a>`)
               } else {
                   alert("Notebook commit failed. Error: " + (err || "Unknown"))
               }
