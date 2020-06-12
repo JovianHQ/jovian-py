@@ -1,5 +1,6 @@
 import glob
 import os
+import json
 from time import sleep
 
 import click
@@ -8,6 +9,7 @@ from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
 from jovian.utils.credentials import read_creds, read_webapp_url
 from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.kaggle import get_kaggle_notebook
 from jovian.utils.logger import log
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
 from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
@@ -137,12 +139,28 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
+    # Commit from Kaggle (After many bug reports of empty notebook)
+    if filename == '__notebook_source__.ipynb':
+        if not project:
+            log("Looks like you're on Kaggle. Please provide a project argument", error=True)
+            return
+
+        filename = get_kaggle_notebook(project)
+
     # Ensure that the file exists
     if not os.path.exists(filename):
         log('The detected/provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
             'as the "filename" argument to "jovian.commit".', error=True)
         return
+
+    # Ensure the notebook is not empty
+    if in_notebook():
+        with open('{}.ipynb'.format(filename), 'r') as f:
+            empty_notebook = len(json.loads(f.read())["cells"]) == 0
+            if empty_notebook:
+                log("Retrieved notebook")
+                return
 
     # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
