@@ -10,7 +10,6 @@ from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
 from jovian.utils.constants import DEFAULT_WEBAPP_URL
 
 
-
 def perform_kaggle_commit(project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
     # Get user profile
@@ -21,10 +20,7 @@ def perform_kaggle_commit(project):
     log("Uploading notebook to " + url)
 
     # Construct filename
-    if is_kaggle_batch():
-        filename = "__notebook__.ipynb"
-    else:
-        filename = project + ".ipynb"
+    filename = project + ".ipynb"
 
     # Consturct javascript code
     js_code = '''
@@ -85,5 +81,3 @@ def is_kaggle_batch():
 def is_kaggle_interactive():
     return os.getenv("KAGGLE_KERNEL_RUN_TYPE") == "Interactive"
 
-def in_kaggle():
-    return os.getenv("KAGGLE_KERNEL_RUN_TYPE") != None

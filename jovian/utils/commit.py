@@ -9,7 +9,7 @@ from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
 from jovian.utils.credentials import read_creds, read_webapp_url
 from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
 from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
-from jovian.utils.kaggle import in_kaggle, is_kaggle_batch, is_kaggle_interactive, perform_kaggle_commit
+from jovian.utils.kaggle import is_kaggle_batch, is_kaggle_interactive, perform_kaggle_commit
 from jovian.utils.logger import log
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
 from jovian.utils.rcfile import get_cached_slug, get_notebook_slug, reset_notebook_slug, set_notebook_slug
@@ -139,10 +139,9 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
-    check_kaggle = kwargs.get('check_kaggle', is_kaggle_interactive())
 
     # Commit from Kaggle (After many bug reports of empty notebook)
-    if check_kaggle:
+    if kwargs.get('check_kaggle', True) and is_kaggle_interactive():
         log("Detected Kaggle notebook...")
         if not project:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
@@ -216,7 +215,7 @@ def _parse_filename(filename):
     if filename is None:
         if in_script():
             filename = get_script_filename()
-        if is_kaggle_batch():
+        elif is_kaggle_batch():
             filename = "__notebook__.ipynb"
         elif in_notebook():
             filename = get_notebook_name()
