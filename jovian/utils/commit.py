@@ -139,8 +139,10 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
+    is_kaggle = kwargs.get('is_kaggle', in_kaggle())
+
     # Commit from Kaggle (After many bug reports of empty notebook)
-    if in_kaggle():
+    if is_kaggle:
         log("Detected Kaggle notebook...")
         if not project:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
