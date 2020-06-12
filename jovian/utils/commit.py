@@ -141,11 +141,12 @@ def commit(message=None,
 
     # Commit from Kaggle (After many bug reports of empty notebook)
     if filename == '__notebook_source__.ipynb':
+        log("Detected Kaggle notebook...")
         if not project:
-            log("Looks like you're on Kaggle. Please provide a project argument", error=True)
+            log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
 
-        filename = get_kaggle_notebook()
+        filename = get_kaggle_notebook(project)
 
     # Ensure that the file exists
     if not os.path.exists(filename):
