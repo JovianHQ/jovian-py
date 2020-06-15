@@ -246,6 +246,7 @@ def _parse_project(project, filename, new_project):
         metadata = api.get_gist(project)
     elif '/' in project:
         project_title = project.split('/')[1]
+        username = api.get_current_user()['username']
         metadata = api.get_gist(project)
     # Attach username to the title
     else:
@@ -255,7 +256,7 @@ def _parse_project(project, filename, new_project):
 
     # Skip if metadata could not be found
     if not metadata:
-        log('Creating a new project "' + username + '/' + project + '"')
+        log('Creating a new project "' + username + '/' + project_title + '"')
         return project_title, None
 
     # Extract information from metadata
