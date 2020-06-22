@@ -47,7 +47,7 @@ def help(ctx):  # no-cover
 @main.command('version')
 @click.pass_context
 def main_version(ctx):  # no-cover
-    """Print installed jovian library version."""
+    """Print installed Jovian library version."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
     sys.argv[1] = "--version"
@@ -98,7 +98,7 @@ def activate_env(ctx):
 
 
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
-@click.argument('notebook', metavar="<username/notebook-title>")
+@click.argument('notebook', metavar="<username/title>")
 @click.option('-v', '--version', 'version', help="Version number")
 @click.option('--no-outputs', 'no_outputs', is_flag=True, default=False, help="Exclude output files")
 @click.option('--overwrite', 'overwrite', is_flag=True, help="Overwrite existing project")
@@ -116,7 +116,7 @@ def exec_clone(ctx, notebook, version, no_outputs, overwrite):
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
-@click.option('-n', '--notebook', 'notebook', help="Notebook project (format: username/notebook-title)")
+@click.option('-n', '--notebook', 'notebook', help="Notebook project (format: username/title)")
 @click.option('-v', '--version', 'version', help="Version number")
 @click.pass_context
 def exec_pull(ctx, notebook, version):
@@ -141,8 +141,8 @@ def set_project(ctx,  notebook, project):
 
         $ jovian set-project my_notebook.ipynb danb/keras-example
 
-    This will create or update the .jovianrc file in the current directory to ensure that commit
-    inside the Jupyter notebook of my_notebook.ipynb add new versions to the project danb/keras-example
+    This will create or update the .jovianrc file in the current directory to ensure that commits
+    inside the Jupyter notebook "my_notebook.ipynb" add new versions to the project danb/keras-example
     """
     set_notebook_slug(filename=notebook, slug=project)
 
