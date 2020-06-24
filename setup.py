@@ -33,7 +33,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://jovian.ml/?utm_source=pypi",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["*.tests", "*.tests.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
