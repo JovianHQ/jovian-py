@@ -139,6 +139,8 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
+    print(message, files, outputs, environment, privacy, filename, project, new_project)
+
     # Commit from Kaggle (After many bug reports of empty notebook)
     if filename == '__notebook_source__.ipynb':
         log("Detected Kaggle notebook...")
@@ -146,13 +148,13 @@ def commit(message=None,
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
 
-        perform_kaggle_commit(message, 
-                            files, 
-                            outputs, 
-                            environment,
-                            privacy,
-                            project,
-                            new_project)
+        perform_kaggle_commit(message,
+                              files,
+                              outputs,
+                              environment,
+                              privacy,
+                              project,
+                              new_project)
         return
 
     # Ensure that the file exists
