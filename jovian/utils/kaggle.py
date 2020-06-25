@@ -35,8 +35,6 @@ def perform_kaggle_commit(message,
     jovian_commit = """jovian.commit(message={}, files={}, outputs={}, environment={}, privacy='{}', filename='{}', project='{}', new_project={})""".format(
         message, files, outputs, environment, privacy, filename, project, new_project)
 
-    print(jovian_commit)
-
     # Construct javascript code
     js_code = '''
     require(["base/js/namespace"],function(Jupyter) {
@@ -82,7 +80,7 @@ print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_upd
         `;
 
         console.log("Invoking jovian.commit")
-        console.log(pythonCode)
+        // console.log(pythonCode)
 
         Jupyter.notebook.kernel.execute(pythonCode, { iopub: { output: jvnLog }});
     });'''

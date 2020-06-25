@@ -139,8 +139,6 @@ def commit(message=None,
         log(FILENAME_MSG, error=True)
         return
 
-    print(message, files, outputs, environment, privacy, filename, project, new_project)
-
     # Commit from Kaggle (After many bug reports of empty notebook)
     if filename == '__notebook_source__.ipynb':
         log("Detected Kaggle notebook...")
