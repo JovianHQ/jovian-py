@@ -25,13 +25,11 @@ def perform_kaggle_commit(message,
     log("Uploading notebook to " + url)
 
     # Construct filename
-    filename = project + ".ipynb"
+    filename = "{}.ipynb".format(project.split('/')[1] if '/' in project else project)
 
-    # Handle str, None, list accordingly
+    # Handle str, None accordingly
     message = "'{}'".format(message) if isinstance(message, str) else None
     environment = "'{}'".format(environment) if isinstance(environment, str) else None
-    files = "'{}'".format(files) if isinstance(files, str) else files
-    outputs = "'{}'".format(outputs) if isinstance(outputs, str) else outputs
 
     # Construct jovian.commit w/ parameters
     jovian_commit = """jovian.commit(message={}, files={}, outputs={}, environment={}, privacy='{}', filename='{}', project='{}', new_project={})""".format(
