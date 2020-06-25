@@ -9,7 +9,13 @@ from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
 from jovian.utils.constants import DEFAULT_WEBAPP_URL
 
 
-def perform_kaggle_commit(project):
+def perform_kaggle_commit(message,
+                          files,
+                          outputs,
+                          environment,
+                          privacy,
+                          project,
+                          new_project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
     # Get user profile
     user = get_current_user()['username']
@@ -21,7 +27,27 @@ def perform_kaggle_commit(project):
     # Construct filename
     filename = project + ".ipynb"
 
-    # Consturct javascript code
+    # Construct jovian.commit w/ parameters
+    jovian_commit = """jovian.commit(message='{}', 
+                                    files='{}', 
+                                    outputs='{}',
+                                    environment='{}',
+                                    privacy='{}',
+                                    filename='{}',
+                                    project='{}',
+                                    new_project='{}'
+                                    )""".format(message,
+                                                files,
+                                                outputs,
+                                                environment,
+                                                privacy,
+                                                filename,
+                                                project,
+                                                new_project)
+
+    print(jovian_commit)
+
+    # Construct javascript code
     js_code = '''
     require(["base/js/namespace"],function(Jupyter) {
         var nbJson = JSON.stringify(Jupyter.notebook.toJSON());
@@ -60,13 +86,13 @@ with redirect_stdout(jvn_update), redirect_stderr(jvn_update_err):
 jvn_f_out = StringIO()
 jvn_f_err = StringIO()
 with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None)
+    jvn_msg = '''+jovian_commit+'''
 
 print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
         `;
 
         console.log("Invoking jovian.commit")
-        // console.log(pythonCode)
+        console.log(pythonCode)
 
         Jupyter.notebook.kernel.execute(pythonCode, { iopub: { output: jvnLog }});
     });'''
