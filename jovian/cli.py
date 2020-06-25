@@ -110,7 +110,7 @@ def exec_clone(ctx, notebook, version, no_outputs, overwrite):
 
     Or clone a specific version of notebook:
 
-        $ jovian clone -v 10 aakashns/jovian-tutorial 
+        $ jovian clone aakashns/jovian-tutorial -v 10
     """
     clone(slug=notebook, version=version, include_outputs=not no_outputs, overwrite=overwrite)
 

@@ -10,7 +10,9 @@ These commands ensure that you can directly interact with [Jovian](https://jovia
 .. click:: jovian.cli:main
     :prog: jovian
     :show-nested:
+    :commands: clone, install, activate, pull, configure, set-project, commit, reset, add-slack, enable-extension, disable-extension, version, help
     :flat-toctree:
     :hide-options-in-usage:
     :skip-main-command:
+    :options-to-last:
 ```
