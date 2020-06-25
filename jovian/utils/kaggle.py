@@ -27,8 +27,14 @@ def perform_kaggle_commit(message,
     # Construct filename
     filename = project + ".ipynb"
 
+    # Handle str, None, list accordingly
+    message = "'{}'".format(message) if isinstance(message, str) else None
+    environment = "'{}'".format(environment) if isinstance(environment, str) else None
+    files = "'{}'".format(files) if isinstance(files, str) else files
+    outputs = "'{}'".format(outputs) if isinstance(outputs, str) else outputs
+
     # Construct jovian.commit w/ parameters
-    jovian_commit = """jovian.commit(message='{}', files={}, outputs={}, environment='{}', privacy='{}', filename='{}', project='{}', new_project={})""".format(
+    jovian_commit = """jovian.commit(message={}, files={}, outputs={}, environment={}, privacy='{}', filename='{}', project='{}', new_project={})""".format(
         message, files, outputs, environment, privacy, filename, project, new_project)
 
     print(jovian_commit)
