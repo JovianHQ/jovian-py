@@ -146,7 +146,13 @@ def commit(message=None,
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
 
-        perform_kaggle_commit(project)
+        perform_kaggle_commit(message,
+                              files,
+                              outputs,
+                              environment,
+                              privacy,
+                              project,
+                              new_project)
         return
 
     # Ensure that the file exists

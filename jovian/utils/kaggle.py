@@ -9,7 +9,13 @@ from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
 from jovian.utils.constants import DEFAULT_WEBAPP_URL
 
 
-def perform_kaggle_commit(project):
+def perform_kaggle_commit(message,
+                          files,
+                          outputs,
+                          environment,
+                          privacy,
+                          project,
+                          new_project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
     # Get user profile
     user = get_current_user()['username']
@@ -19,9 +25,17 @@ def perform_kaggle_commit(project):
     log("Uploading notebook to " + url)
 
     # Construct filename
-    filename = project + ".ipynb"
+    filename = "{}.ipynb".format(project.split('/')[1] if '/' in project else project)
 
-    # Consturct javascript code
+    # Handle str, None accordingly
+    message = "'{}'".format(message) if isinstance(message, str) else None
+    environment = "'{}'".format(environment) if isinstance(environment, str) else None
+
+    # Construct jovian.commit w/ parameters
+    jovian_commit = """jovian.commit(message={}, files={}, outputs={}, environment={}, privacy='{}', filename='{}', project='{}', new_project={})""".format(
+        message, files, outputs, environment, privacy, filename, project, new_project)
+
+    # Construct javascript code
     js_code = '''
     require(["base/js/namespace"],function(Jupyter) {
         var nbJson = JSON.stringify(Jupyter.notebook.toJSON());
@@ -60,7 +74,7 @@ with redirect_stdout(jvn_update), redirect_stderr(jvn_update_err):
 jvn_f_out = StringIO()
 jvn_f_err = StringIO()
 with redirect_stdout(jvn_f_out), redirect_stderr(jvn_f_err):
-    jvn_msg = jovian.commit(project="'''+project+'''", filename="'''+filename+'''", environment=None)
+    jvn_msg = '''+jovian_commit+'''
 
 print(json.dumps({'msg': jvn_msg, 'err': jvn_f_err.getvalue(), 'update': jvn_update.getvalue()}))
         `;
