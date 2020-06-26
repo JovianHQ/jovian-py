@@ -508,6 +508,35 @@ def test_commit_in_notebook_filename_none(
     assert captured.err.strip() == expected_result_err.strip()
 
 
+@mock.patch("jovian.utils.commit.save_notebook", return_value=None)
+@mock.patch("jovian.utils.commit._parse_filename", return_value='__notebook_source__.ipynb')
+@mock.patch("jovian.utils.commit.in_notebook", return_value=True)
+@mock.patch("jovian.utils.commit.perform_kaggle_commit", return_value=None)
+def test_commit_kaggle_notebook(
+        mock_perform_kaggle_commit, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
+
+    commit(project="sample-notebook")
+    expected_result_out = dedent("""
+    [jovian] Attempting to save notebook..
+    [jovian] Detected Kaggle notebook...""")
+    captured = capsys.readouterr()
+    assert captured.out.strip() == expected_result_out.strip()
+
+
+@mock.patch("jovian.utils.commit.save_notebook", return_value=None)
+@mock.patch("jovian.utils.commit._parse_filename", return_value='__notebook_source__.ipynb')
+@mock.patch("jovian.utils.commit.in_notebook", return_value=True)
+@mock.patch("jovian.utils.commit.perform_kaggle_commit", return_value=None)
+def test_commit_kaggle_notebook_project_none(
+        mock_perform_kaggle_commit, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
+
+    commit()
+    expected_result_err = dedent("""
+    [jovian] Error: Please provide the project argument e.g. jovian.commit(project='my-project')""")
+    captured = capsys.readouterr()
+    assert captured.err.strip() == expected_result_err.strip()
+
+
 @mock.patch("jovian.utils.commit.os.path.exists", return_value=False)
 @mock.patch("jovian.utils.commit._parse_filename", return_value='file')
 @mock.patch("jovian.utils.commit.in_notebook", return_value=False)
