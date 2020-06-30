@@ -1,4 +1,4 @@
-from jovian.utils.colab import in_colab
+from jovian.utils.colab import in_colab, get_colab_file_id
 from jovian.utils.jupyter import set_notebook_name
 from jovian.utils.latest import check_update
 
@@ -8,4 +8,4 @@ def _initialize_jovian():
     set_notebook_name()
     check_update()
     if in_colab():
-        jovian.utils.colab.get_colab_id()
+        get_colab_file_id()
