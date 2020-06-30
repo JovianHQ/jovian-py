@@ -8,7 +8,4 @@ def _initialize_jovian():
     set_notebook_name()
     check_update()
     if in_colab():
-        print(globals())
-        print("in colab")
-        global id
         print(id)
