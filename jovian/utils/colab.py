@@ -9,7 +9,7 @@ def in_colab():
 
 def set_colab_file_id(colab_file_id):
     global _colab_file_id
-    _colab_file_id = file_id
+    _colab_file_id = colab_file_id
 
 
 def get_colab_file_id():
