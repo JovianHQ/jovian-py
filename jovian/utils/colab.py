@@ -2,4 +2,4 @@ import sys
 
 
 def in_colab():
-    'google.colab' in sys.modules
+    return 'google.colab' in sys.modules
