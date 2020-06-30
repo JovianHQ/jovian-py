@@ -8,4 +8,4 @@ def _initialize_jovian():
     set_notebook_name()
     check_update()
     if in_colab():
-        print(JOVIAN_ID)
+        jovian.utils.colab.get_colab_id()
