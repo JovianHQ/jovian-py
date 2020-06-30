@@ -7,5 +7,3 @@ def _initialize_jovian():
     """Initialize by setting the notebook name and checking for updates"""
     set_notebook_name()
     check_update()
-    if in_colab():
-        get_colab_file_id()
