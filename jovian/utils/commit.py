@@ -5,6 +5,7 @@ from time import sleep
 
 import click
 from jovian.utils import api, git
+from jovian.utils.colab import in_colab, get_colab_file_id
 from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
 from jovian.utils.credentials import read_creds, read_webapp_url
 from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
@@ -121,6 +122,11 @@ def commit(message=None,
         log('"artifacts" is deprecated. Use "outputs" instead', error=True)
 
     is_cli = kwargs.get('is_cli', False)
+
+    # To commit colab notebooks
+    if in_colab():
+        # changes to be made based on api endpoint changes
+        pass
 
     # Skip if unsupported environment
     if not in_script() and not in_notebook() and not is_cli:
