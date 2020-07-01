@@ -1,4 +1,3 @@
-from jovian.utils.colab import in_colab
 from jovian.utils.jupyter import set_notebook_name
 from jovian.utils.latest import check_update
 

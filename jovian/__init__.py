@@ -1,4 +1,5 @@
 from jovian._version import __version__
+from jovian.utils.commit import commit
 from jovian.utils.records import (log_hyperparams, log_metrics, log_dataset,
                                   log_git, reset, get_records)
 from jovian.utils.slack import notify
