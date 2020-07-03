@@ -356,6 +356,7 @@ define([
      *  else prompts the user with a modal to get the API key.
      */
 
+    var saveFail = false;
     //config
     const settingsFeature = false;
     const sidebarFeature = false;
@@ -459,6 +460,15 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
             iopub: { output: jvnLog }
           });
         });
+        Jupyter.notebook.events.one(
+          "notebook_save_failed.Notebook",
+          function () {
+            saveFail = true;
+            Jupyter.notebook.kernel.execute(jvn_commit, {
+              iopub: { output: jvnLog }
+            });
+          }
+        );
       });
 
     const validateApi = () =>
@@ -590,11 +600,32 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
                     .append(p);
                 }
 
-                user_and_notebook();
-                refresh_latest_version();
-                refresh_version_control();
-                share_dialog();
-                collaborators();
+                if (saveFail) {
+                  const label = $("<p/>")
+                    .text("Auto Save failed ")
+                    .append(
+                      $(
+                        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                      ).css("color", "rgb(191, 191, 0)")
+                    );
+                  const p = $("<p/>").text(
+                    "Committed contents might not be up to date. Please save the notebook manually and commit again."
+                  );
+                  jvn_modal
+                    .find("#i_label")
+                    .append($("<br/>"))
+                    .append($("<br/>"))
+                    .append(label)
+                    .append(p);
+                  saveFail = false;
+                }
+                if (sidebarFeature) {
+                  user_and_notebook();
+                  refresh_latest_version();
+                  refresh_version_control();
+                  share_dialog();
+                  collaborators();
+                }
               } else {
                 jvn_modal
                   .find("#i_label")
@@ -1399,7 +1430,7 @@ os.system('jovian disable-extension')`;
     const set_params_ext_action = {
       icon: "fa-caret-down",
       help: "Show a list of parameters for user to set up",
-      handler: showDropDown
+      handler: showDropDown //saveParams
     };
 
     const set_params_ext_name = Jupyter.actions.register(
