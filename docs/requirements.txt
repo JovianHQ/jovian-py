@@ -3,3 +3,6 @@ sphinx-rtd-theme==0.4.3
 sphinxcontrib-napoleon==0.7
 sphinx==2.2.0
 sphinx-sitemap==2.1.0
+git+https://github.com/JovianML/sphinx-click.git
+click==7.0
+pyyaml==5.1.2

@@ -47,7 +47,7 @@ def help(ctx):  # no-cover
 @main.command('version')
 @click.pass_context
 def main_version(ctx):  # no-cover
-    """Print Jovian’s version number."""
+    """Print installed Jovian library version."""
 
     # Pretend user typed 'jovian --version' instead of 'jovian version'
     sys.argv[1] = "--version"
@@ -70,16 +70,17 @@ def reset(ctx):
 
 
 @main.command("install", short_help="Install packages from environment file.")
-@click.option('-n', '--name', 'name')
+@click.option('-n', '--name', 'name', help="Name of conda env")
 @click.pass_context
 def install_env(ctx, name=None):
     """Install packages from environment file:
 
         $ jovian install
 
-    or, install from specific environment file
+    or, to specify environment name:
 
-        $ jovian install environment-linux.yml
+        $ jovian install -n my_env
+
     """
 
     if not name:
@@ -97,10 +98,10 @@ def activate_env(ctx):
 
 
 @main.command("clone", short_help="Clone a notebook hosted on Jovian")
-@click.argument('notebook')
-@click.option('-v', '--version', 'version')
-@click.option('--no-outputs', 'no_outputs', is_flag=True, default=False)
-@click.option('--overwrite', 'overwrite', is_flag=True)
+@click.argument('notebook', metavar="<username/title>")
+@click.option('-v', '--version', 'version', help="Version number")
+@click.option('--no-outputs', 'no_outputs', is_flag=True, default=False, help="Exclude output files")
+@click.option('--overwrite', 'overwrite', is_flag=True, help="Overwrite existing project")
 @click.pass_context
 def exec_clone(ctx, notebook, version, no_outputs, overwrite):
     """Clone a notebook hosted on Jovian:
@@ -111,13 +112,12 @@ def exec_clone(ctx, notebook, version, no_outputs, overwrite):
 
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
-
     clone(slug=notebook, version=version, include_outputs=not no_outputs, overwrite=overwrite)
 
 
 @main.command("pull", short_help="Fetch new version of notebook hosted Jovian.")
-@click.option('-n', '--notebook', 'notebook')
-@click.option('-v', '--version', 'version')
+@click.option('-n', '--notebook', 'notebook', help="Notebook project (format: username/title)")
+@click.option('-v', '--version', 'version', help="Version number")
 @click.pass_context
 def exec_pull(ctx, notebook, version):
     """Fetch the new version of notebook hosted on Jovian(inside a cloned directory):
@@ -125,7 +125,6 @@ def exec_pull(ctx, notebook, version):
         $ jovian pull 
 
     Or fetch a specific version of a specific notebook:
-    (Provide the notebook-name with the username separated by a forward slash)
 
         $ jovian pull -n aakashns/jovian-tutorial -v 10
     """
@@ -138,12 +137,12 @@ def exec_pull(ctx, notebook, version):
 @click.argument('project')
 @click.pass_context
 def set_project(ctx,  notebook, project):
-    """Associate notebook (filename.ipynb) to Jovian project (username.title)
+    """Associate notebook (filename.ipynb) to Jovian project (username/title)
 
         $ jovian set-project my_notebook.ipynb danb/keras-example
 
     This will create or update the .jovianrc file in the current directory to ensure that commits
-    inside the Jupyter notebook my_notebook.ipynb add new versions to the project danb/keras-example
+    inside the Jupyter notebook "my_notebook.ipynb" add new versions to the project danb/keras-example
     """
     set_notebook_slug(filename=notebook, slug=project)
 
