@@ -13,12 +13,13 @@ extensions = ['recommonmark',  # to use .md along with .rst
               'sphinx.ext.autodoc',  # import doc from docstrings
               'sphinx.ext.linkcode',  # linking the source code on github
               'sphinx_sitemap',  # generate sitemap
-              'sphinxcontrib.napoleon']  # to support Google style docstrings for autodoc
+              'sphinxcontrib.napoleon',  # to support Google style docstrings for autodoc
+              'sphinx_click.ext']
 
 master_doc = 'index'
 source_suffix = ['.rst', '.md']
 
-autodoc_mock_imports = ["torch", "fastai", "keras", "click", "numpy"]
+autodoc_mock_imports = ["torch", "fastai", "keras", "numpy"]
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'TermsOfService.md', 'PrivacyPolicy.md']
 
 html_theme = 'sphinx_rtd_theme'
