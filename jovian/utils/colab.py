@@ -43,6 +43,7 @@ def perform_colab_commit(project, privacy):
 
     auth_headers = _h()
 
+    log("Uploading colab notebook to Jovian...")
     res = post(url=_u('/gist/colab-commit'),
                data=data,
                headers=auth_headers)

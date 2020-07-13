@@ -131,7 +131,11 @@ def commit(message=None,
             return
 
         res = perform_colab_commit(project, privacy)
-        return urljoin(read_webapp_url(), res['owner'], res['title'])
+        username = res['owner']['username']
+        title = res['title']
+
+        log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
+        return urljoin(read_webapp_url(), username, title)
 
     # Skip if unsupported environment
     if not in_script() and not in_notebook() and not is_cli:
