@@ -4,6 +4,7 @@ from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import post
 from jovian.utils.shared import _u
+from jovian.utils.request import pretty
 
 
 _colab_file_id = None
