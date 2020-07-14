@@ -1,5 +1,10 @@
 # Fastai Integration
 
+```eval_rst
+.. meta::
+   :description: Jovian.ml integration with fast.ai
+```
+
 **Step 1** Import
 
 ```

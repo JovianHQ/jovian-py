@@ -1,5 +1,10 @@
 ## Notebook versioning and diffs
 
+```eval_rst
+.. meta::
+   :description: Version control for Data Science experiments with online jupyter notebooks
+```
+
 ### Version control
 
 If you're used to creating many duplicate versions of notebooks with slight modifications and long file names. Look no further, <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> will be your version control for notebooks.

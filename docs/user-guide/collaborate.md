@@ -1,5 +1,10 @@
 ## Collaborating on Jovian projects
 
+```eval_rst
+.. meta::
+   :description: Collaborate on online jupyter notebooks with Jovian.ml
+```
+
 <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> allows you to add collaborators to work with you on a ML Project.
 
 ### How to add collaborators?

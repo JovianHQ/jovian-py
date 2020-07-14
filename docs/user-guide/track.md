@@ -1,5 +1,10 @@
 ## Tracking Datasets, Hyperparameters and Metrics
 
+```eval_rst
+.. meta::
+   :description: Track Datasets, Hyperparameters and Metrics for online jupyter notebooks
+```
+
 Spreadsheets is one of the ways to track information & results of multiple ML experiments. However, using spreadsheets can be tiresome and non-intuitive without the context of the code.
 
 <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> makes its easy for anyone to track information about datasets, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.

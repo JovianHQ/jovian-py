@@ -1,5 +1,10 @@
 ## Installation
 
+```eval_rst
+.. meta::
+   :description: Install Jovian python library to collaborate, track versions of online jupyter notebooks
+```
+
 The `jovian` python library can be installed using the `pip` package manager. To install `jovian` via terminal or command line, run:
 
 ```

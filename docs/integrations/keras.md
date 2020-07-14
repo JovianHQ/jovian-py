@@ -1,5 +1,10 @@
 # Keras Integration
 
+```eval_rst
+.. meta::
+   :description: Jovian.ml integration with keras.io
+```
+
 **Step 1** Import
 
 ```

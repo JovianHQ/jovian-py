@@ -1,6 +1,8 @@
 ## Log Dataset, Hyperparams & Metrics
 
 ```eval_rst
+.. meta::
+   :description: Use Jovian to track hyperparameters, metrics and dataset.
 .. autofunction:: jovian.log_dataset
 
 .. autofunction:: jovian.log_hyperparams

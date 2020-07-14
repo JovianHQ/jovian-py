@@ -1,5 +1,10 @@
 # PyCharm Integration
 
+```eval_rst
+.. meta::
+   :description: Jovian.ml integration with PyCharm
+```
+
 [jovian.commit](../user-guide/upload) works for [PyCharm notebooks](https://www.jetbrains.com/help/pycharm/jupyter-notebook-support.html) too.
 
 ```
