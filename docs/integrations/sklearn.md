@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with Scikit Learn
+   :description: Jovian integration with Scikit Learn.
 ```
 
 Page under Construction

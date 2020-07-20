@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with VScode
+   :description: Jovian integration with VScode.
 ```
 
 [jovian.commit](../user-guide/upload) works for [VS Code Notebooks](https://code.visualstudio.com/docs/python/jupyter-support) too.

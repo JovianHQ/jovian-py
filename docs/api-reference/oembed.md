@@ -42,5 +42,5 @@ Response:
 
 ```eval_rst
 .. meta::
-   :description: Embed online jupyter notebooks to blogs and websites
+   :description: Embed Jupyter notebooks to blogs and websites.
 ```

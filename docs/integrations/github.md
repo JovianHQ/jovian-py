@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with github.com
+   :description: Jovian integration with Github.
 ```
 
 [jovian.commit](../api-reference/commit) automatically performs [git commit](https://git-scm.com/docs/git-commit) if the current notebook/script is in a git repository, as `git_commit` is `True` by default and works only inside a git repository.

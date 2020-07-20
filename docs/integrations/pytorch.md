@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with pytorch.org
+   :description: Jovian integration with PyTorch.
 ```
 
 Page under Construction

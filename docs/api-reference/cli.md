@@ -8,7 +8,7 @@ These commands ensure that you can directly interact with [Jovian](https://jovia
 
 ```eval_rst
 .. meta::
-   :description: Use Jovian on your command line
+   :description: Use Jovian from the command line.
 .. click:: jovian.cli:main
     :prog: jovian
     :show-nested:

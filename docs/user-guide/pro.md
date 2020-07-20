@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml offering for private deployment.
+   :description: Jovian Pro offering for private deployment.
 ```
 
 [Schedule](https://meetings.hubspot.com/aakashns) a meeting for a Demo and discussion with Aakash NS (CEO, Jovian.ml).

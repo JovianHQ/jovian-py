@@ -2,6 +2,6 @@
 
 ```eval_rst
 .. meta::
-   :description: Use Jovian send notifications to slack integration
+   :description: Use Jovian to send notifications to Slack.
 .. autofunction:: jovian.notify
 ```

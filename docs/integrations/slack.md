@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with slack.com
+   :description: Jovian integration with Slack.
 ```
 
 Get notifications from your training experiment and stay updated with all the milestones of your code. No more watching the progress bar of your fit function to keep track of your model training.

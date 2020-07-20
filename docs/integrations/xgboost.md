@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with Xgboost
+   :description: Jovian integration with Xgboost.
 ```
 
 Page under Construction

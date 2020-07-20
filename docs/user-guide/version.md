@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Version control for Data Science experiments with online jupyter notebooks
+   :description: Version control for Data Science experiments with Jupyter notebooks using Jovian.
 ```
 
 ### Version control

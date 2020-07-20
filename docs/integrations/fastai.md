@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with fast.ai
+   :description: Jovian integration with FastAi.
 ```
 
 **Step 1** Import

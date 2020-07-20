@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with opencv.org
+   :description: Jovian integration with OpenCV.
 ```
 
 Page under Construction

@@ -2,6 +2,6 @@
 
 ```eval_rst
 .. meta::
-   :description: Track hyperparameters, metrics with keras callback by Jovian
+   :description: Track hyperparameters and metrics with Keras callback by Jovian.
 .. autoclass:: jovian.callbacks.keras.JovianKerasCallback
 ```

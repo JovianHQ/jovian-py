@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Organize online jupyter notebooks with topic tags
+   :description: Organize Jupyter notebooks on Jovian with topic tags.
 ```
 
 <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian </a> allows you to add topics to your notebooks. Adding topics to your notebooks helps other people find and contribute to your projects easily. You can add topics related to your project's intended purpose, subject area, frameworks/languages used, or other important qualities that you find useful.

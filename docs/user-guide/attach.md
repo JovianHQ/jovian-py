@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Attach files, images, utils, python to online Jovian jupyter notebooks
+   :description: Attach files, images and model outputs to Jovian projects.
 ```
 
 As seen in the [previous section](version.md) by committing, source code and environment files are captured & uploaded.

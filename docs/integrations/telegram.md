@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with Telegram
+   :description: Jovian integration with Telegram.
 ```
 
 Page under Construction

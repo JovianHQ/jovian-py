@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with keras.io
+   :description: Jovian integration with Keras.
 ```
 
 **Step 1** Import
