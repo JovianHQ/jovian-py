@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Track Datasets, Hyperparameters and Metrics for Jupyter notebooks.
+   :description: Track datasets, hyperparameters and metrics for ML experiments.
 ```
 
 Spreadsheets is one of the ways to track information & results of multiple ML experiments. However, using spreadsheets can be tiresome and non-intuitive without the context of the code.
