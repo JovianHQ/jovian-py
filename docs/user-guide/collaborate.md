@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Collaborate on Jupyter notebooks with Jovian platform.
+   :description: Collaborate on Jupyter notebooks using Jovian platform.
 ```
 
 <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> allows you to add collaborators to work with you on a ML Project.

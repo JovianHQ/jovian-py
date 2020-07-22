@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Compare and analyze different versions of Jupyter notebooks with Jovian.
+   :description: Compare and analyze different versions of ML experiments with Jovian.
 ```
 
 Once you have more than one [versions](version.md) of a notebook, you will be able to use `Compare Versions` present in the `Version` dropdown on the top right corner.
