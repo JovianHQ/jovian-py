@@ -7,6 +7,8 @@ These commands requires [installation](/user-guide/install.md) of jovian library
 These commands ensure that you can directly interact with [Jovian](https://jovian.ml) from CLI.
 
 ```eval_rst
+.. meta::
+   :description: Use Jovian from the command line.
 .. click:: jovian.cli:main
     :prog: jovian
     :show-nested:

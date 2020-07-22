@@ -48,9 +48,9 @@ Jovian: The platform for all your Data Science projects
   callbacks/keras
   api-reference/oembed
 
-########################################################
+********************************************************
 Jovian: Libraries and Integrations
-########################################################
+********************************************************
 
 Jovian integrates seamlessly with your favorite tools and libraries.
 Automate your workflow and boost your productivity.
