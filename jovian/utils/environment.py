@@ -16,7 +16,7 @@ def get_conda_bin():
         # If it fails, look for $CONDA_EXE
         conda_exe = os.environ.get("CONDA_EXE")
         # Check if it returns a valid path
-        if conda_exe is not None and conda_exe != '$CONDA_EXE':
+        if conda_exe and conda_exe != '$CONDA_EXE':
             # Update binary and execute again
             conda_bin = conda_exe
             if os.popen(conda_bin).read().strip() == '':
