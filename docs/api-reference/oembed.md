@@ -17,10 +17,10 @@ Parameters:
 _Example URLs:_
 
 - Jovian Notebook URLs
-  - [https://jovian.ml/aakashns/01-pytorch-basics](https://jovian.ml/aakashns/01-pytorch-basics)
-  - [https://jovian.ml/aakashns/movielens-fastai/v/14](https://jovian.ml/aakashns/movielens-fastai/v/14)
+  - [Jovian Notebook](https://jovian.ml/aakashns/01-pytorch-basics)
+  - [Jovian Notebook (Version specified)](https://jovian.ml/aakashns/movielens-fastai/v/14)
 - Jovian Viewer URLs
-  - [http://jovian.ml/viewer?url={notebook-url}](http://jovian.ml/viewer?url=https%3A%2F%2Fjvn.storage.googleapis.com%2Fgists%2Faakashns%2F5bc23520933b4cc187cfe18e5dd7e2ed%2Fraw%2F901a9d2508bd441dbf06954c5f46bf58%2Fmovielens-fastai.ipynb)
+  - [https://jovian.ml/viewer?url={notebook-url}](https://jovian.ml/viewer?url=https%3A%2F%2Fjvn.storage.googleapis.com%2Fgists%2Faakashns%2F5bc23520933b4cc187cfe18e5dd7e2ed%2Fraw%2F901a9d2508bd441dbf06954c5f46bf58%2Fmovielens-fastai.ipynb)
 - [Raw `.ipynb` file URL](https://jvn.storage.googleapis.com/gists/aakashns/5bc23520933b4cc187cfe18e5dd7e2ed/raw/901a9d2508bd441dbf06954c5f46bf58/movielens-fastai.ipynb)
 
 Response:
@@ -38,4 +38,9 @@ Response:
   "width": 800,
   "html": "<iframe src='https://jovian.ml/embed?url=https%3A//jvn.storage.googleapis.com/gists/aakashns/5bc23520933b4cc187cfe18e5dd7e2ed/raw/901a9d2508bd441dbf06954c5f46bf58/movielens-fastai.ipynb' title='Jovian Viewer' height=800 width=800 frameborder=0 allowfullscreen></iframe>"
 }
+```
+
+```eval_rst
+.. meta::
+   :description: Embed Jupyter notebooks to blogs and websites.
 ```

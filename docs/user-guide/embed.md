@@ -1,5 +1,10 @@
 ## Embed Jupyter Notebooks with Jovian.ml
 
+```eval_rst
+.. meta::
+   :description: Embed Jupyter notebooks hosted on Jovian to blog and websites.
+```
+
 If you're a blogger who takes screen snips from your Jupyter Notebooks to attach to your blog or want to showcase your wonderful notebooks on a website and wondering how to embed one. We have heard your worries and are here with this feature, any notebook on <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a> is embeddable.
 
 We got you covered if you want to embed any of the following.

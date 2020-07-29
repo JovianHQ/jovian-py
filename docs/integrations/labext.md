@@ -1,5 +1,10 @@
 # Jupyter Lab Extension
 
+```eval_rst
+.. meta::
+   :description: Jovian integration with Jupyter Lab.
+```
+
 Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ml?utm_source=docs) with just **One Click**.
 Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 

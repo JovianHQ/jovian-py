@@ -1,72 +1,20 @@
-## Command Line Commands
+## CLI Commands
 
-#### Initialize
+CLI - Command line interface, is a text-based interface to interact with your system. On Mac/Linux based OS you'll have terminal application where these commands can be executed, on windows it'll be named as command prompt or conda prompt can be used if Anaconda has been installed.
 
-Requests for a API Key for a new user, can find the key at [Jovian](https://jnv.io). By clicking on `API key` button, key will be copied to the clipboard.
+These commands requires [installation](/user-guide/install.md) of jovian library, if you're working with pip/conda virtual environments make sure you activate the environment where the jovian library is installed.
 
-```
-$ jovian init
-```
-
-#### Clone a Notebook
-
-Clone a notebook form Jovian, by clicking on the `Clone` button of a notebook repo the whole clone command will be copied to the clipboard.
-
-```
-$ jovian clone {notebook_id}
-```
-
-#### Pull the latest Notebook
-
-Pull the latest version of the notebook, use the command in a cloned repository or from a repository where you have committed to jovian.
-
-```
-$ jovian pull
-```
+These commands ensure that you can directly interact with [Jovian](https://jovian.ml) from CLI.
 
 ```eval_rst
-.. caution::
-    Make sure the changes are committed if needed, pull overwrites the current notebook.
-```
-
-#### Install the required dependencies
-
-Install all the dependencies required to the the cloned notebook, use the command in a cloned repository.
-
-```
-$ jovian install
-```
-
-```eval_rst
-.. important:: The above command prompts
-    `
-    Please provide a name for the conda environment [{env_name}]:
-    `
-
-    Press enter to install the dependencies to `env_name` (base env if the content of the square brackets is empty) else provide the env name in the prompt.
-```
-
-#### Version
-
-Displays the current installed version of jovian library.
-
-```
-$ jovian version
-```
-
-#### Enable or Disable Jupyter Notebook Extension
-
-By default, the jovian jupyter extension is enabled.
-
-```
-$ jovian enable-extension
-```
-
-```
-$ jovian disable-extension
-```
-
-```eval_rst
-.. note::
-    The changes are observed when the webpage of the notebook is refreshed.
+.. meta::
+   :description: Use Jovian from the command line.
+.. click:: jovian.cli:main
+    :prog: jovian
+    :show-nested:
+    :commands: clone, install, activate, pull, configure, set-project, commit, reset, add-slack, enable-extension, disable-extension, version, help
+    :flat-toctree:
+    :hide-options:
+    :options-suffix:
+    :skip-main-command:
 ```
