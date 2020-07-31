@@ -50,7 +50,7 @@ def test_get_conda_bin_look_for_conda_exe(mock_popen):
     assert get_conda_bin() == "/Users/username/miniconda3/bin/conda"
 
 
-@mock.patch.dict("os.environ", "")
+@mock.patch.dict("os.environ", {"CONDA_EXE": "/Users/username/miniconda3/bin/conda"})
 @mock.patch("os.popen")
 def test_get_conda_bin_look_for_conda_exe_raises_error(mock_popen):
     ret1, ret2 = mock.Mock(), mock.Mock()
