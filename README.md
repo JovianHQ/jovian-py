@@ -49,29 +49,35 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
 <table>
     <tr>
         <th> </th>
-        <th>jovian(Python Package)</th>
+        <th>Jovian(Python Package)</th>
         <th>Jovian(Webapp)</th>
     </tr>
     <tr>
         <td>Issues or Feature Request</td>
-        <td align="center"> <a href="https://github.com/JovianML/jovian-py/issues">Forum</a> </td>
-        <td align="center"> <a href="https://github.com/JovianML/jovian-support/issues">Forum</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML/jovian-py/issues" target="_blank">Forum</a> </td>
+        <td align="center"> <a href="https://jovian.ml/forum/c/help/22" target="_blank">Forum</a> </td>
     </tr>
     <tr>
         <td>Repository and Website</td>
-        <td align="center"> <a href="https://github.com/JovianML">Repo</a> </td>
-        <td align="center"> <a href="https://jovian.ml/?utm_source=github">Website</a> </td>
+        <td align="center"> <a href="https://github.com/JovianML" target="_blank">Repo</a> </td>
+        <td align="center"> <a href="https://www.jovian.ml/?utm_source=github" target="_blank">Website</a> </td>
     </tr>
     <tr>
         <td>Slack Discussions</td>
-        <td align="center" colspan=2> <a href="https://bit.ly/jovian-users">Slack Invite</a> </td>
+        <td align="center" colspan=2> <a href="https://bit.ly/jovian-users" rel="noopener noreferrer" target="_blank">Slack Invite</a> </td>
     </tr>
 </table>
 
 ## Contact
 
 Mail : hello@jovian.ml
-<br>
+<br/>
 Twitter : [@JovianML](https://twitter.com/JovianML)
-<br>
+<br/>
 Slack : [Slack Invite](https://bit.ly/jovian-users)
+<br/>
+YouTube: [YouTube Channel](https://www.youtube.com/jovianml)
+<br/>
+LinkedIn: [LinkedIn Page](https://www.linkedin.com/company/jovianml/)
+<br/>
+Forum: [Data Science Forum](https://jovian.ml/forum/)
