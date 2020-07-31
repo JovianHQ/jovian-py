@@ -3,7 +3,7 @@ import sys
 from jovian.utils.api import get_current_user, _h
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
-from jovian.utils.request import post
+from jovian.utils.request import post, pretty
 from jovian.utils.shared import _u
 
 
