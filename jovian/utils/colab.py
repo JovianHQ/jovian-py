@@ -1,10 +1,10 @@
 import sys
-from jovian.utils.api import _h, get_current_user
+
+from jovian.utils.api import get_current_user, _h
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import post
 from jovian.utils.shared import _u
-from jovian.utils.request import pretty
 
 
 _colab_file_id = None
@@ -14,9 +14,9 @@ def in_colab():
     return 'google.colab' in sys.modules
 
 
-def set_colab_file_id(colab_file_id):
+def set_colab_file_id(file_id):
     global _colab_file_id
-    _colab_file_id = colab_file_id
+    _colab_file_id = file_id
 
 
 def get_colab_file_id():
