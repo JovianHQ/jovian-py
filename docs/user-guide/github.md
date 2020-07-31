@@ -1,5 +1,10 @@
 ## Git Integration
 
+```eval_rst
+.. meta::
+   :description: Jovian commit also performs git commit to keep a track of other files.
+```
+
 [jovian.commit](../api-reference/commit) automatically performs [git commit](https://git-scm.com/docs/git-commit) if the current notebook/script is in a git repository, as `git_commit` is `True` by default and works only inside a git repository.
 
 Use `git_message` parameter to give a different commit message to git, else it will take jovian's commit message by default.

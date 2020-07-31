@@ -1,5 +1,10 @@
 ## Reproducing uploaded notebooks
 
+```eval_rst
+.. meta::
+   :description: Duplicate and reproduce Jupyter notebooks with Jovian.
+```
+
 An uploaded notebook on <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> can be reproduced in any other machine. Following are the steps involved to reproduce a notebook.
 
 ### Clone

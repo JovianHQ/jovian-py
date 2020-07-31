@@ -1,5 +1,10 @@
 ## Uploading Jupyter Notebooks to Jovian
 
+```eval_rst
+.. meta::
+   :description: Upload Jupyter notebooks to maintain versions of machine learning experiments.
+```
+
 Jovian allows you to upload and share <a href="https://jupyter.org/" target=_blank> Jupyter Notebook</a> instantly with a single command, directly within Jupyter. Make sure you've completed the [installation](install.md) before reading further.
 
 #### Uploading Notebooks
