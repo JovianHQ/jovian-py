@@ -79,3 +79,5 @@ Slack : [Slack Invite](https://bit.ly/jovian-users)
 YouTube: [YouTube Channel](https://www.youtube.com/jovianml)
 <br/>
 LinkedIn: [LinkedIn Page](https://www.linkedin.com/company/jovianml/)
+<br/>
+Forum: [Data Science Forum](https://jovian.ml/forum/)
