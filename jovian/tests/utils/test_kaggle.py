@@ -35,7 +35,7 @@ from jovian.tests.resources.shared import fake_creds
                                'new_project': True},
                               """jovian.commit(message='test commit', files=[], outputs=[], environment=None, privacy='auto', filename='sample-notebook.ipynb', project='sample-notebook', new_project=True)""")
                          ])
-@ mock.patch('jovian.utils.kaggle.get_ipython')
+@ mock.patch('IPython.get_ipython')
 @ mock.patch("jovian.utils.kaggle.get_current_user", return_value={'username': 'PrajwalPrashanth'})
 def test_perform_kaggle_commit(mock_get_current_user, mock_get_ipython, args, expected_jovian_commit):
 

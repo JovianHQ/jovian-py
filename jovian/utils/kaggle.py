@@ -2,7 +2,6 @@ import json
 from time import sleep
 
 
-from IPython import get_ipython
 from jovian.utils.logger import log
 from jovian.utils.api import get_current_user
 from jovian.utils.credentials import read_cred, WEBAPP_URL_KEY
@@ -17,6 +16,8 @@ def perform_kaggle_commit(message,
                           project,
                           new_project):
     """ Retreive all cells and writes it to a file called project-name.ipynb, then returns the filename"""
+    from IPython import get_ipython
+
     # Get user profile
     user = get_current_user()['username']
 
