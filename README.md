@@ -72,12 +72,10 @@ If you want to contribute to **jovian**(Python package), review the [**Contribut
 
 Mail : hello@jovian.ml
 <br/>
-Twitter : [@JovianML](https://twitter.com/JovianML)
+Forum: [Data Science Forum](https://jovian.ml/forum/)
 <br/>
-Slack : [Slack Invite](https://bit.ly/jovian-users)
+Twitter : [@JovianML](https://twitter.com/JovianML)
 <br/>
 YouTube: [YouTube Channel](https://www.youtube.com/jovianml)
 <br/>
 LinkedIn: [LinkedIn Page](https://www.linkedin.com/company/jovianml/)
-<br/>
-Forum: [Data Science Forum](https://jovian.ml/forum/)
