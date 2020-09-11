@@ -8,7 +8,7 @@ from jovian.utils.request import post, pretty
 from jovian.utils.shared import _u
 
 POST_API_URL = '/learn/course/{}/section/{}/make_submission'
-POST_API_URL_SHORT_SLUG = '/learn/section-short-slug/{}/make_submission'
+POST_API_URL_SHORT_SLUG = '/learn/course/section/{}/make_submission'
 ASSIGNMENT_PAGE_URL = '/learn/{}/assignment/{}'
 
 
