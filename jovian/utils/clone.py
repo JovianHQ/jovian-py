@@ -71,7 +71,15 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     # Download gist metadata
     ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
-    gist = get_gist(slug, version, fresh)
+    
+    # Try to get gist with current user 
+    try:
+        gist = get_gist(slug, version, fresh)
+    except Exception as exception:
+        log_msg = str(exception)
+        log(log_msg)
+        return
+
     title = gist['title']
 
     # If fresh clone, create directory
