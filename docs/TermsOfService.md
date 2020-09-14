@@ -18,7 +18,7 @@ The Company requests You (_as defined below_) to carefully go through these term
 
 "**Service(s)**" shall mean such services provided through the Platform. Notwithstanding anything contained here, the services may change from time to time, at the sole discretion of the Company.
 
-“**You**” or “**User(s)**” or “**Consumer**” shall mean any end user or his/her representatives or affiliates who has completed the registration process, as described under account registration below. Unless repugnant to the context thereof, the term “User” shall also include any casual visitor of the Platform.
+“**You**” or **“User(s)”** or “**Consumer**” shall mean any end user or his/her representatives or affiliates who has completed the registration process, as described under account registration below. Unless repugnant to the context thereof, the term “User” shall also include any casual visitor of the Platform.
 
 **Services**
 
