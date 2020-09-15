@@ -1,5 +1,5 @@
 from jovian.utils.api import _h
-from jovian.utils.commit import commit
+from jovian.utils.commit import commit, _parse_filename
 from jovian.utils.credentials import read_webapp_url
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
@@ -17,6 +17,11 @@ def submit(assignment=None, assignment_short_slug=None, notebook_url=None, **kwa
     """
     if not assignment and not assignment_short_slug:
         log("Please provide assignment or assignment_short_slug argument", error=True)
+        return
+
+    filename = _parse_filename(kwargs.get('filename'))
+    if filename == '__notebook_source__.ipynb':
+        log("jovian.submit does not support kaggle notebook directly, make a commit serpartely and then do jovian.sunmit(notebook_url=<notebook_url_returned_after_commit>)", error=True)
         return
 
     if assignment:
