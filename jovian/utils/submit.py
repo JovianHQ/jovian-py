@@ -42,7 +42,7 @@ def submit(assignment=None, assignment_short_slug=None, notebook_url=None, **kwa
         if res.status_code == 200:
             data = res.json()['data']
             course_slug = data.get('course_slug')
-            assignment_slug = data.get('assignment_slug')
+            assignment_slug = data.get('section_slug')
 
             assignment_page_url = ASSIGNMENT_PAGE_URL.format(course_slug, assignment_slug)
             log('Verify your submission at {}'.format(urljoin(read_webapp_url(), assignment_page_url)))
