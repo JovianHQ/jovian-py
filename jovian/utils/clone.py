@@ -5,6 +5,7 @@ from requests import get
 from jovian._version import __version__
 from jovian.utils.constants import ISSUES_MSG
 
+from jovian.utils.api import get_api_key
 from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url, read_org_id
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
@@ -37,9 +38,17 @@ def get_gist(slug, version, fresh):
     else:
         url = _u('gist/' + slug + _v(version))
     res = get(url, headers=_h(fresh))
+    
     if res.status_code == 200:
         return res.json()['data']
-    raise Exception('Failed to retrieve Gist: ' + pretty(res))
+    elif res.status_code == 401:
+        # User need to login first
+        log('Need to login to access this repository')
+        get_api_key()
+        return get_gist(slug, version, fresh)
+    else:
+        log_msg = str(Exception('Failed to retrieve Repository: ' + pretty(res)))
+        return log(log_msg, error=True)
 
 
 def post_clone_msg(title):
@@ -73,13 +82,12 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Fetching ' + slug + " " + ver_str + "..")
     
     # Try to get gist with current user 
-    try:
-        gist = get_gist(slug, version, fresh)
-    except Exception as exception:
-        log_msg = str(exception)
-        log(log_msg)
-        return
+    gist = get_gist(slug, version, fresh)
 
+    # If no gist retrieve
+    if gist == None:
+        return 
+   
     title = gist['title']
 
     # If fresh clone, create directory
