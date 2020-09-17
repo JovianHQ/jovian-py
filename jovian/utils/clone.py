@@ -47,8 +47,8 @@ def get_gist(slug, version, fresh):
         get_api_key()
         return get_gist(slug, version, fresh)
     else:
-        log_msg = str(Exception('Failed to retrieve Repository: ' + pretty(res)))
-        return log(log_msg, error=True)
+        log_msg = 'Failed to retrieve Repository: ' + pretty(res)
+        log(log_msg, error=True)
 
 
 def post_clone_msg(title):
