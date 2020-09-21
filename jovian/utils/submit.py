@@ -7,16 +7,15 @@ from jovian.utils.misc import urljoin
 from jovian.utils.request import post, pretty
 from jovian.utils.shared import _u
 
-POST_API_URL = '/learn/course/{}/section/{}/make_submission'
-POST_API_URL_SHORT_SLUG = '/learn/course/section/{}/make_submission'
+POST_API = '/learn/course/section/{}/make_submission'
 ASSIGNMENT_PAGE_URL = '/learn/{}/assignment/{}'
 
 
-def submit(assignment=None, assignment_short_slug=None, notebook_url=None, **kwargs):
+def submit(assignment=None, notebook_url=None, **kwargs):
     """ Performs jovian.commit and makes a assignment submission with the uploaded notebook.
     """
-    if not assignment and not assignment_short_slug:
-        log("Please provide assignment or assignment_short_slug argument", error=True)
+    if not assignment:
+        log("Please provide assignment", error=True)
         return
 
     filename = _parse_filename(kwargs.get('filename'))
@@ -24,13 +23,7 @@ def submit(assignment=None, assignment_short_slug=None, notebook_url=None, **kwa
         log("jovian.submit does not support kaggle notebook directly, make a commit serpartely and then do jovian.sunmit(notebook_url=<notebook_url_returned_after_commit>)", error=True)
         return
 
-    if assignment:
-        course_slug, assignment_slug = assignment.split("/")
-        post_url = POST_API_URL.format(course_slug, assignment_slug)
-
-    if assignment_short_slug:
-        post_url = POST_API_URL_SHORT_SLUG.format(assignment_short_slug)
-
+    post_url = POST_API.format(assignment)
     nb_url = notebook_url if notebook_url else commit(**kwargs)
 
     if nb_url:
