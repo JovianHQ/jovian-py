@@ -15,12 +15,15 @@ def submit(assignment=None, notebook_url=None, **kwargs):
     """ Performs jovian.commit and makes a assignment submission with the uploaded notebook.
     """
     if not assignment:
-        log("Please provide assignment", error=True)
+        log("Please provide assignment name", error=True)
         return
 
     filename = _parse_filename(kwargs.get('filename'))
     if filename == '__notebook_source__.ipynb':
-        log("jovian.submit does not support kaggle notebook directly, make a commit serpartely and then do jovian.sunmit(notebook_url=<notebook_url_returned_after_commit>)", error=True)
+        log("""jovian.submit does not support kaggle notebooks directly.
+         Please make a commit first, copy the notebook URL and pass it to jovian.submit.
+         eg. jovian.submit(assignment="zero-to-pandas-a1", 
+                           notebook_url="https://jovian.ml/PrajwalPrashanth/assignment")""", error=True)
         return
 
     post_url = POST_API.format(assignment)
