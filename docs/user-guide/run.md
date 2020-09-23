@@ -37,12 +37,12 @@ Execute notebooks on your browser without the need of local setup. Thanks to the
     <img src="https://imgur.com/WvEfAAj.png" class="screenshot" alt="Run jovian notebooks online">
 - **Step 3: Integrate Google Drive to Jovian**
   - A modal would pop up, choose `Authorize and Run on Colab`(only this process supports jovian.commit), this would take to you to a page when your integrate Google Drive with Jovian only for the first time. Authorize with the required Google Email ID.
-    <img src="https://imgur.com/ojVBBqA.png" class="screenshot" alt="Run on MyBinder">
+    <img src="https://imgur.com/ojVBBqA.png" class="screenshot" alt="Authorize drive">
   - All the notebooks that you run will be saved on your drive under the email id that you authorize and the same file is picked up while committing back.
   - After successful authorization you'll be redirected to the Colab page which is private and only the authorized email id has the permissions to view/edit it.
 - **Step 4: Executing cells on colab**
   - We have embedded first cell which has all the necessities required for jovian.commit to work including installation. Please retain this cell and run it.
-    <img src="https://imgur.com/1qJerZc.png" class="screenshot" alt="Run on MyBinder">
+    <img src="https://imgur.com/1qJerZc.png" class="screenshot" alt="Colab interface">
   - You can carry forward with other cells after this
 - **Step 5: jovian.commit**
 
@@ -54,9 +54,9 @@ jovian.commit(project="python-pandas") # project parameter is required(existing 
 
 - Currently we don't have support for this, but there is a way to do it.
 - **Step 1: Download .ipynb from Colab**
-  - <img src="https://imgur.com/PnrSTx0.png" class="screenshot" alt="Run on MyBinder">
+  - <img src="https://imgur.com/PnrSTx0.png" class="screenshot" alt="Download notebook from colab">
 - **Step 2: Upload it to Jovian from Webapp**
-  - <img src="https://imgur.com/bwg9hFv.png" class="screenshot" alt="Run on MyBinder">
+  - <img src="https://imgur.com/bwg9hFv.png" class="screenshot" alt="Upload notebook to jovian">
     That's it. Once you have it on Jovian, the first flow can be used.
 
 #### Why jovian.commit on Local Jupyter, Binder, Kaggle is simpler than Colab?
