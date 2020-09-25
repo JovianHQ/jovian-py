@@ -38,16 +38,14 @@ def get_gist(slug, version, fresh):
     else:
         url = _u('gist/' + slug + _v(version))
     res = get(url, headers=_h(fresh))
-    
     if res.status_code == 200:
         return res.json()['data']
     elif res.status_code == 401:
-        # User need to login first
-        log('Need to login to access this repository')
+        log('This notebook does not exist or is private. Please provide the API key')
         get_api_key()
         return get_gist(slug, version, fresh)
     else:
-        log_msg = 'Failed to retrieve Repository: ' + pretty(res)
+        log_msg = 'Failed to retrieve notebook: ' + pretty(res)
         log(log_msg, error=True)
 
 
@@ -80,11 +78,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     # Download gist metadata
     ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
-    
-    # Try to get gist with current user 
     gist = get_gist(slug, version, fresh)
-
-    # If no gist retrieve
     if gist == None:
         return 
    
