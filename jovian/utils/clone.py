@@ -45,8 +45,7 @@ def get_gist(slug, version, fresh):
         get_api_key()
         return get_gist(slug, version, fresh)
     else:
-        log_msg = 'Failed to retrieve notebook: ' + pretty(res)
-        log(log_msg, error=True)
+        log('Failed to retrieve notebook: ' + pretty(res), error=True)
 
 
 def post_clone_msg(title):
@@ -79,7 +78,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
-    if gist == None:
+    if not gist:
         return 
    
     title = gist['title']
