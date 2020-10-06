@@ -130,7 +130,7 @@ def commit(message=None,
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
         if environment == "conda":
-            log("Colab uses a pip environment, cannot capture conda environment.")
+            log("Colab uses a pip environment, cannot capture conda environment.", error=True)
             return
         elif environment == "auto":
             environment = "pip"
