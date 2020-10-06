@@ -1,24 +1,24 @@
 ## Run notebooks online
 
-Execute notebooks on your browser without the need of local setup. Thanks to the following free online services, run any notebook uploaded to [Jovian](https://jovian.ml) with just a click.
+Execute notebooks on your browser without the need of local setup. Run any notebook uploaded to [Jovian](https://jovian.ml) with just a click.
 
-- [Binder](https://mybinder.org) [CPU only instances]
-- [Colab](https://colab.research.google.com) [GPU or TPU instances]
-- [Kaggle](https://www.kaggle.com/notebooks) [GPU or TPU instances]
+- Binder [CPU only instances]
+- Colab [GPU or TPU instances]
+- Kaggle [GPU or TPU instances]
 
 <img src="https://imgur.com/WvEfAAj.png" class="screenshot" alt="Run jovian notebooks online">
 
 ### Run on Binder
 
-- Click `Run on Binder` and you will be redirected to [Binder](https://mybinder.org)
-- You may have to wait few minutes while it installs dependencies.
+- Click `Run on Binder`
+- You may have to wait few minutes while it installs initial dependencies.
 
-<img src="https://imgur.com/oJnksFb.png" class="screenshot" alt="Run on MyBinder">
+<img src="https://imgur.com/oJnksFb.png" class="screenshot" alt="Run on Binder">
 
 - Notebooks with conda dependency present will automatically install them to the instance. It may take few more minutes while installing project related dependencies.
 - Upon successful launch, you can expect similar notebook instance ready for execution.
 
-<img src="https://imgur.com/Q1CLUZQ.png" class="screenshot" alt="Run on MyBinder">
+<img src="https://imgur.com/Q1CLUZQ.png" class="screenshot" alt="Run on Binder">
 
 ```eval_rst
 .. important::
