@@ -1,5 +1,6 @@
 import os
 import click
+import json
 from requests import get
 
 from jovian._version import __version__
@@ -95,12 +96,17 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Downloading files..')
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
-            with open(f['filename'], 'wb') as fp:
-                fp.write(get(f['rawUrl']).content)
+            # Delete  kernalspec entry from .ipynb file 
+            if f['filename'][-6:] == ".ipynb":
+                nb_content = json.loads(get(f['rawUrl']).content.decode("utf-8"))
+                if 'metadata' in nb_content and 'kernelspec' in nb_content['metadata']: 
+                    del nb_content['metadata']['kernelspec']
+                content = bytes(json.dumps(nb_content), 'utf-8')
+            else:
+                content=get(f['rawUrl']).content
+            with open(f['filename'], 'wb') as fp: 
+                fp.write(content)
 
-        # Create .jovianrc for a fresh clone
-        if fresh and f['filename'].endswith('.ipynb'):
-            set_notebook_slug(f['filename'], slug)
 
     # Print success message and instructions
     if fresh:
