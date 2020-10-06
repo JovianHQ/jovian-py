@@ -131,8 +131,11 @@ def commit(message=None,
             return
 
         res = perform_colab_commit(project, privacy)
-        username = res['owner']['username']
-        title = res['title']
+        slug, username, version, title = res['slug'], res['owner']['username'], res['version'], res['title']
+        _capture_environment(environment, slug, version)
+        _attach_files(files, slug, version)
+        _attach_files(outputs, slug, version, output=True)
+        _attach_records(slug, version)
 
         log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
