@@ -34,6 +34,7 @@ Jovian: The platform for all your Data Science projects
   integrations/slack
   user-guide/topics
   user-guide/github
+  user-guide/submit
   user-guide/pro
 
 .. toctree::
