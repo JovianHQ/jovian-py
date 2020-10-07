@@ -40,6 +40,14 @@ For more features of `jovian.commit` and API reference visit [Commit](../api-ref
         In certain environments like JupyterLab and password protected notebooks, ``jovian`` may not be able to detect the notebook filename automatically. In such cases, pass the notebook's name as the ``nb_filename`` argument to ``jovian.commit``.
 ```
 
+#### Import notebooks from URL
+
+Create a `New Notebook` imported from any hosted URL which points to a .ipynb file (Github/Gitlab/....)
+<img src="https://imgur.com/vuzAq2L.png" class="screenshot" alt="new notebook dropdown" >
+
+**Example:** Retrieving raw URL from a notebook uploaded to Github.
+<img src="https://imgur.com/gHIXVad.png" class="screenshot" alt="raw url from github" >
+
 #### Benefits of Jovian
 
 **Easy sharing and collaboration**: Just copy the link to share an uploaded notebook with your friends or colleages. Your notebooks are also visible on your profile page, unless you mark them _Secret_. You can also add collaborators and let others contribute to your project ([learn more](collaborate.md)).
