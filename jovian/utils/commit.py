@@ -131,11 +131,14 @@ def commit(message=None,
             return
         if environment == "conda":
             log("Colab uses a pip environment, cannot capture conda environment. Capturing pip environment")
+            environment = "pip"
+        elif environment == "auto":
+            environment = "pip"
 
         res = perform_colab_commit(project, privacy)
         slug, username, version, title = res['slug'], res['owner']['username'], res['version'], res['title']
 
-        _capture_environment(environment="pip", slug, version)
+        _capture_environment(environment, slug, version)
         _attach_files(files, slug, version)
         _attach_files(outputs, slug, version, output=True)
         _attach_records(slug, version)
