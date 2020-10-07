@@ -71,6 +71,8 @@ img.screenshot {
   border-radius: 4px;
   overflow: hidden;
   box-shadow: rgba(52, 64, 77, 0.2) 0px 1px 5px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 h1 {
@@ -312,4 +314,8 @@ h3 {
 p.rubric,
 dl.option {
   margin-left: 1%;
+}
+
+.rst-content .section ul p {
+  margin-top: 4px;
 }
