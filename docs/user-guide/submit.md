@@ -1,6 +1,6 @@
 # Submit assignments directly from jovian library
 
-[Commit](upload.md) and submit assignments for <a href="https://jovian.ml/learn" target=_blank>Courses hosted on Jovian</a> directly from Jupyter notebook. All you need is a `assignment` code (available in the respective assignment pages) that you need pass to `jovian.submit`.
+[Commit](upload.md) and submit assignments for <a href="https://jovian.ml/learn" target=_blank>Courses hosted on Jovian</a> directly from Jupyter notebook. All you need is an `assignment` code (available in the respective assignment pages) that you need pass to `jovian.submit`.
 
 **Example:**
 
