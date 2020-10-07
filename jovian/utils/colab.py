@@ -28,7 +28,8 @@ def perform_colab_commit(project, privacy):
     # file_id, project, privacy api key
     file_id = get_colab_file_id()
     if file_id is None:
-        log("Colab File Id is not provided", error=True)
+        log("Colab File Id is not provided. Make sure to execute the cell where the Id is set.", error=True)
+        return
 
     # /gist/colab-commit data = {file_id, project}, return status
     if '/' not in project:
