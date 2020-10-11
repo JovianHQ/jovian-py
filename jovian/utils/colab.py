@@ -25,16 +25,10 @@ def get_colab_file_id():
 
 
 def perform_colab_commit(project, privacy):
-    # file_id, project, privacy api key
-    file_id = get_colab_file_id()
-    if file_id is None:
-        log("Colab File Id is not provided", error=True)
-
-    # /gist/colab-commit data = {file_id, project}, return status
     if '/' not in project:
         project = get_current_user()['username'] + '/' + project
 
-    data = {'project': project, 'file_id': file_id, 'visibility': privacy}
+    data = {'project': project, 'file_id': get_colab_file_id(), 'visibility': privacy}
 
     if privacy == 'auto':
         data['public'] = True

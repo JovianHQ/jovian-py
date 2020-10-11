@@ -25,6 +25,7 @@ Jovian: The platform for all your Data Science projects
   user-guide/install
   user-guide/upload
   user-guide/reproduce
+  user-guide/run
   user-guide/version
   user-guide/attach
   user-guide/track
@@ -34,6 +35,7 @@ Jovian: The platform for all your Data Science projects
   integrations/slack
   user-guide/topics
   user-guide/github
+  user-guide/submit
   user-guide/pro
 
 .. toctree::

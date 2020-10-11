@@ -6,6 +6,7 @@ from requests import get
 from jovian._version import __version__
 from jovian.utils.constants import ISSUES_MSG
 
+from jovian.utils.api import get_api_key
 from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url, read_org_id
 from jovian.utils.logger import log
 from jovian.utils.rcfile import get_rcdata, rcfile_exists, set_notebook_slug
@@ -40,7 +41,12 @@ def get_gist(slug, version, fresh):
     res = get(url, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
-    raise Exception('Failed to retrieve Gist: ' + pretty(res))
+    elif res.status_code == 401:
+        log('This notebook does not exist or is private. Please provide the API key')
+        get_api_key()
+        return get_gist(slug, version, fresh)
+    else:
+        log('Failed to retrieve notebook: ' + pretty(res), error=True)
 
 
 def post_clone_msg(title):
@@ -73,6 +79,9 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     ver_str = '(version ' + str(version) + ')' if version else ''
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
+    if not gist:
+        return 
+   
     title = gist['title']
 
     # If fresh clone, create directory

@@ -129,10 +129,23 @@ def commit(message=None,
         if project is None:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
+        if get_colab_file_id() is None:
+            log("Colab File Id is not provided. Make sure to execute the cell where the Id is set.", error=True)
+            return
 
         res = perform_colab_commit(project, privacy)
-        username = res['owner']['username']
-        title = res['title']
+        slug, username, version, title = res['slug'], res['owner']['username'], res['version'], res['title']
+
+        if environment == "conda":
+            log("Conda environment is not supported on Colab. Capturing pip environment instead.")
+            environment = "pip"
+        elif environment == "auto":
+            environment = "pip"
+
+        _capture_environment(environment, slug, version)
+        _attach_files(files, slug, version)
+        _attach_files(outputs, slug, version, output=True)
+        _attach_records(slug, version)
 
         log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
