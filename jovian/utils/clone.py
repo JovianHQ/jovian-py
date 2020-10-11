@@ -105,12 +105,12 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Downloading files..')
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
-            # Delete  kernalspec entry from .ipynb file 
+            # Delete  kernalspec entry from .ipynb file
             if f['filename'].endswith('.ipynb'):
-                content = _sanitize_notebook(f['rawUrl'])
+                content = _sanitize_notebook(get(f['rawUrl']).content)
             else:
-                content=get(f['rawUrl']).content
-            with open(f['filename'], 'wb') as fp: 
+                content = get(f['rawUrl']).content
+            with open(f['filename'], 'wb') as fp:
                 fp.write(content)
 
         # Create .jovianrc for a fresh clone
@@ -146,9 +146,10 @@ def pull(slug=None, version=None):
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)
 
-def _sanitize_notebook(notebook):
+
+def _sanitize_notebook(content):
     # Delete  kernalspec entry
-    nb_content = json.loads(get(notebook).content.decode("utf-8"))
-    if nb_content.get('metadata', {}).get('kernelspec'): 
+    nb_content = json.loads(content.decode("utf-8"))
+    if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
     return bytes(json.dumps(nb_content), 'utf-8')
