@@ -116,7 +116,7 @@ def test_clone(mock_get_gist, mock_requests_get):
         get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
         mock_requests_get.side_effect = [get1, get2]
-        print(get1, get1.content)
+
         clone('aakashns/metrics-example', version='3')
 
         os.chdir(dir)
