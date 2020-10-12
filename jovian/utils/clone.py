@@ -1,5 +1,6 @@
 import os
 import click
+import json
 from requests import get
 
 from jovian._version import __version__
@@ -104,8 +105,12 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Downloading files..')
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
+            if f['filename'].endswith('.ipynb'):
+                content = _sanitize_notebook(get(f['rawUrl']).content)
+            else:
+                content = get(f['rawUrl']).content
             with open(f['filename'], 'wb') as fp:
-                fp.write(get(f['rawUrl']).content)
+                fp.write(content)
 
         # Create .jovianrc for a fresh clone
         if fresh and f['filename'].endswith('.ipynb'):
@@ -139,3 +144,11 @@ def pull(slug=None, version=None):
     for fname in nbs:
         # Get the latest files for each notebook
         clone(nbs[fname]['slug'], version, fresh=False)
+
+
+def _sanitize_notebook(content):
+    # Delete  kernalspec entry
+    nb_content = json.loads(content.decode("utf-8"))
+    if nb_content.get('metadata', {}).get('kernelspec'):
+        del nb_content['metadata']['kernelspec']
+    return bytes(json.dumps(nb_content), 'utf-8')

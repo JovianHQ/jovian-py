@@ -113,7 +113,7 @@ def test_clone(mock_get_gist, mock_requests_get):
         mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
-        get1.content, get2.content = b"notebook content", b"environment content"
+        get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
         mock_requests_get.side_effect = [get1, get2]
 
@@ -141,7 +141,7 @@ def test_clone_multiple(mock_get_gist, mock_requests_get):
         mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
-        get1.content, get2.content = b"notebook content", b"environment content"
+        get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
         mock_requests_get.side_effect = [get1, get2] * 3
 
@@ -174,7 +174,7 @@ def test_clone_fresh_false(mock_get_gist, mock_requests_get):
         mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
-        get1.content, get2.content = b"notebook content", b"environment content"
+        get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
         mock_requests_get.side_effect = [get1, get2]
 
@@ -202,7 +202,7 @@ def test_clone_overwrite(mock_get_gist, mock_requests_get):
         mock_get_gist.return_value = FAKE_GIST
 
         get1, get2 = mock.Mock(), mock.Mock()
-        get1.content, get2.content = b"notebook content", b"environment content"
+        get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
         mock_requests_get.side_effect = [get1, get2] * 2
 
