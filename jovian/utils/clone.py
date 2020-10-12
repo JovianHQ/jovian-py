@@ -105,7 +105,6 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Downloading files..')
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
-            # Delete  kernalspec entry from .ipynb file
             if f['filename'].endswith('.ipynb'):
                 content = _sanitize_notebook(get(f['rawUrl']).content)
             else:
