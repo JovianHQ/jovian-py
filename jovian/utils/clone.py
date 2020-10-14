@@ -105,12 +105,21 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Downloading files..')
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
+            dir_list = []
+            if f['folder']:
+                dir_list = f['folder'].split('/')
+                _create_path(dir_list)    
             if f['filename'].endswith('.ipynb'):
                 content = _sanitize_notebook(get(f['rawUrl']).content)
             else:
                 content = get(f['rawUrl']).content
             with open(f['filename'], 'wb') as fp:
                 fp.write(content)
+            
+            #Return back to the root directory of file f
+            if f['folder']:
+                for i in range(len(dir_list)):
+                    os.chdir(os.pardir)
 
         # Create .jovianrc for a fresh clone
         if fresh and f['filename'].endswith('.ipynb'):
@@ -152,3 +161,10 @@ def _sanitize_notebook(content):
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
     return bytes(json.dumps(nb_content), 'utf-8')
+
+def _create_path(dir_list=[]):
+    # Create path of directories if not exist and chage the current path
+     for dir in dir_list:
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        os.chdir(dir)
