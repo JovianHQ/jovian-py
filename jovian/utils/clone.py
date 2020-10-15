@@ -106,7 +106,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
             dir_list = []
-            if f['folder']:
+            if f.get('folder'):
                 dir_list = f['folder'].split('/')
                 _create_path(dir_list)    
             if f['filename'].endswith('.ipynb'):
@@ -117,7 +117,7 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
                 fp.write(content)
             
             #Return back to the root directory of file f
-            if f['folder']:
+            if f.get('folder'):
                 for i in range(len(dir_list)):
                     os.chdir(os.pardir)
 
