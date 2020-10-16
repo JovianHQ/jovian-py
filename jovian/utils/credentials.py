@@ -11,8 +11,9 @@ import requests
 
 from jovian.utils.constants import DEFAULT_API_URL, DEFAULT_ORG_ID, DEFAULT_WEBAPP_URL
 from jovian.utils.error import ApiError, ConfigError
+from jovian.utils.jupyter import in_notebook
 from jovian.utils.logger import log
-from jovian.utils.misc import is_flavor_pro, urljoin
+from jovian.utils.misc import is_flavor_pro, get_platform, urljoin
 
 try:
     # Python 3
@@ -281,8 +282,12 @@ def write_guest_key(token):
 
 def request_api_key():
     """Ask the user to provide the API key"""
+    hide_api_key=True
+    if not in_notebook() and get_platform() == 'windows':
+        hide_api_key=False
+    log(get_platform())
     log("Please enter your API key ( from " + read_webapp_url() + " ):")
-    api_key = click.prompt("API KEY", hide_input=True)
+    api_key = click.prompt("API KEY", hide_input=hide_api_key)
     return api_key
 
 
