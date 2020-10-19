@@ -4,6 +4,7 @@ import json
 from jovian.utils.constants import RC_FILENAME
 
 _current_slug = None
+_current_project = None
 
 
 def rcfile_exists():
@@ -72,3 +73,15 @@ def make_rcdata(filename, slug):
         }
     }
     return json.dumps(data)
+
+
+def get_cached_project():
+    """Get cached project parameter"""
+    global _current_project
+    return _current_project
+
+
+def set_colab_or_kaggle_project(project):
+    """Cache project parameter for kaggle and colab notebooks"""
+    global _current_project
+    _current_project = project
