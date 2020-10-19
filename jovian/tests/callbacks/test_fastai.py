@@ -14,7 +14,7 @@ except ImportError:
 
 
 @pytest.fixture
-@pytest.mark.skipif(True, reason="Disabling until it is actively developed, fastai APIs have changed.")
+@pytest.mark.skip(reason="Disabling until it is actively developed, fastai APIs have changed.")
 def learn():
     data = (ImageList.from_folder(PosixPath("./jovian/tests/resources/mnist_tiny"))
             .split_by_folder()
@@ -27,7 +27,7 @@ def learn():
     return learn
 
 
-@pytest.mark.skipif(True, reason="Disabling until it is actively developed, fastai APIs have changed.")
+@pytest.mark.skip(reason="Disabling until it is actively developed, fastai APIs have changed.")
 @mock.patch("jovian.callbacks.fastai.log_hyperparams")
 @mock.patch("jovian.callbacks.fastai.log_metrics")
 def test_on_train_begin_and_on_epoch_end(mock_log_metrics, mock_log_hyperparams, learn):
