@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. meta::
-   :description: Jovian.ml integration with tensorflow
+   :description: Jovian integration with tensorflow
 ```
 
 Page under Construction

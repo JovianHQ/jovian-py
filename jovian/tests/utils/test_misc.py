@@ -51,19 +51,19 @@ def test_get_platform(ret_val, expected_result):
 @pytest.mark.parametrize(
     "urls, expected_result",
     [
-        (["https://jovian.ml"], "https://jovian.ml"),
-        (["https://jovian.ml/"], "https://jovian.ml/"),
+        (["https://jovian.ai"], "https://jovian.ai"),
+        (["https://jovian.ai/"], "https://jovian.ai/"),
         (["///user/siddhant"], "user/siddhant"),
-        (["https://jovian.ml", "user/siddhant"], "https://jovian.ml/user/siddhant"),
-        (["https://jovian.ml", "/user/siddhant"], "https://jovian.ml/user/siddhant"),
-        (["https://jovian.ml/", "user/siddhant"], "https://jovian.ml/user/siddhant"),
-        (["https://jovian.ml/", "/user/siddhant"], "https://jovian.ml/user/siddhant"),
-        (["https://jovian.ml", "user/siddhant/"], "https://jovian.ml/user/siddhant/"),
-        (["https://jovian.ml", "/user/siddhant/"], "https://jovian.ml/user/siddhant/"),
-        (["https://jovian.ml/", "user/siddhant/"], "https://jovian.ml/user/siddhant/"),
-        (["https://jovian.ml/", "/user/siddhant/"], "https://jovian.ml/user/siddhant/"),
-        (["https://jovian.ml/", "///user/siddhant/////"], "https://jovian.ml/user/siddhant/"),
-        (["https://jovian.ml/", "user/siddhant/", "/gists/starred"], "https://jovian.ml/user/siddhant/gists/starred"),
+        (["https://jovian.ai", "user/siddhant"], "https://jovian.ai/user/siddhant"),
+        (["https://jovian.ai", "/user/siddhant"], "https://jovian.ai/user/siddhant"),
+        (["https://jovian.ai/", "user/siddhant"], "https://jovian.ai/user/siddhant"),
+        (["https://jovian.ai/", "/user/siddhant"], "https://jovian.ai/user/siddhant"),
+        (["https://jovian.ai", "user/siddhant/"], "https://jovian.ai/user/siddhant/"),
+        (["https://jovian.ai", "/user/siddhant/"], "https://jovian.ai/user/siddhant/"),
+        (["https://jovian.ai/", "user/siddhant/"], "https://jovian.ai/user/siddhant/"),
+        (["https://jovian.ai/", "/user/siddhant/"], "https://jovian.ai/user/siddhant/"),
+        (["https://jovian.ai/", "///user/siddhant/////"], "https://jovian.ai/user/siddhant/"),
+        (["https://jovian.ai/", "user/siddhant/", "/gists/starred"], "https://jovian.ai/user/siddhant/gists/starred"),
     ]
 )
 def test_urljoin(urls, expected_result):

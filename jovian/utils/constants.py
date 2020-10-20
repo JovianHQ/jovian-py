@@ -1,5 +1,5 @@
 # URLs for public versions of Jovian
-DEFAULT_WEBAPP_URL = "https://jovian.ml/"
+DEFAULT_WEBAPP_URL = "https://jovian.ai/"
 DEFAULT_API_URL = "https://api.jovian.ai/"
 
 RC_FILENAME = ".jovianrc"

@@ -187,7 +187,7 @@ def test_get_current_user_raises_exception(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -398,7 +398,7 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
     with fake_creds() as dir:
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -482,7 +482,7 @@ def test_upload_file_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds() as dir:
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -553,7 +553,7 @@ def test_post_blocks_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -620,7 +620,7 @@ def test_post_block_raises_api_error(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -680,7 +680,7 @@ def test_post_records_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -715,7 +715,7 @@ def test_post_slack_message(mock_requests_post):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_api_key",
@@ -747,7 +747,7 @@ def test_post_slack_message_raises_api_error(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
@@ -782,7 +782,7 @@ def test_post_slack_message_safe(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",
