@@ -148,7 +148,12 @@ def pull(slug=None, version=None):
 
 def _sanitize_notebook(content):
     # Delete  kernalspec entry
-    nb_content = json.loads(content.decode("utf-8"))
+    nb_content={}
+    try:
+        nb_content = json.loads(content.decode("utf-8"))
+    except ValueError:
+    # Corrupt Notebook
+        return content
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
     return bytes(json.dumps(nb_content), 'utf-8')
