@@ -39,7 +39,7 @@ def commit(message=None,
         message(string, optional): A short message to be used as the title for this version.
 
         files(array, optional): Any additional scripts(.py files), CSVs etc. that are required to
-            run the notebook. These will be available in the files tab of the project page on Jovian.ml
+            run the notebook. These will be available in the files tab of the project page on Jovian
 
         outputs(array, optional): Any outputs files or artifacts generated from the modeling processing.
             This can include model weights/checkpoints, generated CSVs, output images etc.
@@ -82,7 +82,7 @@ def commit(message=None,
         notebooks sometimes it may fail to detect notebook automatically.
     .. |Jovian| raw:: html
 
-        <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
+        <a href="https://jovian.ai/?utm_source=docs" target="_blank"> Jovian </a>
     """
 
     # Deprecated argument (secret)

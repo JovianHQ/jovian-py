@@ -4,7 +4,7 @@ CLI - Command line interface, is a text-based interface to interact with your sy
 
 These commands requires [installation](/user-guide/install.md) of jovian library, if you're working with pip/conda virtual environments make sure you activate the environment where the jovian library is installed.
 
-These commands ensure that you can directly interact with [Jovian](https://jovian.ml) from CLI.
+These commands ensure that you can directly interact with [Jovian](https://jovian.ai) from CLI.
 
 ```eval_rst
 .. meta::
