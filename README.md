@@ -1,4 +1,4 @@
-# Jovian: Collaboration Platform for Data Science Projects
+# Jovian: Learning Platform for Data Science & ML.
 
 ![](/docs/jovian_horizontal_logo.svg)
 
