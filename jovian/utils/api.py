@@ -76,6 +76,8 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
                        files={'files': nb_file},
                        headers=auth_headers)
             if res.status_code == 200:
+                if res.json().get('errors'):
+                    log(res.json()['errors'], error=True)
                 return res.json()['data']
             raise ApiError('File upload failed: ' + pretty(res))
 
@@ -91,6 +93,8 @@ def upload_file(gist_slug, file, folder=None, version=None, artifact=False, vers
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
+        if res.json().get('errors'):
+            log(res.json()['errors'], error=True)
         return res.json()['data']
     raise ApiError('File upload failed: ' + pretty(res))
 

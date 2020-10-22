@@ -43,5 +43,7 @@ def perform_colab_commit(project, privacy):
                headers=auth_headers)
 
     if res.status_code == 200:
+        if res.json().get('errors'):
+            log(res.json()['errors'], error=True)
         return res.json()['data']
     raise ApiError('Colab commit failed: ' + pretty(res))

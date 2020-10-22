@@ -124,7 +124,7 @@ def commit(message=None,
     is_cli = kwargs.get('is_cli', False)
 
     # To commit colab notebooks
-    if in_colab():
+    if True:
         log("Detected Colab notebook...")
         if project is None:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
