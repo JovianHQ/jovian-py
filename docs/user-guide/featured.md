@@ -5,25 +5,40 @@
    :description: Featured Notebooks and Collections.
 ```
 
-<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> provides you with the feature to highlight some of your Notebooks & Collections on profile overview. You can feature like those
-related to your project , or some of your favourite topics ,or frameworks/languages used, or other important qualities that you find useful on your profile.
+<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> provides you with the feature to highlight your Notebooks & Collections on profile overview. Pin your best projects to your profile, so that other people can view them easily. "Pinned Notebooks/Collections" always stays at the top among other projects.
 
-### How to add Notebooks/Collections in Featured Section?
+## How to add Notebooks/Collections in Featured Section?
 
-1. For each notebook and collection you have been provided with the option to Pin it.
-   Note that you cannot pin private/secret notebooks and private collections.
+### Pin your Notebooks/Collections:
 
-  <img src="https://i.imgur.com/oxzHbMc.png" class="screenshot" alt="Pin Notebook">
+For each notebook and collection you have been provided with the option to **Pin** it.
 
-  <img src="https://i.imgur.com/5k71Moy.png" class="screenshot" alt="Pin Collection">
+  <img src="https://imgur.com/ccxU4QF.png " class="screenshot" alt="Pin Notebook">
 
-2. Navigate to Overview section after you have pinned the notebook/collection.There you see
-   your featured Notebooks and Collections.
-   Similarly you can see the featured collection and notebooks for other users as well.
+  <img src="https://i.imgur.com/0koaVcc.jpg" class="screenshot" alt="Pin Collection">
 
-   <img src="https://i.imgur.com/QhoQ2RT.jpg" class="screenshot" alt="OverView Tab">
+```eval_rst
+.. note:: You cannot pin private/secret notebooks and private collections.
 
-3. If you want to removal some notebook or collection from feature , simply unpin them
-   from Notebook/ Collection section.
+```
 
-4. Note that you can pin maximum 6 collection/notebook at a time.
+### View featured Notebooks/Collections:
+
+Navigate to Overview section after you have pinned the notebook/collection.There you see
+your featured Notebooks and Collections.
+Similarly you can see the featured Notebooks and Collections for other users as well.
+
+   <img src="https://i.imgur.com/xCj7qrn.jpg" class="screenshot" alt="OverView Tab">
+
+```eval_rst
+.. note:: You can pin maximum 6 Notebooks/Collections at a time.
+```
+
+## How to remove Notebooks/Collections from Featured Section?
+
+If you want to remove a particular Notebook/Collection from feature , simply **Unpin** them
+like shown below.
+
+  <img src="https://i.imgur.com/wFHEnli.jpg" class="screenshot" alt="Unpin Notebook">
+
+  <img src="https://i.imgur.com/oGwNxD6.jpg" class="screenshot" alt="Unpin Collection">

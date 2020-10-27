@@ -34,6 +34,7 @@ Jovian: The platform for all your Data Science projects
   user-guide/embed
   integrations/slack
   user-guide/topics
+  user-guide/featured
   user-guide/github
   user-guide/submit
   user-guide/pro
