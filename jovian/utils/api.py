@@ -143,6 +143,6 @@ def post_slack_message(data, safe=False):
 def parse_success_response(res):
     result = res.json()
     data = result.get('data')
-    warning = result.get('errors', [])
+    errors = result.get('errors', [])
 
     return data, errors[0].get('message') if isinstance(errors, list) and len(errors) > 0 else None
