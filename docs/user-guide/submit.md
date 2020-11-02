@@ -1,6 +1,6 @@
 # Submit assignments directly from jovian library
 
-[Commit](upload.md) and submit assignments for <a href="https://jovian.ml/learn" target=_blank>Courses hosted on Jovian</a> directly from Jupyter notebook. All you need is an `assignment` code (available in the respective assignment pages) that you need pass to `jovian.submit`.
+[Commit](upload.md) and submit assignments for <a href="https://jovian.ai/learn" target=_blank>Courses hosted on Jovian</a> directly from Jupyter notebook. All you need is an `assignment` code (available in the respective assignment pages) that you need pass to `jovian.submit`.
 
 **Example:**
 
@@ -18,7 +18,7 @@ Incase you just need to submit a notebook already uploaded to Jovian, you can pa
 import jovian
 
 jovian.submit(assignment="zero-to-pandas-a1",
-              notebook_url="https://jovian.ml/PrajwalPrashanth/assignment")
+              notebook_url="https://jovian.ai/PrajwalPrashanth/assignment")
 ```
 
 ### Submit from Kaggle Kernels

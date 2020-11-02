@@ -1,7 +1,7 @@
 import pytest
 from click.testing import CliRunner
 from unittest import mock
-from jovian.cli import main
+from jovian.__main__ import main
 
 
 @pytest.fixture(scope='module')
@@ -102,15 +102,15 @@ def runner():
     ]
 )
 def test_cli(func, cli_args, called_with_args, runner):
-    with mock.patch("jovian.cli.{}".format(func)) as mock_func:
+    with mock.patch("jovian.__main__.{}".format(func)) as mock_func:
         result = runner.invoke(main, cli_args)
         mock_func.assert_called_with(**called_with_args)
         assert result.exit_code == 0
 
 
-@mock.patch("jovian.cli.commit_path")
-@mock.patch("jovian.cli.log")
-@mock.patch("jovian.cli.is_py2", return_value=True)
+@mock.patch("jovian.__main__.commit_path")
+@mock.patch("jovian.__main__.log")
+@mock.patch("jovian.__main__.is_py2", return_value=True)
 def test_commit_py2(mock_py2, mock_log, mock_commit, runner):
     result = runner.invoke(main, ["commit", "my_notebook.ipynb"])
     mock_log.assert_called_with(

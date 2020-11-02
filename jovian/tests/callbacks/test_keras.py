@@ -16,7 +16,8 @@ except:
     pass
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
+# @pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
+@pytest.mark.skip(reason="Disabling until a rewrite for tensorflow2.")
 @pytest.mark.parametrize(
     "data, encoded_type",
     [
@@ -45,7 +46,8 @@ def model():
     return model
 
 
-@pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
+# @pytest.mark.skipif(sys.version_info > (3, 7), reason="requires python3.7 or lower")
+@pytest.mark.skip(reason="Disabling until a rewrite for tensorflow2.")
 @mock.patch("jovian.callbacks.keras.notify")
 @mock.patch("jovian.callbacks.keras.log_hyperparams")
 @mock.patch("jovian.callbacks.keras.log_metrics")

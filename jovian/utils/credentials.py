@@ -34,7 +34,7 @@ WEBAPP_URL_KEY = "WEBAPP_URL"
 HOME = os.path.expanduser('~')
 CONFIG_DIR = HOME + '/.jovian'
 CREDS_FNAME = 'credentials.json'
-CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jovian.ml'
+CONTACT_MSG = 'Looks like there\'s something wrong with your setup. Please report this issue to hello@jovian.ai'
 
 # Config directory management
 
@@ -189,10 +189,10 @@ def ensure_org(check_pro=True):
 
     # Construct the webapp URL
     if org_id:
-        webapp_url = 'https://' + org_id + '.jovian.ml/'
+        webapp_url = 'https://' + org_id + '.jovian.ai/'
     else:
         org_id = DEFAULT_ORG_ID
-        webapp_url = 'https://jovian.ml/'
+        webapp_url = 'https://jovian.ai/'
 
     # Try to retrieve the config.json file from webapp
     try:

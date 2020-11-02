@@ -78,7 +78,7 @@ def test_read_creds_no_creds_folder():
 
 def test_read_creds_folder_exists():
     with fake_creds():
-        expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        expected_result = {"WEBAPP_URL": "https://staging.jovian.ai/",
                            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                            "ORG_ID": "staging",
                            "API_URL": "https://api-staging.jovian.ai",
@@ -121,7 +121,7 @@ def test_read_cred_with_default():
 
 def test_write_creds():
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -132,7 +132,7 @@ def test_write_creds():
 
 def test_write_cred():
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -140,7 +140,7 @@ def test_write_cred():
 
         write_cred('FAKE_KEY', 'fake_value')
 
-        expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        expected_result = {"WEBAPP_URL": "https://staging.jovian.ai/",
                            "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                            "ORG_ID": "staging",
                            "API_URL": "https://api-staging.jovian.ai",
@@ -150,7 +150,7 @@ def test_write_cred():
 
 def test_write_cred_already_exists():
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -164,7 +164,7 @@ def test_write_cred_already_exists():
 
 def test_purge_cred_key():
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -172,7 +172,7 @@ def test_purge_cred_key():
 
         purge_cred_key('GUEST_KEY')
 
-        expected_result = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        expected_result = {"WEBAPP_URL": "https://staging.jovian.ai/",
                            "ORG_ID": "staging",
                            "API_URL": "https://api-staging.jovian.ai"}
 
@@ -227,23 +227,23 @@ def test_request_org_id(mock_prompt):
 
 
 def mock_requests_get(url, *args, **kwargs):
-    if url == 'https://jovian.ml/config.json':
+    if url == 'https://jovian.ai/config.json':
         data = {"API_URL": "https://api.jovian.ai"}
 
         return MockResponse(data, status_code=200)
 
-    elif url == 'https://fakecompany.jovian.ml/config.json':
+    elif url == 'https://fakecompany.jovian.ai/config.json':
 
         return MockResponse({"msg": "Request failed"}, status_code=500, text="Fake internal server error")
 
-    elif url == 'https://jsonerror.jovian.ml/config.json':
+    elif url == 'https://jsonerror.jovian.ai/config.json':
         data = {"API_URL": "https://api.jovian.ai"}
         res = MockResponse(data, status_code=200, text="response of fake json decode error")
         res.json = json_decode_error_raiser
 
         return res
 
-    elif url == 'https://no-api-key.jovian.ml/config.json':
+    elif url == 'https://no-api-key.jovian.ai/config.json':
         data = {}
 
         return MockResponse(data, status_code=200, text="response with no api key")
@@ -277,7 +277,7 @@ def test_ensure_org_some_creds_exist_default_org_id(
         mock_is_flavor_pro, mock_request_org_id, mock_requests_get):
     with fake_creds():
         # setUp
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
                  "API_URL": "https://api-staging.jovian.ai"}
         write_creds(creds)
@@ -286,7 +286,7 @@ def test_ensure_org_some_creds_exist_default_org_id(
 
         assert read_api_url() == "https://api.jovian.ai"
         assert read_org_id() == "public"
-        assert read_webapp_url() == "https://jovian.ml/"
+        assert read_webapp_url() == "https://jovian.ai/"
 
 
 @pytest.mark.parametrize(
@@ -295,31 +295,31 @@ def test_ensure_org_some_creds_exist_default_org_id(
         (
             connection_error_raiser,
             "fakecompany",
-            {"WEBAPP_URL": "https://staging.jovian.ml/",
+            {"WEBAPP_URL": "https://staging.jovian.ai/",
              "API_URL": "https://api-staging.jovian.ai"},
-            "Failed to connect to https://fakecompany.jovian.ml/ . Please verify your organization ID and " +
+            "Failed to connect to https://fakecompany.jovian.ai/ . Please verify your organization ID and " +
             "ensure you are connected to the internet."
         ),
         (
             mock_requests_get,
             "fakecompany",
-            {"WEBAPP_URL": "https://staging.jovian.ml/",
+            {"WEBAPP_URL": "https://staging.jovian.ai/",
              "API_URL": "https://api-staging.jovian.ai"},
-            "Request to retrieve configuration file https://fakecompany.jovian.ml/config.json failed with " +
+            "Request to retrieve configuration file https://fakecompany.jovian.ai/config.json failed with " +
             "status_code 500 . Looks like there's something wrong with your setup.",
         ),
         (
             mock_requests_get,
             "jsonerror",
-            {"WEBAPP_URL": "https://staging.jovian.ml/",
+            {"WEBAPP_URL": "https://staging.jovian.ai/",
              "API_URL": "https://api-staging.jovian.ai"},
-            "Failed to parse JSON configuration file from https://jsonerror.jovian.ml/config.json",
+            "Failed to parse JSON configuration file from https://jsonerror.jovian.ai/config.json",
         ),
         (
             mock_requests_get,
             "no-api-key",
-            {"WEBAPP_URL": "https://staging.jovian.ml/"},
-            "Failed to extract API_URL from JSON configuration file https://no-api-key.jovian.ml/config.json"
+            {"WEBAPP_URL": "https://staging.jovian.ai/"},
+            "Failed to extract API_URL from JSON configuration file https://no-api-key.jovian.ai/config.json"
         ),
     ]
 )
@@ -426,7 +426,7 @@ def test_get_guest_key():
 @mock.patch("uuid.uuid4", return_value=UUID('b66406dc-02c3-471b-ac27-d923fb4c6b1e'))
 def test_get_guest_key_generate_key(mock_uuid4):
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
         write_creds(creds)
@@ -437,7 +437,7 @@ def test_get_guest_key_generate_key(mock_uuid4):
 @mock.patch("jovian.utils.credentials.validate_api_key", return_value=True)
 def test_get_api_key(mock_validate_api_key):
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "ORG_ID": "staging",
                  "API_KEY": "fake_api_key",
                  "API_URL": "https://api-staging.jovian.ai"}
@@ -450,7 +450,7 @@ def test_get_api_key(mock_validate_api_key):
 @mock.patch("jovian.utils.credentials.validate_api_key", return_value=False)
 def test_get_api_key_api_error(mock_validate_api_key, mock_prompt):
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
         write_creds(creds)
@@ -463,7 +463,7 @@ def test_get_api_key_api_error(mock_validate_api_key, mock_prompt):
 @mock.patch("jovian.utils.credentials.validate_api_key", return_value=True)
 def test_get_api_key_request_once(mock_validate_api_key, mock_prompt):
     with fake_creds():
-        creds = {"WEBAPP_URL": "https://staging.jovian.ml/",
+        creds = {"WEBAPP_URL": "https://staging.jovian.ai/",
                  "ORG_ID": "staging",
                  "API_URL": "https://api-staging.jovian.ai"}
         write_creds(creds)
