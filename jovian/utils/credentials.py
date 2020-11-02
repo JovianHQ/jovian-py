@@ -283,7 +283,6 @@ def write_guest_key(token):
 def request_api_key():
     """Ask the user to provide the API key"""
     hide_api_key = in_notebook() or get_platform() != 'windows'
-    log(get_platform())
     log("Please enter your API key ( from " + read_webapp_url() + " ):")
     api_key = click.prompt("API KEY", hide_input=hide_api_key)
     return api_key
