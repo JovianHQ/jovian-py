@@ -96,5 +96,6 @@
   "prettier.trailingComma": "none",
   "prettier.disableLanguages": ["html"],
   "html.format.wrapLineLength": 50,
-  "html.format.wrapAttributes": "align"
+  "html.format.wrapAttributes": "align",
+  "python.pythonPath": "/Users/aakashns/miniconda3/envs/jovian-py-dev/bin/python"
 }

@@ -9,7 +9,7 @@ These commands ensure that you can directly interact with [Jovian](https://jovia
 ```eval_rst
 .. meta::
    :description: Use Jovian from the command line.
-.. click:: jovian.cli:main
+.. click:: jovian.__main__:main
     :prog: jovian
     :show-nested:
     :commands: clone, install, activate, pull, configure, set-project, commit, reset, add-slack, enable-extension, disable-extension, version, help
