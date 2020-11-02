@@ -27,7 +27,7 @@ setuptools.setup(
     author="Jovian",
     author_email="hello@jovian.ai",
     entry_points={
-        'console_scripts': ['jovian=jovian.cli:main'],
+        'console_scripts': ['jovian=jovian.__main__:main'],
     },
     description="Jovian Python SDK",
     long_description=long_description,
