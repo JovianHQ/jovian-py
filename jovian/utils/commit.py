@@ -124,7 +124,7 @@ def commit(message=None,
 
     is_cli = kwargs.get('is_cli', False)
 
-    set_project(project)
+    set_project(project, new_project)
     # To commit colab notebooks
     if in_colab():
         log("Detected Colab notebook...")

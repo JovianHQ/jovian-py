@@ -119,14 +119,14 @@ def test_get_project():
 
 
 @pytest.mark.parametrize(
-    "project, expected",
+    "project, new_project, expected",
     [
-        ("sample_project", "sample_project"),
-        (None, "sample_project"),
-        ("sample_project2", "sample_project2"),
-        (None, "sample_project2")
+        ("sample_project", False, "sample_project"),
+        (None, False, "sample_project"),
+        (None, True, None),
+        ("sample_project2", True, "sample_project2")
     ]
 )
-def test_set_project(project, expected):
-    set_project(project)
+def test_set_project(project, new_project, expected):
+    set_project(project, new_project)
     assert get_project() == expected
