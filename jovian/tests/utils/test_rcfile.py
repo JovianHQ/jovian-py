@@ -121,11 +121,10 @@ def test_get_project():
 @pytest.mark.parametrize(
     "project, expected",
     [
-        ("", None),
-        (None, None),
         ("sample_project", "sample_project"),
-        ("", "sample_project"),
-        (None, "sample_project")
+        (None, "sample_project"),
+        ("sample_project2", "sample_project2"),
+        (None, "sample_project2")
     ]
 )
 def test_set_project(project, expected):
