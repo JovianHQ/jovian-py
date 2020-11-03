@@ -528,7 +528,7 @@ def test_commit_kaggle_notebook(
 @mock.patch("jovian.utils.commit._parse_filename", return_value='__notebook_source__.ipynb')
 @mock.patch("jovian.utils.commit.in_notebook", return_value=True)
 @mock.patch("jovian.utils.commit.perform_kaggle_commit", return_value=None)
-@mock.patch("jovian.utils.commit.get_cached_project", return_value=None)
+@mock.patch("jovian.utils.commit.get_project", return_value=None)
 def test_commit_kaggle_notebook_project_none(
         mock_perform_kaggle_commit, mock_in_notebook, mock_parse_filename, mock_save_notebook, mock_cached_project,
         capsys):

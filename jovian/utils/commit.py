@@ -14,7 +14,7 @@ from jovian.utils.kaggle import perform_kaggle_commit
 from jovian.utils.logger import log
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
 from jovian.utils.rcfile import (get_cached_slug, get_notebook_slug, reset_notebook_slug,
-                                 set_notebook_slug, get_cached_project, set_colab_or_kaggle_project)
+                                 set_notebook_slug, get_project, set_project)
 from jovian.utils.records import get_records, log_git, reset
 from jovian.utils.script import get_script_filename, in_script
 
@@ -124,10 +124,11 @@ def commit(message=None,
 
     is_cli = kwargs.get('is_cli', False)
 
+    set_project(project)
     # To commit colab notebooks
     if in_colab():
         log("Detected Colab notebook...")
-        project = project if project else get_cached_project()
+        project = project or get_project()
         if not project:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
@@ -148,8 +149,6 @@ def commit(message=None,
         _attach_files(files, slug, version)
         _attach_files(outputs, slug, version, output=True)
         _attach_records(slug, version)
-
-        set_colab_or_kaggle_project(project)
 
         log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
@@ -174,7 +173,7 @@ def commit(message=None,
     # Commit from Kaggle (After many bug reports of empty notebook)
     if filename == '__notebook_source__.ipynb':
         log("Detected Kaggle notebook...")
-        project = project if project else get_cached_project()
+        project = project or get_project()
         if not project:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
@@ -186,7 +185,6 @@ def commit(message=None,
                               privacy,
                               project,
                               new_project)
-        set_colab_or_kaggle_project(project)
         return
 
     # Ensure that the file exists
