@@ -23,7 +23,7 @@ def submit(assignment=None, notebook_url=None, **kwargs):
         log("""jovian.submit does not support kaggle notebooks directly.
          Please make a commit first, copy the notebook URL and pass it to jovian.submit.
          eg. jovian.submit(assignment="zero-to-pandas-a1", 
-                           notebook_url="https://jovian.ml/PrajwalPrashanth/assignment")""", error=True)
+                           notebook_url="https://jovian.ai/PrajwalPrashanth/assignment")""", error=True)
         return
 
     post_url = POST_API.format(assignment)

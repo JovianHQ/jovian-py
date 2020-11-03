@@ -1,11 +1,11 @@
-## Embed Jupyter Notebooks with Jovian.ml
+## Embed Jupyter Notebooks with Jovian
 
 ```eval_rst
 .. meta::
    :description: Embed Jupyter notebooks hosted on Jovian to blog and websites.
 ```
 
-If you're a blogger who takes screen snips from your Jupyter Notebooks to attach to your blog or want to showcase your wonderful notebooks on a website and wondering how to embed one. We have heard your worries and are here with this feature, any notebook on <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a> is embeddable.
+If you're a blogger who takes screen snips from your Jupyter Notebooks to attach to your blog or want to showcase your wonderful notebooks on a website and wondering how to embed one. We have heard your worries and are here with this feature, any notebook on <a href="https://jovian.ai/?utm_source=docs" target="_blank"> Jovian </a> is embeddable.
 
 We got you covered if you want to embed any of the following.
 
@@ -19,12 +19,12 @@ We got you covered if you want to embed any of the following.
 
 Before seeing how to to embed, have a preview of the embed right here.Below we have embedded a Jupyter notebook in our docs page, using iframe. You can interact with the notebook like copy the source code of a cell, copy a image output, scroll each cells etc.
 
-<iframe src="https://jovian.ml/embed?url=https://jovian.ml/PrajwalPrashanth/whatsapp-chat-data-analysis/v/9&cellId=49" title="Jovian Viewer" height="430" width="800" frameborder="0" scrolling="auto"></iframe>
+<iframe src="https://jovian.ai/embed?url=https://jovian.ai/PrajwalPrashanth/whatsapp-chat-data-analysis/v/9&cellId=49" title="Jovian Viewer" height="430" width="800" frameborder="0" scrolling="auto"></iframe>
 <br />
 
 ### Open up Embed modal
 
-[Commit](upload.md) a notebook or visit a uploaded notebook on <a href="https://jovian.ml/?utm_source=docs" target="_blank"> Jovian.ml </a>
+[Commit](upload.md) a notebook or visit a uploaded notebook on <a href="https://jovian.ai/?utm_source=docs" target="_blank"> Jovian </a>
 
 #### Click on Embed button
 

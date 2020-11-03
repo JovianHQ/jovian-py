@@ -96,5 +96,7 @@
   "prettier.trailingComma": "none",
   "prettier.disableLanguages": ["html"],
   "html.format.wrapLineLength": 50,
-  "html.format.wrapAttributes": "align"
+  "html.format.wrapAttributes": "auto",
+  "python.pythonPath": "${env:JOVIAN_PY_DEV_PYTHONPATH}"
+
 }
