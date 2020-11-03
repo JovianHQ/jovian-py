@@ -29,9 +29,8 @@ def mock_requests_post(url, *args, **kwargs):
         or url == "https://api-staging.jovian.ai/gist/fake_gist_slug/upload"
     ):
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
-            data = {"data": {"message": "Gist created successfully"}}
-            if kwargs.get("has_warning"):
-                data["errors"] = [{"message": "Uploaded gist has a warning"}]
+            data = {"data": {"message": "Gist created successfully"},
+                    "errors": [{"message": "Uploaded gist has a warning"}]}
             return MockResponse(data, status_code=200)
         else:
             data = {
@@ -332,7 +331,7 @@ def test_get_gist_access_raises_exception(
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
-def test_create_gist_simple_no_gist_slug(mock_requests_post):
+def test_create_gist_simple_no_gist_slug(mock_requests_post, capsys):
     with fake_creds() as dir:
         create_gist_simple(
             filename=os.path.join(dir, ".jovian/credentials.json"),
@@ -340,6 +339,8 @@ def test_create_gist_simple_no_gist_slug(mock_requests_post):
             privacy="private",
             version_title="first version",
         )
+
+        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
         mock_requests_post.assert_called_with(
             "https://api-staging.jovian.ai/gist/create",
@@ -367,7 +368,7 @@ def test_create_gist_simple_no_gist_slug(mock_requests_post):
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
-def test_create_gist_simple_with_gist_slug(mock_requests_post):
+def test_create_gist_simple_with_gist_slug(mock_requests_post, capsys):
     with fake_creds() as dir:
         create_gist_simple(
             filename=os.path.join(dir, ".jovian/credentials.json"),
@@ -375,6 +376,8 @@ def test_create_gist_simple_with_gist_slug(mock_requests_post):
             title="Credentials",
             version_title="first version",
         )
+
+        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
         mock_requests_post.assert_called_with(
             "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
@@ -447,7 +450,7 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
-def test_upload_file(mock_requests_post):
+def test_upload_file(mock_requests_post, capsys):
     with fake_creds() as dir:
         with open(
             os.path.join(dir, ".jovian/credentials.json"), "rb"
@@ -459,6 +462,8 @@ def test_upload_file(mock_requests_post):
                 artifact=True,
                 version_title="fake_version_title",
             )
+
+            assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
             mock_requests_post.assert_called_with(
                 "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
@@ -815,14 +820,13 @@ def test_post_slack_message_safe(
 
 @pytest.mark.parametrize("res, expected",
                          (
-                             (mock_requests_post(
-                                 url="https://api-staging.jovian.ai/gist/create",
-                                 headers={"Authorization": "Bearer fake_api_key"},
-                                 has_warning=True),
-                              ({"message": "Gist created successfully"}, "Uploaded gist has a warning")),
-                             (mock_requests_post(
-                                 url="https://api-staging.jovian.ai/gist/create",
-                                 headers={"Authorization": "Bearer fake_api_key"}),
+                             (MockResponse({"data": {"message": "Gist created successfully"},
+                                            "errors": [{"message": "Uploaded gist has a warning"}]}, 200),
+                                 ({"message": "Gist created successfully"}, "Uploaded gist has a warning")),
+                             (MockResponse({"data": {"message": "Gist created successfully"},
+                                            "errors": "Uploaded gist has a warning"}, 200),
+                              ({"message": "Gist created successfully"}, None)),
+                             (MockResponse({"data": {"message": "Gist created successfully"}}, 200),
                               ({"message": "Gist created successfully"}, None))))
 def test_parse_success_response(res, expected):
     assert parse_success_response(res) == expected
