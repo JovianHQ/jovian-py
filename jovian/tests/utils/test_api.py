@@ -17,6 +17,7 @@ from jovian.utils.api import (
     post_records,
     post_slack_message,
     upload_file,
+    parse_success_response
 )
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
@@ -29,6 +30,8 @@ def mock_requests_post(url, *args, **kwargs):
     ):
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {"data": {"message": "Gist created successfully"}}
+            if kwargs.get("has_warning"):
+                data["errors"] = [{"message": "Uploaded gist has a warning"}]
             return MockResponse(data, status_code=200)
         else:
             data = {
@@ -808,3 +811,18 @@ def test_post_slack_message_safe(
             },
             json={"key": "value"},
         )
+
+
+@pytest.mark.parametrize("res, expected",
+                         (
+                             (mock_requests_post(
+                                 url="https://api-staging.jovian.ai/gist/create",
+                                 headers={"Authorization": "Bearer fake_api_key"},
+                                 has_warning=True),
+                              ({"message": "Gist created successfully"}, "Uploaded gist has a warning")),
+                             (mock_requests_post(
+                                 url="https://api-staging.jovian.ai/gist/create",
+                                 headers={"Authorization": "Bearer fake_api_key"}),
+                              ({"message": "Gist created successfully"}, None))))
+def test_parse_success_response(res, expected):
+    assert parse_success_response(res) == expected
