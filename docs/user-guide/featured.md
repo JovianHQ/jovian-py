@@ -30,7 +30,7 @@ your featured Notebooks and Collections.
 
    <img src="https://i.imgur.com/xCj7qrn.jpg" class="screenshot" alt="OverView Tab">
 
-## How to remove Notebooks/Collections from Featured Section?
+### How to remove Notebooks/Collections from Featured Section?
 
 If you want to remove a particular Notebook/Collection from feature , simply **Unpin** them
 like shown below.
