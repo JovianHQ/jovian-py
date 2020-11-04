@@ -36,7 +36,7 @@ def mock_requests_get(url, *args, **kwargs):
                         "deleted": False,
                         "id": 10,
                         "updatedAt": "Fri, 13 Dec 2019 13:41:27 GMT",
-                        "workspace": "jovian.ml",
+                        "workspace": "jovian.ai",
                     }
                 },
                 "success": True,
@@ -65,7 +65,7 @@ def mock_requests_get(url, *args, **kwargs):
         (
             "fake_api_key",
             "[jovian] Slack already connected."
-            + " \nWorkspace: jovian.ml\nConnected Channel: @rohit"
+            + " \nWorkspace: jovian.ai\nConnected Channel: @rohit"
         ),
         (
             "fake_api_key_error",
@@ -77,7 +77,7 @@ def mock_requests_get(url, *args, **kwargs):
 def test_add_slack(mock_requests_get, api_key, expected_result, capsys):
     with fake_creds():
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": api_key,
@@ -95,7 +95,7 @@ def test_add_slack(mock_requests_get, api_key, expected_result, capsys):
 def test_add_slack_api_error(mock_get):
     with fake_creds():
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
             "API_KEY": "fake_invalid_api_key",

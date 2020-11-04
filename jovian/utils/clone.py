@@ -80,8 +80,8 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
     if not gist:
-        return 
-   
+        return
+
     title = gist['title']
 
     # If fresh clone, create directory
@@ -156,4 +156,7 @@ def _sanitize_notebook(content):
         return content
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
-    return bytes(json.dumps(nb_content), 'utf-8')
+    try:
+        return bytes(json.dumps(nb_content), 'utf-8')
+    except TypeError:
+        return bytes(json.dumps(nb_content)).encode('utf-8')
