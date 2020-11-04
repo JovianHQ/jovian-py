@@ -80,8 +80,8 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     log('Fetching ' + slug + " " + ver_str + "..")
     gist = get_gist(slug, version, fresh)
     if not gist:
-        return 
-   
+        return
+
     title = gist['title']
 
     # If fresh clone, create directory
@@ -156,11 +156,14 @@ def pull(slug=None, version=None):
 
 
 def _sanitize_notebook(content):
-    # Delete  kernalspec entry
+    # Delete  kernelspec entry
     nb_content = json.loads(content.decode("utf-8"))
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
-    return bytes(json.dumps(nb_content), 'utf-8')
+     try:
+        return bytes(json.dumps(nb_content), 'utf-8')
+    except TypeError:
+        return bytes(json.dumps(nb_content)).encode('utf-8')
 
 def _create_path(dir_list=[]):
     # Create path of directories if not exist and chage the current path
@@ -168,3 +171,4 @@ def _create_path(dir_list=[]):
         if not os.path.exists(dir):
             os.makedirs(dir)
         os.chdir(dir)
+

@@ -18,7 +18,7 @@ def fake_creds(config_dir='.jovian', creds_filename='credentials.json', extra=No
         creds = {
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
             "API_URL": "https://api-staging.jovian.ai",
-            "WEBAPP_URL": "https://staging.jovian.ml/",
+            "WEBAPP_URL": "https://staging.jovian.ai/",
             "ORG_ID": "staging",
             "API_KEY": "fake_api_key",
         }

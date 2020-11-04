@@ -7,9 +7,9 @@
 
 ### Version control
 
-If you're used to creating many duplicate versions of notebooks with slight modifications and long file names. Look no further, <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a> will be your version control for notebooks.
+If you're used to creating many duplicate versions of notebooks with slight modifications and long file names. Look no further, <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> will be your version control for notebooks.
 
-`jovian.commit` records all the versions under same notebook project. So, each change can be a version by author and collaborators which can be easily toggled in the <a href="https://jovian.ml?utm_source=docs" target=_blank> website </a>
+`jovian.commit` records all the versions under same notebook project. So, each change can be a version by author and collaborators which can be easily toggled in the <a href="https://jovian.ai?utm_source=docs" target=_blank> website </a>
 
 <img src="https://imgur.com/pkLzNum.png" class="screenshot" alt="jovian jupyter version control" >
 
@@ -23,7 +23,7 @@ All the versions are comparable, you can view additions, deletions made among an
 
 **How to view the differences?**
 
-1. [Commit](../api-reference/commit) different versions and visit <a href="https://jovian.ml?utm_source=docs" target=_blank> Jovian.ml </a>.
+1. [Commit](../api-reference/commit) different versions and visit <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a>.
 2. Click on `Version` drop down on the right top corner.
 3. Click on `Compare Versions`
 4. Select any 2 versions with the use of check boxes and click on `View Diff` button.
