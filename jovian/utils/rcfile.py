@@ -81,10 +81,7 @@ def get_project():
     return _current_project
 
 
-def set_project(project, new_project):
+def set_project(project):
     """Cache project parameter"""
     global _current_project
-    if new_project and not project:
-        _current_project = None
-    if project:
-        _current_project = project
+    _current_project = project

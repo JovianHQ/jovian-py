@@ -124,11 +124,10 @@ def commit(message=None,
 
     is_cli = kwargs.get('is_cli', False)
 
-    set_project(project, new_project)
     # To commit colab notebooks
     if in_colab():
         log("Detected Colab notebook...")
-        project = project or get_project()
+        project = project or (not new_project and get_project())
         if not project:
             log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
             return
@@ -149,6 +148,8 @@ def commit(message=None,
         _attach_files(files, slug, version)
         _attach_files(outputs, slug, version, output=True)
         _attach_records(slug, version)
+
+        set_project(project)
 
         log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
@@ -185,6 +186,7 @@ def commit(message=None,
                               privacy,
                               project,
                               new_project)
+        set_project(project)
         return
 
     # Ensure that the file exists
