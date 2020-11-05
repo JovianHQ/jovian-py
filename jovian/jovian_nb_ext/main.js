@@ -365,7 +365,11 @@ define([
       const filename = Jupyter.notebook.notebook_name;
       const code = `
 from jovian.utils.rcfile import get_notebook_slug
-get_notebook_slug("${filename}")`;
+get_notebook_slug("${filename}")
+import jovian
+jovian.utils.jupyter.get_notebook_name_saved = lambda: "${filename}"      
+`;
+
 
       Jupyter.notebook.kernel.execute(code);
     };
