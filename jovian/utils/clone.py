@@ -109,7 +109,10 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
                 content = _sanitize_notebook(get(f['rawUrl']).content)
             else:
                 content = get(f['rawUrl']).content
-            with open(f['filename'], 'wb') as fp:
+            if f['folder']:
+                os.makedirs(f['folder'], exist_ok=True)
+            filepath = os.path.join(f['folder'] or '', f['filename'])
+            with open(filepath, 'wb') as fp:
                 fp.write(content)
 
         # Create .jovianrc for a fresh clone
