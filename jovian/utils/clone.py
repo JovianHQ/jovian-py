@@ -109,8 +109,8 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
                 content = _sanitize_notebook(get(f['rawUrl']).content)
             else:
                 content = get(f['rawUrl']).content
-            if f['folder']:
-                os.makedirs(f['folder'], exist_ok=True)
+            if f['folder'] and not os.path.exists(f['folder']):
+                os.makedirs(f['folder'])
             filepath = os.path.join(f['folder'] or '', f['filename'])
             with open(filepath, 'wb') as fp:
                 fp.write(content)
