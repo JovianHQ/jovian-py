@@ -17,9 +17,6 @@ For each notebook and collection you have been provided with the option to **Pin
 
 ```eval_rst
 .. note:: You cannot pin private/secret notebooks and private collections.
-```
-
-```eval_rst
 .. note:: You can pin maximum 6 Notebooks/Collections at a time.
 ```
 
@@ -29,6 +26,10 @@ Navigate to Overview section after you have pinned the notebook/collection.There
 your featured Notebooks and Collections.
 
    <img src="https://i.imgur.com/xCj7qrn.jpg" class="screenshot" alt="OverView Tab">
+
+```eval_rst
+.. note:: If no notebooks/collections are pinned, we'll show 6 most recent notebooks/collections on your profile.
+```
 
 ### How to remove Notebooks/Collections from Featured Section?
 

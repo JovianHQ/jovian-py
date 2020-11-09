@@ -9,8 +9,9 @@ from unittest.mock import ANY, call
 import pytest
 
 from jovian.tests.resources.shared import fake_creds, fake_records, mock_git_repo, temp_directory, touch
-from jovian.utils.commit import (_attach_file, _attach_files, _attach_records, _capture_environment, _list_ipynb_files,
-                                 _parse_filename, _parse_project, _perform_git_commit, commit, commit_path)
+from jovian.utils.commit import (
+    _attach_file, _attach_files, _attach_records, _capture_environment, _list_ipynb_files, _parse_filename,
+    _parse_project, _perform_git_commit, commit, commit_path)
 from jovian.utils.error import CondaError
 
 
@@ -527,8 +528,10 @@ def test_commit_kaggle_notebook(
 @mock.patch("jovian.utils.commit._parse_filename", return_value='__notebook_source__.ipynb')
 @mock.patch("jovian.utils.commit.in_notebook", return_value=True)
 @mock.patch("jovian.utils.commit.perform_kaggle_commit", return_value=None)
+@mock.patch("jovian.utils.commit.get_project", return_value=None)
 def test_commit_kaggle_notebook_project_none(
-        mock_perform_kaggle_commit, mock_in_notebook, mock_parse_filename, mock_save_notebook, capsys):
+        mock_perform_kaggle_commit, mock_in_notebook, mock_parse_filename, mock_save_notebook, mock_cached_project,
+        capsys):
 
     commit()
     expected_result_err = dedent("""

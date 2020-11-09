@@ -9,7 +9,7 @@ import pytest
 from jovian.tests.resources.shared import temp_directory
 from jovian.utils.constants import RC_FILENAME
 from jovian.utils.rcfile import (get_cached_slug, get_notebook_slug, get_rcdata, make_rcdata, rcfile_exists,
-                                 reset_notebook_slug, save_rcdata, set_notebook_slug)
+                                 reset_notebook_slug, save_rcdata, set_notebook_slug, set_project, get_project)
 
 _data = {
     "notebooks": {
@@ -111,3 +111,20 @@ def test_reset_notebook_slug():
     assert get_cached_slug() == "f67108fc906341d8b15209ce88ebc3d2"
     reset_notebook_slug()
     assert get_cached_slug() == None
+
+
+@mock.patch("jovian.utils.rcfile._current_project", "sample_project")
+def test_get_project():
+    assert get_project() == "sample_project"
+
+
+@pytest.mark.parametrize(
+    "project, expected",
+    [
+        ("sample_project", "sample_project"),
+        ("sample_project2", "sample_project2")
+    ]
+)
+def test_set_project(project, expected):
+    set_project(project)
+    assert get_project() == expected
