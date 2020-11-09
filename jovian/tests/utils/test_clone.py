@@ -1,5 +1,6 @@
 import os
 import shutil
+import json
 from contextlib import contextmanager
 from unittest import mock
 from unittest.mock import call
@@ -8,7 +9,7 @@ from textwrap import dedent
 import pytest
 
 from jovian.tests.resources.shared import MockResponse, fake_creds, temp_directory
-from jovian.utils.clone import _h, clone, get_gist, post_clone_msg, pull
+from jovian.utils.clone import _h, clone, get_gist, post_clone_msg, pull, _sanitize_notebook
 from jovian import __version__
 
 HEADERS = {"Authorization": "Bearer fake_api_key",
@@ -74,13 +75,11 @@ def test_get_gist(mock_get, gist, called_with_url):
 
         mock_get.assert_called_with(called_with_url, headers=HEADERS)
 
-
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 404))
 def test_get_gist_raises_exception(mock_get):
     with fake_creds():
         with pytest.raises(Exception):
             get_gist('does-not-exist', 3, fresh=True)
-
 
 def test_post_clone_message(capsys):
     post_clone_msg('jovian-tutorial')
@@ -110,28 +109,30 @@ def test_post_clone_message(capsys):
 @mock.patch("jovian.utils.clone.get_gist")
 def test_clone(mock_get_gist, mock_requests_get):
     with temp_directory() as dir:
-        mock_get_gist.return_value = FAKE_GIST
+        fake_gists=[ FAKE_GIST, {}]
+        for gist in fake_gists:
+            mock_get_gist.return_value = gist
 
-        get1, get2 = mock.Mock(), mock.Mock()
-        get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
+            get1, get2 = mock.Mock(), mock.Mock()
+            get1.content, get2.content = b'{"notebook": "content"}', b"environment content"
 
-        mock_requests_get.side_effect = [get1, get2]
+            mock_requests_get.side_effect = [get1, get2]
 
-        clone('aakashns/metrics-example', version='3')
+            clone('aakashns/metrics-example', version='3')
 
-        os.chdir(dir)
+            os.chdir(dir)
 
-        mock_get_gist.assert_called_with('aakashns/metrics-example', '3', True)
-        mock_requests_get.assert_has_calls([
-            call("https://storage.com/slug1"),
-            call("https://storage.com/slug2")
-        ])
+            mock_get_gist.assert_called_with('aakashns/metrics-example', '3', True)
+            mock_requests_get.assert_has_calls([
+                call("https://storage.com/slug1"),
+                call("https://storage.com/slug2")
+            ])
 
-        # Check that folder was created
-        assert os.listdir() == ["metrics-example"]
+            # Check that folder was created
+            assert os.listdir() == ["metrics-example"]
 
-        # Check that files were downloaded
-        assert set(os.listdir("metrics-example")) == {".jovianrc", "environment.yml", "metrics-example.ipynb"}
+            # Check that files were downloaded
+            assert set(os.listdir("metrics-example")) == {".jovianrc", "environment.yml", "metrics-example.ipynb"}
 
 
 @mock.patch("jovian.utils.clone.get")
@@ -265,3 +266,27 @@ def test_pull_get_latest_notebooks(mock_clone):
             call('aakashns/jovian-tutorial', None, fresh=False),
         ]
         mock_clone.assert_has_calls(calls, any_order=True)
+
+@pytest.mark.parametrize(
+    "content, result",
+    [
+        ( 
+            b"notebook content",
+            b"notebook content"
+        ),
+        (   
+            bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'utf-8'),
+            bytes(json.dumps({'metadata':{'key':'data'}}), 'utf-8')
+        )
+    ]
+)
+def test_sanitize_notebook(content, result):
+    assert _sanitize_notebook(content) == result
+
+def mock_json_dumps(*args, **kwargs):
+    raise TypeError('fake type error')
+
+@mock.patch("json.dumps", side_effect=mock_json_dumps)
+def test_sanitize_notebook_for_python_2(mock_json_dumps):
+        with pytest.raises(TypeError):
+            _sanitize_notebook(str({'metadata':{'key':'data'}}).encode('utf-8'))
