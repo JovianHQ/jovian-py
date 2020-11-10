@@ -25,13 +25,15 @@ FAKE_GIST = {
         {
             "filename": "metrics-example.ipynb",
             "artifact": False,
-            "rawUrl": "https://storage.com/slug1"
+            "rawUrl": "https://storage.com/slug1",
+            "folder": "folder"
         },
         {
             "filename": "environment.yml",
             "artifact": False,
-            "rawUrl": "https://storage.com/slug2"
-        },
+            "rawUrl": "https://storage.com/slug2",
+            "folder": "folder"
+        }
     ],
 }
 
@@ -74,6 +76,19 @@ def test_get_gist(mock_get, gist, called_with_url):
         get_gist(gist, 3, fresh=True)
 
         mock_get.assert_called_with(called_with_url, headers=HEADERS)
+
+def mock_get_gist(gist, version, fresh=True, *args, **kwargs):
+        first_gist=gist
+        first_version=version
+        yield get_gist(gist, version, fresh=True)
+        assert mock_get_gist.assert_called_with(first_gist, first_version, True)
+
+@mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 401))
+@mock.patch("jovian.utils.credentials.get_api_key")
+@mock.patch("jovian.utils.clone.get_gist", side_effect=mock_get_gist)
+def test_get_gist_recursive(mock_get_gist, mock_get_api_key, mock_get, gist="fake_gist_slug"):
+    with fake_creds():
+        get_gist(gist, 3, fresh=True)
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 404))
 def test_get_gist_raises_exception(mock_get):
@@ -132,7 +147,8 @@ def test_clone(mock_get_gist, mock_requests_get):
             assert os.listdir() == ["metrics-example"]
 
             # Check that files were downloaded
-            assert set(os.listdir("metrics-example")) == {".jovianrc", "environment.yml", "metrics-example.ipynb"}
+            assert set(os.listdir("metrics-example")) == {".jovianrc", "folder"}
+            assert set(os.listdir("metrics-example/folder")) == {"environment.yml", "metrics-example.ipynb"}
 
 
 @mock.patch("jovian.utils.clone.get")
@@ -193,7 +209,8 @@ def test_clone_fresh_false(mock_get_gist, mock_requests_get):
         assert "metrics-example" not in os.listdir()
 
         # Check that files were downloaded
-        assert set(os.listdir()) == {"environment.yml", "metrics-example.ipynb"}
+        assert set(os.listdir()) == {'folder'}
+        assert set(os.listdir('folder')) == {"environment.yml", "metrics-example.ipynb"}
 
 
 @mock.patch("jovian.utils.clone.get")
@@ -283,10 +300,10 @@ def test_pull_get_latest_notebooks(mock_clone):
 def test_sanitize_notebook(content, result):
     assert _sanitize_notebook(content) == result
 
-def mock_json_dumps(*args, **kwargs):
+def mock_bytes(*args, **kwargs):
     raise TypeError('fake type error')
 
-@mock.patch("json.dumps", side_effect=mock_json_dumps)
-def test_sanitize_notebook_for_python_2(mock_json_dumps):
+@mock.patch("__main__.bytes", side_effect=mock_bytes)
+def test_sanitize_notebook_raises_exception(mock_bytes):
         with pytest.raises(TypeError):
-            _sanitize_notebook(str({'metadata':{'key':'data'}}).encode('utf-8'))
+            _sanitize_notebook(str("abc").encode('utf-8'))
