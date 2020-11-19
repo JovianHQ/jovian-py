@@ -22,7 +22,7 @@ from jovian.utils.script import get_script_filename, in_script
 def commit(message=None,
            files=[],
            outputs=[],
-           environment='auto',
+           environment=None,
            privacy='auto',
            filename=None,
            project=None,
