@@ -23,11 +23,13 @@ FAKE_GIST = {
     "files": [
         {
             "filename": "metrics-example.ipynb",
+            "folder": None,
             "artifact": False,
             "rawUrl": "https://storage.com/slug1"
         },
         {
             "filename": "environment.yml",
+            "folder": None,
             "artifact": False,
             "rawUrl": "https://storage.com/slug2"
         },
