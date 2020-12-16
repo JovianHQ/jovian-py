@@ -340,8 +340,6 @@ def test_create_gist_simple_no_gist_slug(mock_requests_post, capsys):
             version_title="first version",
         )
 
-        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
-
         mock_requests_post.assert_called_with(
             "https://api-staging.jovian.ai/gist/create",
             data={
@@ -376,8 +374,6 @@ def test_create_gist_simple_with_gist_slug(mock_requests_post, capsys):
             title="Credentials",
             version_title="first version",
         )
-
-        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
         mock_requests_post.assert_called_with(
             "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
@@ -449,7 +445,33 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
         )
 
 
-@mock.patch("requests.post", side_effect=mock_requests_post)
+@mock.patch('requests.post', return_value=MockResponse({"data": {"message": "Gist created successfully"},
+                                                        "errors": [{"message": "Uploaded gist has a warning"}]}, 200))
+def test_create_gist_simple_has_warning(mock_post_request, capsys):
+    with fake_creds() as dir:
+        create_gist_simple(
+            filename=os.path.join(dir, ".jovian/credentials.json")
+        )
+
+        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
+
+
+@mock.patch('requests.post', return_value=MockResponse({"data": {"message": "Gist created successfully"},
+                                                        "errors": [{"message": "Uploaded gist has a warning"}]}, 200))
+def test_upload_file_has_warning(mock_post_request, capsys):
+    with fake_creds() as dir:
+        with open(
+            os.path.join(dir, ".jovian/credentials.json"), "rb"
+        ) as f:
+            upload_file(
+                gist_slug="fake_gist_slug",
+                file=("credentials.json", f)
+            )
+
+            assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
+
+
+@ mock.patch("requests.post", side_effect=mock_requests_post)
 def test_upload_file(mock_requests_post, capsys):
     with fake_creds() as dir:
         with open(
@@ -462,8 +484,6 @@ def test_upload_file(mock_requests_post, capsys):
                 artifact=True,
                 version_title="fake_version_title",
             )
-
-            assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
             mock_requests_post.assert_called_with(
                 "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
