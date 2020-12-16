@@ -331,7 +331,7 @@ def test_get_gist_access_raises_exception(
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
-def test_create_gist_simple_no_gist_slug(mock_requests_post, capsys):
+def test_create_gist_simple_no_gist_slug(mock_requests_post):
     with fake_creds() as dir:
         create_gist_simple(
             filename=os.path.join(dir, ".jovian/credentials.json"),
@@ -366,7 +366,7 @@ def test_create_gist_simple_no_gist_slug(mock_requests_post, capsys):
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
-def test_create_gist_simple_with_gist_slug(mock_requests_post, capsys):
+def test_create_gist_simple_with_gist_slug(mock_requests_post):
     with fake_creds() as dir:
         create_gist_simple(
             filename=os.path.join(dir, ".jovian/credentials.json"),
@@ -472,7 +472,7 @@ def test_upload_file_has_warning(mock_post_request, capsys):
 
 
 @ mock.patch("requests.post", side_effect=mock_requests_post)
-def test_upload_file(mock_requests_post, capsys):
+def test_upload_file(mock_requests_post):
     with fake_creds() as dir:
         with open(
             os.path.join(dir, ".jovian/credentials.json"), "rb"
