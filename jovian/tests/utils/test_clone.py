@@ -83,6 +83,7 @@ def mock_get_gist(gist, version, fresh=True, *args, **kwargs):
         yield get_gist(gist, version, fresh=True)
         assert mock_get_gist.assert_called_with(first_gist, first_version, True)
 
+
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 401))
 @mock.patch("jovian.utils.credentials.get_api_key")
 @mock.patch("jovian.utils.clone.get_gist", side_effect=mock_get_gist)
@@ -90,11 +91,13 @@ def test_get_gist_recursive(mock_get_gist, mock_get_api_key, mock_get, gist="fak
     with fake_creds():
         get_gist(gist, 3, fresh=True)
 
+
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 404))
 def test_get_gist_raises_exception(mock_get):
     with fake_creds():
         with pytest.raises(Exception):
             get_gist('does-not-exist', 3, fresh=True)
+
 
 def test_post_clone_message(capsys):
     post_clone_msg('jovian-tutorial')
@@ -284,6 +287,8 @@ def test_pull_get_latest_notebooks(mock_clone):
         ]
         mock_clone.assert_has_calls(calls, any_order=True)
 
+notebook = bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'utf-8')
+
 @pytest.mark.parametrize(
     "content, result",
     [
@@ -292,18 +297,18 @@ def test_pull_get_latest_notebooks(mock_clone):
             b"notebook content"
         ),
         (   
-            bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'utf-8'),
+            notebook,
             bytes(json.dumps({'metadata':{'key':'data'}}), 'utf-8')
         )
     ]
 )
 def test_sanitize_notebook(content, result):
-    assert _sanitize_notebook(content) == result
+   assert _sanitize_notebook(content) == result
 
 def mock_bytes(*args, **kwargs):
     raise TypeError('fake type error')
 
 @mock.patch("__main__.bytes", side_effect=mock_bytes)
 def test_sanitize_notebook_raises_exception(mock_bytes):
-        with pytest.raises(TypeError):
-            _sanitize_notebook(str("abc").encode('utf-8'))
+    with pytest.raises(TypeError):
+        _sanitize_notebook(notebook)
