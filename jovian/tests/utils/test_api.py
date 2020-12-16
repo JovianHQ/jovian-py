@@ -29,8 +29,7 @@ def mock_requests_post(url, *args, **kwargs):
         or url == "https://api-staging.jovian.ai/gist/fake_gist_slug/upload"
     ):
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
-            data = {"data": {"message": "Gist created successfully"},
-                    "errors": [{"message": "Uploaded gist has a warning"}]}
+            data = {"data": {"message": "Gist created successfully"}}
             return MockResponse(data, status_code=200)
         else:
             data = {
