@@ -17,6 +17,7 @@ from jovian.utils.api import (
     post_records,
     post_slack_message,
     upload_file,
+    parse_success_response
 )
 from jovian.utils.credentials import write_creds
 from jovian.utils.error import ApiError
@@ -443,7 +444,18 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
         )
 
 
-@mock.patch("requests.post", side_effect=mock_requests_post)
+@mock.patch('requests.post', return_value=MockResponse({"data": {"message": "Gist created successfully"},
+                                                        "errors": [{"message": "Uploaded gist has a warning"}]}, 200))
+def test_create_gist_simple_has_warning(mock_post_request, capsys):
+    with fake_creds() as dir:
+        create_gist_simple(
+            filename=os.path.join(dir, ".jovian/credentials.json")
+        )
+
+        assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
+
+
+@ mock.patch("requests.post", side_effect=mock_requests_post)
 def test_upload_file(mock_requests_post):
     with fake_creds() as dir:
         with open(
@@ -524,6 +536,21 @@ def test_upload_file_raises_api_error(mock_requests_post, mock_get_api_key):
             str(context.value)
             == "File upload failed: (HTTP 404) Gist not found"
         )
+
+
+@mock.patch('requests.post', return_value=MockResponse({"data": {"message": "Gist created successfully"},
+                                                        "errors": [{"message": "Uploaded gist has a warning"}]}, 200))
+def test_upload_file_has_warning(mock_post_request, capsys):
+    with fake_creds() as dir:
+        with open(
+            os.path.join(dir, ".jovian/credentials.json"), "rb"
+        ) as f:
+            upload_file(
+                gist_slug="fake_gist_slug",
+                file=("credentials.json", f)
+            )
+
+            assert capsys.readouterr().err.strip() == '[jovian] Error: Uploaded gist has a warning'.strip()
 
 
 @mock.patch("requests.post", side_effect=mock_requests_post)
@@ -808,3 +835,17 @@ def test_post_slack_message_safe(
             },
             json={"key": "value"},
         )
+
+
+@pytest.mark.parametrize("res, expected",
+                         (
+                             (MockResponse({"data": {"message": "Gist created successfully"},
+                                            "errors": [{"message": "Uploaded gist has a warning"}]}, 200),
+                                 ({"message": "Gist created successfully"}, "Uploaded gist has a warning")),
+                             (MockResponse({"data": {"message": "Gist created successfully"},
+                                            "errors": "Uploaded gist has a warning"}, 200),
+                              ({"message": "Gist created successfully"}, None)),
+                             (MockResponse({"data": {"message": "Gist created successfully"}}, 200),
+                              ({"message": "Gist created successfully"}, None))))
+def test_parse_success_response(res, expected):
+    assert parse_success_response(res) == expected

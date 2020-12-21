@@ -1,6 +1,6 @@
 import sys
 
-from jovian.utils.api import get_current_user, _h
+from jovian.utils.api import get_current_user, _h, parse_success_response
 from jovian.utils.error import ApiError
 from jovian.utils.logger import log
 from jovian.utils.request import post, pretty
@@ -43,5 +43,8 @@ def perform_colab_commit(project, privacy):
                headers=auth_headers)
 
     if res.status_code == 200:
-        return res.json()['data']
+        data, warning = parse_success_response(res)
+        if warning:
+            log(warning, error=True)
+        return data
     raise ApiError('Colab commit failed: ' + pretty(res))
