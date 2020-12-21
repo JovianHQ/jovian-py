@@ -159,7 +159,11 @@ def _sanitize_notebook(content):
         return content
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']
+    return _bytes(json.dumps(nb_content))
+
+
+def _bytes(content):
     try:
-        return bytes(json.dumps(nb_content), 'utf-8')
+        return bytes(content, 'utf-8')
     except TypeError:
-        return bytes(json.dumps(nb_content)).encode('utf-8')
+        return bytes(content).encode('utf-8')

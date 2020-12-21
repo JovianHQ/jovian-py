@@ -78,10 +78,7 @@ def test_get_gist(mock_get, gist, called_with_url):
         mock_get.assert_called_with(called_with_url, headers=HEADERS)
 
 def mock_get_gist(gist, version, fresh=True, *args, **kwargs):
-        first_gist=gist
-        first_version=version
         yield get_gist(gist, version, fresh=True)
-        assert mock_get_gist.assert_called_with(first_gist, first_version, True)
 
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 401))
@@ -287,7 +284,7 @@ def test_pull_get_latest_notebooks(mock_clone):
         ]
         mock_clone.assert_has_calls(calls, any_order=True)
 
-notebook = bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'utf-8')
+
 
 @pytest.mark.parametrize(
     "content, result",
@@ -297,18 +294,10 @@ notebook = bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'ut
             b"notebook content"
         ),
         (   
-            notebook,
+            bytes(json.dumps({'metadata':{'key':'data','kernelspec':'data'}}),'utf-8'),
             bytes(json.dumps({'metadata':{'key':'data'}}), 'utf-8')
         )
     ]
 )
 def test_sanitize_notebook(content, result):
-   assert _sanitize_notebook(content) == result
-
-def mock_bytes(*args, **kwargs):
-    raise TypeError('fake type error')
-
-@mock.patch("__main__.bytes", side_effect=mock_bytes)
-def test_sanitize_notebook_raises_exception(mock_bytes):
-    with pytest.raises(TypeError):
-        _sanitize_notebook(notebook)
+    assert _sanitize_notebook(content) == result
