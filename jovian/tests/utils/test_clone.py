@@ -78,7 +78,7 @@ def test_get_gist(mock_get, gist, called_with_url):
         mock_get.assert_called_with(called_with_url, headers=HEADERS)
 
 def mock_get_gist(gist, version, fresh=True, *args, **kwargs):
-    yield get_gist(gist, version, fresh=True)
+    return "fake_gist"
 
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 401))
@@ -86,7 +86,7 @@ def mock_get_gist(gist, version, fresh=True, *args, **kwargs):
 @mock.patch("jovian.utils.clone.get_gist", side_effect=mock_get_gist)
 def test_get_gist_recursive(mock_get_gist, mock_get_api_key, mock_get, gist="fake_gist_slug"):
     with fake_creds():
-        get_gist(gist, 3, fresh=True)
+        assert get_gist(gist, 3, fresh=True) == "fake_gist"
 
 
 @mock.patch("jovian.utils.clone.get", return_value=MockResponse({'data': {'key': 'value'}}, 404))
