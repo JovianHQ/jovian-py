@@ -127,12 +127,12 @@ def commit(message=None,
     # To commit colab notebooks
     if in_colab():
         log("Detected Colab notebook...")
+        if get_colab_file_id() is None:
+            log("jovian.commit doesn't work on Colab unless the notebook was created and executed from Jovian. Make sure to run the first code cell at the top after executing from Jovian. Alternatively, you can download this notebook and upload it manually to Jovian. Learn more: https://jovian.ai/docs/user-guide/run.html#run-on-colab", error=True)
+            return
         project = project or (not new_project and get_project())
         if not project:
-            log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
-            return
-        if get_colab_file_id() is None:
-            log("Colab File Id is not provided. Make sure to execute the cell where the Id is set.", error=True)
+            log("Please provide the project argument for the first commit e.g. jovian.commit(project='my-project')", error=True)
             return
 
         res = perform_colab_commit(project, privacy)
