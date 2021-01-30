@@ -13,7 +13,9 @@ from textwrap import dedent
 import math
 
 
-def _show_test_case(inputs, expected):
+def _show_test_case(test_case):
+    inputs = test_case['input']
+    expected = test_case['output']
     print(dedent("""
     Input:
     {}
@@ -36,13 +38,13 @@ def _show_result(result, runtime, message):
     """.format(result, runtime, message)))
 
 
-def evaluate_test_case(function, test_case, display=False):
+def evaluate_test_case(function, test_case, display=True):
     """Check if `function` works as expected for `test_case`"""
     inputs = test_case['input']
     expected = test_case['output']
 
-    if not display:
-        _show_test_case(inputs, expected)
+    if display:
+        _show_test_case(test_case)
 
     start = timer()
     result = function(**inputs)
@@ -51,17 +53,30 @@ def evaluate_test_case(function, test_case, display=False):
     passed = result == expected
     message = "\033[92mPASSED\033[0m" if passed else "\033[91mFAILED\033[0m"
 
-    if not display:
+    if display:
         _show_result(result, runtime, message)
 
     return result, passed, runtime
 
 
-def evaluate_test_cases(function, test_cases):
+def evaluate_test_cases(function, test_cases, error_only=False):
     results = []
     for i, test_case in enumerate(test_cases):
-        print("\n\033[1mTEST CASE #{}\033[0m".format(i))
-        results.append(evaluate_test_case(function, test_case))
+        if not error_only:
+            print("\n\033[1mTEST CASE #{}\033[0m".format(i))
+        result = evaluate_test_case(function, test_case, display=False)
+        results.append(result)
+        if error_only and not result[1]:
+            print("\n\033[1mTEST CASE #{}\033[0m".format(i))
+        if not error_only or not result[1]:
+            _show_test_case(test_case)
+            _show_result(*result)
+
+    total = len(results)
+    num_passed = sum([r[1] for r in results])
+    print("\n\033[1mSUMMARY\033[0m")
+    print("\nTOTAL: {}, \033[92mPASSED\033[0m: {}, \033[91mFAILED\033[0m: {}".format(
+        total, num_passed, total - num_passed))
     return results
 
 
