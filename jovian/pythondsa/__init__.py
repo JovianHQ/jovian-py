@@ -25,7 +25,9 @@ def _show_test_case(test_case):
     """.format(inputs, expected)))
 
 
-def _show_result(result, runtime, message):
+def _show_result(result):
+    actual_output, passed, runtime = result
+    message = "\033[92mPASSED\033[0m" if passed else "\033[91mFAILED\033[0m"
     print(dedent("""
     Actual Output:
     {}
@@ -35,28 +37,30 @@ def _show_result(result, runtime, message):
 
     Test Result:
     {}
-    """.format(result, runtime, message)))
+    """.format(actual_output, runtime, message)))
 
 
 def evaluate_test_case(function, test_case, display=True):
     """Check if `function` works as expected for `test_case`"""
     inputs = test_case['input']
-    expected = test_case['output']
+    output = test_case['output']
 
     if display:
         _show_test_case(test_case)
 
     start = timer()
-    result = function(**inputs)
+    actual_output = function(**inputs)
     end = timer()
+
     runtime = math.ceil((end - start)*1e6)/1000
-    passed = result == expected
-    message = "\033[92mPASSED\033[0m" if passed else "\033[91mFAILED\033[0m"
+    passed = actual_output == output
+
+    result = actual_output, passed, runtime
 
     if display:
-        _show_result(result, runtime, message)
+        _show_result(result)
 
-    return result, passed, runtime
+    return result
 
 
 def evaluate_test_cases(function, test_cases, error_only=False):
@@ -70,7 +74,7 @@ def evaluate_test_cases(function, test_cases, error_only=False):
             print("\n\033[1mTEST CASE #{}\033[0m".format(i))
         if not error_only or not result[1]:
             _show_test_case(test_case)
-            _show_result(*result)
+            _show_result(result)
 
     total = len(results)
     num_passed = sum([r[1] for r in results])
