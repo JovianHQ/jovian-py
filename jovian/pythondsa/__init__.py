@@ -13,6 +13,13 @@ from textwrap import dedent
 import math
 
 
+def _str_trunc(data, size=100):
+    data_str = str(data)
+    if len(data_str) > size + 3:
+        return data_str[:size] + '...'
+    return data_str
+
+
 def _show_test_case(test_case):
     inputs = test_case['input']
     expected = test_case['output']
@@ -22,7 +29,7 @@ def _show_test_case(test_case):
 
     Expected Output:
     {}
-    """.format(inputs, expected)))
+    """.format(_str_trunc(inputs), _str_trunc(expected))))
 
 
 def _show_result(result):
@@ -37,7 +44,7 @@ def _show_result(result):
 
     Test Result:
     {}
-    """.format(actual_output, runtime, message)))
+    """.format(_str_trunc(actual_output), runtime, message)))
 
 
 def evaluate_test_case(function, test_case, display=True):
@@ -63,7 +70,7 @@ def evaluate_test_case(function, test_case, display=True):
     return result
 
 
-def evaluate_test_cases(function, test_cases, error_only=False):
+def evaluate_test_cases(function, test_cases, error_only=False, summary_only=False):
     results = []
     for i, test_case in enumerate(test_cases):
         if not error_only:
