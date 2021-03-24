@@ -52,7 +52,7 @@ The User hereby represents and warrants that it shall:
 
 **Payment and Taxes**
 
-In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://www.jovian.ai/pricing](https://www.jovian.ai/pricing).
+In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://jovian.ai/pro](https://jovian.ai/pro).
 
 The User must pay the charges by bank transfer or using such payment details as are notified by the Company to the User from time to time. Except as specifically prescribed in this TOS, each Party is separately responsible for their own taxes payable in connection with this Agreement. All sums payable (if any) shall be paid in full, free of all deductions and withholdings of any kind except where any deduction or withholding is required by law. The charges exclude GST , or other applicable taxes. Where GST or other tax is payable, User agrees that the Charges will be increased by an amount equivalent to the GST, or other taxes as applicable.
 
