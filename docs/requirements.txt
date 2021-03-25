@@ -5,5 +5,5 @@ sphinx==2.2.0
 sphinx-sitemap==2.1.0
 git+https://github.com/JovianML/sphinx-click.git
 click==7.0
-pyyaml==5.1.2
+pyyaml==5.4
 jupyter==1.0.0
