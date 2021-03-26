@@ -7,7 +7,7 @@ attrs==19.1.0
 autopep8==1.4.4
 Babel==2.7.0
 backcall==0.1.0
-bleach==3.1.4
+bleach==3.3.0
 bumpversion==0.5.3
 certifi==2018.8.24
 chardet==3.0.4
