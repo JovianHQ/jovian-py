@@ -101,4 +101,4 @@ def binary_search(lo, hi, condition):
             hi = mid - 1
         else:
             lo = mid + 1
-    return -1
+    return 0
