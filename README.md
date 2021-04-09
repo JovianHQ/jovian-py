@@ -1,6 +1,6 @@
 # Jovian: Learning Platform for Data Science & ML.
 
-![](/docs/jovian_horizontal_logo.svg)
+<img src="/docs/jovian_horizontal_logo.svg" width="480">
 
 [![Documentation Status](https://readthedocs.org/projects/jovian-py/badge/?version=latest)](https://jovian.ai/docs/)
 [![Python application](https://github.com/JovianML/jovian-py/workflows/Python%20application/badge.svg)](https://github.com/JovianML/jovian-py/actions?query=branch%3Amaster)
