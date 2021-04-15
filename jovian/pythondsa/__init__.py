@@ -22,14 +22,21 @@ def _str_trunc(data, size=100):
 
 def _show_test_case(test_case):
     inputs = test_case['input']
-    expected = test_case['output']
+
+    if 'outputs' in test_case:
+        expected_text = "Outputs"
+        expected = test_case.get('outputs')
+    else:
+        expected_text = "Output"
+        expected = test_case.get('output')
+
     print(dedent("""
     Input:
     {}
 
-    Expected Output:
+    Expected {}:
     {}
-    """.format(_str_trunc(inputs), _str_trunc(expected))))
+    """.format(_str_trunc(inputs), expected_text, _str_trunc(expected))))
 
 
 def _show_result(result):
@@ -50,7 +57,8 @@ def _show_result(result):
 def evaluate_test_case(function, test_case, display=True):
     """Check if `function` works as expected for `test_case`"""
     inputs = test_case['input']
-    output = test_case['output']
+    output = test_case.get('output')
+    outputs = test_case.get('outputs')
 
     if display:
         _show_test_case(test_case)
@@ -60,7 +68,10 @@ def evaluate_test_case(function, test_case, display=True):
     end = timer()
 
     runtime = math.ceil((end - start)*1e6)/1000
-    passed = actual_output == output
+    if outputs:
+        passed = actual_output in outputs
+    else:
+        passed = actual_output == output
 
     result = actual_output, passed, runtime
 
