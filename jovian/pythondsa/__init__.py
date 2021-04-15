@@ -57,8 +57,6 @@ def _show_result(result):
 def evaluate_test_case(function, test_case, display=True):
     """Check if `function` works as expected for `test_case`"""
     inputs = test_case['input']
-    output = test_case.get('output')
-    outputs = test_case.get('outputs')
 
     if display:
         _show_test_case(test_case)
@@ -68,10 +66,10 @@ def evaluate_test_case(function, test_case, display=True):
     end = timer()
 
     runtime = math.ceil((end - start)*1e6)/1000
-    if outputs:
-        passed = actual_output in outputs
+    if 'outputs' in test_case:
+        passed = actual_output in test_case.get('outputs')
     else:
-        passed = actual_output == output
+        passed = actual_output == test_case.get('output')
 
     result = actual_output, passed, runtime
 
