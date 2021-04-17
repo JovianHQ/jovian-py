@@ -23,7 +23,7 @@ Create a new Python environment using [conda](https://docs.conda.io/en/latest/).
 _Make sure you have [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) setup on your pc_
 
 ```
-conda create -n jovian-py-dev python=3.5 -y
+conda create -n jovian-py-dev python=3.6 -y
 ```
 
 Activate the environment:
