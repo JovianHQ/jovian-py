@@ -25,16 +25,14 @@ def replace_regex(tb, pattern_map):
         for pattern, replace_with in pattern_map.items():
             cell.source = re.sub(pattern, replace_with, cell.source, flags=re.MULTILINE)
 
-def run_tests(nb=None):
-    if nb is not None:
+def run_tests(nb):
+    if type(nb) == dict:
         pattern_map = {
-            r"! *pip *install.*$": "",
-            r"jovian *. *commit": "",
-        }
+                r"! *pip *install.*$": "",
+                r"jovian *. *commit": "",
+            }
         replace_regex(nb, pattern_map)
         nb.execute()
-    else: 
-        nb = globals()
     
     all_passed, comments = True, ""
     
