@@ -5,7 +5,7 @@
 VERSION = $(shell python setup.py --version)
 
 setup-env:
-	conda create -n jovian-py-dev python=3.5 -y
+	conda create -n jovian-py-dev python=3.6 -y
 	@echo "Run:\n\tconda activate jovian-py-dev\n\tpip install -r requirements.txt"
 
 activate:

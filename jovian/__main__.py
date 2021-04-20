@@ -156,7 +156,7 @@ def exec_commit(ctx, notebook):
         $ jovian commit my_notebook.ipynb
     """
     if is_py2():
-        log("Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+        log("Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.6 and above.",
             warn=True)
     commit_path(path=notebook, environment=None, is_cli=True)
 
