@@ -114,7 +114,7 @@ def test_cli(func, cli_args, called_with_args, runner):
 def test_commit_py2(mock_py2, mock_log, mock_commit, runner):
     result = runner.invoke(main, ["commit", "my_notebook.ipynb"])
     mock_log.assert_called_with(
-        "Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.5 and above.",
+        "Committing is not supported for Python 2.x. Please install and run Jovian from Python 3.6 and above.",
         warn=True)
     called_with_args = {"path": "my_notebook.ipynb", "environment": None, "is_cli": True}
     mock_commit.assert_called_with(**called_with_args)
