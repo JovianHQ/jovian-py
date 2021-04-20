@@ -1,10 +1,13 @@
+import traceback
 import re
 
 TESTS = {}
 
 def format_exc(e):
     """Format the exception message"""
-    return "\nError: " + str(e) if str(e).strip() else ""
+    msg = ": {}".format(str(e)) if str(e).strip() else ""
+    error_type = type(e).__name__
+    return "\n{} {}".format(error_type, msg)
 
 def testcase(test_id, error_msg):
     """A decorator for marking functions as test cases""" 
@@ -15,6 +18,7 @@ def testcase(test_id, error_msg):
                 if result is None: result = ""
                 return True, result
             except Exception as e:
+                print(traceback.format_exc())
                 return False, error_msg + format_exc(e)
         TESTS[test_id] = wrapper
         return wrapper
@@ -26,7 +30,7 @@ def replace_regex(tb, pattern_map):
             cell.source = re.sub(pattern, replace_with, cell.source, flags=re.MULTILINE)
 
 def run_tests(nb):
-    if type(nb) == dict:
+    if type(nb) != dict:
         pattern_map = {
                 r"! *pip *install.*$": "",
                 r"jovian *. *commit": "",
