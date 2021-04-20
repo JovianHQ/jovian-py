@@ -25,7 +25,7 @@ def replace_regex(tb, pattern_map):
         for pattern, replace_with in pattern_map.items():
             cell.source = re.sub(pattern, replace_with, cell.source, flags=re.MULTILINE)
 
-def run_tests(nb):
+def run_tests(nb=None):
     if nb is not None:
         pattern_map = {
             r"! *pip *install.*$": "",
