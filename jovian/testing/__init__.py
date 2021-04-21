@@ -16,7 +16,7 @@ def testcase(test_id, error_msg):
             try:
                 result = fun(*args, **kwargs)
                 if result is None: result = ""
-                return True, result
+                return True, str(result)
             except Exception as e:
                 print(traceback.format_exc())
                 return False, error_msg + format_exc(e)
