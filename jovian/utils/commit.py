@@ -194,7 +194,7 @@ def commit(message=None,
 
     # Ensure that the file exists
     if not os.path.exists(filename):
-        log('The detected/provided file "' + filename +
+        log('The provided file "' + filename +
             '" does not exist. Please provide the correct notebook filename ' +
             'as the "filename" argument to "jovian.commit".', error=True)
         return
@@ -253,6 +253,8 @@ def commit_path(path, **kwargs):
 
 def _parse_filename(filename):
     """Perform the required checks and get the final filename"""
+    _filename = filename
+
     # Get the filename of the notebook (if not provided)
     if filename is None:
         if in_script():
@@ -263,6 +265,11 @@ def _parse_filename(filename):
     # Add the right extension to the filename
     elif get_file_extension(filename) not in ['.py', '.ipynb']:
         filename += '.py' if in_script() else '.ipynb'
+
+    # Reset detected filename if the file doesn't exist
+    if not _filename and filename and not os.path.exists(filename):
+        filename = None
+
     return filename
 
 

@@ -3,8 +3,8 @@ DEFAULT_WEBAPP_URL = "https://jovian.ai/"
 DEFAULT_API_URL = "https://api.jovian.ai/"
 
 RC_FILENAME = ".jovianrc"
-FILENAME_MSG = 'Failed to detect notebook filename. Please provide the correct notebook filename ' + \
-    'as the "filename" argument to "jovian.commit".'
+FILENAME_MSG = 'Failed to detect notebook filename. Re-run this cell to try again or provide the notebook filename ' + \
+    'during commit e.g. jovian.commit(filename="jupyter-notebook-filename.ipynb")'
 ISSUES_MSG = """NOTE: Jovian is currently in beta, so if you face any issues, 
                please report them here: https://github.com/JovianML/jovian-py/issues"""
 
