@@ -52,7 +52,7 @@ Go ahead if u need more customization like `only output cell` and preview the em
 
 <a href="https://medium.com" target="_blank">Medium</a> and <a href="https://reddit.com" target="_blank">Reddit</a> support oEmbed so if you're writing a blog and want to add snippets with or without output charts or helping someone on reddit thread you can use this.
 
-Just copy and paste the embed link, here is a example. Click on the image to visit the medium blog where snippets are added.
+Just copy and paste the embed link, here is an example. Click on the image to visit the medium blog where snippets are added.
 
 <a href="https://medium.com/@prajwal.prashanth22/whatsapp-chat-data-analysis-8944b91581f5" target="_blank"><img src="https://imgur.com/sB9nZdZ.png" class="screenshot" alt="Medium blog embed notebook example" ></a>
 
@@ -60,6 +60,6 @@ Just copy and paste the embed link, here is a example. Click on the image to vis
 
 If you're building a profile website to showcase your projects or academic institution/community/meetup website making a resources page this is right for you.
 
-Just copy and paste the iframe code in the website's code, here is a example. Click on the image to visit the a example Github Page where the whole notebook is embedded.
+Just copy and paste the iframe code in the website's code, here is an example. Click on the image to visit an example Github Page where the whole notebook is embedded.
 
 <a href="https://prajwalprashanth.github.io/whatsapp-data-analysis" target="_blank"><img src="https://imgur.com/S5tpDuJ.png" class="screenshot" alt="notebook embed website example" ></a>
