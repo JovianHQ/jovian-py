@@ -169,25 +169,18 @@ def commit(message=None,
         log('Attempting to save notebook..')
         sleep(1)
 
-    # Check filename (if provided) is correct
-    if filename and not os.path.exists(filename):
-        log('The provided file "' + filename +
-            '" does not exist. Please provide the correct notebook filename ' +
-            'e.g. "jovian.commit(filename=\'my-notebook.ipynb\')"', error=True)
-        return 
-
     # Extract notebook/script filename
     filename = _parse_filename(filename)
-    if filename is None:
+    if filename is None or not os.path.exists(filename):
         log(FILENAME_MSG, error=True)
         return
 
-    # Commit from Kaggle (After many bug reports of empty notebook)
-    if filename == '__notebook_source__.ipynb' and USE_JAVSCRIPT_ON_KAGGLE:
+    # Commit from Kaggle (disabled for now)
+    if USE_JAVSCRIPT_ON_KAGGLE and filename == '__notebook_source__.ipynb':
         log("Detected Kaggle notebook...")
         project = project or get_project()
         if not project:
-            log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
+            log("Please provide the project argument e.g.\n\t jovian.commit(project='my-project')", error=True)
             return
 
         perform_kaggle_commit(message,
@@ -198,14 +191,6 @@ def commit(message=None,
                               project,
                               new_project)
         set_project(project)
-        return
-
-    # Ensure that the file exists
-    if not os.path.exists(filename):
-
-        log('Faied to detectThe detected/provided file "' + filename +
-            '" does not exist. Please provide the correct notebook filename ' +
-            'as the "filename" argument to "jovian.commit".', error=True)
         return
 
     # Retrieve Gist ID & title
