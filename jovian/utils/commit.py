@@ -9,7 +9,7 @@ from jovian.utils.colab import in_colab, get_colab_file_id, perform_colab_commit
 from jovian.utils.constants import DEFAULT_EXTENSION_WHITELIST, FILENAME_MSG
 from jovian.utils.credentials import read_creds, read_webapp_url
 from jovian.utils.environment import CondaError, upload_conda_env, upload_pip_env
-from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook
+from jovian.utils.jupyter import get_notebook_name, in_notebook, save_notebook, set_notebook_name
 from jovian.utils.kaggle import perform_kaggle_commit
 from jovian.utils.logger import log
 from jovian.utils.misc import get_file_extension, is_uuid, urljoin
@@ -18,6 +18,7 @@ from jovian.utils.rcfile import (get_cached_slug, get_notebook_slug, reset_noteb
 from jovian.utils.records import get_records, log_git, reset
 from jovian.utils.script import get_script_filename, in_script
 
+USE_JAVSCRIPT_ON_KAGGLE = False
 
 def commit(message=None,
            files=[],
@@ -170,16 +171,16 @@ def commit(message=None,
 
     # Extract notebook/script filename
     filename = _parse_filename(filename)
-    if filename is None:
+    if filename is None or not os.path.exists(filename):
         log(FILENAME_MSG, error=True)
         return
 
-    # Commit from Kaggle (After many bug reports of empty notebook)
-    if filename == '__notebook_source__.ipynb':
+    # Commit from Kaggle (disabled for now)
+    if USE_JAVSCRIPT_ON_KAGGLE and filename == '__notebook_source__.ipynb':
         log("Detected Kaggle notebook...")
         project = project or get_project()
         if not project:
-            log("Please provide the project argument e.g. jovian.commit(project='my-project')", error=True)
+            log("Please provide the project argument e.g.\n\t jovian.commit(project='my-project')", error=True)
             return
 
         perform_kaggle_commit(message,
@@ -190,13 +191,6 @@ def commit(message=None,
                               project,
                               new_project)
         set_project(project)
-        return
-
-    # Ensure that the file exists
-    if not os.path.exists(filename):
-        log('The detected/provided file "' + filename +
-            '" does not exist. Please provide the correct notebook filename ' +
-            'as the "filename" argument to "jovian.commit".', error=True)
         return
 
     # Retrieve Gist ID & title
@@ -263,6 +257,11 @@ def _parse_filename(filename):
     # Add the right extension to the filename
     elif get_file_extension(filename) not in ['.py', '.ipynb']:
         filename += '.py' if in_script() else '.ipynb'
+
+    # Ensure that the file exists
+    if not os.path.exists(filename):
+        filename = None
+        set_notebook_name()
     return filename
 
 
