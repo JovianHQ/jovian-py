@@ -259,7 +259,7 @@ def _parse_filename(filename):
         filename += '.py' if in_script() else '.ipynb'
 
     # Ensure that the file exists
-    if not os.path.exists(filename):
+    if not filename or not os.path.exists(filename):
         filename = None
         set_notebook_name()
     return filename
