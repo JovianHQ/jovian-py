@@ -60,6 +60,6 @@ Just copy and paste the embed link, here is an example. Click on the image to vi
 
 If you're building a profile website to showcase your projects or academic institution/community/meetup website making a resources page this is right for you.
 
-Just copy and paste the iframe code in the website's code, here is an example. Click on the image to visit an example Github Page where the whole notebook is embedded.
+Just copy and paste the iframe code in the website's code, here is an example. Click on the image to visit the example Github Page where the whole notebook is embedded.
 
 <a href="https://prajwalprashanth.github.io/whatsapp-data-analysis" target="_blank"><img src="https://imgur.com/S5tpDuJ.png" class="screenshot" alt="notebook embed website example" ></a>
