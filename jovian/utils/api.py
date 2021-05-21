@@ -55,7 +55,6 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
 
     with open(filename, 'rb') as f:
         nb_file = (filename, f)
-        print('Uploading notebook..')
         if gist_slug:
             return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
         else:

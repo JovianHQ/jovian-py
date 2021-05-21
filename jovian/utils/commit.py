@@ -30,7 +30,6 @@ def commit(message=None,
            new_project=None,
            git_commit=False,
            git_message='auto',
-           debug=False,
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
@@ -167,7 +166,6 @@ def commit(message=None,
     # Attempt to save Jupyter notebook
     if in_notebook():
         save_notebook()
-        if debug: log('Attempting to save notebook..')
         sleep(1)
 
     # Extract notebook/script filename
@@ -198,6 +196,7 @@ def commit(message=None,
     project_title, project_id = _parse_project(project, filename, new_project)
 
     # Create or update gist (with title and )
+    print('Uploading notebook..')
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
