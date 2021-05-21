@@ -149,7 +149,7 @@ def commit(message=None,
         elif environment == "auto":
             environment = "pip"
 
-        _capture_environment(environment, slug, version, debug)
+        _capture_environment(environment, slug, version)
         _attach_files(files, slug, version)
         _attach_files(outputs, slug, version, output=True)
         _attach_records(slug, version)
@@ -383,7 +383,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
             log('Ignoring "' + path + '" (not found)', error=True)
 
 
-def _capture_environment(environment, gist_slug, version, debug=False):
+def _capture_environment(environment, gist_slug, version):
     """Capture the python environment and attach it to the commit"""
     if environment is not None:
         # Check credentials if environment config exists
@@ -396,7 +396,7 @@ def _capture_environment(environment, gist_slug, version, debug=False):
             if environment == 'auto' and (environment_config == 'conda' or environment_config == 'pip'):
                 environment = environment_config
 
-        if debug: log('Capturing environment..')
+        log('Capturing environment..')
         captured = False
 
         if environment == 'auto' or environment == 'conda':
