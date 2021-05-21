@@ -23,13 +23,14 @@ USE_JAVSCRIPT_ON_KAGGLE = False
 def commit(message=None,
            files=[],
            outputs=[],
-           environment='auto',
+           environment=None,
            privacy='auto',
            filename=None,
            project=None,
            new_project=None,
            git_commit=False,
            git_message='auto',
+           debug=False,
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
@@ -148,14 +149,14 @@ def commit(message=None,
         elif environment == "auto":
             environment = "pip"
 
-        _capture_environment(environment, slug, version)
+        _capture_environment(environment, slug, version, debug)
         _attach_files(files, slug, version)
         _attach_files(outputs, slug, version, output=True)
         _attach_records(slug, version)
 
         set_project(project)
 
-        log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
+        print('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
 
     # Skip if unsupported environment
@@ -166,7 +167,7 @@ def commit(message=None,
     # Attempt to save Jupyter notebook
     if in_notebook():
         save_notebook()
-        log('Attempting to save notebook..')
+        if debug: log('Attempting to save notebook..')
         sleep(1)
 
     # Extract notebook/script filename
@@ -382,7 +383,7 @@ def _attach_files(paths, gist_slug, version, output=False, exclude_files=None):
             log('Ignoring "' + path + '" (not found)', error=True)
 
 
-def _capture_environment(environment, gist_slug, version):
+def _capture_environment(environment, gist_slug, version, debug=False):
     """Capture the python environment and attach it to the commit"""
     if environment is not None:
         # Check credentials if environment config exists
@@ -395,7 +396,7 @@ def _capture_environment(environment, gist_slug, version):
             if environment == 'auto' and (environment_config == 'conda' or environment_config == 'pip'):
                 environment = environment_config
 
-        log('Capturing environment..')
+        if debug: log('Capturing environment..')
         captured = False
 
         if environment == 'auto' or environment == 'conda':
