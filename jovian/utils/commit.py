@@ -20,6 +20,7 @@ from jovian.utils.script import get_script_filename, in_script
 
 USE_JAVSCRIPT_ON_KAGGLE = False
 
+
 def commit(message=None,
            files=[],
            outputs=[],
@@ -194,7 +195,13 @@ def commit(message=None,
         return
 
     # Retrieve Gist ID & title
-    project_title, project_id = _parse_project(project, filename, new_project)
+    project_title, project_id, owner_username = _parse_project(project, filename, new_project)
+
+    # Try to perform git commit
+    git_flag = _perform_git_commit(project_id, message) if project_id else None
+    if git_flag:
+        log('Committed successfully! ' + urljoin(read_webapp_url(), owner_username, project_title))
+        return urljoin(read_webapp_url(), owner_username, project_title)
 
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
@@ -212,7 +219,6 @@ def commit(message=None,
     if not git_message or git_message == 'auto':
         git_message = message or 'jovian commit ' + username + '/' + title + ' v' + str(version)
     _perform_local_git_commit(filename, git_commit, git_message)
-    _perform_git_commit(message)
     _attach_records(slug, version)
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
@@ -220,13 +226,28 @@ def commit(message=None,
     return urljoin(read_webapp_url(), username, title)
 
 
-def _perform_git_commit(message):
-    if not git.is_git():
-        
-        pass
-    else:
-        pass
-    
+def _perform_git_commit(slug, message):
+    username = api.get_current_user()['username']
+    is_jovian_git_repo = api.check_is_git_repo(slug).get("is_git_repo")
+
+    if not is_jovian_git_repo or not git.is_git:
+        return None
+
+    git.remote_update()
+
+    if not git.is_up_to_date() or not git.check_write_access():
+        return None
+
+    if not message:
+        while message is None or message.strip() == "":
+            message = git.request_commit_message()
+
+    git.insert_git_credential(username)
+    git.commit(message)
+    git.credential_store()
+    return git.git_push() == 0
+
+
 def commit_path(path, **kwargs):
     files = _list_ipynb_files(path)
     num_files = len(files)
@@ -288,7 +309,7 @@ def _parse_project(project, filename, new_project):
 
     # Skip if project is not provided & can't be read
     if project is None:
-        return None, None
+        return None, None, None
 
     # Get project metadata for UUID & username/title
     if is_uuid(project):
@@ -317,7 +338,7 @@ def _parse_project(project, filename, new_project):
     # Check if the current user can commit to this project
     permissions = api.get_gist_access(project_id)
     if not permissions['write']:
-        return project_title, None
+        return project_title, None, None
 
     # Log whether this is an update or creation
     if project_id is None:
@@ -325,7 +346,7 @@ def _parse_project(project, filename, new_project):
     else:
         log('Updating notebook "' + username + "/" + project_title + '" on ' + read_webapp_url())
 
-    return project_title, project_id
+    return project_title, project_id, username
 
 
 def _attach_file(path, gist_slug, version, output=False):

@@ -1,6 +1,13 @@
 """Git related utilities"""
 import os
 import subprocess
+from urllib.parse import urlparse
+
+import click
+from jovian.utils.credentials import get_api_key, read_api_url
+from jovian.utils.logger import log
+
+HOME = os.path.expanduser('~')
 
 
 def is_git():
@@ -37,6 +44,42 @@ def commit(message):
 def git_push():
     """Push the branch to origin"""
     return os.system("git push origin " + get_branch())
+
+
+def remote_update():
+    """Updates all the remotes"""
+    return os.system("git remote update")
+
+
+def is_up_to_date():
+    return "behind" not in os.popen("git status -uno").read().splitlines()[1]
+
+
+def is_jovian_remote(remote):
+    return urlparse(read_api_url()).netloc == urlparse(remote).netloc
+
+
+def insert_git_credential(username):
+    api_url = urlparse(read_api_url())
+    password = get_api_key()
+    creds_path = api_url.scheme + "://" + username + ":" + password + "@" + api_url.netloc + "\n"
+    git_creds = os.path.join(HOME, '.git-credentials')
+    with open(git_creds, 'a') as f:
+        f.write(creds_path)
+
+
+def check_write_access():
+    return os.system("git push origin --dry-run") == 0
+
+
+def credential_store():
+    return os.system("git config credential.helper store")
+
+
+def request_commit_message():
+    """Ask the user to provide a commit message"""
+    log("Please provide a commit message:")
+    return click.prompt("Commit message")
 
 
 def git_commit_push(message):
