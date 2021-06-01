@@ -235,6 +235,7 @@ def _perform_git_commit(slug, message):
 
     git.remote_update()
 
+    git.insert_git_credential(username)
     if not git.is_up_to_date() or not git.check_write_access():
         return None
 
@@ -242,7 +243,6 @@ def _perform_git_commit(slug, message):
         while message is None or message.strip() == "":
             message = git.request_commit_message()
 
-    git.insert_git_credential(username)
     git.commit(message)
     git.credential_store()
     return git.git_push() == 0
