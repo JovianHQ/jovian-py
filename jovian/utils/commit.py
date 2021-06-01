@@ -211,7 +211,8 @@ def commit(message=None,
 
     if not git_message or git_message == 'auto':
         git_message = message or 'jovian commit ' + username + '/' + title + ' v' + str(version)
-    _perform_git_commit(filename, git_commit, git_message)
+    _perform_local_git_commit(filename, git_commit, git_message)
+    _perform_git_commit(message)
     _attach_records(slug, version)
 
     log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
@@ -219,6 +220,13 @@ def commit(message=None,
     return urljoin(read_webapp_url(), username, title)
 
 
+def _perform_git_commit(message):
+    if not git.is_git():
+        
+        pass
+    else:
+        pass
+    
 def commit_path(path, **kwargs):
     files = _list_ipynb_files(path)
     num_files = len(files)
@@ -414,7 +422,7 @@ def _capture_environment(environment, gist_slug, version):
                 log(str(e), error=True)
 
 
-def _perform_git_commit(filename, git_commit, git_message):
+def _perform_local_git_commit(filename, git_commit, git_message):
     if git_commit and git.is_git():
         reset('git')  # resets git commit info
 

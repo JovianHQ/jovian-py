@@ -49,6 +49,14 @@ def get_gist_access(slug):
                     slug + '" (retry with new_project=True to create a new notebook): ' + pretty(res))
 
 
+def check_is_git_repo(slug):
+    """Check whether gist is a git repo in backend or not"""
+    res = get(url=_u('/gist/' + slug + '/check-git'), headers=_h())
+    if res.status_code == 200:
+        return res.json()['data']
+    raise Exception('Failed to check whether gist is a git repo' + slug + ': ' + pretty(res))
+
+
 def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None):
     """Upload the current notebook to create/update a gist"""
     auth_headers = _h()
