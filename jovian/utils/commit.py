@@ -197,7 +197,7 @@ def commit(message=None,
     # Retrieve Gist ID & title
     project_title, project_id, owner_username = _parse_project(project, filename, new_project)
 
-    # Try to perform git commit
+    # Try to perform jovian git commit
     git_flag = _perform_git_commit(project_id, message) if project_id else None
     if git_flag:
         log('Committed successfully! ' + urljoin(read_webapp_url(), owner_username, project_title))
