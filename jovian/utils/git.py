@@ -1,5 +1,6 @@
 """Git related utilities"""
 import os
+import re
 import subprocess
 from urllib.parse import urlparse
 
@@ -39,14 +40,13 @@ def commit(message):
     return os.system('cd ' + get_repository_root() + ' && git add . &&  git commit -a -m "' + message + '" && cd -')
 
 
-def git_push():
-    """Push the branch to origin"""
-    return os.system("git push origin " + get_branch())
+def git_push(remote):
+    """Push the branch to remote"""
+    return os.system("git push {} {}".format(remote, get_branch()))
 
 
-def remote_update():
-    """Updates all the remotes"""
-    return os.system("git remote update") == 0
+def remote_update(remote):
+    return os.system("git remote update {}".format(remote)) == 0
 
 
 def is_up_to_date():
@@ -90,6 +90,25 @@ def clone(username, title, destination=None):
     return os.system('git clone {} {}'.format(clone_url, destination or '')) == 0
 
 
+def get_jovian_remote(username, title):
+    remotes = os.popen('git remote').read().splitlines()
+    api_url = read_api_url()
+    api_net_loc = urlparse(api_url).netloc
+    project = username + "/" + title
+
+    for remote in remotes:
+        remote_url = urlparse(get_remote_url(remote))
+        remote_project = _remove_git_suffix(remote_url.path.strip('/'))
+
+        if remote_url.netloc == api_net_loc and remote_project == project:
+            return remote
+    return None
+
+
+def get_remote_url(remote):
+    return os.popen('git remote get-url {}'.format(remote)).read().strip()
+
+
 def git_commit_push(message):
     """Create a commit and push to origin"""
     if is_git():
@@ -107,3 +126,7 @@ def get_relative_path():
     root_dir = get_repository_root()
     file_dir = os.path.abspath('')
     return os.path.relpath(file_dir, root_dir)
+
+
+def _remove_git_suffix(project_title):
+    return re.sub(r"\.git$", "", project_title)

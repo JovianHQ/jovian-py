@@ -235,8 +235,13 @@ def _perform_git_commit(message, owner_username, project_title):
         log("Nothing to commit")
         return
 
-    if not git.remote_update():
-        log("Failed to update remote")
+    remote = git.get_jovian_remote(username=owner_username, title=project_title)
+    if not remote:
+        log("Jovian remote not set.")
+        return
+
+    if not git.remote_update(remote):
+        log("Failed to update {}".format(remote))
         return
 
     git.insert_git_credential(username)
@@ -250,7 +255,7 @@ def _perform_git_commit(message, owner_username, project_title):
         return
 
     git.commit(message)
-    if git.git_push() == 0:
+    if git.git_push(remote) == 0:
         log('Committed successfully! ' + urljoin(read_webapp_url(), owner_username, project_title))
     else:
         log("Failed to push to Jovian")
