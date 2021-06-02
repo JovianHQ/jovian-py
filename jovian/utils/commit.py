@@ -194,7 +194,7 @@ def commit(message=None,
         set_project(project)
         return
 
-    has_jovian_git_repo = api.check_is_git_repo(project)
+    has_jovian_git_repo = api.check_jovian_git_repo(project)
     # Retrieve Gist ID & title
     project_title, project_id, owner_username, latest_version = _parse_project(
         project, filename, new_project, git=has_jovian_git_repo

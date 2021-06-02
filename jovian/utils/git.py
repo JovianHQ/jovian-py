@@ -3,9 +3,7 @@ import os
 import subprocess
 from urllib.parse import urlparse
 
-import click
 from jovian.utils.credentials import get_api_key, read_api_url
-from jovian.utils.logger import log
 
 HOME = os.path.expanduser('~')
 

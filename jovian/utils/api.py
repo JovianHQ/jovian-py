@@ -49,8 +49,8 @@ def get_gist_access(slug):
                     slug + '" (retry with new_project=True to create a new notebook): ' + pretty(res))
 
 
-def check_is_git_repo(slug):
-    """Check whether gist is a git repo in backend or not"""
+def check_jovian_git_repo(slug):
+    """Check whether gist has a jovian git repo"""
     if '/' in slug:
         parts = slug.split('/')
         username, title = parts[0], parts[1]
