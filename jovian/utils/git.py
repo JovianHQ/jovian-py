@@ -72,6 +72,10 @@ def check_write_access():
     return os.system("git push origin --dry-run") == 0
 
 
+def is_index_dirty():
+    return os.popen('git status --porcelain').read().strip() != ""
+
+
 def credential_store():
     return os.system("git config credential.helper store")
 
