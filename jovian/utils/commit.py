@@ -194,14 +194,16 @@ def commit(message=None,
         set_project(project)
         return
 
+    has_jovian_git_repo = api.check_is_git_repo(project)
     # Retrieve Gist ID & title
-    project_title, project_id, owner_username = _parse_project(project, filename, new_project)
+    project_title, project_id, owner_username, latest_version = _parse_project(
+        project, filename, new_project, git=has_jovian_git_repo
+    )
 
     # Try to perform jovian git commit
-    git_flag = _perform_git_commit(project_id, message) if project_id else None
-    if git_flag:
-        log('Committed successfully! ' + urljoin(read_webapp_url(), owner_username, project_title))
-        return urljoin(read_webapp_url(), owner_username, project_title)
+    if git.is_git() and has_jovian_git_repo:
+        message = message or 'Version {}'.format(latest_version + 1)
+        return _perform_git_commit(message, owner_username, project_title)
 
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
@@ -226,25 +228,32 @@ def commit(message=None,
     return urljoin(read_webapp_url(), username, title)
 
 
-def _perform_git_commit(slug, message):
+def _perform_git_commit(message, owner_username, project_title):
     username = api.get_current_user()['username']
 
-    if not api.check_is_git_repo(slug) or not git.is_git or not git.is_index_dirty():
-        return None
+    if not git.is_index_dirty():
+        log("Nothing to commit")
+        return
 
-    git.remote_update()
+    if not git.remote_update():
+        log("Failed to update remote")
+        return
 
     git.insert_git_credential(username)
-    if not git.is_up_to_date() or not git.check_write_access():
-        return None
 
-    if not message:
-        while message is None or message.strip() == "":
-            message = git.request_commit_message()
+    if not git.is_up_to_date():
+        log("Please use \"git pull\" to update your local branch")
+        return
+
+    if not git.check_write_access():
+        log("Permission to {} denied to {}".format(owner_username + "/" + project_title, username))
+        return
 
     git.commit(message)
-    git.credential_store()
-    return git.git_push() == 0
+    if git.git_push() == 0:
+        log('Committed successfully! ' + urljoin(read_webapp_url(), owner_username, project_title))
+    else:
+        log("Failed to push to Jovian")
 
 
 def commit_path(path, **kwargs):
@@ -293,7 +302,7 @@ def _parse_filename(filename):
     return filename
 
 
-def _parse_project(project, filename, new_project):
+def _parse_project(project, filename, new_project, git=False):
     """Perform the required checks and get the final project name"""
     current_slug = get_cached_slug()
 
@@ -308,7 +317,7 @@ def _parse_project(project, filename, new_project):
 
     # Skip if project is not provided & can't be read
     if project is None:
-        return None, None, None
+        return None, None, None, None
 
     # Get project metadata for UUID & username/title
     if is_uuid(project):
@@ -317,27 +326,28 @@ def _parse_project(project, filename, new_project):
     elif '/' in project:
         project_title = project.split('/')[1]
         username = api.get_current_user()['username']
-        metadata = api.get_gist(project)
+        metadata = api.get_gist(project, git=git)
     # Attach username to the title
     else:
         project_title = project
         username = api.get_current_user()['username']
-        metadata = api.get_gist(username + '/' + project)
+        metadata = api.get_gist(username + '/' + project, git=git)
 
     # Skip if metadata could not be found
     if not metadata:
         log('Creating a new project "' + username + '/' + project_title + '"')
-        return project_title, None
+        return project_title, None, None, None
 
     # Extract information from metadata
     username = metadata['owner']['username']
     project_title = metadata['title']
     project_id = metadata['slug']
+    latest_version = metadata['latestVersion']
 
     # Check if the current user can commit to this project
     permissions = api.get_gist_access(project_id)
     if not permissions['write']:
-        return project_title, None, None
+        return project_title, None, None, None
 
     # Log whether this is an update or creation
     if project_id is None:
@@ -345,7 +355,7 @@ def _parse_project(project, filename, new_project):
     else:
         log('Updating notebook "' + username + "/" + project_title + '" on ' + read_webapp_url())
 
-    return project_title, project_id, username
+    return project_title, project_id, username, latest_version
 
 
 def _attach_file(path, gist_slug, version, output=False):

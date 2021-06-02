@@ -48,7 +48,7 @@ def git_push():
 
 def remote_update():
     """Updates all the remotes"""
-    return os.system("git remote update")
+    return os.system("git remote update") == 0
 
 
 def is_up_to_date():
@@ -63,21 +63,23 @@ def insert_git_credential(username):
     api_url = urlparse(read_api_url())
     password = get_api_key()
     creds_path = api_url.scheme + "://" + username + ":" + password + "@" + api_url.netloc + "\n"
-    git_creds = os.path.join(HOME, '.git-credentials')
-    with open(git_creds, 'a') as f:
+    git_creds = fetch_git_credential_path(username)
+    log(git_creds)
+    with open(git_creds, 'w') as f:
         f.write(creds_path)
+    os.system("git config credential.helper 'store --file {}'".format(git_creds))
+
+
+def fetch_git_credential_path(username):
+    return os.path.join(HOME, '.git-jovian-credentials-{}'.format(username))
 
 
 def check_write_access():
-    return os.system("git push origin --dry-run") == 0
+    return os.system("git push origin " + get_branch() + " --dry-run") == 0
 
 
 def is_index_dirty():
     return os.popen('git status --porcelain').read().strip() != ""
-
-
-def credential_store():
-    return os.system("git config credential.helper store")
 
 
 def request_commit_message():

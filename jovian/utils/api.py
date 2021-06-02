@@ -23,7 +23,7 @@ def get_current_user():
     raise Exception('Failed to fetch current user profile. ' + pretty(res))
 
 
-def get_gist(slug, version=None, check_exists=True):
+def get_gist(slug, version=None, check_exists=True, git=False):
     """Get the metadata for a gist"""
     if '/' in slug:
         parts = slug.split('/')
@@ -31,7 +31,7 @@ def get_gist(slug, version=None, check_exists=True):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    res = get(url=url, headers=_h())
+    res = get(url=url, params={"git": git}, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     elif check_exists and res.status_code == 404:
@@ -51,9 +51,18 @@ def get_gist_access(slug):
 
 def check_is_git_repo(slug):
     """Check whether gist is a git repo in backend or not"""
-    res = get(url=_u('/gist/' + slug + '/check-git'), headers=_h())
+    if '/' in slug:
+        parts = slug.split('/')
+        username, title = parts[0], parts[1]
+        url = _u('/gist/' + username + '/' + title + '/check-git')
+    else:
+        url = _u('/gist/' + slug + '/check-git')
+
+    res = get(url=url, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
+    elif res.status_code in [403, 404]:
+        return False
     raise Exception('Failed to check whether gist is a git repo' + slug + ': ' + pretty(res))
 
 
