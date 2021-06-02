@@ -62,12 +62,15 @@ def is_jovian_remote(remote):
 def insert_git_credential(username):
     api_url = urlparse(read_api_url())
     password = get_api_key()
-    creds_path = api_url.scheme + "://" + username + ":" + password + "@" + api_url.netloc + "\n"
-    git_creds = fetch_git_credential_path(username)
-    log(git_creds)
-    with open(git_creds, 'w') as f:
-        f.write(creds_path)
-    os.system("git config credential.helper 'store --file {}'".format(git_creds))
+    git_creds_path = fetch_git_credential_path(username)
+    with open(git_creds_path, 'w') as f:
+        f.write(construct_git_creds(api_url, username, password))
+
+    return os.system("git config credential.helper 'store --file {}'".format(git_creds_path))
+
+
+def construct_git_creds(api_url, username, password):
+    return api_url.scheme + "://" + username + ":" + password + "@" + api_url.netloc + "\n"
 
 
 def fetch_git_credential_path(username):
