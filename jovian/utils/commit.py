@@ -228,9 +228,8 @@ def commit(message=None,
 
 def _perform_git_commit(slug, message):
     username = api.get_current_user()['username']
-    is_jovian_git_repo = api.check_is_git_repo(slug).get("is_git_repo")
 
-    if not is_jovian_git_repo or not git.is_git:
+    if not api.check_is_git_repo(slug) or not git.is_git:
         return None
 
     git.remote_update()
