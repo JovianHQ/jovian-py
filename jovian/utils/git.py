@@ -82,12 +82,6 @@ def is_index_dirty():
     return os.popen('git status --porcelain').read().strip() != ""
 
 
-def request_commit_message():
-    """Ask the user to provide a commit message"""
-    log("Please provide a commit message:")
-    return click.prompt("Commit message")
-
-
 def git_commit_push(message):
     """Create a commit and push to origin"""
     if is_git():
