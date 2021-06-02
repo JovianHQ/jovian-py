@@ -64,7 +64,7 @@ def insert_git_credential(username):
     with open(git_creds_path, 'w') as f:
         f.write(construct_git_creds(api_url, username, password))
 
-    return os.system("git config credential.helper 'store --file {}'".format(git_creds_path))
+    return os.system("git config --global credential.helper 'store --file {}'".format(git_creds_path))
 
 
 def construct_git_creds(api_url, username, password):
@@ -81,6 +81,13 @@ def check_write_access():
 
 def is_index_dirty():
     return os.popen('git status --porcelain').read().strip() != ""
+
+
+def clone(username, title, destination=None):
+    api_url = read_api_url()
+    insert_git_credential(username)
+    clone_url = os.path.join(api_url, username, title)
+    return os.system('git clone {} {}'.format(clone_url, destination or '')) == 0
 
 
 def git_commit_push(message):

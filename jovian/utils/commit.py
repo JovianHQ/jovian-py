@@ -194,14 +194,14 @@ def commit(message=None,
         set_project(project)
         return
 
-    has_jovian_git_repo = api.check_jovian_git_repo(project)
+    jovian_git_repo = api.check_jovian_git_repo(project)
     # Retrieve Gist ID & title
     project_title, project_id, owner_username, latest_version = _parse_project(
-        project, filename, new_project, git=has_jovian_git_repo
+        project, filename, new_project, git=jovian_git_repo["git"]
     )
 
     # Try to perform jovian git commit
-    if git.is_git() and has_jovian_git_repo:
+    if git.is_git() and jovian_git_repo["git"] and jovian_git_repo["can_write"]:
         message = message or 'Version {}'.format(latest_version + 1)
         return _perform_git_commit(message, owner_username, project_title)
 
