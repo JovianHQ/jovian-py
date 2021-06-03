@@ -5,7 +5,7 @@ from jovian.utils.constants import RC_FILENAME
 
 _current_slug = None
 _current_project = None
-_git = True
+_git = False
 
 
 def rcfile_exists():
@@ -82,9 +82,14 @@ def get_project():
     return _current_project
 
 
-def get_git_flag():
+def get_git():
     global _git
     return _git
+
+
+def set_git(git):
+    global _git
+    _git = git
 
 
 def set_project(project):

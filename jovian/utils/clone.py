@@ -9,7 +9,7 @@ from jovian.utils.constants import ISSUES_MSG
 from jovian.utils.api import get_api_key
 from jovian.utils.credentials import get_guest_key, read_api_key_opt, read_api_url, read_org_id
 from jovian.utils.logger import log
-from jovian.utils.rcfile import get_git_flag, get_rcdata, rcfile_exists, set_notebook_slug
+from jovian.utils.rcfile import get_git, get_rcdata, rcfile_exists, set_notebook_slug
 from jovian.utils.request import pretty
 from jovian.utils.shared import _u, _v
 
@@ -38,7 +38,7 @@ def get_gist(slug, version, fresh):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    res = get(url, params={"git": get_git_flag()}, headers=_h(fresh))
+    res = get(url, params={"git": get_git()}, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
     elif res.status_code == 401:
