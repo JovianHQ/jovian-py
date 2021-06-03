@@ -23,7 +23,7 @@ def get_current_user():
     raise Exception('Failed to fetch current user profile. ' + pretty(res))
 
 
-def get_gist(slug, version=None, check_exists=True, git=False):
+def get_gist(slug, version=None, check_exists=True):
     """Get the metadata for a gist"""
     if '/' in slug:
         parts = slug.split('/')
@@ -31,7 +31,7 @@ def get_gist(slug, version=None, check_exists=True, git=False):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    res = get(url=url, params={"git": git}, headers=_h())
+    res = get(url=url, params={"git": True}, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     elif check_exists and res.status_code == 404:
@@ -49,24 +49,7 @@ def get_gist_access(slug):
                     slug + '" (retry with new_project=True to create a new notebook): ' + pretty(res))
 
 
-def check_jovian_git_repo(slug):
-    """Check whether gist has a jovian git repo"""
-    if '/' in slug:
-        parts = slug.split('/')
-        username, title = parts[0], parts[1]
-        url = _u('/gist/' + username + '/' + title + '/check-git')
-    else:
-        url = _u('/gist/' + slug + '/check-git')
-
-    res = get(url=url, headers=_h())
-    if res.status_code == 200:
-        return res.json()['data']
-    elif res.status_code in [403, 404]:
-        return False
-    raise Exception('Failed to check whether gist is a git repo' + slug + ': ' + pretty(res))
-
-
-def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None, git=False):
+def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None):
     """Upload the current notebook to create/update a gist"""
     auth_headers = _h()
 
@@ -74,7 +57,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
         nb_file = (filename, f)
         log('Uploading notebook..')
         if gist_slug:
-            return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title, git=git)
+            return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
         else:
             data = {'visibility': privacy}
 
@@ -89,7 +72,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             if version_title:
                 data['version_title'] = version_title
             res = post(url=_u('/gist/create'),
-                       params={"git": git},
+                       params={"git": True},
                        data=data,
                        files={'files': nb_file},
                        headers=auth_headers)
@@ -101,7 +84,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             raise ApiError('File upload failed: ' + pretty(res))
 
 
-def upload_file(gist_slug, file, folder=None, version=None, artifact=False, version_title=None, git=False):
+def upload_file(gist_slug, file, folder=None, version=None, artifact=False, version_title=None):
     """Upload an additional file to a gist"""
     data = {'artifact': 'true'} if artifact else {}
     if folder:
@@ -110,7 +93,7 @@ def upload_file(gist_slug, file, folder=None, version=None, artifact=False, vers
         data['version_title'] = version_title
 
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
-               params={"git": git},
+               params={"git": True},
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
         data, warning = parse_success_response(res)

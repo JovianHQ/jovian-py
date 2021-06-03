@@ -4,7 +4,6 @@ import json
 from requests import get
 
 from jovian._version import __version__
-from jovian.utils import api, git
 from jovian.utils.constants import ISSUES_MSG
 
 from jovian.utils.api import get_api_key
@@ -31,7 +30,7 @@ def _h(fresh):
     return headers
 
 
-def get_gist(slug, version, fresh, git=False):
+def get_gist(slug, version, fresh):
     """Download a gist"""
     if '/' in slug:
         parts = slug.split('/')
@@ -39,7 +38,7 @@ def get_gist(slug, version, fresh, git=False):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    res = get(url, params={"git": git}, headers=_h(fresh))
+    res = get(url, params={"git": True}, headers=_h(fresh))
     if res.status_code == 200:
         return res.json()['data']
     elif res.status_code == 401:
@@ -83,16 +82,15 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
     if not gist:
         return
 
-    title = original_title = gist['title']
+    title = gist['title']
 
     # If fresh clone, create directory
-    chdir = False
     if fresh and not os.path.exists(title):
         os.makedirs(title)
-        chdir = True
+        os.chdir(title)
 
     elif fresh and os.path.exists(title) and overwrite:
-        chdir = True
+        os.chdir(title)
 
     elif fresh and os.path.exists(title) and not overwrite:
         i = 1
@@ -101,20 +99,10 @@ def clone(slug, version=None, fresh=True, include_outputs=True, overwrite=False)
         title = title + '-' + str(i)
 
         os.makedirs(title)
-        chdir = True
-
-    git_repo = api.check_jovian_git_repo(slug)
-    if git_repo.get("git") and git_repo.get("can_read"):
-        username = gist['owner']['username']
-        git.clone(username, original_title, destination=title)
-        post_clone_msg(title)
-        return
+        os.chdir(title)
 
     # Download the files
     log('Downloading files..')
-    if chdir:
-        os.chdir(title)
-
     for f in gist['files']:
         if not f['artifact'] or include_outputs:
             if f['filename'].endswith('.ipynb'):
@@ -163,11 +151,11 @@ def pull(slug=None, version=None):
 
 def _sanitize_notebook(content):
     # Delete  kernalspec entry
-    nb_content={}
+    nb_content = {}
     try:
         nb_content = json.loads(content.decode("utf-8"))
     except ValueError:
-    # Corrupt Notebook
+        # Corrupt Notebook
         return content
     if nb_content.get('metadata', {}).get('kernelspec'):
         del nb_content['metadata']['kernelspec']

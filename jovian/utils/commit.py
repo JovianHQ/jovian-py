@@ -20,7 +20,6 @@ from jovian.utils.script import get_script_filename, in_script
 
 USE_JAVSCRIPT_ON_KAGGLE = False
 
-
 def commit(message=None,
            files=[],
            outputs=[],
@@ -195,10 +194,10 @@ def commit(message=None,
         return
 
     # Retrieve Gist ID & title
-    project_title, project_id, git = _parse_project(project, filename, new_project)
+    project_title, project_id = _parse_project(project, filename, new_project)
 
     # Create or update gist (with title and )
-    res = api.create_gist_simple(filename, project_id, privacy, project_title, message, git=git)
+    res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
 
@@ -266,7 +265,7 @@ def _parse_filename(filename):
     return filename
 
 
-def _parse_project(project, filename, new_project, git=False):
+def _parse_project(project, filename, new_project):
     """Perform the required checks and get the final project name"""
     current_slug = get_cached_slug()
 
@@ -281,7 +280,7 @@ def _parse_project(project, filename, new_project, git=False):
 
     # Skip if project is not provided & can't be read
     if project is None:
-        return None, None, None
+        return None, None
 
     # Get project metadata for UUID & username/title
     if is_uuid(project):
@@ -300,7 +299,7 @@ def _parse_project(project, filename, new_project, git=False):
     # Skip if metadata could not be found
     if not metadata:
         log('Creating a new project "' + username + '/' + project_title + '"')
-        return project_title, None, None
+        return project_title, None
 
     # Extract information from metadata
     username = metadata['owner']['username']
@@ -310,7 +309,7 @@ def _parse_project(project, filename, new_project, git=False):
     # Check if the current user can commit to this project
     permissions = api.get_gist_access(project_id)
     if not permissions['write']:
-        return project_title, None, None
+        return project_title, None
 
     # Log whether this is an update or creation
     if project_id is None:
@@ -318,7 +317,7 @@ def _parse_project(project, filename, new_project, git=False):
     else:
         log('Updating notebook "' + username + "/" + project_title + '" on ' + read_webapp_url())
 
-    return project_title, project_id, metadata.get("has_git_repo")
+    return project_title, project_id
 
 
 def _attach_file(path, gist_slug, version, output=False):
