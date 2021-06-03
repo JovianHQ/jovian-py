@@ -10,7 +10,7 @@ from jovian.utils.extension import setup_extension
 from jovian.utils.install import activate, install
 from jovian.utils.logger import log
 from jovian.utils.misc import is_py2
-from jovian.utils.rcfile import set_notebook_slug
+from jovian.utils.rcfile import set_git, set_notebook_slug
 from jovian.utils.slack import add_slack
 
 
@@ -102,8 +102,9 @@ def activate_env(ctx):
 @click.option('-v', '--version', 'version', help="Version number")
 @click.option('--no-outputs', 'no_outputs', is_flag=True, default=False, help="Exclude output files")
 @click.option('--overwrite', 'overwrite', is_flag=True, help="Overwrite existing project")
+@click.option('--git', 'git', is_flag=True, default=False, help="Use git backend")
 @click.pass_context
-def exec_clone(ctx, notebook, version, no_outputs, overwrite):
+def exec_clone(ctx, notebook, version, no_outputs, overwrite, git):
     """Clone a notebook hosted on Jovian:
 
         $ jovian clone aakashns/jovian-tutorial
@@ -112,6 +113,7 @@ def exec_clone(ctx, notebook, version, no_outputs, overwrite):
 
         $ jovian clone aakashns/jovian-tutorial -v 10
     """
+    set_git(git)
     clone(slug=notebook, version=version, include_outputs=not no_outputs, overwrite=overwrite)
 
 
