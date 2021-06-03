@@ -66,7 +66,7 @@ def check_jovian_git_repo(slug):
     raise Exception('Failed to check whether gist is a git repo' + slug + ': ' + pretty(res))
 
 
-def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None):
+def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None, version_title=None, git=False):
     """Upload the current notebook to create/update a gist"""
     auth_headers = _h()
 
@@ -74,7 +74,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
         nb_file = (filename, f)
         log('Uploading notebook..')
         if gist_slug:
-            return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title)
+            return upload_file(gist_slug=gist_slug, file=nb_file, version_title=version_title, git=git)
         else:
             data = {'visibility': privacy}
 
@@ -89,6 +89,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             if version_title:
                 data['version_title'] = version_title
             res = post(url=_u('/gist/create'),
+                       params={"git": git},
                        data=data,
                        files={'files': nb_file},
                        headers=auth_headers)
@@ -100,7 +101,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             raise ApiError('File upload failed: ' + pretty(res))
 
 
-def upload_file(gist_slug, file, folder=None, version=None, artifact=False, version_title=None):
+def upload_file(gist_slug, file, folder=None, version=None, artifact=False, version_title=None, git=False):
     """Upload an additional file to a gist"""
     data = {'artifact': 'true'} if artifact else {}
     if folder:
@@ -109,6 +110,7 @@ def upload_file(gist_slug, file, folder=None, version=None, artifact=False, vers
         data['version_title'] = version_title
 
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
+               params={"git": git},
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
         data, warning = parse_success_response(res)
