@@ -1,3 +1,4 @@
+from jovian.utils.rcfile import get_git_flag
 from jovian._version import __version__
 from jovian.utils.credentials import get_api_key, get_guest_key, read_api_url, read_org_id
 from jovian.utils.error import ApiError
@@ -31,7 +32,7 @@ def get_gist(slug, version=None, check_exists=True):
         url = _u('user/' + username + '/gist/' + title + _v(version))
     else:
         url = _u('gist/' + slug + _v(version))
-    res = get(url=url, params={"git": True}, headers=_h())
+    res = get(url=url, params={"git": get_git_flag()}, headers=_h())
     if res.status_code == 200:
         return res.json()['data']
     elif check_exists and res.status_code == 404:
@@ -72,7 +73,7 @@ def create_gist_simple(filename=None, gist_slug=None, privacy='auto', title=None
             if version_title:
                 data['version_title'] = version_title
             res = post(url=_u('/gist/create'),
-                       params={"git": True},
+                       params={"git": get_git_flag()},
                        data=data,
                        files={'files': nb_file},
                        headers=auth_headers)
@@ -93,7 +94,7 @@ def upload_file(gist_slug, file, folder=None, version=None, artifact=False, vers
         data['version_title'] = version_title
 
     res = post(url=_u('/gist/' + gist_slug + '/upload' + _v(version)),
-               params={"git": True},
+               params={"git": get_git_flag()},
                files={'files': file}, data=data, headers=_h())
     if res.status_code == 200:
         data, warning = parse_success_response(res)
