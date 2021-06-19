@@ -196,7 +196,6 @@ def commit(message=None,
     project_title, project_id = _parse_project(project, filename, new_project)
 
     # Create or update gist (with title and )
-    print('Uploading notebook..')
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
