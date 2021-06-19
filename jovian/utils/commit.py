@@ -23,7 +23,7 @@ USE_JAVSCRIPT_ON_KAGGLE = False
 def commit(message=None,
            files=[],
            outputs=[],
-           environment='auto',
+           environment=None,
            privacy='auto',
            filename=None,
            project=None,
@@ -155,7 +155,7 @@ def commit(message=None,
 
         set_project(project)
 
-        log('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
+        print('Committed successfully! ' + urljoin(read_webapp_url(), username, title))
         return urljoin(read_webapp_url(), username, title)
 
     # Skip if unsupported environment
@@ -166,7 +166,6 @@ def commit(message=None,
     # Attempt to save Jupyter notebook
     if in_notebook():
         save_notebook()
-        log('Attempting to save notebook..')
         sleep(1)
 
     # Extract notebook/script filename
@@ -197,6 +196,7 @@ def commit(message=None,
     project_title, project_id = _parse_project(project, filename, new_project)
 
     # Create or update gist (with title and )
+    print('Uploading notebook..')
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
     slug, owner, version, title = res['slug'], res['owner'], res['version'], res['title']
     username = owner['username']
