@@ -283,17 +283,15 @@ def _parse_project(project, filename, new_project):
         return None, None
 
     # Get project metadata for UUID & username/title
+    username = api.get_current_user()['username']
+    project_title = project
     if is_uuid(project):
-        project_title = None
         metadata = api.get_gist(project)
     elif '/' in project:
         project_title = project.split('/')[1]
-        username = api.get_current_user()['username']
         metadata = api.get_gist(project)
     # Attach username to the title
     else:
-        project_title = project
-        username = api.get_current_user()['username']
         metadata = api.get_gist(username + '/' + project)
 
     # Skip if metadata could not be found
