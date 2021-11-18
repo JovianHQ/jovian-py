@@ -1,6 +1,6 @@
 # Privacy Policy
 
-SWIFTACE AI PRIVATE LIMITED ("Us" or "We" or "Our" or "[Jovian](https://www.jovian.ai)" ) operates the website available at [www.jovian.ai](https://www.jovian.ai) or any other Platform which will be made available to render the Services (“Platform”).
+SWIFTACE INC. ("Us" or "We" or "Our" or "[Jovian](https://www.jovian.ai)" ) operates the website available at [www.jovian.ai](https://www.jovian.ai) or any other Platform which will be made available to render the Services (“Platform”).
 
 This page informs You of Our policies regarding the collection, use, and disclosure of personal data when You use Our Platform and the choices You have associated with that data (hereinafter referred to as “Privacy Policy”).
 
