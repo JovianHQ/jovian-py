@@ -8,11 +8,6 @@ from textwrap import dedent
 import math
 
 
-from timeit import default_timer as timer
-from textwrap import dedent
-import math
-
-
 def _str_trunc(data, size=100):
     data_str = str(data)
     if len(data_str) > size + 3:
