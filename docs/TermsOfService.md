@@ -52,9 +52,18 @@ The User hereby represents and warrants that it shall:
 
 **Payment and Taxes**
 
-In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://jovian.ai/pro](https://jovian.ai/pro).
+In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://www.jovian.ai](https://www.jovian.ai).
 
 The User must pay the charges by bank transfer or using such payment details as are notified by the Company to the User from time to time. Except as specifically prescribed in this TOS, each Party is separately responsible for their own taxes payable in connection with this Agreement. All sums payable (if any) shall be paid in full, free of all deductions and withholdings of any kind except where any deduction or withholding is required by law. The charges exclude GST , or other applicable taxes. Where GST or other tax is payable, User agrees that the Charges will be increased by an amount equivalent to the GST, or other taxes as applicable.
+
+**Refund Policy**
+
+A Customer may opt out of certain Programs subscribed by him/her and seek a refund for the fees already paid in relation thereto, provided the Customer informs us in writing regarding the same and seeks the refund prior to the expiry of the Refund Window (as detailed in the table below). The Refund Window is calculated from the date of the first class/session of the relevant Program subscribed by the Customer. We shall not entertain any requests related to refund of fees after the expiry of the Refund Window. __IT MUST BE NOTED, THAT NOTWITHSTANDING THE MODE OF PAYMENT USED FOR PAYING THE FEES, THE REFUND SHALL ALWAYS BE MADE TO A BANK ACCOUNT (AS PER THE DETAILS PROVIDED BY THE CUSTOMER) THROUGH NEFT/IMPS/RTGS OR SUCH OTHER FACILITY AS DEEMED FIT BY JOVIAN. WE MAY REQUEST FOR INFORMATION/DOCUMENTS (WHICH MAY INCLUDE A CANCELLED CHEQUE PERTAINING TO THE BANK ACCOUNT OF THE CUSTOMER) TO VERIFY YOUR CREDENTIALS AND DETAILS OF THE BANK ACCOUNT BEFORE INITIATING THE REFUND. WE SHALL STRIVE TO PROCESS THE REFUNDS WITHIN FIFTEEN (15) DAYS OF RECEIPT OF ALL THE RELEVANT INFORMATION AND DOCUMENTATION FROM YOU IN THIS REGARD__. We do not provide refunds for the lack of usage, dissatisfaction with the Program or for any reason whatsoever after the expiry of the Refund Window.
+
+| Program      | Refund Window |
+| :----:      | :----:      |
+| Data Science and Machine Learning Bootcamp      | Fourteen (14) Days       |
+
 
 **Updation of Terms of Service**
 
