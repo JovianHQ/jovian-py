@@ -85,3 +85,9 @@ def set_project(project):
     """Cache project parameter"""
     global _current_project
     _current_project = project
+
+
+def reset_cache():
+    global _current_project, _current_slug
+    _current_project = None
+    _current_slug = None
