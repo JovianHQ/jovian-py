@@ -81,6 +81,8 @@ def commit(message=None,
 
         git_message(string, optional): Commit message for git. If not provided, it uses the `message` argument
 
+        require_write_access(false, optional): Commit only if the current user has write access
+
     .. attention::
         Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected
         notebooks sometimes it may fail to detect notebook automatically.
