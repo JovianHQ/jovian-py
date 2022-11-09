@@ -20,6 +20,7 @@ from jovian.utils.script import get_script_filename, in_script
 
 USE_JAVSCRIPT_ON_KAGGLE = False
 
+
 def commit(message=None,
            files=[],
            outputs=[],
@@ -30,6 +31,7 @@ def commit(message=None,
            new_project=None,
            git_commit=False,
            git_message='auto',
+           require_write_access=False,
            **kwargs):
     """Uploads the current file (Jupyter notebook or python script) to |Jovian|
 
@@ -78,6 +80,8 @@ def commit(message=None,
             applicable only when the notebook is inside a Git repository.
 
         git_message(string, optional): Commit message for git. If not provided, it uses the `message` argument
+
+        require_write_access(false, optional): Commit only if the current user has write access
 
     .. attention::
         Pass notebook's name to `filename` argument, in certain environments like Jupyter Lab and password protected
@@ -194,6 +198,8 @@ def commit(message=None,
 
     # Retrieve Gist ID & title
     project_title, project_id = _parse_project(project, filename, new_project)
+    if not project_id and require_write_access:
+        return
 
     # Create or update gist (with title and )
     res = api.create_gist_simple(filename, project_id, privacy, project_title, message)
