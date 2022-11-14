@@ -133,8 +133,8 @@ def commit(message=None,
     if in_colab():
         log("Detected Colab notebook...")
         if get_colab_file_id() is None:
-            log("jovian.commit() is no longer required on Google Colab. If you ran this notebook from Jovian, "
-                "then just save this file in Colab using Ctrl+S/Cmd+S and it will be updated on Jovian. "
+            log("jovian.commit() is no longer required on Google Colab. If you ran this notebook from Jovian, \n"
+                "then just save this file in Colab using Ctrl+S/Cmd+S and it will be updated on Jovian. \n"
                 "Also, you can also delete this cell, it's no longer necessary.")
             return
         project = project or (not new_project and get_project())
