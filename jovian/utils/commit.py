@@ -133,10 +133,9 @@ def commit(message=None,
     if in_colab():
         log("Detected Colab notebook...")
         if get_colab_file_id() is None:
-            log("jovian.commit doesn't work on Colab unless the notebook was created and executed from Jovian.\n" +
-                "Make sure to run the first code cell at the top after executing from Jovian.\n" +
-                "Alternatively, you can download this notebook and upload it manually to Jovian.\n" +
-                "Learn more: https://jovian.ai/docs/user-guide/run.html#run-on-colab", error=True)
+            log("jovian.commit() is no longer required on Google Colab. If you ran this notebook from Jovian, "
+                "then just save this file in Colab using Ctrl+S/Cmd+S and it will be updated on Jovian. "
+                "Also, you can also delete this cell, it's no longer necessary.")
             return
         project = project or (not new_project and get_project())
         if not project:
