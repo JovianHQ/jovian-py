@@ -4,13 +4,13 @@
 
 The Platform (defined below) is owned and operated by SwiftAce Inc., a Delaware corporation headquartered at 291 S Milpitas Blvd, Suite 217, FalconX, Milpitas, CA 95035. SwiftAce Inc. has a fully-owned subsidiary in India, SwiftAce AI Private Limited, a company incorporated under the provisions of Companies Act, 2013, with its registered office at 58-14-94/1/4, FF-202, Merripalem Vuda Layout, Visakhapatnam-530009, Andhra Pradesh, India. SwiftAce Inc and SwiftAce AI Private Limited are collectively referred to as “**Company** ” "**we**," "**us**,", "**our**", “**Jovian**”.
 
-The Company requests You (_as defined below_) to carefully go through these terms & conditions (“**Terms of Service**” or “**Agreement**” or “**ToS**”) prior to using or accessing the Platform. If You continue to use this Platform, You irrevocably and unconditionally agree to comply with, abide by and be bound by all the obligations stipulated in this ToS, which together read with our Privacy Policy available at [https://jovian.com/privacy-policy.html](https://jovian.com/privacy-policy.html). (“**Privacy Policy**”) and any other applicable policies referred to herein or made available on the Platform, shall govern the Company’s relationship with You in relation to the Platform and shall be considered as a part of these ToS. This ToS only applies to the Platform. If there is any third-party platform, website or services undertaken or linked to this Platform, please note that the terms of use of such third parties shall apply, unless expressly and specifically stated. The User alone shall be responsible for the use of the Services of such third parties. These ToS supersede all previous oral and written terms and conditions (if any) communicated to You and shall act as a binding Agreement between Company and the Users (as defined hereunder). If you do not agree to be bound by all terms and conditions captured in this TOS, please do not use the Platform or Services.
+The Company requests You (_as defined below_) to carefully go through these terms & conditions (“**Terms of Service**” or “**Agreement**” or “**ToS**”) prior to using or accessing the Platform. If You continue to use this Platform, You irrevocably and unconditionally agree to comply with, abide by and be bound by all the obligations stipulated in this ToS, which together read with our Privacy Policy available at [https://jovian.ai/privacy-policy.html](https://jovian.ai/privacy-policy.html). (“**Privacy Policy**”) and any other applicable policies referred to herein or made available on the Platform, shall govern the Company’s relationship with You in relation to the Platform and shall be considered as a part of these ToS. This ToS only applies to the Platform. If there is any third-party platform, website or services undertaken or linked to this Platform, please note that the terms of use of such third parties shall apply, unless expressly and specifically stated. The User alone shall be responsible for the use of the Services of such third parties. These ToS supersede all previous oral and written terms and conditions (if any) communicated to You and shall act as a binding Agreement between Company and the Users (as defined hereunder). If you do not agree to be bound by all terms and conditions captured in this TOS, please do not use the Platform or Services.
 
 **Definitions**
 
 “**Account**” shall mean the account created by a User as per terms set out under the ToS which enables the User to access and use the Services provided on the Platform.
 
-“**Platform**” shall mean the website available at https://www.jovian.com/ or any other platform which will be made available to render the services.
+“**Platform**” shall mean the website available at https://www.jovian.ai/ or any other platform which will be made available to render the services.
 
 "**Content**" shall mean and includes, without limitation, any information, data (including but not limited to any visual data), projects, text, reports, blogs, User profiles, software, datasets, source code, tags, graphs/graphics, scripts, photos/images, and interactive features generated, provided, or otherwise made accessible either by you or by us or our partners or sponsors on or through the service.
 
@@ -52,7 +52,7 @@ The User hereby represents and warrants that it shall:
 
 **Payment and Taxes**
 
-In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://www.jovian.com](https://www.jovian.com).
+In order to use the Platform and/or certain Services, you must pay the company as per the terms set out at [https://www.jovian.ai](https://www.jovian.ai).
 
 The User must pay the charges by bank transfer or using such payment details as are notified by the Company to the User from time to time. Except as specifically prescribed in this TOS, each Party is separately responsible for their own taxes payable in connection with this Agreement. All sums payable (if any) shall be paid in full, free of all deductions and withholdings of any kind except where any deduction or withholding is required by law. The charges exclude GST , or other applicable taxes. Where GST or other tax is payable, User agrees that the Charges will be increased by an amount equivalent to the GST, or other taxes as applicable.
 
@@ -181,7 +181,7 @@ We ensure easy access to the Users by providing a tool to update your profile in
 
 **Support**
 
-Jovian offers email-based and online support tools. You may access support resources or contact our support by emailing at [hello@jovian.com](mailto:hello@jovian.com). The Company does not make any promises regarding how quickly we will respond to your request for support, or that we will be able to fix any problems You may be having. Any suggestions by Company regarding use of the Services shall not be construed as a warranty.
+Jovian offers email-based and online support tools. You may access support resources or contact our support by emailing at [hello@jovian.ai](mailto:hello@jovian.ai). The Company does not make any promises regarding how quickly we will respond to your request for support, or that we will be able to fix any problems You may be having. Any suggestions by Company regarding use of the Services shall not be construed as a warranty.
 
 **Termination**
 
