@@ -88,7 +88,7 @@ def commit(message=None,
         notebooks sometimes it may fail to detect notebook automatically.
     .. |Jovian| raw:: html
 
-        <a href="https://jovian.ai/?utm_source=docs" target="_blank"> Jovian </a>
+        <a href="https://jovian.com/?utm_source=docs" target="_blank"> Jovian </a>
     """
 
     # Deprecated argument (secret)

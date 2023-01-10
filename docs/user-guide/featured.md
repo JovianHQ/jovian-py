@@ -5,7 +5,7 @@
    :description: Featured Notebooks and Collections.
 ```
 
-<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> provides you with the feature to highlight your Notebooks & Collections on profile overview. Pin your best projects to your profile, so that other people can view them easily. "Pinned Notebooks/Collections" always stays at the top among other projects.
+<a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> provides you with the feature to highlight your Notebooks & Collections on profile overview. Pin your best projects to your profile, so that other people can view them easily. "Pinned Notebooks/Collections" always stays at the top among other projects.
 
 ### Pin your Notebooks/Collections:
 

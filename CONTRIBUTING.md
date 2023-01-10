@@ -95,7 +95,7 @@ code .
 
 ## Contributing to Docs
 
-The documentation website of Jovian is hosted at [jovian.ai/docs](https://jovian.ai/docs/)
+The documentation website of Jovian is hosted at [jovian.com/docs](https://jovian.com/docs/)
 
 To run the docs server locally, run:
 

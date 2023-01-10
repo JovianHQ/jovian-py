@@ -7,7 +7,7 @@
 
 Spreadsheets is one of the ways to track information & results of multiple ML experiments. However, using spreadsheets can be tiresome and non-intuitive without the context of the code.
 
-<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> makes its easy for anyone to track information about datasets, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.
+<a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> makes its easy for anyone to track information about datasets, hyperparameters and metrics which are associated with each version of the your experiment in notebooks. Its also displays these information version-by-version of your notebook under single UI.
 
 These information of a notebook are all added to `Records` Tab where you can toggle and view each version's log.
 

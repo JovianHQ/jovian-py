@@ -17,8 +17,8 @@ def mock_request_get(*args, **kwargs):
         "IS_PRODUCTION": True,
         "IS_FLAVOR_PRO": False,
         "COMPANY_LOGO_URL": "https://i.imgur.com/iOPEHyK.png",
-        "API_URL": "https://api-staging.jovian.ai",
-        "API_URL_ALT": "https://staging.jovian.ai/api",
+        "API_URL": "https://api-staging.jovian.com",
+        "API_URL_ALT": "https://staging.jovian.com/api",
         "AUTH_ENV": "staging",
         "LOGIN_REDIRECT_PATH": "/login",
     }, 200)
@@ -77,16 +77,16 @@ def test_configure_confirm_yes(mock_confirm, mock_prompt, mock_validate_api_key,
         configure()
 
         assert read_creds() == {'API_KEY': 'fake_api_key',
-                                'API_URL': 'https://api-staging.jovian.ai',
+                                'API_URL': 'https://api-staging.jovian.com',
                                 'GUEST_KEY': ANY,
                                 'ORG_ID': 'staging',
-                                'WEBAPP_URL': 'https://staging.jovian.ai/'}
+                                'WEBAPP_URL': 'https://staging.jovian.com/'}
 
         expected_result = dedent("""
         [jovian] It looks like Jovian is already configured ( check ~/.jovian/credentials.json ).
         [jovian] Removing existing configuration..
         [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
-        [jovian] Please enter your API key ( from https://staging.jovian.ai/ ):
+        [jovian] Please enter your API key ( from https://staging.jovian.com/ ):
         [jovian] Configuration complete!
         """).strip()
 
@@ -104,14 +104,14 @@ def test_configure_no_creds(mock_prompt, mock_validate_api_key, mock_get, capsys
         configure()
 
         assert read_creds() == {'API_KEY': 'fake_api_key',
-                                'API_URL': 'https://api-staging.jovian.ai',
+                                'API_URL': 'https://api-staging.jovian.com',
                                 'GUEST_KEY': ANY,
                                 'ORG_ID': 'staging',
-                                'WEBAPP_URL': 'https://staging.jovian.ai/'}
+                                'WEBAPP_URL': 'https://staging.jovian.com/'}
 
         expected_result = dedent("""
         [jovian] If you're a jovian-pro user please enter your company's organization ID on Jovian (otherwise leave it blank).
-        [jovian] Please enter your API key ( from https://staging.jovian.ai/ ):
+        [jovian] Please enter your API key ( from https://staging.jovian.com/ ):
         [jovian] Configuration complete!
         """).strip()
 

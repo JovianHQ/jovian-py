@@ -21,13 +21,13 @@ import jovian
 jovian.commit()
 ```
 
-When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> (or Jovian Pro) account.
+When you run `jovian.commit` for the first time you'll be asked to provide an API key, which you can get from your <a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> (or Jovian Pro) account.
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot" alt="jovian api key button" >
 
 Here's what `jovian.commit` does:
 
-- It saves and uploads the Jupyter notebook to your <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> (or Jovian Pro) account.
+- It saves and uploads the Jupyter notebook to your <a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> (or Jovian Pro) account.
 - It captures and uploads the python virtual environment containing the list of libraries required to run your notebook.
 - It returns a link that you can use to view and share your notebook with friends or colleagues.
 

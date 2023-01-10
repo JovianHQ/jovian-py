@@ -64,11 +64,11 @@ def test_h(command, fresh):
     [
         (
             'aakashns/jovian-tutorial',
-            'https://api-staging.jovian.ai/user/aakashns/gist/jovian-tutorial?gist_version=3',
+            'https://api-staging.jovian.com/user/aakashns/gist/jovian-tutorial?gist_version=3',
         ),
         (
             'fake_gist_slug',
-            'https://api-staging.jovian.ai/gist/fake_gist_slug?gist_version=3',
+            'https://api-staging.jovian.com/gist/fake_gist_slug?gist_version=3',
         ),
     ]
 )

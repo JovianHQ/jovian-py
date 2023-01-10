@@ -17,7 +17,7 @@ Jovian: The platform for all your Data Science projects
 
 .. |Jovian| raw:: html
   
-  <a href="https://jovian.ai/?utm_source=docs" target="_blank"> Jovian </a>
+  <a href="https://jovian.com/?utm_source=docs" target="_blank"> Jovian </a>
 
 .. toctree::
   :caption: Getting Started

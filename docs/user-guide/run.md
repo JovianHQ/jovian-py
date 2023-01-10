@@ -1,6 +1,6 @@
 ## Run notebooks online
 
-Execute notebooks on your browser without the need of local setup. Run any notebook uploaded to [Jovian](https://jovian.ai) with just a click.
+Execute notebooks on your browser without the need of local setup. Run any notebook uploaded to [Jovian](https://jovian.com) with just a click.
 
 - Binder [CPU only instances]
 - Colab [GPU or TPU instances]

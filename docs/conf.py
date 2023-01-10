@@ -29,7 +29,7 @@ templates_path = ['_templates']
 html_static_path = ['_static']
 html_css_files = ['css/navbar.css', 'css/override.css']
 
-html_baseurl = 'https://jovian.ai/docs/'
+html_baseurl = 'https://jovian.com/docs/'
 html_logo = 'jovian_horizontal_logo.svg'
 html_show_sphinx = False
 

@@ -51,7 +51,7 @@ jovian.configure()
 
 The above command prompts for the following information:
 
-1.  **Organization ID**: The Organization ID provided by your company for authentication. E.g. if you are accessing Jovian Pro at [https://mycompany.jovian.ai](https://mycompany.jovian.ai?utm_source=docs) , your organization ID is `mycompany`.
+1.  **Organization ID**: The Organization ID provided by your company for authentication. E.g. if you are accessing Jovian Pro at [https://mycompany.jovian.com](https://mycompany.jovian.com?utm_source=docs) , your organization ID is `mycompany`.
 
 2.  **API key**: You'll get the API key when you're logged in to your organization's Jovian Pro site. By clicking on the _API key_ button, the key will be copied to clipboard.
 

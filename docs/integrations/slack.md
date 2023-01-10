@@ -10,7 +10,7 @@ Use the same integration to get notification about other activities on Jovian.
 
 ### Connect to a Slack Workspace
 
-Visit <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> and click on the `Connect Slack`. You'll be redirected to Slack Webpage.
+Visit <a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> and click on the `Connect Slack`. You'll be redirected to Slack Webpage.
 
 <img src="https://i.imgur.com/9NTbh7v.png" class="screenshot" alt="docs images" >
 
@@ -36,6 +36,6 @@ For API documentation check out [Jovian Slack Notify](../api-reference/notif)
 
 ### Integration Preferences
 
-You can customize on what notifications you get to your Slack. To update the preferences visit <a href="https://jovian.ai/settings/integrations?utm_source=docs" target=_blank> Jovian Settings </a> or you go to your `Profile Dropdown` on the top right corner and click on `Settings`.
+You can customize on what notifications you get to your Slack. To update the preferences visit <a href="https://jovian.com/settings/integrations?utm_source=docs" target=_blank> Jovian Settings </a> or you go to your `Profile Dropdown` on the top right corner and click on `Settings`.
 
 <img src="https://i.imgur.com/C2oZohS.png" class="screenshot" alt="docs images" >
