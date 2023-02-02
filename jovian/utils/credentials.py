@@ -173,66 +173,11 @@ def ensure_org(check_pro=True):
     if check_pro and not is_flavor_pro():
         return
 
-    # Read the credentials
-    creds = read_creds()
-    try:
-        org_id = creds[ORG_ID_KEY]
-        api_url = creds[API_URL_KEY]
-        webapp_url = creds[WEBAPP_URL_KEY]
-        if org_id and api_url and webapp_url:
-            return
-    except KeyError:
-        pass
-
-    # Request organization
-    org_id = request_org_id()
-
-    # Construct the webapp URL
-    if org_id:
-        webapp_url = 'https://' + org_id + '.jovian.ai/'
-    else:
-        org_id = DEFAULT_ORG_ID
-        webapp_url = 'https://jovian.ai/'
-
-    # Try to retrieve the config.json file from webapp
-    try:
-        config_url = webapp_url + 'config.json'
-        config_res = requests.get(config_url)
-    except ConnectionError as e:
-        msg = 'Failed to connect to ' + webapp_url + \
-            ' . Please verify your organization ID and ensure you are connected to the internet.'
-        log(msg, error=True)
-        raise ConfigError(msg, e)
-
-    # Check for a successful response
-    if config_res.status_code != 200:
-        msg = 'Request to retrieve configuration file ' + config_url + \
-            ' failed with status_code ' + str(config_res.status_code) + ' . ' + CONTACT_MSG
-        log(msg, error=True)
-        raise ConfigError(msg + ' Response (truncated):\n' +
-                          config_res.text[:100])
-
-    # Parse JSON configuration
-    try:
-        config_json = config_res.json()
-    except JSONDecodeError as e:
-        msg = 'Failed to parse JSON configuration file from ' + \
-            config_url + ' . ' + CONTACT_MSG
-        log(msg, error=True)
-        raise ConfigError(msg + ' Response (truncated):\n' +
-                          config_res.text[:100], e)
-
     # Extract API URL
-    try:
-        api_url = config_json[API_URL_KEY]
-    except KeyError as e:
-        msg = 'Failed to extract API_URL from JSON configuration file ' + \
-            config_url + ' . ' + CONTACT_MSG
-        log(msg, error=True)
-        raise ConfigError(msg, e)
+    api_url = DEFAULT_API_URL
+    webapp_url = "https://jovian.com"
 
     # Save details to credentials file
-    write_org_id(org_id)
     write_api_url(api_url)
     write_webapp_url(webapp_url)
 
