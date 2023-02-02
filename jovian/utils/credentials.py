@@ -175,7 +175,7 @@ def ensure_org(check_pro=True):
 
     # Extract API URL
     api_url = DEFAULT_API_URL
-    webapp_url = "https://jovian.com"
+    webapp_url = DEFAULT_WEBAPP_URL
 
     # Save details to credentials file
     write_api_url(api_url)
