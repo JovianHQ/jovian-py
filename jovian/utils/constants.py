@@ -1,6 +1,6 @@
 # URLs for public versions of Jovian
-DEFAULT_WEBAPP_URL = "https://jovian.ai/"
-DEFAULT_API_URL = "https://api.jovian.ai/"
+DEFAULT_WEBAPP_URL = "https://jovian.com/"
+DEFAULT_API_URL = "https://api.jovian.com/"
 
 RC_FILENAME = ".jovianrc"
 FILENAME_MSG = 'Failed to read the Jupyter notebook. Please re-run this cell to try again. If the issue persists, provide ' + \
