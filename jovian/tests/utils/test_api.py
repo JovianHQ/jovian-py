@@ -25,8 +25,8 @@ from jovian.utils.error import ApiError
 
 def mock_requests_post(url, *args, **kwargs):
     if (
-        url == "https://api-staging.jovian.ai/gist/create"
-        or url == "https://api-staging.jovian.ai/gist/fake_gist_slug/upload"
+        url == "https://api-staging.jovian.com/gist/create"
+        or url == "https://api-staging.jovian.com/gist/fake_gist_slug/upload"
     ):
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {"data": {"message": "Gist created successfully"}}
@@ -37,7 +37,7 @@ def mock_requests_post(url, *args, **kwargs):
                 "success": False,
             }
             return MockResponse(data, status_code=404)
-    elif url == "https://api-staging.jovian.ai/data/record":
+    elif url == "https://api-staging.jovian.com/data/record":
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {"data": {"message": "Data logged successfully"}}
             return MockResponse(data, status_code=200)
@@ -48,7 +48,7 @@ def mock_requests_post(url, *args, **kwargs):
             }
             return MockResponse(data, status_code=500)
 
-    elif url == "https://api-staging.jovian.ai/data/fake_gist_slug/commit":
+    elif url == "https://api-staging.jovian.com/data/fake_gist_slug/commit":
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {"data": {"message": "Data logged successfully"}}
             return MockResponse(data, status_code=200)
@@ -59,7 +59,7 @@ def mock_requests_post(url, *args, **kwargs):
             }
             return MockResponse(data, status_code=404)
 
-    elif url == "https://api-staging.jovian.ai/slack/notify":
+    elif url == "https://api-staging.jovian.com/slack/notify":
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {
                 "data": {
@@ -87,7 +87,7 @@ def mock_requests_post(url, *args, **kwargs):
 
 
 def mock_requests_get(url, *args, **kwargs):
-    if url == "https://api-staging.jovian.ai/user/profile":
+    if url == "https://api-staging.jovian.com/user/profile":
         if kwargs["headers"]["Authorization"] == "Bearer fake_api_key":
             data = {"data": {"id": 47, "username": "rohit"}, "success": True}
 
@@ -100,10 +100,10 @@ def mock_requests_get(url, *args, **kwargs):
             return MockResponse(data, status_code=401)
 
     elif (
-        url == "https://api-staging.jovian.ai/user/rohit/gist/demo-notebook"
+        url == "https://api-staging.jovian.com/user/rohit/gist/demo-notebook"
         or url
-        == "https://api-staging.jovian.ai/user/rohit/gist/demo-notebook?gist_version=3"
-        or url == "https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2"
+        == "https://api-staging.jovian.com/user/rohit/gist/demo-notebook?gist_version=3"
+        or url == "https://api-staging.jovian.com/gist/f67108fc906341d8b15209ce88ebc3d2"
     ):
 
         data = {
@@ -121,14 +121,14 @@ def mock_requests_get(url, *args, **kwargs):
 
     # Dictionary containing mock responses
     response_dict = {
-        "https://api-staging.jovian.ai/gist/fake_nonexistent_gist": MockResponse(
+        "https://api-staging.jovian.com/gist/fake_nonexistent_gist": MockResponse(
             {"errors": [{"code": 404, "message": "Gist not found"}], "success": False},
             status_code=404,
         ),
-        "https://api-staging.jovian.ai/gist/fake_gist_too_large": MockResponse(
+        "https://api-staging.jovian.com/gist/fake_gist_too_large": MockResponse(
             {"message": "Internal Server Error"}, status_code=500
         ),
-        "https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access": MockResponse(
+        "https://api-staging.jovian.com/gist/f67108fc906341d8b15209ce88ebc3d2/check-access": MockResponse(
             {
                 "data": {
                     "currentUser": {"id": 47, "username": "rohit"},
@@ -140,7 +140,7 @@ def mock_requests_get(url, *args, **kwargs):
             },
             status_code=200,
         ),
-        "https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access": MockResponse(
+        "https://api-staging.jovian.com/gist/fake_nonexistent_gist/check-access": MockResponse(
             {"errors": [{"code": 404, "message": "Gist not found"}], "success": False},
             status_code=404,
         ),
@@ -168,7 +168,7 @@ def test_get_current_user(mock_requests_get):
         get_current_user()
 
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/user/profile",
+            "https://api-staging.jovian.com/user/profile",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -188,9 +188,9 @@ def test_get_current_user_raises_exception(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -200,7 +200,7 @@ def test_get_current_user_raises_exception(
             get_current_user()
 
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/user/profile",
+            "https://api-staging.jovian.com/user/profile",
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",
                 "x-jovian-source": "library",
@@ -223,7 +223,7 @@ def test_get_gist(mock_requests_get, mock_request_get_api_key):
     with fake_creds():
         get_gist("rohit/demo-notebook")
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/user/rohit/gist/demo-notebook",
+            "https://api-staging.jovian.com/user/rohit/gist/demo-notebook",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -236,7 +236,7 @@ def test_get_gist(mock_requests_get, mock_request_get_api_key):
 
         get_gist("rohit/demo-notebook", version=3)
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/user/rohit/gist/demo-notebook?gist_version=3",
+            "https://api-staging.jovian.com/user/rohit/gist/demo-notebook?gist_version=3",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -249,7 +249,7 @@ def test_get_gist(mock_requests_get, mock_request_get_api_key):
 
         get_gist("f67108fc906341d8b15209ce88ebc3d2")
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2",
+            "https://api-staging.jovian.com/gist/f67108fc906341d8b15209ce88ebc3d2",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -288,7 +288,7 @@ def test_get_gist_access(mock_requests_get, mock_get_api_key):
     with fake_creds():
         get_gist_access("f67108fc906341d8b15209ce88ebc3d2")
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/gist/f67108fc906341d8b15209ce88ebc3d2/check-access",
+            "https://api-staging.jovian.com/gist/f67108fc906341d8b15209ce88ebc3d2/check-access",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -310,7 +310,7 @@ def test_get_gist_access_raises_exception(
             get_gist_access("fake_nonexistent_gist")
 
         mock_requests_get.assert_called_with(
-            "https://api-staging.jovian.ai/gist/fake_nonexistent_gist/check-access",
+            "https://api-staging.jovian.com/gist/fake_nonexistent_gist/check-access",
             headers={
                 "Authorization": "Bearer fake_api_key",
                 "x-jovian-source": "library",
@@ -340,7 +340,7 @@ def test_create_gist_simple_no_gist_slug(mock_requests_post):
         )
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/gist/create",
+            "https://api-staging.jovian.com/gist/create",
             data={
                 "visibility": "private",
                 "public": False,
@@ -375,7 +375,7 @@ def test_create_gist_simple_with_gist_slug(mock_requests_post):
         )
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
+            "https://api-staging.jovian.com/gist/fake_gist_slug/upload",
             data={"version_title": "first version"},
             files={
                 "files": (
@@ -399,9 +399,9 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
     with fake_creds() as dir:
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -415,7 +415,7 @@ def test_create_gist_simple_raises_api_error(mock_requests_post):
             )
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/gist/create",
+            "https://api-staging.jovian.com/gist/create",
             data={
                 "visibility": "auto",
                 "public": True,
@@ -470,7 +470,7 @@ def test_upload_file(mock_requests_post):
             )
 
             mock_requests_post.assert_called_with(
-                "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
+                "https://api-staging.jovian.com/gist/fake_gist_slug/upload",
                 data={
                     "artifact": "true",
                     "folder": ".jovian",
@@ -494,9 +494,9 @@ def test_upload_file_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds() as dir:
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -515,7 +515,7 @@ def test_upload_file_raises_api_error(mock_requests_post, mock_get_api_key):
                 )
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/gist/fake_gist_slug/upload",
+            "https://api-staging.jovian.com/gist/fake_gist_slug/upload",
             data={
                 "artifact": "true",
                 "folder": ".jovian",
@@ -561,7 +561,7 @@ def test_post_blocks(mock_requests_post):
         post_blocks(blocks)
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/record",
+            "https://api-staging.jovian.com/data/record",
             data=None,
             headers={
                 "Authorization": "Bearer fake_api_key",
@@ -580,9 +580,9 @@ def test_post_blocks_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -594,7 +594,7 @@ def test_post_blocks_raises_api_error(mock_requests_post, mock_get_api_key):
             post_blocks(blocks)
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/record",
+            "https://api-staging.jovian.com/data/record",
             data=None,
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",
@@ -619,7 +619,7 @@ def test_post_block(mock_requests_post, mock_timestamp):
         post_block("metrics", {"key": "value"})
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/record",
+            "https://api-staging.jovian.com/data/record",
             data=None,
             headers={
                 "Authorization": "Bearer fake_api_key",
@@ -647,9 +647,9 @@ def test_post_block_raises_api_error(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -659,7 +659,7 @@ def test_post_block_raises_api_error(
             post_block("metrics", {"key": "value"})
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/record",
+            "https://api-staging.jovian.com/data/record",
             data=None,
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",
@@ -688,7 +688,7 @@ def test_post_records(mock_requests_post):
     with fake_creds():
         post_records("fake_gist_slug", {"key": "value"})
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/fake_gist_slug/commit",
+            "https://api-staging.jovian.com/data/fake_gist_slug/commit",
             data=None,
             headers={
                 "Authorization": "Bearer fake_api_key",
@@ -707,9 +707,9 @@ def test_post_records_raises_api_error(mock_requests_post, mock_get_api_key):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -719,7 +719,7 @@ def test_post_records_raises_api_error(mock_requests_post, mock_get_api_key):
             post_records("fake_gist_slug", {"key": "value"})
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/data/fake_gist_slug/commit",
+            "https://api-staging.jovian.com/data/fake_gist_slug/commit",
             data=None,
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",
@@ -742,9 +742,9 @@ def test_post_slack_message(mock_requests_post):
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_api_key",
             "ORG_ID": "staging",
         }
@@ -753,7 +753,7 @@ def test_post_slack_message(mock_requests_post):
         post_slack_message({"key": "value"})
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/slack/notify",
+            "https://api-staging.jovian.com/slack/notify",
             data=None,
             headers={
                 "Authorization": "Bearer fake_api_key",
@@ -774,9 +774,9 @@ def test_post_slack_message_raises_api_error(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -788,7 +788,7 @@ def test_post_slack_message_raises_api_error(
             post_slack_message(data)
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/slack/notify",
+            "https://api-staging.jovian.com/slack/notify",
             data=None,
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",
@@ -809,9 +809,9 @@ def test_post_slack_message_safe(
     with fake_creds():
         # setUp
         creds = {
-            "WEBAPP_URL": "https://staging.jovian.ai/",
+            "WEBAPP_URL": "https://staging.jovian.com/",
             "GUEST_KEY": "b6538d4dfde04fcf993463a828a9cec6",
-            "API_URL": "https://api-staging.jovian.ai",
+            "API_URL": "https://api-staging.jovian.com",
             "API_KEY": "fake_invalid_api_key",
             "ORG_ID": "staging",
         }
@@ -824,7 +824,7 @@ def test_post_slack_message_safe(
         }
 
         mock_requests_post.assert_called_with(
-            "https://api-staging.jovian.ai/slack/notify",
+            "https://api-staging.jovian.com/slack/notify",
             data=None,
             headers={
                 "Authorization": "Bearer fake_invalid_api_key",

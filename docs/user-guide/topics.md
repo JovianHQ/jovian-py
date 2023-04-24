@@ -5,7 +5,7 @@
    :description: Organize Jupyter notebooks on Jovian with topic tags.
 ```
 
-<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> allows you to add topics to your notebooks. Adding topics to your notebooks helps other people find and contribute to your projects easily. You can add topics related to your project's intended purpose, subject area, frameworks/languages used, or other important qualities that you find useful.
+<a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> allows you to add topics to your notebooks. Adding topics to your notebooks helps other people find and contribute to your projects easily. You can add topics related to your project's intended purpose, subject area, frameworks/languages used, or other important qualities that you find useful.
 
 ### About Topics
 
@@ -13,7 +13,7 @@ With topics, you can explore notebooks in a particular subject area, find projec
 
 <img src="https://i.imgur.com/HmBU5s0.png" class="screenshot" alt="Topics Box">
 
-To browse the most used topics, go to <a href="https://jovian.ai/explore?utm_source=docs" target="_blank">https://jovian.ai/explore</a>.
+To browse the most used topics, go to <a href="https://jovian.com/explore?utm_source=docs" target="_blank">https://jovian.com/explore</a>.
 
 ### How to add Topics in your notebooks?
 
@@ -45,9 +45,9 @@ You can search for notebooks that are associated with a particular topic. You ca
 
 Examples:
 
-- <a href="https://jovian.ai/topics/pytorch?utm_source=docs" target="_blank">https://jovian.ai/topics/pytorch</a>
+- <a href="https://jovian.com/topics/pytorch?utm_source=docs" target="_blank">https://jovian.com/topics/pytorch</a>
 
-- <a href="https://jovian.ai/topics/pytorch,tutorial?utm_source=docs" target="_blank">https://jovian.ai/topics/pytorch,tutorial</a>
+- <a href="https://jovian.com/topics/pytorch,tutorial?utm_source=docs" target="_blank">https://jovian.com/topics/pytorch,tutorial</a>
 
 <h3>Topics Page</h3>
 

@@ -25,14 +25,14 @@ setuptools.setup(
     name=pkg_name,
     version=verstr,
     author="Jovian",
-    author_email="hello@jovian.ai",
+    author_email="hello@jovian.com",
     entry_points={
         'console_scripts': ['jovian=jovian.__main__:main'],
     },
     description="Jovian Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://jovian.ai/?utm_source=pypi",
+    url="https://jovian.com/?utm_source=pypi",
     packages=setuptools.find_packages(exclude=["*.tests", "*.tests.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",

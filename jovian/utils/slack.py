@@ -55,8 +55,8 @@ def notify(data, verbose=True, safe=False):
     .. important::
         This feature requires for your Jovian account to be connected to a Slack workspace, visit `Jovian Integrations`_ to integrate them and to control the type of notifications.
     .. _Slack: https://slack.com
-    .. _Jovian: https://jovian.ai?utm_source=docs
-    .. _Jovian Integrations: https://jovian.ai/settings/integrations?utm_source=docs
+    .. _Jovian: https://jovian.com?utm_source=docs
+    .. _Jovian Integrations: https://jovian.com/settings/integrations?utm_source=docs
     """
     res = post_slack_message(data=data, safe=safe)
     if verbose:

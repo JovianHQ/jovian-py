@@ -5,7 +5,7 @@
    :description: Duplicate and reproduce Jupyter notebooks with Jovian.
 ```
 
-An uploaded notebook on <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> can be reproduced in any other machine. Following are the steps involved to reproduce a notebook.
+An uploaded notebook on <a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> can be reproduced in any other machine. Following are the steps involved to reproduce a notebook.
 
 ### Clone
 
@@ -25,7 +25,7 @@ jovian clone <username/project-title>
 
 #### Install
 
-<a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> captures the original python environment of the notebook, which make it easier to reproduce the notebook by installing all the required dependencies.
+<a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> captures the original python environment of the notebook, which make it easier to reproduce the notebook by installing all the required dependencies.
 The following commands uses <a href="https://conda.io" target=_blank> Anaconda </a> to install all the required packages, make sure that conda is installed.
 
 Once the notebook is cloned, it would have created a folder with the name of the notebook project.
@@ -46,7 +46,7 @@ The above command prompts for a virtual environment name where it will install a
 
 <img src="https://i.imgur.com/ysEWR80.gif" class="screenshot" alt="install jovian notebook dependcies" >
 
-In this way, <a href="https://jovian.ai?utm_source=docs" target=_blank> Jovian </a> seamlessly ensures the end-to-end reproducibility of your Jupyter notebooks across different operating systems.
+In this way, <a href="https://jovian.com?utm_source=docs" target=_blank> Jovian </a> seamlessly ensures the end-to-end reproducibility of your Jupyter notebooks across different operating systems.
 
 ```eval_rst
 .. note:: You have to own the notebook or have to be a collaborator to commit changes to the same notebook project. If not you can commit the cloned notebook with any changes to your Jovian profile as a new notebook project.

@@ -380,7 +380,7 @@ jovian.utils.jupyter.get_notebook_name_saved = lambda: "${filename}"
 
     const jvnCommit = () =>
       /**
-       * Commits the notebook to Jovian(https://jovian.ai).
+       * Commits the notebook to Jovian(https://jovian.com).
        *
        * Returns:
        *  - Committed notebook's link: for successful commit
@@ -687,7 +687,7 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
        * Layout:
        *  - form : class: form-horizontal
        *    - div :
-       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jovian.ai)
+       *      - label : id: i_label | text: Please enter your API key from [Jovian](https://jovian.com)
        *      - input : id: text_box | class: form-control | placeholder: {default_text}
        *      - label : id: e_label | text: Invalid API key | hidden: by default
        *
@@ -702,7 +702,7 @@ del jvn_update, jvn_f_out, jvn_f_err, jvn_msg`;
       // TODO: Configure correct WEBAPP_URL
       // .append(
       //   $("<a/>")
-      //     .attr("href", "https://jovian.ai?utm_source=nb-ext")
+      //     .attr("href", "https://jovian.com?utm_source=nb-ext")
       //     .attr("target", "_blank")
       //     .text("Jovian")
       // );
@@ -1505,7 +1505,7 @@ os.system('jovian disable-extension')`;
 
     // displays Jovian logo
     var Jlogo = document.createElement("IMG");
-    Jlogo.setAttribute("src", "https://www.jovian.ai/jovian_logo.svg");
+    Jlogo.setAttribute("src", "https://www.jovian.com/jovian_logo.svg");
     Jlogo.setAttribute("width", "250px");
     div.appendChild(Jlogo);
 

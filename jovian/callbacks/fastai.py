@@ -26,7 +26,7 @@ class JovianFastaiCallback(Callback):
 
         Visit `this`_ for a detailed example on using the fastai callback, also visit the *Records* tab
         to see all the logs of that notebook logged by the callback.
-    .. _this: https://jovian.ai/PrajwalPrashanth/7f16274fc3224d829941bc2553ef6061?utm_source=docs
+    .. _this: https://jovian.com/PrajwalPrashanth/7f16274fc3224d829941bc2553ef6061?utm_source=docs
     """
 
     def __init__(self, learn: Learner, arch_name=None, reset_tracking=True):

@@ -11,4 +11,4 @@ def test_u():
     with fake_creds():
         path = 'user/profile'
 
-        assert _u(path) == 'https://api-staging.jovian.ai/user/profile'
+        assert _u(path) == 'https://api-staging.jovian.com/user/profile'

@@ -21,7 +21,7 @@ def mock_get_gist(project):
             "slug": "f67108fc906341d8b15209ce88ebc3d2",
             "title": "demo-notebook",
             "owner": {
-                "avatar": "https://api-staging.jovian.ai/api/user/rohit/avatar",
+                "avatar": "https://api-staging.jovian.com/api/user/rohit/avatar",
                 "id": 47,
                 "name": "Rohit Sanjay",
                 "username": "rohit"
@@ -31,7 +31,7 @@ def mock_get_gist(project):
             "slug": "f67108fc906341d8b15209ce88ebc3d2",
             "title": "demo-notebook",
             "owner": {
-                "avatar": "https://api-staging.jovian.ai/api/user/rohit/avatar",
+                "avatar": "https://api-staging.jovian.com/api/user/rohit/avatar",
                 "id": 47,
                 "name": "Rohit Sanjay",
                 "username": "rohit"
@@ -41,7 +41,7 @@ def mock_get_gist(project):
             "slug": None,
             "title": "demo-notebook",
             "owner": {
-                "avatar": "https://api-staging.jovian.ai/api/user/rohit/avatar",
+                "avatar": "https://api-staging.jovian.com/api/user/rohit/avatar",
                 "id": 47,
                 "name": "Rohit Sanjay",
                 "username": "rohit"
@@ -559,7 +559,7 @@ def mock_create_gist_simple(*args, **kwargs):
         "slug": "fake_gist_slug",
         "title": "demo-notebook",
         "owner": {
-                "avatar": "https://api-staging.jovian.ai/api/user/rohit/avatar",
+                "avatar": "https://api-staging.jovian.com/api/user/rohit/avatar",
                 "id": 47,
                 "name": "Rohit Sanjay",
                 "username": "rohit"
@@ -575,7 +575,7 @@ def patch_all(f):
     @mock.patch("jovian.utils.commit._attach_files")
     @mock.patch("jovian.utils.commit._capture_environment")
     @mock.patch("jovian.utils.commit.set_notebook_slug")
-    @mock.patch("jovian.utils.commit.read_webapp_url", return_value='https://staging.jovian.ai/')
+    @mock.patch("jovian.utils.commit.read_webapp_url", return_value='https://staging.jovian.com/')
     @mock.patch("jovian.utils.commit.api.create_gist_simple", side_effect=mock_create_gist_simple)
     @mock.patch("jovian.utils.commit._parse_project", return_value=('fake_project_title', 'fake_project_id'))
     @mock.patch("jovian.utils.commit.os.path.exists", return_value=True)
@@ -621,7 +621,7 @@ def test_commit(mock_in_script,
 
     mock_attach_records.assert_called_with('fake_gist_slug', 2)
 
-    expected_common_result = "[jovian] Committed successfully! https://staging.jovian.ai/rohit/demo-notebook"
+    expected_common_result = "[jovian] Committed successfully! https://staging.jovian.com/rohit/demo-notebook"
     captured = capsys.readouterr()
     assert captured.out.strip() == expected_common_result.strip()
-    assert returned_value == "https://staging.jovian.ai/rohit/demo-notebook"
+    assert returned_value == "https://staging.jovian.com/rohit/demo-notebook"

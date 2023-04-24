@@ -5,7 +5,7 @@
    :description: Jovian integration with Jupyter Lab.
 ```
 
-Now you can commit your Jupyter Notebook to [Jovian](https://jovian.ai?utm_source=docs) with just **One Click**.
+Now you can commit your Jupyter Notebook to [Jovian](https://jovian.com?utm_source=docs) with just **One Click**.
 Make sure you’ve completed the [Installation](../user-guide/install.md) before reading further.
 
 ## Using Jovian Jupyter Lab Extension
@@ -16,7 +16,7 @@ Once you have successfully installed jovian, a new button `Commit` will appear o
 
 <img src="https://i.imgur.com/jTvA0De.png" class="screenshot" alt="jovian api key prompt">
 
-You can get the API key at [Jovian](https://jovian.ai?utm_source=docs). Once you log in, just click on `API key` button, and the key will be copied to the clipboard.
+You can get the API key at [Jovian](https://jovian.com?utm_source=docs). Once you log in, just click on `API key` button, and the key will be copied to the clipboard.
 
 <img src="https://i.imgur.com/taLLUVd.png" class="screenshot" alt="jovian api key copy button">
 
@@ -34,7 +34,7 @@ If the entered API key is invalid you will get following error.
 
 #### Successful Commit
 
-Once the API key has been validated, you can start committing to [Jovian](https://jovian.ai?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can click the link to your Notebook in Jovian.
+Once the API key has been validated, you can start committing to [Jovian](https://jovian.com?utm_source=docs) by clicking `Commit` button. Once the Notebook has been committed successfully you will get the confirmation message with the link where the Jupyter Notebook has been uploaded to, you can click the link to your Notebook in Jovian.
 
 <img src="https://i.imgur.com/BBesRzu.png" class="screenshot" alt="jovian commit success prompt">
 
@@ -72,7 +72,7 @@ $ jupyter labextension enable jovian-jupyterlab
 
 <!-- ## Commit with Share Dialog
 
-After you have succesfully commited your notebook to [Jovian](https://jovian.ai?utm_source=docs), you can share your notebook to social media.
+After you have succesfully commited your notebook to [Jovian](https://jovian.com?utm_source=docs), you can share your notebook to social media.
 
 The following window will appear, providing the user with the options to share the notebook to facebook, twitter, or linkedin.
 
