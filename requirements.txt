@@ -41,7 +41,7 @@ mistune==0.8.4
 more-itertools==8.0.2
 nbconvert==5.6.1
 nbformat==5.0.6
-notebook==6.1.5
+notebook==6.4.12
 packaging==19.1
 pandocfilters==1.4.2
 parso==0.5.1
